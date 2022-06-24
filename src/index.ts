@@ -1,4 +1,6 @@
 
-import {albhed_map} from "./Secrets/PasswordStorage";
-window.alert("hello world");
+import {albhed_map, initRabbitHole} from "./Secrets/PasswordStorage";
 console.log(albhed_map);
+window.onload = ()=>{
+    initRabbitHole();
+}

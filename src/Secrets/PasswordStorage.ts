@@ -6,6 +6,8 @@
 //if anyone can explain the origin of each one you'll unlock secret content directly from me
 //hell, if you can even do a majority I'd love to hear it, in all sincerity. I love hearing people find my work interesting :)
 
+import { TranscriptEngine } from "./Transcript";
+
 
 //look, okay, al bhed from ffx is something that for *some* percent of the population feels in their bones
 //so this will drive home a nagging sense of familiarity, that it MUST be important
@@ -45,6 +47,20 @@ export const albhed_map = {
 
 }
 
+export const initRabbitHole = ()=>{
+    const hole = document.querySelector("#rabbithole") as HTMLElement;
+
+    hole.onclick = ()=>{
+        const target = document.querySelector("body");
+        target.innerHTML = "";//clear;
+        const te = new TranscriptEngine(`testing
+        1...2...3...
+        testing
+        [okay]
+        it works`,target)
+        te.play();
+    }
+}
 
 export class SourceDurationPair{
     source: string;
