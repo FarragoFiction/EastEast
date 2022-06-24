@@ -1,13 +1,15 @@
+import { loadSecretText } from "..";
 import { createElementWithId, createElementWithIdAndParent, sleep } from "../Utils/misc";
+import { passwords, translate } from "./PasswordStorage";
 
 export class TranscriptEngine {
     typing = false;
     speed = 50;
     clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
-    text: String;
+    text="";
     parent: HTMLElement;
-    constructor(text, parent) {
-        this.text = text;
+    form?: HTMLElement;
+    constructor(parent) {
         this.parent = parent;
         this.init();
     }
@@ -16,6 +18,12 @@ export class TranscriptEngine {
         if (!this.parent) {
             return;
         }
+        window.onmousedown = () => {
+            this.speed = 0;
+          }
+          window.onmouseup = () => {
+            this.speed = 50;
+          }
         this.parent.style.cssText =
             `font-family: gamer;
         color: #00ff00;
@@ -26,7 +34,43 @@ export class TranscriptEngine {
         const scanline = createElementWithIdAndParent("div", crt, undefined, "scanline")
         const lines = createElementWithIdAndParent("div", crt, undefined, "lines")
         const terminal = createElementWithIdAndParent("div", crt, "terminal")
+        this.form = createElementWithIdAndParent("form", crt);
+        const input = createElementWithIdAndParent("input", this.form, "terminal-input") as HTMLInputElement;
+        const button = createElementWithIdAndParent("button", this.form, undefined, 'terminal-button');
+        button.innerText="SUBMIT";
+        this.form.onsubmit = (e) => {
+            e.preventDefault();
+            this.handlePW(input.value);
+        }
+
+
+        input.placeholder = "Enter Password Now";
+        input.autofocus = true;
+
+
         this.parent.append(crt);
+    }
+
+    handleBadPW =(text:string)=>{
+        this.text = translate(text);
+        this.play();
+    }
+
+    handleGoodPW = (text:string)=>{
+        const secret = passwords[text.toUpperCase()];
+        this.text = secret.title+"\n";
+       this.text+=loadSecretText(passwords[text.toUpperCase()].text);
+       this.play();
+    }
+
+    handlePW = (text: string) => {
+        //if good, load the right file
+        //if bad, albhed time baby
+        if(passwords[text.toUpperCase()]){
+            this.handleGoodPW(text);
+        }else{
+            this.handleBadPW(text);
+        }
     }
 
     play = () => {

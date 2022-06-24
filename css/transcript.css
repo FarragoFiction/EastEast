@@ -15,6 +15,17 @@ color: red;
   padding: 10px;
 }
 
+#terminal-input{
+  background-color: #131313;
+  width: 500px;
+  height: 33px;
+  border: 3px solid #00ff00;
+  padding-left: 10px;
+  font-family: gamer;
+  color: #00ff00;
+  font-size: 18px;
+}
+
 
 .void{
   visibility: hidden;
@@ -182,7 +193,7 @@ color: red;
     border-radius: 13px;
     text-overflow: hidden;
 }
-button{
+.terminal-button{
   font-family: gamer;
   background: black;
   color: white;
