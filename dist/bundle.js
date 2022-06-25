@@ -2296,10 +2296,11 @@ exports.TranscriptEngine = void 0;
 const __1 = __webpack_require__(607);
 const misc_1 = __webpack_require__(79);
 const PasswordStorage_1 = __webpack_require__(867);
+const defaultSpeed = 66;
 class TranscriptEngine {
     constructor(parent) {
         this.typing = false;
-        this.speed = 50;
+        this.speed = defaultSpeed;
         this.clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
         this.text = "";
         this.init = () => {
@@ -2310,7 +2311,7 @@ class TranscriptEngine {
                 this.speed = 0;
             };
             window.onmouseup = () => {
-                this.speed = 50;
+                this.speed = defaultSpeed;
             };
             this.parent.style.cssText =
                 `font-family: gamer;
@@ -2386,7 +2387,9 @@ class TranscriptEngine {
                     i = this.doChunkAllAtOnce(element, i, text);
                 }
                 if (!skipping) {
+                    console.log("JR NOTE: about to sleep for ", this.speed, "current time is", Date.now());
                     yield (0, misc_1.sleep)(this.speed);
+                    console.log("JR NOTE: slept current time is", Date.now());
                     this.clickAudio.play();
                     element.innerHTML += text.charAt(i);
                 }

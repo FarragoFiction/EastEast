@@ -1,24 +1,40 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>ZampanioSimEastEast</title>
-    <script src="dist/bundle.js"></script>
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/transcript.css">
+  <script src="dist/bundle.js"></script>
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/transcript.css">
 
 </head>
+
 <body>
-  <div id = "zampaniosimeast"></div>
-  <img id="rabbithole" src = "images/rabbithole.png">
+  <div id ="current-room"></div>
+  <div class="player-container" id="story-container">
+    <div class="story-so-far">
+      test story
+    </div>
+    <div class="command">
+      test command
+    </div>
+
+
+
+  </div>
+  <img id="rabbithole" src="images/rabbithole.png">
 
   <ul>
-    <li>import all the room graphics from East</li>
-    <li>room object, renders a random floor image from random Theme, just as css bg, no canvas</li>
-    <li>Entity object, knows how to move, doens't leave bounds</li>
-    <li>Quotidian extends Entity, moves randomly</li>
-    <li>* pull in eye killers assets, render her on screen</li>
+    <li>room object, renders a random floor image from random Theme, just as css bg, no canvas, long room over the ai
+      dungeon stuff</li>
+      <li>same thing for walls</li>
+    <li>Entity object, knows how to move, doens't leave bounds of room</li>
+    <li>Quotidian extends Entity, moves randomly, head empty, no thoughts</li>
+    <li>simple trigger effect ai engine , like quest engine. first trigger is "entity is in combat range" and first effect is "dies"</li>
+    <li>* pull in eye killers assets, render her on screen, she kills anything that gets close, but otherwise doens't move</li>
 
   </ul>>
-  
+
 </body>
+
 </html>

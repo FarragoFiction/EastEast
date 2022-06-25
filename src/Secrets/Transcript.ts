@@ -2,9 +2,11 @@ import { loadSecretText } from "..";
 import { createElementWithId, createElementWithIdAndParent, sleep } from "../Utils/misc";
 import { passwords, translate } from "./PasswordStorage";
 
+const defaultSpeed = 66;
 export class TranscriptEngine {
     typing = false;
-    speed = 50;
+
+    speed = defaultSpeed;
     clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
     text="";
     parent: HTMLElement;
@@ -22,7 +24,7 @@ export class TranscriptEngine {
             this.speed = 0;
           }
           window.onmouseup = () => {
-            this.speed = 50;
+            this.speed = defaultSpeed;
           }
         this.parent.style.cssText =
             `font-family: gamer;
@@ -114,7 +116,10 @@ export class TranscriptEngine {
                 i = this.doChunkAllAtOnce(element, i, text);
             }
             if (!skipping) {
+                console.log("JR NOTE: about to sleep for ", this.speed, "current time is", Date.now())
                 await sleep(this.speed);
+                console.log("JR NOTE: slept current time is", Date.now())
+
                 this.clickAudio.play();
                 element.innerHTML += text.charAt(i);
             }
