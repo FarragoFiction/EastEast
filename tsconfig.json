@@ -5,7 +5,9 @@
     "target": "es6",
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "build"
+    "outDir": "build",
+    "strict": true,
+
   },
   "lib": ["es2021"]
 }

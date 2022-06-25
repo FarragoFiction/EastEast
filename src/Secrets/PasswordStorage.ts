@@ -64,7 +64,10 @@ export const initRabbitHole = () => {
     const hole = document.querySelector("#rabbithole") as HTMLElement;
 
     hole.onclick = () => {
-        const target = document.querySelector("body");
+        const target = document.querySelector("body") as HTMLElement;
+        if(!target){
+            return;
+        }
         target.innerHTML = "";//clear;
         const te = new TranscriptEngine(target);
     }

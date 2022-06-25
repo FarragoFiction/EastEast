@@ -11,7 +11,7 @@ export class TranscriptEngine {
     text="";
     parent: HTMLElement;
     form?: HTMLElement;
-    constructor(parent) {
+    constructor(parent:HTMLElement) {
         this.parent = parent;
         this.init();
     }
@@ -79,17 +79,19 @@ export class TranscriptEngine {
         this.transcript(this.text);
     }
 
-    transcript = async (linesUnedited) => {
+    transcript = async (linesUnedited:string) => {
 
 
         const lines = linesUnedited.split("\n");
 
-        const terminal = document.querySelector("#terminal");
+        const terminal = document.querySelector("#terminal") as HTMLElement;
+        if(!terminal){
+            return;
+        }
         terminal.innerHTML = "";
         for (let line of lines) {
             const element = document.createElement("p");
             terminal.append(element);
-
             await this.typeWrite(terminal, element, line)
             await sleep(this.speed * 10);
 
@@ -107,7 +109,7 @@ export class TranscriptEngine {
     //and v1 is in ATranscript and ASecondTranscript
     //because YES the code is intentionally a shitty maze for my future self
     //and i guess any future Heirs
-    typeWrite = async (scroll_element, element, text) => {
+    typeWrite = async (scroll_element:HTMLElement, element:HTMLElement, text:string) => {
         this.typing = true;
         let skipping = false;
         for (let i = 0; i < text.length; i++) {
@@ -131,7 +133,7 @@ export class TranscriptEngine {
         }
     }
 
-    doChunkAllAtOnce = (ele, start_index, text) => {
+    doChunkAllAtOnce = (ele:HTMLElement, start_index:number, text:string) => {
         const offset = 0;
         //look for ending offset
         //create new span element

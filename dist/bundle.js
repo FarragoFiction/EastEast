@@ -2249,6 +2249,9 @@ const initRabbitHole = () => {
     const hole = document.querySelector("#rabbithole");
     hole.onclick = () => {
         const target = document.querySelector("body");
+        if (!target) {
+            return;
+        }
         target.innerHTML = ""; //clear;
         const te = new Transcript_1.TranscriptEngine(target);
     };
@@ -2273,6 +2276,55 @@ exports.passwords = {
     "KNOW RESTRAINT": new Secret("Confessionals 4", undefined, "Secrets/Content/4.js"),
     "NO RESTRAINT": new Secret("Confessionals 5", undefined, "Secrets/Content/5.js")
 };
+
+
+/***/ }),
+
+/***/ 923:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Room = void 0;
+const ThemeStorage_1 = __webpack_require__(288);
+const misc_1 = __webpack_require__(79);
+class Room {
+    //objects
+    //people
+    //really theres just the one room, we keep clearing it out.
+    constructor(themes, element, seed) {
+        this.floor = "glitch.png";
+        this.wall = "glitch.png";
+        this.width = 0;
+        this.height = 0;
+        this.render = () => {
+            this.element.innerHTML = "";
+            this.width = this.element.getBoundingClientRect().width;
+            this.height = this.element.getBoundingClientRect().height;
+            this.element.style.backgroundImage = `url(images/Walkabout/floor/${this.floor})`;
+            const wall = (0, misc_1.createElementWithIdAndParent)("div", this.element, "wall");
+            wall.style.backgroundImage = `url(images/Walkabout/wall/${this.wall})`;
+        };
+        this.init = () => {
+            this.initFloor();
+            this.initWall();
+        };
+        this.initFloor = () => {
+            const theme = this.seed.pickFrom(this.themes);
+            this.floor = theme.pickPossibilityFor(this.seed, ThemeStorage_1.FLOOR);
+        };
+        this.initWall = () => {
+            const theme = this.seed.pickFrom(this.themes);
+            this.wall = theme.pickPossibilityFor(this.seed, ThemeStorage_1.WALL);
+        };
+        this.themes = themes;
+        this.seed = seed;
+        this.element = element;
+        this.init();
+    }
+}
+exports.Room = Room;
 
 
 /***/ }),
@@ -2360,6 +2412,9 @@ class TranscriptEngine {
         this.transcript = (linesUnedited) => __awaiter(this, void 0, void 0, function* () {
             const lines = linesUnedited.split("\n");
             const terminal = document.querySelector("#terminal");
+            if (!terminal) {
+                return;
+            }
             terminal.innerHTML = "";
             for (let line of lines) {
                 const element = document.createElement("p");
@@ -2718,16 +2773,35 @@ exports.createElementWithId = createElementWithId;
 /***/ }),
 
 /***/ 607:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.loadSecretText = void 0;
+const Stat_1 = __webpack_require__(137);
+const Theme_1 = __webpack_require__(702);
+const ThemeStorage_1 = __webpack_require__(288);
 const PasswordStorage_1 = __webpack_require__(867);
+const Room_1 = __webpack_require__(923);
+const NonSeededRandUtils_1 = __webpack_require__(258);
+const SeededRandom_1 = __importDefault(__webpack_require__(450));
 console.log(PasswordStorage_1.albhed_map);
 window.onload = () => {
     (0, PasswordStorage_1.initRabbitHole)();
+    const ele = document.querySelector("#current-room");
+    (0, Stat_1.initStats)();
+    (0, Theme_1.initThemes)();
+    const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]];
+    console.log("JR NOTE: todo take seed from param");
+    const seed = (0, NonSeededRandUtils_1.getRandomNumberBetween)(1, 113);
+    if (ele) {
+        const room = new Room_1.Room(themes, ele, new SeededRandom_1.default(seed));
+        room.render();
+    }
 };
 //the text should be a javascript file exporting const text.
 function loadSecretText(location) {
@@ -3176,6 +3250,8 @@ var map = {
 	"./Secrets/Content/5.js": 952,
 	"./Secrets/PasswordStorage": 867,
 	"./Secrets/PasswordStorage.ts": 867,
+	"./Secrets/RoomEngine/Room": 923,
+	"./Secrets/RoomEngine/Room.ts": 923,
 	"./Secrets/Transcript": 122,
 	"./Secrets/Transcript.ts": 122,
 	"./Utils/ArrayUtils": 907,

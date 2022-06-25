@@ -179,6 +179,15 @@ textarea{
   margin-bottom: 50px;
   background-image: url("../images/Walkabout/floor/woodfloor.png");
   border: 10px solid #292929;
+  position: relative;
+}
+
+#wall{
+  width: 400px;
+  height: 120px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
 }
 
 .story-so-far{

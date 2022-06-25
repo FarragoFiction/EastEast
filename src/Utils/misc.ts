@@ -1,4 +1,4 @@
-export const sleep = (ms) => {
+export const sleep = (ms:number) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 export const createElementWithIdAndParent = (eleName: string, parent: HTMLElement, id?: string, className?: string) => {
