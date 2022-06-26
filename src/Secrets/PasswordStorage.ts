@@ -120,6 +120,10 @@ export const passwords: PasswordMap = {
     , "INFINITE AMOUNT OF PAIN": new Secret("Notes of Slaughter 9", undefined, "Secrets/Content/16.js")
     , "CAST ASIDE ALL ASPIRATIONS OF MORTALITY": new Secret("Notes of Slaughter 10", undefined, "Secrets/Content/17.js")
     , "BITS OF THE PAST LEAK INTO THE PRESENT": new Secret("Notes of Slaughter 11", undefined, "Secrets/Content/18.js")
-    , "I SHIP IT": new Secret("Notes of Slaughter 12", undefined, "Secrets/Content/19.js")
+    , "SLAUGHTERHOUSE 9": new Secret("Notes of Slaughter 12", undefined, "Secrets/Content/19.js")
+    , "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts") 
+    , "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts") 
+
 
 };
+export const text = "\n\n\n\n"+ Object.keys(passwords).join("\n");

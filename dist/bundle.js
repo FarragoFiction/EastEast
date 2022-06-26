@@ -2194,7 +2194,7 @@ exports.initThemes = initThemes;
 //if anyone can explain the origin of each one you'll unlock secret content directly from me
 //hell, if you can even do a majority I'd love to hear it, in all sincerity. I love hearing people find my work interesting :)
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.passwords = exports.Secret = exports.initRabbitHole = exports.translate = exports.albhed_map = void 0;
+exports.text = exports.passwords = exports.Secret = exports.initRabbitHole = exports.translate = exports.albhed_map = void 0;
 const Transcript_1 = __webpack_require__(122);
 //look, okay, al bhed from ffx is something that for *some* percent of the population feels in their bones
 //so this will drive home a nagging sense of familiarity, that it MUST be important
@@ -2293,8 +2293,11 @@ exports.passwords = {
     "INFINITE AMOUNT OF PAIN": new Secret("Notes of Slaughter 9", undefined, "Secrets/Content/16.js"),
     "CAST ASIDE ALL ASPIRATIONS OF MORTALITY": new Secret("Notes of Slaughter 10", undefined, "Secrets/Content/17.js"),
     "BITS OF THE PAST LEAK INTO THE PRESENT": new Secret("Notes of Slaughter 11", undefined, "Secrets/Content/18.js"),
-    "I SHIP IT": new Secret("Notes of Slaughter 12", undefined, "Secrets/Content/19.js")
+    "SLAUGHTERHOUSE 9": new Secret("Notes of Slaughter 12", undefined, "Secrets/Content/19.js"),
+    "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts"),
+    "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts")
 };
+exports.text = "\n\n\n\n" + Object.keys(exports.passwords).join("\n");
 
 
 /***/ }),
@@ -3076,6 +3079,19 @@ __webpack_require__.r(__webpack_exports__);
 const text = `
 * JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
 
+Name: Yongki
+Aliases:  The Reflection, L-0-I1(0-47)
+Coping Strategy: Chaotic (See Summary, Detail Notes 1-46)
+Attachment Style: Chaotic (See Summary, Detail Notes 1-46)
+
+Quick Summary:
+
+Yongk ican not be summarized. Each time his Reflection resets him, all his memory (and thus personality) is lost. Each time he builds himself anew, he is, to greater and lesser extents, a different person.
+
+This Heresy that has befallen him may yet have a cure, but in the mean time I work with the Yongki I am given to try to focus on recognizing situations that may have a Mirror and how to avoid it.
+
+
+
 `;
 
 /***/ }),
@@ -3090,6 +3106,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 const text = `
 * JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+
+Name: Parker
+Aliases:  The Shot, L-0-21
+Coping Strategy: Chaotic (See Summary)
+Attachment Style: Chaotic (See Summary)
+
+Quick Summary:
+
+Parker is a positive JOY to work with. His eyes are an open book to his inner workings, What You See is absolutely What You Get.
+
+According to him his impulse control was "stolen by some anime girl" one, or possibly two Universes ago.  Regardless of why, this results in quite a fascinating case. Quite ironically, given his proclivity towards deep tunnels into the earth, his problems are entirely kept on the surface, with no knowledge needed of his history.
+
+Our focus has been on giving him more tools to make sure his first impulse in a situation is one he won't later regret. He has taken well to flashcards, post it notes and various other reminders of the options he has in any stressful situation.   While this HAS contributed to the overall...shall we say complex nature of his living environment, it has clearly lead to him feeling more in control and capable in his day to day life.
+
+Examples of flashcards that have worked especially well include "BAN THEM", "CALL THEM ON THE PHONE", "ASK VIK IF THIS IS OKAY" and "SEND THEM A MESSAGE".  It is surprising how many disparate situations these cards can apply to.
+
+NOTE: We are working on getting him to kidnap me less often.
 
 `;
 
@@ -3168,6 +3202,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 const text = `
 * JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+Name: Tyrfing
+Aliases:  That Guy With The Sword, That Guy With the Worm Babies,L-C-003
+Coping Strategy: Denial
+Attachment Style: Secure
+
+Quick Summary:
+
+~~~~~~~~~~~
+
+Tyrfing is a relatively new patient of mine. His eyes are deep and piercing, quickly judging as irrelevant most of what he sees.  
+
+As the lone Disciple of a Forgotten God, Tyrfing finds it difficult to find purpose in this new world. His platonic domestic partner has helped him find limited Purpose in the art of domestic combat, such as baking, PTA meetings and minor local politics, and he is fiercely protective of his (non clone) children, however briefly they exist.
+
+Together we are working on small ways for him to feel like his purpose is being met, such as  spreading  the Word of Nidhogg, describing the Secret Truth of the Betrayal of the 4 Divines, and similar.  While we do not share religious beliefs I am always happy to help Spread Knowledge. (And, on a Personal Note, I do understand what it is like to have Societally Unacceptable Religious Beliefs in this Universe. I miss my Home.)
 
 `;
 
