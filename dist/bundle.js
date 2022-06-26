@@ -2230,7 +2230,10 @@ exports.albhed_map = {
     "w": "F",
     "x": "Q",
     "y": "O",
-    "z": "W"
+    "z": "W",
+    "0": "https://www.tumblr.com/blog/view/figuringoutnothing/688028145704665088?source=share",
+    "1": "https://farragofiction.com/DevonaFears",
+    "2": "http://farragofiction.com/NotesOnStealingPeoplesShit/"
 };
 const translate = (word) => {
     let ret = word.toLowerCase();
