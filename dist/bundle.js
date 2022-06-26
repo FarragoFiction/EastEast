@@ -2297,7 +2297,7 @@ exports.passwords = {
     "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts")
 };
-exports.text = "\n\n\n\n" + Object.keys(exports.passwords).join("\n");
+exports.text = `.\n.\n.\n.\n ${Object.keys(exports.passwords).join("\n")}}`;
 
 
 /***/ }),
