@@ -106,5 +106,20 @@ export const passwords: PasswordMap = {
     , "BEWEARE OBLIVION IS AT HAND": new Secret("Confessionals 3", undefined, "Secrets/Content/3.js")
     , "KNOW RESTRAINT": new Secret("Confessionals 4", undefined, "Secrets/Content/4.js")
     , "NO RESTRAINT": new Secret("Confessionals 5", undefined, "Secrets/Content/5.js")
+    //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
+    , "THE TRUTH IS LAYERED": new Secret("Notes of Slaughter: Prelude", undefined, "Secrets/Content/6.js")
+    , "THE FOOL IS DEAD": new Secret("Notes of Slaughter 0", undefined, "Secrets/Content/7.js")
+    , "SHEPHARD SHUFFLE": new Secret("Notes of Slaughter 1", undefined, "Secrets/Content/8.js")
+    , "BEWARE OBLIVION IS AT HAND": new Secret("Notes of Slaughter 2", undefined, "Secrets/Content/9.js")
+    , "DIED LIKE COWARDS": new Secret("Notes of Slaughter 3", undefined, "Secrets/Content/10.js")
+    , "NOT A FED": new Secret("Notes of Slaughter 4", undefined, "Secrets/Content/11.js")
+    , "TIME IS DEAD": new Secret("Notes of Slaughter 5", undefined, "Secrets/Content/12.js")
+    , "TAKE YOUR PLACE IN HISTORY": new Secret("Notes of Slaughter 6", undefined, "Secrets/Content/13.js")
+    , "LEAVE YOUR MARK": new Secret("Notes of Slaughter 7", undefined, "Secrets/Content/14.js")
+    , "COLONIZE YOUR MIND": new Secret("Notes of Slaughter 8", undefined, "Secrets/Content/15.js")
+    , "INFINITE AMOUNT OF PAIN": new Secret("Notes of Slaughter 9", undefined, "Secrets/Content/16.js")
+    , "CAST ASIDE ALL ASPIRATIONS OF MORTALITY": new Secret("Notes of Slaughter 10", undefined, "Secrets/Content/17.js")
+    , "BITS OF THE PAST LEAK INTO THE PRESENT": new Secret("Notes of Slaughter 11", undefined, "Secrets/Content/18.js")
+    , "I SHIP IT": new Secret("Notes of Slaughter 12", undefined, "Secrets/Content/19.js")
 
 };

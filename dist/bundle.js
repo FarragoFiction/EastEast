@@ -2232,7 +2232,7 @@ exports.albhed_map = {
     "y": "O",
     "z": "W",
     "0": "https://www.tumblr.com/blog/view/figuringoutnothing/688028145704665088?source=share",
-    "1": "https://farragofiction.com/DevonaFears",
+    "1": "http://farragofiction.com/DevonaFears",
     "2": "http://farragofiction.com/NotesOnStealingPeoplesShit/"
 };
 const translate = (word) => {
@@ -2278,6 +2278,22 @@ exports.passwords = {
     "BEWEARE OBLIVION IS AT HAND": new Secret("Confessionals 3", undefined, "Secrets/Content/3.js"),
     "KNOW RESTRAINT": new Secret("Confessionals 4", undefined, "Secrets/Content/4.js"),
     "NO RESTRAINT": new Secret("Confessionals 5", undefined, "Secrets/Content/5.js")
+    //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
+    ,
+    "THE TRUTH IS LAYERED": new Secret("Notes of Slaughter: Prelude", undefined, "Secrets/Content/6.js"),
+    "THE FOOL IS DEAD": new Secret("Notes of Slaughter 0", undefined, "Secrets/Content/7.js"),
+    "SHEPHARD SHUFFLE": new Secret("Notes of Slaughter 1", undefined, "Secrets/Content/8.js"),
+    "BEWARE OBLIVION IS AT HAND": new Secret("Notes of Slaughter 2", undefined, "Secrets/Content/9.js"),
+    "DIED LIKE COWARDS": new Secret("Notes of Slaughter 3", undefined, "Secrets/Content/10.js"),
+    "NOT A FED": new Secret("Notes of Slaughter 4", undefined, "Secrets/Content/11.js"),
+    "TIME IS DEAD": new Secret("Notes of Slaughter 5", undefined, "Secrets/Content/12.js"),
+    "TAKE YOUR PLACE IN HISTORY": new Secret("Notes of Slaughter 6", undefined, "Secrets/Content/13.js"),
+    "LEAVE YOUR MARK": new Secret("Notes of Slaughter 7", undefined, "Secrets/Content/14.js"),
+    "COLONIZE YOUR MIND": new Secret("Notes of Slaughter 8", undefined, "Secrets/Content/15.js"),
+    "INFINITE AMOUNT OF PAIN": new Secret("Notes of Slaughter 9", undefined, "Secrets/Content/16.js"),
+    "CAST ASIDE ALL ASPIRATIONS OF MORTALITY": new Secret("Notes of Slaughter 10", undefined, "Secrets/Content/17.js"),
+    "BITS OF THE PAST LEAK INTO THE PRESENT": new Secret("Notes of Slaughter 11", undefined, "Secrets/Content/18.js"),
+    "I SHIP IT": new Secret("Notes of Slaughter 12", undefined, "Secrets/Content/19.js")
 };
 
 
@@ -2866,6 +2882,297 @@ He tries not to hold it against her. He forgives her, and she leaves without ano
 
 /***/ }),
 
+/***/ 591:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+
+
+Name: Neville
+Aliases:  The Twins, L-0-R2
+Coping Strategy: Acceptance
+Attachment Style: Secure
+
+Quick Summary:
+
+Neville is a Fascinating Enigma. When he first entered my office, I could, quite plainly, see nothing behind his eyes. He seemed easy enough, affable and friendly, and perfectly willing to engage with my work.  And yet nothing seemed to stick. 
+
+To my Frustration, any attempts to get him to open up, or to See Beyond the Surface bore absolutely no fruit.   He claimed he was "fine" and saw no actual reason for any dissatisfaction with his lot in life.  To my shame, my assumption had been that he simply was not aware of the facts of his new Reality.
+
+And yet.
+
+On our fourth session, Neville quite surprised me by mentioning that it makes sense I'm not familiar with Minoburgers as I am "not from around here, either". When I asked what he meant, he casually pointed to a dozen or so tiny mannerisms I had that were indicators of being Foreign to this Universe. Mannerisms I was completely unaware I did not share with the wider populace. 
+
+Still Waters do indeed Run Deep with this one.
+
+Overall, his assessment that he is doing well seems an accurate one, to my bewilderment.  He has a support network both within his found family and without it, as well as more casual friends across the world. He acknowledges quite openly the bad in his life, and remains optimistic that they can be overcome.
+
+I've made it clear to him I may have nothing to provide for him, but he insists on continuing his visitations since "you never know" when things might change. 
+
+Truly a mystery.
+
+`;
+
+/***/ }),
+
+/***/ 937:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+Name: Devona
+Aliases:  The Twins, L-0-R4
+Coping Strategy: Avoidance
+Attachment Style: Secure
+
+Quick Summary:
+
+When Devona enters a room her eyes scan every corner of it, taking it all in. You can tell just how kind and considerate she is by her attention to every detail, no matter how irrelevant. 
+
+That kindness leads her to hide her pain and her worries, even from those she trusts. She fears being a burden almost as much as she fears being misunderstood. 
+
+Her strong friendship with Neville, is a source of strength for her, as he sees through even her most clever of facades. However she worries about over relying on him, hence her desire for my services.
+
+It is fortunate that anxiety caused by Knowledge is something of a speciality of me from my time in Morgan's Hill.  
+
+Together we focus on practicing the 5-4-3-2-1 method for coping with anxiety, where she identifies 5 things to see, 4 things to touch, 3 things to hear, 2 things to smell and 1 thing to taste.   In doing this, we are trying to help her form the habit to use her impressive observation talent to break panic spirals, rather than fall into the trap of being Blind to the Outer World while lost in Unhelpful Thoughts.
+
+
+`;
+
+/***/ }),
+
+/***/ 270:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+
+Name: Witherby 
+Aliases:  The Solemn, L-0-R1
+Coping Strategy: Unknown
+Attachment Style: Unknown
+
+Quick Summary:
+
+It has been impressed upon me by my primary employer that should I interact with Witherby, I will "lose my Visa" to this layer of Reality. 
+
+While I do miss my homeland, I am under no Illusion that I will be neatly returned there should I violate this contract.
+
+Still..one can't help but notice certain commonalities in accounts of him, and I will collate these fragments of impressions here.
+
+is the only one of the training team who files taxes
+is standoffish and cold
+goes to an incredible amount of trouble to help those within his inner circle
+has a strong moral compass
+has an equally strong streak of petty thievery
+observant
+easy to talk to
+provides therapy like services to everyone outside the training team
+refuses to provide therapy like services in his 'off hours'
+
+`;
+
+/***/ }),
+
+/***/ 12:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+
+Name: Ronin
+Aliases:  None
+Coping Strategy: Wounded and Defensive
+Attachment Style: Insecure (Avoidant)
+
+Quick Summary:
+
+While Ronin is not a patient of mine (hello hello if you're reading, Bestie :) ), he is one of my oldest friends.
+
+To my shame, I did not correctly See him during our stint at Duskhollow PD, but in the World That Came After, I had the pleasure of working quite closely with him in my role as Minister of Peace.  And, of course, finding him anew in this Universe has been a bright spot that quite outshone all the rest.
+
+I have grown to know him quite thoroughly. A hard worker with high expectations for the world around him who refuses to compromise his integrity, Ronin excels in situations where rules are clearly and strictly enforced across the board.   He has been invaluable in helping me navigate the myriad hidden and esoteric legal statues of this Universe.  I am so, so Proud to see how comfortable he has become in his new Role.  (And while I Know It Is Not My Fault, remain sorry Morgan's Hill was so stifling for him.)
+
+Note: The Whispers Within me call for Ronin. I have taken steps to mitigate any effect this may have on him, to the best of my ability.
+
+
+`;
+
+/***/ }),
+
+/***/ 574:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+Name: Vik
+Aliases:  Nope
+Coping Strategy: Nope
+Attachment Style: Nope
+
+Quick Summary:
+
+
+
+Look, Fiona. It's Ronin writing this-- though you'd guess that anyway eventually. You asked me to make sure you couldn't go all weird and obsessive about this fella again, so I went ahead and erased all your notes about them.
+
+Listen, I don't want to be the asshole, but you PROMISED me you wouldn't go looking again, so like. This is it. This is me telling you why you aren't supposed to. You didn't like who you became and it only ends up with you getting your mind wiped AGAIN.
+
+Yes, I know that's not supposed to be possible for you.
+
+Yes. It still happened.
+
+NO.  Trying to find out why does NOT lead to you learning a way around it.
+
+Believe me. Okay? Trust me when I say you made it VERY clear that this wasn't good for you, your weird religion be damned.
+
+So close this file and think about one of your other patients, okay?
+
+
+`;
+
+/***/ }),
+
+/***/ 377:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+`;
+
+/***/ }),
+
+/***/ 715:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+`;
+
+/***/ }),
+
+/***/ 765:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+
+Name: Khana
+Aliases:  K, L-0-I3
+Coping Strategy: Violence
+Attachment Style: Insecure (Anxious-Avoidant)
+
+Quick Summary:
+While Khana is not one of my patients (being highly dismissive of my profession overall), he equally is a frequent visitor to my office. Occasionally he brags that he has access to my more public facing notes, which he acquires between the ending of one loop of the Spiral and the beginning of another.  I am glad to see that someone else in this Universe understands that Knowledge Is Power.
+
+From conversations with others (both patient and non), I am given to understand that he is currently significantly more stable and secure in his position than in some of the earliest Loops, and while I remain Curious as to what could have lead to such positive growth, I am very Aware of how dangerous prying may prove to be.
+
+Khana revels in power over others, both physically and in Knowledge of Secrets. This is expressed in ways that lead him towards gratification through acts such as private security work and other martial endeavors.  It is my speculation that this work, especially through contact with impressionable natives of this Universe, provides him with enough Eyes to secure satisfaction. Evidence towards this hypothesis includes the fact that this work is relatively new to him, and would not be an outlet during his first, more bloody, Loops. 
+
+Overall, he seems to have a standard case of Eye Mania, which up until this point I had thought this Universe was curiously devoid of.
+
+
+
+`;
+
+/***/ }),
+
+/***/ 314:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+
+Name: N/A
+Aliases: The Shambling Horror, The Host, The Neighbor, L-C-003
+Coping Strategy: Mimickry
+Attachment Style: Secure
+
+Quick Summary:
+
+The Horror is not one of my patients, nor would I accept him as such.  It was only his Diplomatic Significance in Morgan's Hill that required me to tolerate his presence in any way shape or form.
+
+It is my Belief that the Horror was the result of  the Duo Mask being used Inappropriately in such a way that both was and was not Reflected.  It was against my recommendations that we catered to this creature and provided him Diplomatic Immunity.
+
+The Horror yearns for two things and two things only:  To Torment those around him with the Knowledge that he fits in better to Morgan's Hill than they do, and to slowly supplant (violently) the Citizen whose face he wears.  As far as the former goes, he is unparalleled in skill. He will ALWAYS be perfectly acceptable and expected wherever you find him, and just a shade better than anyone could reasonably be by society's Values, causing anywhere from mild to significant mental distress in targets.  As Lesser Horrors do NOT have this ability, further Research is required, but is not recommended for risk of violating Safety Protocols.  
+
+As for the Latter? Should I choose it, I could shatter him with the slightest of words. For now, I do not so choose. The Horror remains docile and appears to not be a physical danger to those around him. I... grudgingly admit that he may actively be a stabilizing element to his platonic partner, Tyrfing.   (Note: the Horror's actual romantic cycle thankfully precludes any such attachments outside of his 'soulmate'). 
+
+`;
+
+/***/ }),
+
+/***/ 714:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+`;
+
+/***/ }),
+
 /***/ 180:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -2947,6 +3254,145 @@ Another person comes in, nearly scraping the confessional roof as she sits down.
 No words are exchanged. She lets out a long, weary sigh; the breath in her lungs comes out in a controlled exhale, not too fast, and not too slow.
 
 She sits there for a while longer, and then she stands up. He forgives her, and she leaves.
+
+`;
+
+/***/ }),
+
+/***/ 178:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+She's sat at her desk, pen idly scratching doodles onto a notepad. They're overwhelmingly cheerful. Clouds. Smiles. Eyes. 
+
+She meets one of the orbs' gaze with equanimity, face blank.
+
+There is a piece of her, deep within, that misses Home with the ache of a long healed injury. 
+
+It helps, some days, to talk about how it all had been with those few refugees she's managed to find. 
+
+Other days she finds solace in one of the few ways this world provides to both See and Be Seen. Social media is, of course, a disappointingly tasteless way to scratch that itch, but... It is what it is.
+
+A perfectly manicured nail (bubblegum pink, of course) taps out a staccato beat into the wood of her desk. Not morse code, never that. She wrinkles her gently upturned nose at the thought of trying to conceal information. No. Just a simple rhythm. A melody from better times.
+
+The phone at her desk buzzes to life and she silences it with a sigh of relief.  There. The designated Two Minutes of Ennui were complete!   Her features come to life, all smiles that go all the way to her eyes and energy and happiness, as if the sadness itself had been a mask she had had to don.
+
+It's important! She reminds herself, getting up from her desk, to not accidentally conceal any Sad Emotions that might be lurking underneath the surface! You have to face everything head on! With Clear Eyes!
+
+TODAY is a very important day! She will be Professional and she will be Compassionate and she will keep Hard Boundaries and she will finally, FINALLY get to speak directly with Wanda. If there could be said to be a single person in this universe who knows even a fraction of what Jaimie, He Who Knows, knows, then it would have to be her.
+
+And Doctor Fiona Slaughter, licensed psychotherapist, wants to know everything she can.
+
+When her office had been broken into and her private notes obviously copied she had nearly cried in relief.  Finally! Finally something makes sense! Someone cared that there was knowledge!  Someone AGREED it didn't belong under lock and key and ciphers and secrecy!  Knowledge Wants To Be Free!
+
+She was, of course, perfectly aware that this Universe believed certain types of information to be less free than others and... if she was to fit in, concessions must be made. But the thrill and delight that coursed through her as she followed thread after thread all the way to its source, the "CEBro" of Eyedol games herself? Exquisite.
+
+And today she would have her closure. Her catharsis. She would stand before the most Holy figure this corrupted Universe had to offer.
+
+She adjusts her bouncy blond hair in one of the many mirrors, grabs her bag (immaculately coordinating with her white and pink outfit, of course), and steps out to face the day.
+
+
+`;
+
+/***/ }),
+
+/***/ 791:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+
+Excerpt: From the Private Notes of Dr. Fiona Slaughter
+
+If you're reading this, you have my congratulations. I had feared these words would remain trapped and stifled for all time, dusty and inert on these pages, fed only by my Eyes alone.
+
+But I Hoped, and my words marching along your synapses is proof it was worth it.
+
+Thank you for navigating the safes and ciphers required by my various contracts and legal obligations.  Thank you for reading these.  
+
+As a courtesy, I have attempted to organize my records as best as I can to make sense to an outsider*.  In exchange, please do your best to keep this information to yourself, or at least do no harm to my patients. 
+
+Thank you,
+
+Dr. Fiona Slaughter
+
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+`;
+
+/***/ }),
+
+/***/ 997:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+
+Name: Camille
+Aliases:  The End, L-0-17 (Note: Be advised she is unaware of this designation and reacts violently to implications of abnormality)
+Coping Strategy:  Denial 
+Attachment Style: Insecure (Anxious previously, Avoidant currently)
+
+Quick Summary:
+
+Camille has a warm smile, mischievous eyes and a desire to love and be loved. 
+
+She felt isolated as a child, both larger and more intimidating than her peers and has difficulty predicting how others view her.  This has lead to her having an insecure attachment style natively, preferring to cling and fawn over loved ones in the fear of losing them.
+
+Prior employment lead to her developing a 'curse', either preventing her directly from speaking or strongly discouraging it. As a result, her attachment style has evolved to be more avoidant overall.
+
+I'm working with her to untangle how much is actually supernatural in nature and how much is her own desire to set harsh Personal Rules in order to make up for how bewildering she finds Societal ones. 
+
+Camille is a strong believer in self improvement and change, being willing to face most obstacles head on with Clear Eyes.  However, this inverts in the face of something she believes beyond change.  She becomes stubborn and willfully Blind, refusing to acknowledge that there is a problem at all. 
+
+As she does not view this as a problem, by definition, I must put aside my personal Beliefs and focus on what aspects of herself she does wish assistance with.
+
+`;
+
+/***/ }),
+
+/***/ 842:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+
+Name: Ria
+Aliases:  The Match, L-0-R5 (it is advised to avoid calling her either alias, as this may cause a guilt spiral)
+Coping Strategy:  Wounded and Defensive (Obsession)
+Attachment Style: Insecure (Anxious)
+
+Quick Summary:
+
+The first thing I noticed about Ria was her bright eyes, constantly searching my office, missing not a single detail. She is intelligent and passionate, and a very hard worker.
+
+Overall, the biggest thing Ria wants to work on is her struggles with Addiction, both in the sense of substance abuse and in her own words, 'an addiction to connecting the facts'.  I struggle to maintain appropriate Professional Distance as I confess the idea that this could be unhealthy is a Foreign one to me.
+
+Ria is an optimist in a Universe of disappointments. Each fresh disappointment creates a new crack in her smile, and given sufficient pain she can lose herself to a frantic attempt to make sure she is Never Hurt Like This Again.
+
+At the same time, she is not unaware of her oversized effect on the people around her. This leads to a cycle of obsessive attempts to control reality to avoid pain punctuated with withdrawing heavily to avoid hurting anyone.
+
+It should be noted that her attempts to control reality tends towards "ending reality".
 
 `;
 
@@ -3243,6 +3689,26 @@ var map = {
 	"./Secrets/Content/0.js": 243,
 	"./Secrets/Content/1": 489,
 	"./Secrets/Content/1.js": 489,
+	"./Secrets/Content/10": 591,
+	"./Secrets/Content/10.js": 591,
+	"./Secrets/Content/11": 937,
+	"./Secrets/Content/11.js": 937,
+	"./Secrets/Content/12": 270,
+	"./Secrets/Content/12.js": 270,
+	"./Secrets/Content/13": 12,
+	"./Secrets/Content/13.js": 12,
+	"./Secrets/Content/14": 574,
+	"./Secrets/Content/14.js": 574,
+	"./Secrets/Content/15": 377,
+	"./Secrets/Content/15.js": 377,
+	"./Secrets/Content/16": 715,
+	"./Secrets/Content/16.js": 715,
+	"./Secrets/Content/17": 765,
+	"./Secrets/Content/17.js": 765,
+	"./Secrets/Content/18": 314,
+	"./Secrets/Content/18.js": 314,
+	"./Secrets/Content/19": 714,
+	"./Secrets/Content/19.js": 714,
 	"./Secrets/Content/2": 180,
 	"./Secrets/Content/2.js": 180,
 	"./Secrets/Content/3": 52,
@@ -3251,6 +3717,14 @@ var map = {
 	"./Secrets/Content/4.js": 892,
 	"./Secrets/Content/5": 952,
 	"./Secrets/Content/5.js": 952,
+	"./Secrets/Content/6": 178,
+	"./Secrets/Content/6.js": 178,
+	"./Secrets/Content/7": 791,
+	"./Secrets/Content/7.js": 791,
+	"./Secrets/Content/8": 997,
+	"./Secrets/Content/8.js": 997,
+	"./Secrets/Content/9": 842,
+	"./Secrets/Content/9.js": 842,
 	"./Secrets/PasswordStorage": 867,
 	"./Secrets/PasswordStorage.ts": 867,
 	"./Secrets/RoomEngine/Room": 923,
