@@ -30,9 +30,8 @@
   <img id="rabbithole" src="images/rabbithole.png">
 
   <ul>
-
-    <li>Entity object, knows how to move, doens't leave bounds of room</li>
-    <li>Quotidian extends Entity, moves randomly, head empty, no thoughts</li>
+    <li>north south and east doors, if you type "go north, south or east" to peewee you shift rooms (peewee doesn't render yet)</li>
+    <li>MoveAlgorithm for blorbos, for now just pick "random" (blorbos innately don't leave bounds)</li>
     <li>simple trigger effect ai engine , like quest engine. first trigger is "entity is in combat range" and first
       effect is "quip". (if a quotidian bumps into anything it comments on it) has a human readable version of trigger and effect, plus flavor for both (like quest engine) </li>
     <li>* pull in eye killers assets, render her on screen, she kills anything that gets close, but otherwise doens't
