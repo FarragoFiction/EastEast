@@ -31,6 +31,270 @@ exports.Memory = Memory;
 
 /***/ }),
 
+/***/ 466:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+//knows what it looks like, knows where it is
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PhysicalObject = void 0;
+class PhysicalObject {
+    //TODO have a list of TRAITS
+    constructor(name, x, y, width, height, themes, layer, src, flavorText) {
+        this.image = document.createElement("img");
+        this.attachToParent = (parent) => {
+            this.parent = parent;
+            this.image.src = this.src;
+            this.image.style.display = "block";
+            this.image.style.zIndex = `${this.layer}+10`;
+            this.image.style.position = "absolute";
+            this.image.style.top = `${this.y}px`;
+            this.image.style.left = `${this.x}px`;
+            this.image.style.width = `${this.width}px`;
+            this.parent.append(this.image);
+            console.log("JR NOTE: in theory, parent has an image now", parent, this.image);
+        };
+        this.name = name;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.flavorText = flavorText;
+        this.themes = themes;
+        this.layer = layer;
+        this.src = src;
+    }
+}
+exports.PhysicalObject = PhysicalObject;
+
+
+/***/ }),
+
+/***/ 580:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//base level Entity object. quotidians can turn into anything
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Quotidian = void 0;
+const PhysicalObject_1 = __webpack_require__(466);
+//what, did you think the REAL eye killer would be so formulaic? 
+class Quotidian extends PhysicalObject_1.PhysicalObject {
+    //TODO have a movement algorithm (effects can shift this)
+    /*
+    example movement algorithm
+    * random
+    * searching pattern
+    * to north
+    * to south
+    * to east
+    * to ENTITY
+    * to OBJECT
+    */
+    //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
+    constructor(name, x, y, width, height, themes, layer, src, flavorText) {
+        super("Quotidan", x, y, width, height, themes, layer, src, flavorText);
+        this.tick = () => {
+            console.log("TODO: tick, need to move according to movement algorithm and check all scenes to see if any apply");
+        };
+    }
+}
+exports.Quotidian = Quotidian;
+
+
+/***/ }),
+
+/***/ 202:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.spawnWallObjects = exports.randomRoomWithThemes = exports.Room = void 0;
+const Theme_1 = __webpack_require__(702);
+const ThemeStorage_1 = __webpack_require__(288);
+const misc_1 = __webpack_require__(79);
+const Quotidian_1 = __webpack_require__(580);
+const PhysicalObject_1 = __webpack_require__(466);
+const URLUtils_1 = __webpack_require__(389);
+class Room {
+    //objects
+    //people
+    //really theres just the one room, we keep clearing it out.
+    constructor(themes, element, rand) {
+        this.floor = "glitch.png";
+        this.wall = "glitch.png";
+        this.width = 400;
+        this.height = 600;
+        this.blorbos = [];
+        this.items = [];
+        this.render = () => {
+            this.element.innerHTML = "";
+            this.width = this.element.getBoundingClientRect().width;
+            this.height = this.element.getBoundingClientRect().height;
+            this.element.style.backgroundImage = `url(images/Walkabout/floor/${this.floor})`;
+            const wall = (0, misc_1.createElementWithIdAndParent)("div", this.element, "wall");
+            wall.style.backgroundImage = `url(images/Walkabout/wall/${this.wall})`;
+            for (let item of this.items) {
+                item.attachToParent(this.element);
+            }
+            for (let blorbo of this.blorbos) {
+                blorbo.attachToParent(this.element);
+            }
+        };
+        this.addItem = (obj) => {
+            this.items.push(obj);
+        };
+        this.addBlorbo = (blorbo) => {
+            this.blorbos.push(blorbo);
+        };
+        this.tick = () => {
+            //TODO blorbos all tick
+        };
+        this.init = () => {
+            this.initFloor();
+            this.initWall();
+        };
+        this.initFloor = () => {
+            const theme = this.rand.pickFrom(this.themes);
+            this.floor = theme.pickPossibilityFor(this.rand, ThemeStorage_1.FLOOR);
+        };
+        this.initWall = () => {
+            const theme = this.rand.pickFrom(this.themes);
+            this.wall = theme.pickPossibilityFor(this.rand, ThemeStorage_1.WALL);
+        };
+        //imported from East
+        this.childRoomThemes = () => {
+            const roll = this.rand.nextDouble();
+            if (roll > 0.6) {
+                //add a theme, but don't go over 6
+                if (this.themes.length < 6) {
+                    return [...this.themes, this.rand.pickFrom(Object.values(Theme_1.all_themes))];
+                }
+                else {
+                    return [...this.themes.slice(1), this.rand.pickFrom(Object.values(Theme_1.all_themes))];
+                }
+            }
+            else if (roll > 0.3) {
+                //remove a theme, but don't go under one
+                if (this.themes.length > 1) {
+                    return [...this.themes.slice(1)];
+                }
+                else {
+                    return [...this.themes.slice(1), this.rand.pickFrom(Object.values(Theme_1.all_themes))];
+                }
+            }
+            else {
+                //same amount just one different
+                return [...this.themes.slice(1), this.rand.pickFrom(Object.values(Theme_1.all_themes))];
+            }
+        };
+        this.spawnChildRoom = () => {
+            (0, exports.randomRoomWithThemes)(this.element, this.childRoomThemes(), this.rand);
+        };
+        this.themes = themes;
+        this.rand = rand;
+        this.element = element;
+        this.init();
+    }
+}
+exports.Room = Room;
+const randomRoomWithThemes = (ele, themes, seededRandom) => __awaiter(void 0, void 0, void 0, function* () {
+    const room = new Room(themes, ele, seededRandom);
+    const items1 = yield (0, exports.spawnWallObjects)(room.width, room.height, 0, ThemeStorage_1.WALLBACKGROUND, "BackWallObjects", seededRandom, themes);
+    const items3 = yield spawnFloorObjects(room.width, room.height, 0, ThemeStorage_1.FLOORBACKGROUND, "UnderFloorObjects", seededRandom, themes);
+    const items2 = yield (0, exports.spawnWallObjects)(room.width, room.height, 1, ThemeStorage_1.WALLFOREGROUND, "FrontWallObjects", seededRandom, themes);
+    const items4 = yield spawnFloorObjects(room.width, room.height, 1, ThemeStorage_1.FLOORFOREGROUND, "TopFloorObjects", seededRandom, themes);
+    const items = items3.concat(items2.concat(items4));
+    console.log("JR NOTE: the random room spawned these items: ", items);
+    for (let item of items) {
+        room.addItem(new PhysicalObject_1.PhysicalObject(item.name, item.x, item.y, item.width, item.height, item.themes, item.layer, item.src, item.flavorText));
+    }
+    room.addBlorbo(new Quotidian_1.Quotidian("Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], 2, "images/Walkabout/Sprites/humanoid_crow.gif", "testing"));
+    return room;
+});
+exports.randomRoomWithThemes = randomRoomWithThemes;
+//has to be async because it checks the image size for positioning
+const spawnWallObjects = (width, height, layer, key, folder, seededRandom, themes) => __awaiter(void 0, void 0, void 0, function* () {
+    let current_x = 0;
+    const padding = 10;
+    const ret = [];
+    console.log("JR NOTE: current x is: ", current_x, "and width is: ", width);
+    while (current_x < width) {
+        const chosen_theme = seededRandom.pickFrom(themes);
+        const item = chosen_theme.pickPossibilityFor(seededRandom, key);
+        if (item && item.src && seededRandom.nextDouble() > 0.3) {
+            const image = yield (0, URLUtils_1.addImageProcess)((`images/Walkabout/Objects/${folder}/${item.src}`));
+            current_x += image.width * 2;
+            //don't clip the wall border, don't go past the floor
+            if (current_x + padding + image.width > width) {
+                return ret;
+            }
+            const y = seededRandom.getRandomNumberBetween(padding, Math.max(padding, image.height));
+            ret.push({ name: "Generic Object", layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * 2, height: image.height, flavorText: item.desc });
+        }
+        else {
+            current_x += 50;
+        }
+    }
+    return ret;
+});
+exports.spawnWallObjects = spawnWallObjects;
+//has to be async because it checks the image size for positioning
+const spawnFloorObjects = (width, height, layer, key, folder, seededRandom, themes) => __awaiter(void 0, void 0, void 0, function* () {
+    let current_x = 0;
+    const floor_bottom = 140;
+    let current_y = floor_bottom;
+    const padding = 10;
+    const ret = [];
+    const scale = 1.5;
+    const y_wiggle = 50;
+    const debug = false;
+    const clutter_rate = seededRandom.nextDouble(0.5, 0.99); //smaller is more cluttered
+    while (current_y + padding < height) {
+        current_x = padding;
+        while (current_x < width) {
+            const chosen_theme = seededRandom.pickFrom(themes);
+            const item = chosen_theme.pickPossibilityFor(seededRandom, key);
+            if (item && item.src && seededRandom.nextDouble() > clutter_rate) {
+                const image = yield (0, URLUtils_1.addImageProcess)(`images/Walkabout/Objects/${folder}/${item.src}`);
+                current_x += image.width * scale;
+                //don't clip the wall border, don't go past the floor
+                if (current_x + padding + image.width * scale > width) {
+                    break;
+                }
+                const y = seededRandom.getRandomNumberBetween(current_y - y_wiggle, current_y + y_wiggle);
+                if (y + padding + image.height * scale > height) {
+                    break;
+                }
+                ret.push({ name: "Generic Object", layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * scale, height: image.height * scale, flavorText: item.desc });
+            }
+            else {
+                current_x += 100;
+            }
+            if (debug && ret.length > 0) {
+                return ret;
+            }
+        }
+        current_y += y_wiggle;
+    }
+    return ret;
+});
+
+
+/***/ }),
+
 /***/ 137:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -2297,56 +2561,7 @@ exports.passwords = {
     "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts")
 };
-exports.text = `.\n.\n.\n.\n ${Object.keys(exports.passwords).join("\n")}}`;
-
-
-/***/ }),
-
-/***/ 923:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Room = void 0;
-const ThemeStorage_1 = __webpack_require__(288);
-const misc_1 = __webpack_require__(79);
-class Room {
-    //objects
-    //people
-    //really theres just the one room, we keep clearing it out.
-    constructor(themes, element, seed) {
-        this.floor = "glitch.png";
-        this.wall = "glitch.png";
-        this.width = 0;
-        this.height = 0;
-        this.render = () => {
-            this.element.innerHTML = "";
-            this.width = this.element.getBoundingClientRect().width;
-            this.height = this.element.getBoundingClientRect().height;
-            this.element.style.backgroundImage = `url(images/Walkabout/floor/${this.floor})`;
-            const wall = (0, misc_1.createElementWithIdAndParent)("div", this.element, "wall");
-            wall.style.backgroundImage = `url(images/Walkabout/wall/${this.wall})`;
-        };
-        this.init = () => {
-            this.initFloor();
-            this.initWall();
-        };
-        this.initFloor = () => {
-            const theme = this.seed.pickFrom(this.themes);
-            this.floor = theme.pickPossibilityFor(this.seed, ThemeStorage_1.FLOOR);
-        };
-        this.initWall = () => {
-            const theme = this.seed.pickFrom(this.themes);
-            this.wall = theme.pickPossibilityFor(this.seed, ThemeStorage_1.WALL);
-        };
-        this.themes = themes;
-        this.seed = seed;
-        this.element = element;
-        this.init();
-    }
-}
-exports.Room = Room;
+exports.text = `.\n.\n.\n.\n ${Object.keys(exports.passwords).join("\n")}`;
 
 
 /***/ }),
@@ -2799,6 +3014,15 @@ exports.createElementWithId = createElementWithId;
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -2808,11 +3032,10 @@ const Stat_1 = __webpack_require__(137);
 const Theme_1 = __webpack_require__(702);
 const ThemeStorage_1 = __webpack_require__(288);
 const PasswordStorage_1 = __webpack_require__(867);
-const Room_1 = __webpack_require__(923);
+const Room_1 = __webpack_require__(202);
 const NonSeededRandUtils_1 = __webpack_require__(258);
 const SeededRandom_1 = __importDefault(__webpack_require__(450));
-console.log(PasswordStorage_1.albhed_map);
-window.onload = () => {
+window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, PasswordStorage_1.initRabbitHole)();
     const ele = document.querySelector("#current-room");
     (0, Stat_1.initStats)();
@@ -2821,10 +3044,10 @@ window.onload = () => {
     console.log("JR NOTE: todo take seed from param");
     const seed = (0, NonSeededRandUtils_1.getRandomNumberBetween)(1, 113);
     if (ele) {
-        const room = new Room_1.Room(themes, ele, new SeededRandom_1.default(seed));
+        const room = yield (0, Room_1.randomRoomWithThemes)(ele, themes, new SeededRandom_1.default(seed));
         room.render();
     }
-};
+});
 //the text should be a javascript file exporting const text.
 function loadSecretText(location) {
     return __webpack_require__(116)(`./${location}`).text;
@@ -3728,6 +3951,12 @@ var map = {
 	"./": 607,
 	"./Objects/Memory": 953,
 	"./Objects/Memory.ts": 953,
+	"./Objects/PhysicalObject": 466,
+	"./Objects/PhysicalObject.ts": 466,
+	"./Objects/Quotidian": 580,
+	"./Objects/Quotidian.ts": 580,
+	"./Objects/RoomEngine/Room": 202,
+	"./Objects/RoomEngine/Room.ts": 202,
 	"./Objects/Stat": 137,
 	"./Objects/Stat.ts": 137,
 	"./Objects/Theme": 702,
@@ -3776,8 +4005,6 @@ var map = {
 	"./Secrets/Content/9.js": 842,
 	"./Secrets/PasswordStorage": 867,
 	"./Secrets/PasswordStorage.ts": 867,
-	"./Secrets/RoomEngine/Room": 923,
-	"./Secrets/RoomEngine/Room.ts": 923,
 	"./Secrets/Transcript": 122,
 	"./Secrets/Transcript.ts": 122,
 	"./Utils/ArrayUtils": 907,

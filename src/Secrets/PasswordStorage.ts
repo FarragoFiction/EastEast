@@ -126,4 +126,4 @@ export const passwords: PasswordMap = {
 
 
 };
-export const text = `.\n.\n.\n.\n ${Object.keys(passwords).join("\n")}}`;
+export const text = `.\n.\n.\n.\n ${Object.keys(passwords).join("\n")}`;
