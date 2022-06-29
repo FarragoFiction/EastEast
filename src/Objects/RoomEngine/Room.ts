@@ -159,7 +159,7 @@ const spawnFloorObjects = async (width:number, height:number,layer: number, key:
     const scale = 1.5;
     const y_wiggle = 50;
     const debug = false;
-    const clutter_rate = seededRandom.nextDouble(0.5,0.99); //smaller is more cluttered
+    const clutter_rate = seededRandom.nextDouble(0.75,0.99); //smaller is more cluttered
     while (current_y + padding < height) {
         current_x = padding;
         while (current_x < width) {
