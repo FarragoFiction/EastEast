@@ -99,6 +99,12 @@ export interface PasswordMap {
 /*
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
+/*
+INFINITE AMOUNT OF PAIN
+CAST ASIDE ALL ASPIRATIONS OF MORTALITY
+BITS OF THE PAST LEAK INTO THE PRESENT
+SLAUGHTERHOUSE 9
+*/
 export const passwords: PasswordMap = {
     "STANDARD EXPECTOPATRONUM": new Secret("Confessionals 0", undefined, "Secrets/Content/0.js")
     , "STANDARD SALMONSUSHI": new Secret("Confessionals 1", undefined, "Secrets/Content/1.js")
@@ -107,22 +113,25 @@ export const passwords: PasswordMap = {
     , "KNOW RESTRAINT": new Secret("Confessionals 4", undefined, "Secrets/Content/4.js")
     , "NO RESTRAINT": new Secret("Confessionals 5", undefined, "Secrets/Content/5.js")
     //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
-    , "THE TRUTH IS LAYERED": new Secret("Notes of Slaughter: Prelude", undefined, "Secrets/Content/6.js")
-    , "THE FOOL IS DEAD": new Secret("Notes of Slaughter 0", undefined, "Secrets/Content/7.js")
-    , "SHEPHARD SHUFFLE": new Secret("Notes of Slaughter 1", undefined, "Secrets/Content/8.js")
+    , "PLACE YOUR TRUST IN ME": new Secret("Notes of Slaughter: Prelude", undefined, "Secrets/Content/6.js")
+    , "RAISE YOU FROM THE END OF THE WORLD": new Secret("Notes of Slaughter 0", undefined, "Secrets/Content/7.js")
+    , "SERENE AND CALM": new Secret("Notes of Slaughter 1", undefined, "Secrets/Content/8.js")
     , "BEWARE OBLIVION IS AT HAND": new Secret("Notes of Slaughter 2", undefined, "Secrets/Content/9.js")
-    , "DIED LIKE COWARDS": new Secret("Notes of Slaughter 3", undefined, "Secrets/Content/10.js")
-    , "NOT A FED": new Secret("Notes of Slaughter 4", undefined, "Secrets/Content/11.js")
+    , "I AM HERE TO TREAT DISEASE": new Secret("Notes of Slaughter 3", undefined, "Secrets/Content/10.js")
+    , "FLESH IS BOUND TO THE FLOW OF TIME": new Secret("Notes of Slaughter 4", undefined, "Secrets/Content/11.js")
     , "TIME IS DEAD": new Secret("Notes of Slaughter 5", undefined, "Secrets/Content/12.js")
-    , "TAKE YOUR PLACE IN HISTORY": new Secret("Notes of Slaughter 6", undefined, "Secrets/Content/13.js")
-    , "LEAVE YOUR MARK": new Secret("Notes of Slaughter 7", undefined, "Secrets/Content/14.js")
-    , "COLONIZE YOUR MIND": new Secret("Notes of Slaughter 8", undefined, "Secrets/Content/15.js")
-    , "INFINITE AMOUNT OF PAIN": new Secret("Notes of Slaughter 9", undefined, "Secrets/Content/16.js")
-    , "CAST ASIDE ALL ASPIRATIONS OF MORTALITY": new Secret("Notes of Slaughter 10", undefined, "Secrets/Content/17.js")
-    , "BITS OF THE PAST LEAK INTO THE PRESENT": new Secret("Notes of Slaughter 11", undefined, "Secrets/Content/18.js")
-    , "SLAUGHTERHOUSE 9": new Secret("Notes of Slaughter 12", undefined, "Secrets/Content/19.js")
+    , "SAVE YOUR LIFE FROM DESTRUCTION": new Secret("Notes of Slaughter 6", undefined, "Secrets/Content/13.js")
+    , "GENTLE CROONING VOICE": new Secret("Notes of Slaughter 7", undefined, "Secrets/Content/14.js")
+    , "LOOKS AFTER THE BROKEN": new Secret("Notes of Slaughter 8", undefined, "Secrets/Content/15.js")
+    , "TAKE CARE OF OTHERS": new Secret("Notes of Slaughter 9", undefined, "Secrets/Content/16.js")
+    , "IT WAS DAWN": new Secret("Notes of Slaughter 10", undefined, "Secrets/Content/17.js")
+    , "THE SOUL IS IMMORTAL": new Secret("Notes of Slaughter 11", undefined, "Secrets/Content/18.js")
+    , "WHEN ALL HAD ABANDONED HOPE": new Secret("Notes of Slaughter 12", undefined, "Secrets/Content/19.js")
     , "POWER CORRUPTS": new Secret("Jumbled Mess", undefined, "Secrets/Content/20.js")
     , "KNOWLEDGE IS POWER": new Secret("Jumbled Mess: Explanation", undefined, "Secrets/Content/21.js")
+    , "LEAVE YOUR MARK": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/22.js")
+    , "TAKE YOUR PLACE IN HISTORY": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/23.js")
+    , "THE FOOL IS DEAD": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/24.js")
 
     , "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts") 
     , "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts") 
