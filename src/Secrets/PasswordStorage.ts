@@ -122,6 +122,7 @@ export const passwords: PasswordMap = {
     , "BITS OF THE PAST LEAK INTO THE PRESENT": new Secret("Notes of Slaughter 11", undefined, "Secrets/Content/18.js")
     , "SLAUGHTERHOUSE 9": new Secret("Notes of Slaughter 12", undefined, "Secrets/Content/19.js")
     , "POWER CORRUPTS": new Secret("Jumbled Mess", undefined, "Secrets/Content/20.js")
+    , "KNOWLEDGE IS POWER": new Secret("Jumbled Mess: Explanation", undefined, "Secrets/Content/21.js")
 
     , "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts") 
     , "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts") 

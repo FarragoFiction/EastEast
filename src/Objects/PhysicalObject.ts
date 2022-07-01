@@ -42,6 +42,11 @@ export class PhysicalObject{
         this.src = src;
     }
 
+    updateRendering = ()=>{
+        this.image.style.top = `${this.y}px`;
+        this.image.style.left = `${this.x}px`;
+    }
+
     attachToParent = (parent: HTMLElement)=>{
         this.parent = parent;
         this.image.src = this.src;

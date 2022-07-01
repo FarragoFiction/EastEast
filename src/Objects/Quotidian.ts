@@ -1,12 +1,14 @@
 //base level Entity object. quotidians can turn into anything
 
+import { Movement } from "./MovementAlgs/BaseMovement";
 import { PhysicalObject } from "./PhysicalObject";
 import { Theme } from "./Theme";
 
 //what, did you think the REAL eye killer would be so formulaic? 
 export class Quotidian extends PhysicalObject{
 
-
+    speed = 10;
+    movement_alg = new Movement(this);
     //TODO have a movement algorithm (effects can shift this)
     /*
     example movement algorithm
@@ -26,6 +28,9 @@ export class Quotidian extends PhysicalObject{
 
     tick = ()=>{
         console.log("TODO: tick, need to move according to movement algorithm and check all scenes to see if any apply");
+        this.movement_alg.tick();
+        this.updateRendering();
+
     }
 
 }

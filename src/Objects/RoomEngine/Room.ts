@@ -18,6 +18,8 @@ export class Room {
     height = 600;
     blorbos: Quotidian[] = [];
     items: PhysicalObject[] = [];
+    ticking = false;
+    tickRate = 500;
 
     //objects
     //people
@@ -44,6 +46,8 @@ export class Room {
         for(let blorbo of this.blorbos){
             blorbo.attachToParent(this.element);
         }
+        this.ticking = true;
+        this.tick();
     }
 
     addItem = (obj: PhysicalObject) => {
@@ -56,6 +60,10 @@ export class Room {
 
     tick = () => {
         //TODO blorbos all tick
+        for(let blorbo of this.blorbos){
+            blorbo.tick();
+        }
+        setTimeout(this.tick,this.tickRate);
     }
 
     init = () => {
