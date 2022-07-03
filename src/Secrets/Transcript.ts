@@ -8,10 +8,10 @@ export class TranscriptEngine {
 
     speed = defaultSpeed;
     clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
-    text="";
+    text = "";
     parent: HTMLElement;
     form?: HTMLElement;
-    constructor(parent:HTMLElement) {
+    constructor(parent: HTMLElement) {
         this.parent = parent;
         this.init();
     }
@@ -22,10 +22,17 @@ export class TranscriptEngine {
         }
         window.onmousedown = () => {
             this.speed = 0;
-          }
-          window.onmouseup = () => {
+        }
+        window.onmouseup = () => {
             this.speed = defaultSpeed;
-          }
+        }
+
+        window.ontouchstart = () => {
+            this.speed = 0;
+        }
+        window.ontouchend = () => {
+            this.speed = defaultSpeed;
+        }
         this.parent.style.cssText =
             `font-family: gamer;
         color: #00ff00;
@@ -39,7 +46,7 @@ export class TranscriptEngine {
         this.form = createElementWithIdAndParent("form", crt);
         const input = createElementWithIdAndParent("input", this.form, "terminal-input") as HTMLInputElement;
         const button = createElementWithIdAndParent("button", this.form, undefined, 'terminal-button');
-        button.innerText="SUBMIT";
+        button.innerText = "SUBMIT";
         this.form.onsubmit = (e) => {
             e.preventDefault();
             this.handlePW(input.value);
@@ -53,24 +60,24 @@ export class TranscriptEngine {
         this.parent.append(crt);
     }
 
-    handleBadPW =(text:string)=>{
+    handleBadPW = (text: string) => {
         this.text = translate(text);
         this.play();
     }
 
-    handleGoodPW = (text:string)=>{
+    handleGoodPW = (text: string) => {
         const secret = passwords[text.toUpperCase()];
-        this.text = secret.title+"\n";
-       this.text+=loadSecretText(passwords[text.toUpperCase()].text);
-       this.play();
+        this.text = secret.title + "\n";
+        this.text += loadSecretText(passwords[text.toUpperCase()].text);
+        this.play();
     }
 
     handlePW = (text: string) => {
         //if good, load the right file
         //if bad, albhed time baby
-        if(passwords[text.toUpperCase()]){
+        if (passwords[text.toUpperCase()]) {
             this.handleGoodPW(text);
-        }else{
+        } else {
             this.handleBadPW(text);
         }
     }
@@ -79,13 +86,13 @@ export class TranscriptEngine {
         this.transcript(this.text);
     }
 
-    transcript = async (linesUnedited:string) => {
+    transcript = async (linesUnedited: string) => {
 
 
         const lines = linesUnedited.split("\n");
 
         const terminal = document.querySelector("#terminal") as HTMLElement;
-        if(!terminal){
+        if (!terminal) {
             return;
         }
         terminal.innerHTML = "";
@@ -109,7 +116,7 @@ export class TranscriptEngine {
     //and v1 is in ATranscript and ASecondTranscript
     //because YES the code is intentionally a shitty maze for my future self
     //and i guess any future Heirs
-    typeWrite = async (scroll_element:HTMLElement, element:HTMLElement, text:string) => {
+    typeWrite = async (scroll_element: HTMLElement, element: HTMLElement, text: string) => {
         this.typing = true;
         let skipping = false;
         for (let i = 0; i < text.length; i++) {
@@ -133,7 +140,7 @@ export class TranscriptEngine {
         }
     }
 
-    doChunkAllAtOnce = (ele:HTMLElement, start_index:number, text:string) => {
+    doChunkAllAtOnce = (ele: HTMLElement, start_index: number, text: string) => {
         const offset = 0;
         //look for ending offset
         //create new span element

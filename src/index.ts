@@ -7,7 +7,6 @@ import { randomRoomWithThemes, Room } from "./Objects/RoomEngine/Room";
 import { getRandomNumberBetween } from "./Utils/NonSeededRandUtils";
 import SeededRandom from "./Utils/SeededRandom";
 window.onload = async()=>{
-    initRabbitHole();
     const ele = document.querySelector("#current-room") as HTMLElement;
     initStats();
     initThemes();
@@ -17,6 +16,8 @@ window.onload = async()=>{
     if(ele){
         const room = await randomRoomWithThemes(ele, themes,new SeededRandom(seed));
         room.render();
+        initRabbitHole(room);
+
     }
 }
 

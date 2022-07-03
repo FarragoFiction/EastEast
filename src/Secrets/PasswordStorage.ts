@@ -6,6 +6,7 @@
 //if anyone can explain the origin of each one you'll unlock secret content directly from me
 //hell, if you can even do a majority I'd love to hear it, in all sincerity. I love hearing people find my work interesting :)
 
+import { Room } from "../Objects/RoomEngine/Room";
 import { TranscriptEngine } from "./Transcript";
 
 
@@ -63,14 +64,16 @@ export const translate = (word: string) => {
     return ret;
 }
 
-export const initRabbitHole = () => {
+export const initRabbitHole = (room: Room) => {
     const hole = document.querySelector("#rabbithole") as HTMLElement;
 
     hole.onclick = () => {
         const target = document.querySelector("body") as HTMLElement;
+
         if(!target){
             return;
         }
+        room.stopTicking();
         target.innerHTML = "";//clear;
         const te = new TranscriptEngine(target);
     }

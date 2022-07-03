@@ -31,6 +31,10 @@ export class Room {
         this.init();
     }
 
+    stopTicking = ()=>{
+        this.ticking = false;
+    }
+
     render = () => {
         this.element.innerHTML = "";
         this.width = this.element.getBoundingClientRect().width;
@@ -63,7 +67,9 @@ export class Room {
         for(let blorbo of this.blorbos){
             blorbo.tick();
         }
-        setTimeout(this.tick,this.tickRate);
+        if(this.ticking){
+            setTimeout(this.tick,this.tickRate);
+        }
     }
 
     init = () => {
