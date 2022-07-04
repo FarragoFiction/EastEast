@@ -45,18 +45,19 @@ class Movement {
     constructor(entity) {
         //alg shouldn't need to change too much about this, besides what happens when you hit a wall
         this.moveInDirection = () => {
+            console.log("JR NOTE: moving", this.entity.direction);
             let simulated_x = this.entity.x;
             let simulated_y = this.entity.y;
             if (this.entity.direction === Quotidian_1.Direction.UP) {
                 simulated_y -= this.entity.currentSpeed;
             }
-            if (this.entity.direction === Quotidian_1.Direction.DOWN) {
+            else if (this.entity.direction === Quotidian_1.Direction.DOWN) {
                 simulated_y += this.entity.currentSpeed;
             }
-            if (this.entity.direction === Quotidian_1.Direction.LEFT) {
-                simulated_y -= this.entity.currentSpeed;
+            else if (this.entity.direction === Quotidian_1.Direction.LEFT) {
+                simulated_x -= this.entity.currentSpeed;
             }
-            if (this.entity.direction === Quotidian_1.Direction.RIGHT) {
+            else if (this.entity.direction === Quotidian_1.Direction.RIGHT) {
                 simulated_x += this.entity.currentSpeed;
             }
             if (this.canMove(simulated_x, simulated_y)) {
@@ -69,44 +70,50 @@ class Movement {
         };
         //honestly this is stupidly easier than angles, so keep this from East
         this.handleWall = () => {
+            console.log("JR NOTE: changing direction from", this.entity.direction);
             if (this.entity.direction === Quotidian_1.Direction.UP) {
                 this.entity.direction = Quotidian_1.Direction.DOWN;
             }
-            if (this.entity.direction === Quotidian_1.Direction.DOWN) {
+            else if (this.entity.direction === Quotidian_1.Direction.DOWN) {
                 this.entity.direction = Quotidian_1.Direction.UP;
             }
-            if (this.entity.direction === Quotidian_1.Direction.LEFT) {
+            else if (this.entity.direction === Quotidian_1.Direction.LEFT) {
                 this.entity.direction = Quotidian_1.Direction.RIGHT;
             }
-            if (this.entity.direction === Quotidian_1.Direction.RIGHT) {
+            else if (this.entity.direction === Quotidian_1.Direction.RIGHT) {
                 this.entity.direction = Quotidian_1.Direction.LEFT;
             }
+            console.log("JR NOTE:  direction changed to", this.entity.direction);
         };
         this.canMove = (x, y) => {
             if (this.entity.direction === Quotidian_1.Direction.UP) {
                 return this.canGoUp(y);
             }
-            if (this.entity.direction === Quotidian_1.Direction.DOWN) {
+            else if (this.entity.direction === Quotidian_1.Direction.DOWN) {
                 return this.canGoDown(y);
             }
-            if (this.entity.direction === Quotidian_1.Direction.LEFT) {
+            else if (this.entity.direction === Quotidian_1.Direction.LEFT) {
                 return this.canGoLeft(x);
             }
-            if (this.entity.direction === Quotidian_1.Direction.RIGHT) {
+            else if (this.entity.direction === Quotidian_1.Direction.RIGHT) {
                 return this.canGoRight(x);
             }
         };
         this.canGoLeft = (x) => {
+            console.log("JR NOTE: Can I go left?", x);
             return x > 0;
         };
         this.canGoRight = (x) => {
-            return x - this.entity.width < this.entity.room.width;
+            console.log("JR NOTE: Can I go right?", x);
+            return x + this.entity.width < this.entity.room.width;
         };
         this.canGoUp = (y) => {
-            return y > 0;
+            console.log("JR NOTE: Can I go up?", y);
+            return y > this.entity.room.wallHeight;
         };
         this.canGoDown = (y) => {
-            return y - this.entity.height < this.entity.room.height;
+            console.log("JR NOTE: Can I go down?", y);
+            return y + this.entity.height < this.entity.room.height;
         };
         this.pickSpeed = () => {
             //rarely a movement alg will change this (speed up to hunt or flee for example)
@@ -208,8 +215,8 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         super(room, "Quotidan", x, y, width, height, themes, layer, src, flavorText);
         this.maxSpeed = 20;
         this.minSpeed = 1;
-        this.currentSpeed = 10;
-        this.direction = Direction.LEFT; //movement algorithm can change or use this.
+        this.currentSpeed = 20;
+        this.direction = Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new BaseMovement_1.Movement(this);
         this.tick = () => {
             console.log("TODO: tick, need to move according to movement algorithm and check all scenes to see if any apply");
@@ -252,12 +259,13 @@ class Room {
     constructor(themes, element, rand) {
         this.floor = "glitch.png";
         this.wall = "glitch.png";
+        this.wallHeight = 100;
         this.width = 400;
         this.height = 600;
         this.blorbos = [];
         this.items = [];
         this.ticking = false;
-        this.tickRate = 500;
+        this.tickRate = 300;
         this.stopTicking = () => {
             this.ticking = false;
         };
@@ -360,7 +368,6 @@ const spawnWallObjects = (width, height, layer, key, folder, seededRandom, theme
     let current_x = 0;
     const padding = 10;
     const ret = [];
-    console.log("JR NOTE: current x is: ", current_x, "and width is: ", width);
     while (current_x < width) {
         const chosen_theme = seededRandom.pickFrom(themes);
         const item = chosen_theme.pickPossibilityFor(seededRandom, key);

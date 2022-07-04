@@ -12,6 +12,7 @@ export class Room {
     themes: Theme[];
     floor = "glitch.png"
     wall = "glitch.png"
+    wallHeight = 100;
     rand: SeededRandom;
     element: HTMLElement;
     width = 400;
@@ -19,7 +20,7 @@ export class Room {
     blorbos: Quotidian[] = [];
     items: PhysicalObject[] = [];
     ticking = false;
-    tickRate = 500;
+    tickRate = 300;
 
 
     //objects
@@ -143,7 +144,6 @@ export const spawnWallObjects = async (width:number, height:number,layer: number
     let current_x = 0;
     const padding = 10;
     const ret: RenderedItem[] = [];
-    console.log("JR NOTE: current x is: ", current_x, "and width is: ", width)
     while (current_x < width) {
         const chosen_theme: Theme = seededRandom.pickFrom(themes);
         const item = chosen_theme.pickPossibilityFor(seededRandom, key);

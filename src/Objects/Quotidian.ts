@@ -17,9 +17,9 @@ export class Quotidian extends PhysicalObject{
 
     maxSpeed = 20;
     minSpeed = 1;
-    currentSpeed = 10;
+    currentSpeed = 20;
 
-    direction = Direction.LEFT; //movement algorithm can change or use this.
+    direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg = new Movement(this);
     //TODO have a movement algorithm (effects can shift this)
     /*

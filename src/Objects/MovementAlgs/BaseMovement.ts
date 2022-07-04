@@ -12,24 +12,19 @@ export class Movement{
 
     //alg shouldn't need to change too much about this, besides what happens when you hit a wall
     moveInDirection = ()=>{
+        console.log("JR NOTE: moving", this.entity.direction)
         let simulated_x = this.entity.x;
         let simulated_y = this.entity.y;
         if(this.entity.direction === Direction.UP){
             simulated_y -= this.entity.currentSpeed;
-        }
-
-        if(this.entity.direction === Direction.DOWN){
+        }else if(this.entity.direction === Direction.DOWN){
             simulated_y += this.entity.currentSpeed;
-        }
-
-        if(this.entity.direction === Direction.LEFT){
-            simulated_y -= this.entity.currentSpeed;
-        }
-
-        if(this.entity.direction === Direction.RIGHT){
+        }else if(this.entity.direction === Direction.LEFT){
+            simulated_x -= this.entity.currentSpeed;
+        }else if(this.entity.direction === Direction.RIGHT){
             simulated_x += this.entity.currentSpeed;
         }
-
+        
         if(this.canMove(simulated_x, simulated_y)){
             this.entity.x = simulated_x;
             this.entity.y = simulated_y;
@@ -40,58 +35,55 @@ export class Movement{
 
     //honestly this is stupidly easier than angles, so keep this from East
     handleWall = ()=>{
+        console.log("JR NOTE: changing direction from",this.entity.direction)
         if(this.entity.direction === Direction.UP){
             this.entity.direction = Direction.DOWN;
-        }
-
-        if(this.entity.direction === Direction.DOWN){
+        }else if(this.entity.direction === Direction.DOWN){
             this.entity.direction = Direction.UP;
-        }
-
-        if(this.entity.direction === Direction.LEFT){
+        }else if(this.entity.direction === Direction.LEFT){
             this.entity.direction = Direction.RIGHT;
-        }
-
-        if(this.entity.direction === Direction.RIGHT){
+        }else if(this.entity.direction === Direction.RIGHT){
             this.entity.direction = Direction.LEFT;
         }
+        console.log("JR NOTE:  direction changed to",this.entity.direction)
+
     }
 
     canMove = (x:number,y:number)=>{
         if(this.entity.direction === Direction.UP){
             return this.canGoUp(y);
-        }
-
-        if(this.entity.direction === Direction.DOWN){
+        }else if(this.entity.direction === Direction.DOWN){
             return this.canGoDown(y);
-        }
-
-        if(this.entity.direction === Direction.LEFT){
+        }else if(this.entity.direction === Direction.LEFT){
             return this.canGoLeft(x);
-        }
-
-        if(this.entity.direction === Direction.RIGHT){
+        }else if(this.entity.direction === Direction.RIGHT){
             return this.canGoRight(x);
         }
 
     }
 
     canGoLeft = (x:number,)=>{
+        console.log("JR NOTE: Can I go left?",x)
         return x>0;
     }
 
     canGoRight = (x:number,)=>{
-        return x-this.entity.width<this.entity.room.width;
+        console.log("JR NOTE: Can I go right?",x)
+
+        return x+this.entity.width<this.entity.room.width;
     }
 
     canGoUp = (y:number,)=>{
-        return y>0;
+        console.log("JR NOTE: Can I go up?",y)
+
+        return y>this.entity.room.wallHeight;
 
     }
 
     canGoDown = (y:number,)=>{
-        return y-this.entity.height<this.entity.room.height;
+        console.log("JR NOTE: Can I go down?",y)
 
+        return y+this.entity.height<this.entity.room.height;
     }
 
     pickSpeed = ()=>{
