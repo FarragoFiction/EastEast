@@ -11,7 +11,6 @@ window.onload = async()=>{
     initStats();
     initThemes();
     const themes = [all_themes[ENDINGS],all_themes[WEB],all_themes[TWISTING],all_themes[CLOWNS]]
-    console.log("JR NOTE: todo take seed from param")
     const seed = getRandomNumberBetween(1,113);
     if(ele){
         const room = await randomRoomWithThemes(ele, themes,new SeededRandom(seed));

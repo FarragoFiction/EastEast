@@ -20,7 +20,7 @@ export class Quotidian extends PhysicalObject{
     minSpeed = 1;
     currentSpeed = 10;
 
-    direction = Direction.UP; //movement algorithm can change or use this.
+    direction = Direction.DOWN; //movement algorithm can change or use this.
     movement_alg = new RandomMovement(this);
     //TODO have a movement algorithm (effects can shift this)
     /*
@@ -40,7 +40,6 @@ export class Quotidian extends PhysicalObject{
     }
 
     tick = ()=>{
-        console.log("TODO: tick, need to move according to movement algorithm and check all scenes to see if any apply");
         this.movement_alg.tick();
         this.updateRendering();
 

@@ -41,11 +41,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Movement = void 0;
 const Quotidian_1 = __webpack_require__(580);
 //decides where to move next.
+//mostly useful for testing, just keeps going int he direction its going and bounces off walls
 class Movement {
     constructor(entity) {
         //alg shouldn't need to change too much about this, besides what happens when you hit a wall
         this.moveInDirection = () => {
-            console.log("JR NOTE: moving", this.entity.direction);
             let simulated_x = this.entity.x;
             let simulated_y = this.entity.y;
             if (this.entity.direction === Quotidian_1.Direction.UP) {
@@ -70,7 +70,6 @@ class Movement {
         };
         //honestly this is stupidly easier than angles, so keep this from East
         this.handleWall = () => {
-            console.log("JR NOTE: changing direction from", this.entity.direction);
             if (this.entity.direction === Quotidian_1.Direction.UP) {
                 this.entity.direction = Quotidian_1.Direction.DOWN;
             }
@@ -83,7 +82,6 @@ class Movement {
             else if (this.entity.direction === Quotidian_1.Direction.RIGHT) {
                 this.entity.direction = Quotidian_1.Direction.LEFT;
             }
-            console.log("JR NOTE:  direction changed to", this.entity.direction);
         };
         this.canMove = (x, y) => {
             if (this.entity.direction === Quotidian_1.Direction.UP) {
@@ -100,19 +98,15 @@ class Movement {
             }
         };
         this.canGoLeft = (x) => {
-            console.log("JR NOTE: Can I go left?", x);
             return x > 0;
         };
         this.canGoRight = (x) => {
-            console.log("JR NOTE: Can I go right?", x);
             return x + this.entity.width < this.entity.room.width;
         };
         this.canGoUp = (y) => {
-            console.log("JR NOTE: Can I go up?", y);
             return y > this.entity.room.wallHeight;
         };
         this.canGoDown = (y) => {
-            console.log("JR NOTE: Can I go down?", y);
             return y + this.entity.height < this.entity.room.height;
         };
         this.pickSpeed = () => {
@@ -174,9 +168,14 @@ class PhysicalObject {
     constructor(room, name, x, y, width, height, themes, layer, src, flavorText) {
         this.image = document.createElement("img");
         this.updateRendering = () => {
-            console.log("JR NOTE: TODO, will i save frame rate if translation with css instead?");
-            this.image.style.top = `${this.y}px`;
-            this.image.style.left = `${this.x}px`;
+            requestAnimationFrame(() => {
+                /* this is too inefficient
+                this.image.style.top = `${this.y}px`;
+                this.image.style.left = `${this.x}px`;
+                */
+                //console.log(`JR NOTE: moving ${this.x}, ${this.y} which offset is ${this.original_x-this.x}, ${this.original_y-this.y}`)
+                this.image.style.transform = `translate(${this.x - this.original_x}px,${this.y - this.original_y}px)`;
+            });
         };
         this.attachToParent = (parent) => {
             this.parent = parent;
@@ -188,11 +187,12 @@ class PhysicalObject {
             this.image.style.left = `${this.x}px`;
             this.image.style.width = `${this.width}px`;
             this.parent.append(this.image);
-            console.log("JR NOTE: in theory, parent has an image now", parent, this.image);
         };
         this.room = room;
         this.name = name;
         this.x = x;
+        this.original_x = x;
+        this.original_y = y;
         this.y = y;
         this.width = width;
         this.height = height;
@@ -243,10 +243,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
-        this.direction = Direction.UP; //movement algorithm can change or use this.
+        this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
         this.tick = () => {
-            console.log("TODO: tick, need to move according to movement algorithm and check all scenes to see if any apply");
             this.movement_alg.tick();
             this.updateRendering();
         };
@@ -292,7 +291,7 @@ class Room {
         this.blorbos = [];
         this.items = [];
         this.ticking = false;
-        this.tickRate = 10;
+        this.tickRate = 100;
         this.stopTicking = () => {
             this.ticking = false;
         };
@@ -3224,7 +3223,6 @@ window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, Stat_1.initStats)();
     (0, Theme_1.initThemes)();
     const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]];
-    console.log("JR NOTE: todo take seed from param");
     const seed = (0, NonSeededRandUtils_1.getRandomNumberBetween)(1, 113);
     if (ele) {
         const room = yield (0, Room_1.randomRoomWithThemes)(ele, themes, new SeededRandom_1.default(seed));

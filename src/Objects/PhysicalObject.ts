@@ -21,6 +21,9 @@ export class PhysicalObject{
     x: number;
     y: number;
     width: number;
+    //originals are needed to calculate offsets for css animations
+    original_x: number;
+    original_y: number;
     height: number;
     flavorText: string;
     themes: Theme[];
@@ -37,6 +40,8 @@ export class PhysicalObject{
         this.room = room;
         this.name = name;
         this.x = x;
+        this.original_x = x;
+        this.original_y = y;
         this.y = y;
         this.width = width;
         this.height = height;
@@ -47,9 +52,16 @@ export class PhysicalObject{
     }
 
     updateRendering = ()=>{
-        console.log("JR NOTE: TODO, will i save frame rate if translation with css instead?")
-        this.image.style.top = `${this.y}px`;
-        this.image.style.left = `${this.x}px`;
+        requestAnimationFrame(()=>{
+            /* this is too inefficient
+            this.image.style.top = `${this.y}px`;
+            this.image.style.left = `${this.x}px`;
+            */
+            //console.log(`JR NOTE: moving ${this.x}, ${this.y} which offset is ${this.original_x-this.x}, ${this.original_y-this.y}`)
+
+           this.image.style.transform=`translate(${this.x-this.original_x}px,${this.y-this.original_y}px)`;
+        })
+
     }
 
     attachToParent = (parent: HTMLElement)=>{
@@ -63,7 +75,6 @@ export class PhysicalObject{
         this.image.style.width = `${this.width}px`;
 
         this.parent.append(this.image);
-        console.log("JR NOTE: in theory, parent has an image now", parent,this.image);
     }
 
 

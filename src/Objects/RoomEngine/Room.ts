@@ -20,7 +20,7 @@ export class Room {
     blorbos: Quotidian[] = [];
     items: PhysicalObject[] = [];
     ticking = false;
-    tickRate = 10;
+    tickRate = 100;
 
 
     //objects

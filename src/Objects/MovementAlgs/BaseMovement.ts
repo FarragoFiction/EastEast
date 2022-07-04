@@ -3,6 +3,7 @@
 import { Direction, Quotidian } from "../Quotidian";
 
 //decides where to move next.
+//mostly useful for testing, just keeps going int he direction its going and bounces off walls
 export class Movement{
     entity: Quotidian;
 
@@ -12,7 +13,6 @@ export class Movement{
 
     //alg shouldn't need to change too much about this, besides what happens when you hit a wall
     moveInDirection = ()=>{
-        console.log("JR NOTE: moving", this.entity.direction)
         let simulated_x = this.entity.x;
         let simulated_y = this.entity.y;
         if(this.entity.direction === Direction.UP){
@@ -35,7 +35,6 @@ export class Movement{
 
     //honestly this is stupidly easier than angles, so keep this from East
     handleWall = ()=>{
-        console.log("JR NOTE: changing direction from",this.entity.direction)
         if(this.entity.direction === Direction.UP){
             this.entity.direction = Direction.DOWN;
         }else if(this.entity.direction === Direction.DOWN){
@@ -45,7 +44,6 @@ export class Movement{
         }else if(this.entity.direction === Direction.RIGHT){
             this.entity.direction = Direction.LEFT;
         }
-        console.log("JR NOTE:  direction changed to",this.entity.direction)
 
     }
 
@@ -63,25 +61,21 @@ export class Movement{
     }
 
     canGoLeft = (x:number,)=>{
-        console.log("JR NOTE: Can I go left?",x)
         return x>0;
     }
 
     canGoRight = (x:number,)=>{
-        console.log("JR NOTE: Can I go right?",x)
 
         return x+this.entity.width<this.entity.room.width;
     }
 
     canGoUp = (y:number,)=>{
-        console.log("JR NOTE: Can I go up?",y)
 
         return y>this.entity.room.wallHeight;
 
     }
 
     canGoDown = (y:number,)=>{
-        console.log("JR NOTE: Can I go down?",y)
 
         return y+this.entity.height<this.entity.room.height;
     }
