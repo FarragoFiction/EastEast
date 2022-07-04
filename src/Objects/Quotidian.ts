@@ -1,6 +1,7 @@
 //base level Entity object. quotidians can turn into anything
 
 import { Movement } from "./MovementAlgs/BaseMovement";
+import { RandomMovement } from "./MovementAlgs/RandomMovement";
 import { PhysicalObject } from "./PhysicalObject";
 import { Room } from "./RoomEngine/Room";
 import { Theme } from "./Theme";
@@ -17,10 +18,10 @@ export class Quotidian extends PhysicalObject{
 
     maxSpeed = 20;
     minSpeed = 1;
-    currentSpeed = 20;
+    currentSpeed = 10;
 
     direction = Direction.UP; //movement algorithm can change or use this.
-    movement_alg = new Movement(this);
+    movement_alg = new RandomMovement(this);
     //TODO have a movement algorithm (effects can shift this)
     /*
     example movement algorithm

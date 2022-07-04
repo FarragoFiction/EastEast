@@ -47,6 +47,7 @@ export class PhysicalObject{
     }
 
     updateRendering = ()=>{
+        console.log("JR NOTE: TODO, will i save frame rate if translation with css instead?")
         this.image.style.top = `${this.y}px`;
         this.image.style.left = `${this.x}px`;
     }

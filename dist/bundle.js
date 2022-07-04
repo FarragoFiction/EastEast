@@ -136,6 +136,32 @@ exports.Movement = Movement;
 
 /***/ }),
 
+/***/ 997:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//given an Entity (which will have access to location and any other pertinent information)
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RandomMovement = void 0;
+const NonSeededRandUtils_1 = __webpack_require__(258);
+const BaseMovement_1 = __webpack_require__(59);
+//decides where to move next.
+class RandomMovement extends BaseMovement_1.Movement {
+    constructor() {
+        super(...arguments);
+        this.pickNewDirection = () => {
+            if (Math.random() > 0.75) {
+                this.entity.direction = (0, NonSeededRandUtils_1.getRandomNumberBetween)(1, 4);
+            }
+        };
+    }
+}
+exports.RandomMovement = RandomMovement;
+
+
+/***/ }),
+
 /***/ 466:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -148,6 +174,7 @@ class PhysicalObject {
     constructor(room, name, x, y, width, height, themes, layer, src, flavorText) {
         this.image = document.createElement("img");
         this.updateRendering = () => {
+            console.log("JR NOTE: TODO, will i save frame rate if translation with css instead?");
             this.image.style.top = `${this.y}px`;
             this.image.style.left = `${this.x}px`;
         };
@@ -188,7 +215,7 @@ exports.PhysicalObject = PhysicalObject;
 //base level Entity object. quotidians can turn into anything
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Quotidian = exports.Direction = void 0;
-const BaseMovement_1 = __webpack_require__(59);
+const RandomMovement_1 = __webpack_require__(997);
 const PhysicalObject_1 = __webpack_require__(466);
 var Direction;
 (function (Direction) {
@@ -215,9 +242,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         super(room, "Quotidan", x, y, width, height, themes, layer, src, flavorText);
         this.maxSpeed = 20;
         this.minSpeed = 1;
-        this.currentSpeed = 20;
+        this.currentSpeed = 10;
         this.direction = Direction.UP; //movement algorithm can change or use this.
-        this.movement_alg = new BaseMovement_1.Movement(this);
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
         this.tick = () => {
             console.log("TODO: tick, need to move according to movement algorithm and check all scenes to see if any apply");
             this.movement_alg.tick();
@@ -265,7 +292,7 @@ class Room {
         this.blorbos = [];
         this.items = [];
         this.ticking = false;
-        this.tickRate = 300;
+        this.tickRate = 10;
         this.stopTicking = () => {
             this.ticking = false;
         };
@@ -355,11 +382,13 @@ const randomRoomWithThemes = (ele, themes, seededRandom) => __awaiter(void 0, vo
     const items2 = yield (0, exports.spawnWallObjects)(room.width, room.height, 1, ThemeStorage_1.WALLFOREGROUND, "FrontWallObjects", seededRandom, themes);
     const items4 = yield spawnFloorObjects(room.width, room.height, 1, ThemeStorage_1.FLOORFOREGROUND, "TopFloorObjects", seededRandom, themes);
     const items = items3.concat(items2.concat(items4));
-    console.log("JR NOTE: the random room spawned these items: ", items);
     for (let item of items) {
         room.addItem(new PhysicalObject_1.PhysicalObject(room, item.name, item.x, item.y, item.width, item.height, item.themes, item.layer, item.src, item.flavorText));
     }
-    room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], 2, "images/Walkabout/Sprites/humanoid_crow.gif", "testing"));
+    const stress_test = 100;
+    for (let i = 0; i < stress_test; i++) {
+        room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], 2, "images/Walkabout/Sprites/humanoid_crow.gif", "testing"));
+    }
     return room;
 });
 exports.randomRoomWithThemes = randomRoomWithThemes;
@@ -4138,7 +4167,7 @@ Dr. Fiona Slaughter
 
 /***/ }),
 
-/***/ 997:
+/***/ 882:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4489,6 +4518,8 @@ var map = {
 	"./Objects/Memory.ts": 953,
 	"./Objects/MovementAlgs/BaseMovement": 59,
 	"./Objects/MovementAlgs/BaseMovement.ts": 59,
+	"./Objects/MovementAlgs/RandomMovement": 997,
+	"./Objects/MovementAlgs/RandomMovement.ts": 997,
 	"./Objects/PhysicalObject": 466,
 	"./Objects/PhysicalObject.ts": 466,
 	"./Objects/Quotidian": 580,
@@ -4547,8 +4578,8 @@ var map = {
 	"./Secrets/Content/6.js": 178,
 	"./Secrets/Content/7": 791,
 	"./Secrets/Content/7.js": 791,
-	"./Secrets/Content/8": 997,
-	"./Secrets/Content/8.js": 997,
+	"./Secrets/Content/8": 882,
+	"./Secrets/Content/8.js": 882,
 	"./Secrets/Content/9": 842,
 	"./Secrets/Content/9.js": 842,
 	"./Secrets/PasswordStorage": 867,

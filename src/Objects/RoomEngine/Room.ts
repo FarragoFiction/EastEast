@@ -20,7 +20,7 @@ export class Room {
     blorbos: Quotidian[] = [];
     items: PhysicalObject[] = [];
     ticking = false;
-    tickRate = 300;
+    tickRate = 10;
 
 
     //objects
@@ -128,12 +128,14 @@ export const randomRoomWithThemes = async (ele: HTMLElement, themes: Theme[], se
     const items2: RenderedItem[] = await spawnWallObjects(room.width,room.height,1, WALLFOREGROUND, "FrontWallObjects", seededRandom, themes);
     const items4: RenderedItem[] = await spawnFloorObjects(room.width,room.height,1, FLOORFOREGROUND, "TopFloorObjects", seededRandom, themes);
     const items = items3.concat(items2.concat(items4));
-    console.log("JR NOTE: the random room spawned these items: ", items)
     for(let item of items){
         room.addItem(new PhysicalObject(room,item.name,item.x,item.y,item.width,item.height,item.themes,item.layer,item.src,item.flavorText))
     }
 
-    room.addBlorbo(new Quotidian(room,"Quotidian",150,150,50,50, [all_themes[SPYING]],2,"images/Walkabout/Sprites/humanoid_crow.gif","testing"));
+    const stress_test = 100;
+    for(let i = 0; i< stress_test; i++){
+        room.addBlorbo(new Quotidian(room,"Quotidian",150,150,50,50, [all_themes[SPYING]],2,"images/Walkabout/Sprites/humanoid_crow.gif","testing"));
+    }
 
 
     return room;
