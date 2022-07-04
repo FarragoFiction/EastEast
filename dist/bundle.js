@@ -32,20 +32,94 @@ exports.Memory = Memory;
 /***/ }),
 
 /***/ 59:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 //given an Entity (which will have access to location and any other pertinent information)
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Movement = void 0;
+const Quotidian_1 = __webpack_require__(580);
 //decides where to move next.
 class Movement {
     constructor(entity) {
+        //alg shouldn't need to change too much about this, besides what happens when you hit a wall
+        this.moveInDirection = () => {
+            let simulated_x = this.entity.x;
+            let simulated_y = this.entity.y;
+            if (this.entity.direction === Quotidian_1.Direction.UP) {
+                simulated_y -= this.entity.currentSpeed;
+            }
+            if (this.entity.direction === Quotidian_1.Direction.DOWN) {
+                simulated_y += this.entity.currentSpeed;
+            }
+            if (this.entity.direction === Quotidian_1.Direction.LEFT) {
+                simulated_y -= this.entity.currentSpeed;
+            }
+            if (this.entity.direction === Quotidian_1.Direction.RIGHT) {
+                simulated_x += this.entity.currentSpeed;
+            }
+            if (this.canMove(simulated_x, simulated_y)) {
+                this.entity.x = simulated_x;
+                this.entity.y = simulated_y;
+            }
+            else {
+                this.handleWall();
+            }
+        };
+        //honestly this is stupidly easier than angles, so keep this from East
+        this.handleWall = () => {
+            if (this.entity.direction === Quotidian_1.Direction.UP) {
+                this.entity.direction = Quotidian_1.Direction.DOWN;
+            }
+            if (this.entity.direction === Quotidian_1.Direction.DOWN) {
+                this.entity.direction = Quotidian_1.Direction.UP;
+            }
+            if (this.entity.direction === Quotidian_1.Direction.LEFT) {
+                this.entity.direction = Quotidian_1.Direction.RIGHT;
+            }
+            if (this.entity.direction === Quotidian_1.Direction.RIGHT) {
+                this.entity.direction = Quotidian_1.Direction.LEFT;
+            }
+        };
+        this.canMove = (x, y) => {
+            if (this.entity.direction === Quotidian_1.Direction.UP) {
+                return this.canGoUp(y);
+            }
+            if (this.entity.direction === Quotidian_1.Direction.DOWN) {
+                return this.canGoDown(y);
+            }
+            if (this.entity.direction === Quotidian_1.Direction.LEFT) {
+                return this.canGoLeft(x);
+            }
+            if (this.entity.direction === Quotidian_1.Direction.RIGHT) {
+                return this.canGoRight(x);
+            }
+        };
+        this.canGoLeft = (x) => {
+            return x > 0;
+        };
+        this.canGoRight = (x) => {
+            return x - this.entity.width < this.entity.room.width;
+        };
+        this.canGoUp = (y) => {
+            return y > 0;
+        };
+        this.canGoDown = (y) => {
+            return y - this.entity.height < this.entity.room.height;
+        };
+        this.pickSpeed = () => {
+            //rarely a movement alg will change this (speed up to hunt or flee for example)
+        };
+        this.pickNewDirection = () => {
+            //bog simple, just go in the direction you were already going.
+            //children of this will do something different, for example change direction to move towards a goal
+        };
         this.tick = () => {
-            //bog simple, just go up.
             //dont' worry about rendering, you're just moving the quotidian, it'll render itself
-            this.entity.y += this.entity.speed;
+            this.pickSpeed();
+            this.pickNewDirection();
+            this.moveInDirection();
         };
         this.entity = entity;
     }
@@ -64,8 +138,7 @@ exports.Movement = Movement;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PhysicalObject = void 0;
 class PhysicalObject {
-    //TODO have a list of TRAITS
-    constructor(name, x, y, width, height, themes, layer, src, flavorText) {
+    constructor(room, name, x, y, width, height, themes, layer, src, flavorText) {
         this.image = document.createElement("img");
         this.updateRendering = () => {
             this.image.style.top = `${this.y}px`;
@@ -83,6 +156,7 @@ class PhysicalObject {
             this.parent.append(this.image);
             console.log("JR NOTE: in theory, parent has an image now", parent, this.image);
         };
+        this.room = room;
         this.name = name;
         this.x = x;
         this.y = y;
@@ -106,9 +180,16 @@ exports.PhysicalObject = PhysicalObject;
 
 //base level Entity object. quotidians can turn into anything
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Quotidian = void 0;
+exports.Quotidian = exports.Direction = void 0;
 const BaseMovement_1 = __webpack_require__(59);
 const PhysicalObject_1 = __webpack_require__(466);
+var Direction;
+(function (Direction) {
+    Direction[Direction["UP"] = 1] = "UP";
+    Direction[Direction["DOWN"] = 2] = "DOWN";
+    Direction[Direction["LEFT"] = 3] = "LEFT";
+    Direction[Direction["RIGHT"] = 4] = "RIGHT";
+})(Direction = exports.Direction || (exports.Direction = {}));
 //what, did you think the REAL eye killer would be so formulaic? 
 class Quotidian extends PhysicalObject_1.PhysicalObject {
     //TODO have a movement algorithm (effects can shift this)
@@ -123,9 +204,12 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
     * to OBJECT
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
-    constructor(name, x, y, width, height, themes, layer, src, flavorText) {
-        super("Quotidan", x, y, width, height, themes, layer, src, flavorText);
-        this.speed = 10;
+    constructor(room, name, x, y, width, height, themes, layer, src, flavorText) {
+        super(room, "Quotidan", x, y, width, height, themes, layer, src, flavorText);
+        this.maxSpeed = 20;
+        this.minSpeed = 1;
+        this.currentSpeed = 10;
+        this.direction = Direction.LEFT; //movement algorithm can change or use this.
         this.movement_alg = new BaseMovement_1.Movement(this);
         this.tick = () => {
             console.log("TODO: tick, need to move according to movement algorithm and check all scenes to see if any apply");
@@ -265,9 +349,9 @@ const randomRoomWithThemes = (ele, themes, seededRandom) => __awaiter(void 0, vo
     const items = items3.concat(items2.concat(items4));
     console.log("JR NOTE: the random room spawned these items: ", items);
     for (let item of items) {
-        room.addItem(new PhysicalObject_1.PhysicalObject(item.name, item.x, item.y, item.width, item.height, item.themes, item.layer, item.src, item.flavorText));
+        room.addItem(new PhysicalObject_1.PhysicalObject(room, item.name, item.x, item.y, item.width, item.height, item.themes, item.layer, item.src, item.flavorText));
     }
-    room.addBlorbo(new Quotidian_1.Quotidian("Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], 2, "images/Walkabout/Sprites/humanoid_crow.gif", "testing"));
+    room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], 2, "images/Walkabout/Sprites/humanoid_crow.gif", "testing"));
     return room;
 });
 exports.randomRoomWithThemes = randomRoomWithThemes;

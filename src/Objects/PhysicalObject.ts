@@ -1,5 +1,6 @@
 //knows what it looks like, knows where it is
 
+import { Room } from "./RoomEngine/Room";
 import { Theme } from "./Theme";
 
 
@@ -29,8 +30,11 @@ export class PhysicalObject{
     parent?: HTMLElement;
     image = document.createElement("img");
     //TODO have a list of TRAITS
+    room:Room; //needed for interacting with the world. if this is inefficient can get just bits of it but don't paint the shed
 
-    constructor(name:string, x: number, y:number, width: number, height: number, themes:Theme[], layer: number, src: string, flavorText:string){
+
+    constructor(room: Room,name:string, x: number, y:number, width: number, height: number, themes:Theme[], layer: number, src: string, flavorText:string){
+        this.room = room;
         this.name = name;
         this.x = x;
         this.y = y;

@@ -21,6 +21,7 @@ export class Room {
     ticking = false;
     tickRate = 500;
 
+
     //objects
     //people
     //really theres just the one room, we keep clearing it out.
@@ -128,10 +129,10 @@ export const randomRoomWithThemes = async (ele: HTMLElement, themes: Theme[], se
     const items = items3.concat(items2.concat(items4));
     console.log("JR NOTE: the random room spawned these items: ", items)
     for(let item of items){
-        room.addItem(new PhysicalObject(item.name,item.x,item.y,item.width,item.height,item.themes,item.layer,item.src,item.flavorText))
+        room.addItem(new PhysicalObject(room,item.name,item.x,item.y,item.width,item.height,item.themes,item.layer,item.src,item.flavorText))
     }
 
-    room.addBlorbo(new Quotidian("Quotidian",150,150,50,50, [all_themes[SPYING]],2,"images/Walkabout/Sprites/humanoid_crow.gif","testing"));
+    room.addBlorbo(new Quotidian(room,"Quotidian",150,150,50,50, [all_themes[SPYING]],2,"images/Walkabout/Sprites/humanoid_crow.gif","testing"));
 
 
     return room;

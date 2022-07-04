@@ -2,12 +2,24 @@
 
 import { Movement } from "./MovementAlgs/BaseMovement";
 import { PhysicalObject } from "./PhysicalObject";
+import { Room } from "./RoomEngine/Room";
 import { Theme } from "./Theme";
+
+export enum Direction {
+    UP = 1,
+    DOWN,
+    LEFT,
+    RIGHT,
+  }
 
 //what, did you think the REAL eye killer would be so formulaic? 
 export class Quotidian extends PhysicalObject{
 
-    speed = 10;
+    maxSpeed = 20;
+    minSpeed = 1;
+    currentSpeed = 10;
+
+    direction = Direction.LEFT; //movement algorithm can change or use this.
     movement_alg = new Movement(this);
     //TODO have a movement algorithm (effects can shift this)
     /*
@@ -22,8 +34,8 @@ export class Quotidian extends PhysicalObject{
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
 
-    constructor(name:string, x: number, y:number, width: number, height: number, themes:Theme[], layer: number, src: string, flavorText:string){
-        super("Quotidan", x,y,width,height,themes,layer,src,flavorText);
+    constructor(room: Room,name:string, x: number, y:number, width: number, height: number, themes:Theme[], layer: number, src: string, flavorText:string){
+        super(room,"Quotidan", x,y,width,height,themes,layer,src,flavorText);
     }
 
     tick = ()=>{
