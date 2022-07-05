@@ -53,8 +53,44 @@ export class Room {
         for(let blorbo of this.blorbos){
             blorbo.attachToParent(this.element);
         }
+        this.renderNorthDoor();
+        this.renderEastDoor();
+        this.renderSouthDoor();
+
+
         this.ticking = true;
         this.tick();
+    }
+
+    getNorth = ()=>{
+        return this.children[0];
+    }
+    getEast = ()=>{
+        return this.children[1];
+
+    }
+    getSouth = ()=>{
+        return this.children[2];
+    }
+
+    renderNorthDoor = ()=>{
+        if(this.getNorth()){
+            const image = createElementWithIdAndParent("img", this.element, "northDoor") as HTMLImageElement;
+            image.src = "images/Walkabout/door.png";
+            const rug = createElementWithIdAndParent("img", this.element, "northDoorRug") as HTMLImageElement;
+            rug.src = "images/Walkabout/rug.png";
+        }
+    }
+
+    renderEastDoor = ()=>{
+        const rug = createElementWithIdAndParent("img", this.element, "eastDoor") as HTMLImageElement;
+        rug.src = "images/Walkabout/rug.png";
+
+    }
+
+    renderSouthDoor = ()=>{
+        const rug = createElementWithIdAndParent("img", this.element, "southDoor") as HTMLImageElement;
+        rug.src = "images/Walkabout/rug.png";
     }
 
     addItem = (obj: PhysicalObject) => {

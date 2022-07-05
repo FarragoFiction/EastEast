@@ -310,8 +310,36 @@ class Room {
             for (let blorbo of this.blorbos) {
                 blorbo.attachToParent(this.element);
             }
+            this.renderNorthDoor();
+            this.renderEastDoor();
+            this.renderSouthDoor();
             this.ticking = true;
             this.tick();
+        };
+        this.getNorth = () => {
+            return this.children[0];
+        };
+        this.getEast = () => {
+            return this.children[1];
+        };
+        this.getSouth = () => {
+            return this.children[2];
+        };
+        this.renderNorthDoor = () => {
+            if (this.getNorth()) {
+                const image = (0, misc_1.createElementWithIdAndParent)("img", this.element, "northDoor");
+                image.src = "images/Walkabout/door.png";
+                const rug = (0, misc_1.createElementWithIdAndParent)("img", this.element, "northDoorRug");
+                rug.src = "images/Walkabout/rug.png";
+            }
+        };
+        this.renderEastDoor = () => {
+            const rug = (0, misc_1.createElementWithIdAndParent)("img", this.element, "eastDoor");
+            rug.src = "images/Walkabout/rug.png";
+        };
+        this.renderSouthDoor = () => {
+            const rug = (0, misc_1.createElementWithIdAndParent)("img", this.element, "southDoor");
+            rug.src = "images/Walkabout/rug.png";
         };
         this.addItem = (obj) => {
             this.items.push(obj);

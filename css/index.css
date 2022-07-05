@@ -171,9 +171,44 @@ textarea{
   cursor: pointer;
 }
 
+#northDoor{
+  position: absolute;
+  display: block;
+  top: 37px;
+  left: 250px;
+  z-index: 10;
+}
+#northDoorRug{
+  position: absolute;
+  display: block;
+  top: 105px;
+  left: 250px;
+  z-index: 9;
+
+}
+
+#eastDoor{
+  position: absolute;
+  display: block;
+  top: 250px;
+  right: -20px;
+  z-index: 10;
+
+}
+
+#southDoor{
+  position: absolute;
+  display: block;
+  bottom: -20px;
+  left: 250px;
+  z-index: 10;
+
+}
+
 #current-room{
   height: 600px;
   width: 400px;
+  overflow: hidden;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 50px;
