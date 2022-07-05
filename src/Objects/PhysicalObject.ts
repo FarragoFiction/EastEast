@@ -1,5 +1,6 @@
 //knows what it looks like, knows where it is
 
+import SeededRandom from "../Utils/SeededRandom";
 import { Room } from "./RoomEngine/Room";
 import { Theme } from "./Theme";
 
@@ -32,6 +33,8 @@ export class PhysicalObject{
     name: string; //only living creatures have names, not items, its used to update them
     parent?: HTMLElement;
     image = document.createElement("img");
+    rand: SeededRandom;
+
     //TODO have a list of TRAITS
     room:Room; //needed for interacting with the world. if this is inefficient can get just bits of it but don't paint the shed
 
@@ -43,6 +46,7 @@ export class PhysicalObject{
         this.original_x = x;
         this.original_y = y;
         this.y = y;
+        this.rand = room.rand;
         this.width = width;
         this.height = height;
         this.flavorText  = flavorText;

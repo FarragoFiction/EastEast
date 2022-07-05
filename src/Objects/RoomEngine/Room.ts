@@ -21,6 +21,7 @@ export class Room {
     items: PhysicalObject[] = [];
     ticking = false;
     tickRate = 100;
+    children:Room[] =[];
 
 
     //objects
@@ -115,8 +116,20 @@ export class Room {
         }
     }
 
-    spawnChildRoom = () => {
-        randomRoomWithThemes(this.element,this.childRoomThemes(), this.rand );
+    spawnChildRoom = async () => {
+        return await randomRoomWithThemes(this.element,this.childRoomThemes(), this.rand );
+    }
+
+    //when i first make the maze, we generate its structure to a certain depth, and then from there one room at a time.
+    propagateMaze = async (depthRemaining: number)=>{
+        const numberChildren = this.rand.getRandomNumberBetween(1,3);
+        for(let i =0; i<numberChildren; i++){
+            const child = await this.spawnChildRoom();
+            this.children.push(child);
+            if(depthRemaining >0){
+                child.propagateMaze(depthRemaining-1);
+            }
+        }
     }
 
 }
@@ -132,7 +145,7 @@ export const randomRoomWithThemes = async (ele: HTMLElement, themes: Theme[], se
         room.addItem(new PhysicalObject(room,item.name,item.x,item.y,item.width,item.height,item.themes,item.layer,item.src,item.flavorText))
     }
 
-    const stress_test = 100;
+    const stress_test = 3;
     for(let i = 0; i< stress_test; i++){
         room.addBlorbo(new Quotidian(room,"Quotidian",150,150,50,50, [all_themes[SPYING]],2,"images/Walkabout/Sprites/humanoid_crow.gif","testing"));
     }

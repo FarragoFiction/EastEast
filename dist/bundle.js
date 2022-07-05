@@ -194,6 +194,7 @@ class PhysicalObject {
         this.original_x = x;
         this.original_y = y;
         this.y = y;
+        this.rand = room.rand;
         this.width = width;
         this.height = height;
         this.flavorText = flavorText;
@@ -292,6 +293,7 @@ class Room {
         this.items = [];
         this.ticking = false;
         this.tickRate = 100;
+        this.children = [];
         this.stopTicking = () => {
             this.ticking = false;
         };
@@ -364,9 +366,20 @@ class Room {
                 return [...this.themes.slice(1), this.rand.pickFrom(Object.values(Theme_1.all_themes))];
             }
         };
-        this.spawnChildRoom = () => {
-            (0, exports.randomRoomWithThemes)(this.element, this.childRoomThemes(), this.rand);
-        };
+        this.spawnChildRoom = () => __awaiter(this, void 0, void 0, function* () {
+            return yield (0, exports.randomRoomWithThemes)(this.element, this.childRoomThemes(), this.rand);
+        });
+        //when i first make the maze, we generate its structure to a certain depth, and then from there one room at a time.
+        this.propagateMaze = (depthRemaining) => __awaiter(this, void 0, void 0, function* () {
+            const numberChildren = this.rand.getRandomNumberBetween(1, 3);
+            for (let i = 0; i < numberChildren; i++) {
+                const child = yield this.spawnChildRoom();
+                this.children.push(child);
+                if (depthRemaining > 0) {
+                    child.propagateMaze(depthRemaining - 1);
+                }
+            }
+        });
         this.themes = themes;
         this.rand = rand;
         this.element = element;
@@ -384,7 +397,7 @@ const randomRoomWithThemes = (ele, themes, seededRandom) => __awaiter(void 0, vo
     for (let item of items) {
         room.addItem(new PhysicalObject_1.PhysicalObject(room, item.name, item.x, item.y, item.width, item.height, item.themes, item.layer, item.src, item.flavorText));
     }
-    const stress_test = 100;
+    const stress_test = 3;
     for (let i = 0; i < stress_test; i++) {
         room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], 2, "images/Walkabout/Sprites/humanoid_crow.gif", "testing"));
     }
@@ -3226,6 +3239,8 @@ window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
     const seed = (0, NonSeededRandUtils_1.getRandomNumberBetween)(1, 113);
     if (ele) {
         const room = yield (0, Room_1.randomRoomWithThemes)(ele, themes, new SeededRandom_1.default(seed));
+        yield room.propagateMaze(3);
+        console.log("JR NOTE: room now has these children: ", room.children);
         room.render();
         (0, PasswordStorage_1.initRabbitHole)(room);
     }

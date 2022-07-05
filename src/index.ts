@@ -14,6 +14,8 @@ window.onload = async()=>{
     const seed = getRandomNumberBetween(1,113);
     if(ele){
         const room = await randomRoomWithThemes(ele, themes,new SeededRandom(seed));
+        await room.propagateMaze(3);
+        console.log("JR NOTE: room now has these children: ", room.children)
         room.render();
         initRabbitHole(room);
 

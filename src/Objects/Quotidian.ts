@@ -1,5 +1,6 @@
 //base level Entity object. quotidians can turn into anything
 
+import SeededRandom from "../Utils/SeededRandom";
 import { Movement } from "./MovementAlgs/BaseMovement";
 import { RandomMovement } from "./MovementAlgs/RandomMovement";
 import { PhysicalObject } from "./PhysicalObject";
