@@ -1,6 +1,7 @@
 //base level Entity object. quotidians can turn into anything
 
 import { Movement } from "../MovementAlgs/BaseMovement";
+import { MoveToNorthDoor } from "../MovementAlgs/MoveToNorthDoor";
 import { NoMovement } from "../MovementAlgs/NoMovement";
 import { Room } from "../RoomEngine/Room";
 import { all_themes } from "../Theme";
@@ -17,7 +18,7 @@ export class Peewee extends Quotidian{
     currentSpeed = 10;
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
-    movement_alg:Movement = new NoMovement(this);
+    movement_alg:Movement = new MoveToNorthDoor(this);
     //TODO have a movement algorithm (effects can shift this)
     /*
     example movement algorithm

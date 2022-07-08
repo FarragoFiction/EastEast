@@ -72,7 +72,8 @@ export class PhysicalObject{
         this.parent = parent;
         this.image.src = this.src;
         this.image.style.display = "block";
-        this.image.style.zIndex = `${this.layer}+10`;
+        this.image.style.zIndex = `${this.layer+10}`;
+        (this.image.style as any) ["jrsayshi"] ="test";
         this.image.style.position = "absolute";
         this.image.style.top = `${this.y}px`;
         this.image.style.left = `${this.x}px`;

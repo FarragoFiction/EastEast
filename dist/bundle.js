@@ -9,7 +9,7 @@
 //base level Entity object. quotidians can turn into anything
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Peewee = void 0;
-const NoMovement_1 = __webpack_require__(4956);
+const MoveToNorthDoor_1 = __webpack_require__(6003);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const Quotidian_1 = __webpack_require__(6647);
@@ -33,7 +33,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.minSpeed = 1;
         this.currentSpeed = 10;
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
-        this.movement_alg = new NoMovement_1.NoMovement(this);
+        this.movement_alg = new MoveToNorthDoor_1.MoveToNorthDoor(this);
     }
 }
 exports.Peewee = Peewee;
@@ -73,7 +73,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
     constructor(room, name, x, y, width, height, themes, src, flavorText) {
-        super(room, name, x, y, width, height, themes, 2, src, flavorText);
+        super(room, name, x, y, width, height, themes, 11, src, flavorText);
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
@@ -205,8 +205,11 @@ class Movement {
             //bog simple, just go in the direction you were already going.
             //children of this will do something different, for example change direction to move towards a goal
         };
+        this.customShit = () => {
+        };
         this.tick = () => {
             //dont' worry about rendering, you're just moving the quotidian, it'll render itself
+            this.customShit();
             this.pickSpeed();
             this.pickNewDirection();
             this.moveInDirection();
@@ -215,6 +218,87 @@ class Movement {
     }
 }
 exports.Movement = Movement;
+
+
+/***/ }),
+
+/***/ 6003:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//given an Entity (which will have access to location and any other pertinent information)
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MoveToNorthDoor = void 0;
+const MoveToSpecificLocation_1 = __webpack_require__(7805);
+//decides where to move next.
+class MoveToNorthDoor extends MoveToSpecificLocation_1.MoveToSpecificLocation {
+    constructor(entity) {
+        let x = 0;
+        let y = 0;
+        super(x, y, entity);
+        this.doorDetected = false;
+        this.customShit = () => {
+            if (!this.doorDetected) {
+                this.detectDoor();
+            }
+        };
+        this.detectDoor = () => {
+            const door = document.querySelector("#northDoor");
+            if (door) {
+                this.x = door.offsetLeft;
+                this.y = door.offsetTop;
+                console.log("JR NOTE: I found the door it is", { x: this.x, y: this.y });
+                this.doorDetected = true;
+            }
+        };
+    }
+}
+exports.MoveToNorthDoor = MoveToNorthDoor;
+
+
+/***/ }),
+
+/***/ 7805:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//given an Entity (which will have access to location and any other pertinent information)
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MoveToSpecificLocation = void 0;
+const Quotidian_1 = __webpack_require__(6647);
+const BaseMovement_1 = __webpack_require__(9059);
+//decides where to move next.
+class MoveToSpecificLocation extends BaseMovement_1.Movement {
+    constructor(x, y, entity) {
+        super(entity);
+        this.pickNewDirection = () => {
+            //vary between picking x or y so you don't look like a robot so much
+            if (this.entity.rand.nextDouble() > 0.5) {
+                //if object x is bigger than mine, need to go right, so d
+                if (this.x > this.entity.x) {
+                    this.entity.direction = Quotidian_1.Direction.RIGHT;
+                }
+                else {
+                    this.entity.direction = Quotidian_1.Direction.LEFT;
+                }
+            }
+            else {
+                //if object y is bigger than mine, need to go down, so s
+                if (this.y > this.entity.y) {
+                    this.entity.direction = Quotidian_1.Direction.DOWN;
+                }
+                else {
+                    this.entity.direction = Quotidian_1.Direction.UP;
+                }
+            }
+        };
+        this.x = x;
+        this.y = y;
+    }
+}
+exports.MoveToSpecificLocation = MoveToSpecificLocation;
 
 
 /***/ }),
@@ -293,7 +377,8 @@ class PhysicalObject {
             this.parent = parent;
             this.image.src = this.src;
             this.image.style.display = "block";
-            this.image.style.zIndex = `${this.layer}+10`;
+            this.image.style.zIndex = `${this.layer + 10}`;
+            this.image.style["jrsayshi"] = "test";
             this.image.style.position = "absolute";
             this.image.style.top = `${this.y}px`;
             this.image.style.left = `${this.x}px`;
@@ -493,7 +578,7 @@ const randomRoomWithThemes = (ele, themes, seededRandom) => __awaiter(void 0, vo
     for (let i = 0; i < stress_test; i++) {
         room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], "images/Walkabout/Sprites/humanoid_crow.gif", "testing"));
     }
-    room.addBlorbo(new Peewee_1.Peewee(room, 150, 150, 50, 50));
+    room.addBlorbo(new Peewee_1.Peewee(room, 0, 350, 50, 50));
     return room;
 });
 exports.randomRoomWithThemes = randomRoomWithThemes;
@@ -4825,6 +4910,10 @@ var map = {
 	"./Objects/Memory.ts": 7953,
 	"./Objects/MovementAlgs/BaseMovement": 9059,
 	"./Objects/MovementAlgs/BaseMovement.ts": 9059,
+	"./Objects/MovementAlgs/MoveToNorthDoor": 6003,
+	"./Objects/MovementAlgs/MoveToNorthDoor.ts": 6003,
+	"./Objects/MovementAlgs/MoveToSpecificLocation": 7805,
+	"./Objects/MovementAlgs/MoveToSpecificLocation.ts": 7805,
 	"./Objects/MovementAlgs/NoMovement": 4956,
 	"./Objects/MovementAlgs/NoMovement.ts": 4956,
 	"./Objects/MovementAlgs/RandomMovement": 5997,

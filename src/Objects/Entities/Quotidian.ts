@@ -37,7 +37,7 @@ export class Quotidian extends PhysicalObject{
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
 
     constructor(room: Room,name:string, x: number, y:number, width: number, height: number, themes:Theme[], src: string, flavorText:string){
-        super(room,name, x,y,width,height,themes,2,src,flavorText);
+        super(room,name, x,y,width,height,themes,11,src,flavorText);
     }
 
     tick = ()=>{

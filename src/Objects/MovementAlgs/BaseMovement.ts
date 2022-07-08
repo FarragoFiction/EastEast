@@ -89,8 +89,13 @@ export class Movement{
         //children of this will do something different, for example change direction to move towards a goal
     }
 
+    customShit = ()=>{
+
+    }
+
     tick = ()=>{
         //dont' worry about rendering, you're just moving the quotidian, it'll render itself
+        this.customShit();
         this.pickSpeed();
         this.pickNewDirection();
         this.moveInDirection();
