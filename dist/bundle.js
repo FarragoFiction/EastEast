@@ -9,7 +9,7 @@
 //base level Entity object. quotidians can turn into anything
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Peewee = void 0;
-const MoveToNorthDoor_1 = __webpack_require__(6003);
+const MoveToWestDoor_1 = __webpack_require__(9991);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const Quotidian_1 = __webpack_require__(6647);
@@ -33,7 +33,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.minSpeed = 1;
         this.currentSpeed = 10;
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
-        this.movement_alg = new MoveToNorthDoor_1.MoveToNorthDoor(this);
+        this.movement_alg = new MoveToWestDoor_1.MoveToWestDoor(this);
     }
 }
 exports.Peewee = Peewee;
@@ -49,6 +49,7 @@ exports.Peewee = Peewee;
 //base level Entity object. quotidians can turn into anything
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Quotidian = exports.Direction = void 0;
+const misc_1 = __webpack_require__(4079);
 const RandomMovement_1 = __webpack_require__(5997);
 const PhysicalObject_1 = __webpack_require__(8466);
 var Direction;
@@ -79,6 +80,20 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.currentSpeed = 10;
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
+        this.emitSass = (sass) => {
+            //debounce essentially
+            if (!this.sass || this.sass.innerText != sass) {
+                this.sass = (0, misc_1.createElementWithIdAndParent)("div", this.container, undefined, "sass");
+                this.sass.innerText = sass;
+                this.sassBegun = new Date();
+            }
+        };
+        this.customShit = () => {
+            //if there is sass
+            //and the sass hasn't expired
+            // if there isn't a popup on the object, make one now.
+            //otherwise you're fine
+        };
         this.tick = () => {
             this.movement_alg.tick();
             this.updateRendering();
@@ -222,6 +237,42 @@ exports.Movement = Movement;
 
 /***/ }),
 
+/***/ 1146:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//given an Entity (which will have access to location and any other pertinent information)
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MoveToEastDoor = void 0;
+const MoveToSpecificLocation_1 = __webpack_require__(7805);
+//decides where to move next.
+class MoveToEastDoor extends MoveToSpecificLocation_1.MoveToSpecificLocation {
+    constructor(entity) {
+        let x = 0;
+        let y = 0;
+        super(x, y, entity);
+        this.doorDetected = false;
+        this.customShit = () => {
+            if (!this.doorDetected) {
+                this.detectDoor();
+            }
+        };
+        this.detectDoor = () => {
+            const door = document.querySelector("#eastDoor");
+            if (door) {
+                this.x = door.offsetLeft;
+                this.y = door.offsetTop;
+                this.doorDetected = true;
+            }
+        };
+    }
+}
+exports.MoveToEastDoor = MoveToEastDoor;
+
+
+/***/ }),
+
 /***/ 6003:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -255,6 +306,42 @@ class MoveToNorthDoor extends MoveToSpecificLocation_1.MoveToSpecificLocation {
     }
 }
 exports.MoveToNorthDoor = MoveToNorthDoor;
+
+
+/***/ }),
+
+/***/ 9380:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//given an Entity (which will have access to location and any other pertinent information)
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MoveToSouthDoor = void 0;
+const MoveToSpecificLocation_1 = __webpack_require__(7805);
+//decides where to move next.
+class MoveToSouthDoor extends MoveToSpecificLocation_1.MoveToSpecificLocation {
+    constructor(entity) {
+        let x = 0;
+        let y = 0;
+        super(x, y, entity);
+        this.doorDetected = false;
+        this.customShit = () => {
+            if (!this.doorDetected) {
+                this.detectDoor();
+            }
+        };
+        this.detectDoor = () => {
+            const door = document.querySelector("#southDoor");
+            if (door) {
+                this.x = door.offsetLeft;
+                this.y = door.offsetTop;
+                this.doorDetected = true;
+            }
+        };
+    }
+}
+exports.MoveToSouthDoor = MoveToSouthDoor;
 
 
 /***/ }),
@@ -299,6 +386,32 @@ class MoveToSpecificLocation extends BaseMovement_1.Movement {
     }
 }
 exports.MoveToSpecificLocation = MoveToSpecificLocation;
+
+
+/***/ }),
+
+/***/ 9991:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//given an Entity (which will have access to location and any other pertinent information)
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MoveToWestDoor = void 0;
+const BaseMovement_1 = __webpack_require__(9059);
+//decides where to move next.
+class MoveToWestDoor extends BaseMovement_1.Movement {
+    constructor(entity) {
+        super(entity);
+        this.customShit = () => {
+            this.entity.emitSass("THERES NO DOOR TO THE WEST, DUNKASS (please, stop making me, go there).");
+        };
+        this.tick = () => {
+            this.customShit();
+        };
+    }
+}
+exports.MoveToWestDoor = MoveToWestDoor;
 
 
 /***/ }),
@@ -362,7 +475,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PhysicalObject = void 0;
 class PhysicalObject {
     constructor(room, name, x, y, width, height, themes, layer, src, flavorText) {
+        this.container = document.createElement("div");
         this.image = document.createElement("img");
+        this.customShit = () => {
+            //for example, living creatures might say things
+        };
         this.updateRendering = () => {
             requestAnimationFrame(() => {
                 /* this is too inefficient
@@ -370,20 +487,21 @@ class PhysicalObject {
                 this.image.style.left = `${this.x}px`;
                 */
                 //console.log(`JR NOTE: moving ${this.x}, ${this.y} which offset is ${this.original_x-this.x}, ${this.original_y-this.y}`)
-                this.image.style.transform = `translate(${this.x - this.original_x}px,${this.y - this.original_y}px)`;
+                this.container.style.transform = `translate(${this.x - this.original_x}px,${this.y - this.original_y}px)`;
+                this.customShit();
             });
         };
         this.attachToParent = (parent) => {
             this.parent = parent;
             this.image.src = this.src;
-            this.image.style.display = "block";
-            this.image.style.zIndex = `${this.layer + 10}`;
-            this.image.style["jrsayshi"] = "test";
-            this.image.style.position = "absolute";
-            this.image.style.top = `${this.y}px`;
-            this.image.style.left = `${this.x}px`;
             this.image.style.width = `${this.width}px`;
-            this.parent.append(this.image);
+            this.container.style.display = "block";
+            this.container.style.zIndex = `${this.layer + 10}`;
+            this.container.style.position = "absolute";
+            this.container.style.top = `${this.y}px`;
+            this.container.style.left = `${this.x}px`;
+            this.container.append(this.image);
+            this.parent.append(this.container);
         };
         this.room = room;
         this.name = name;
@@ -578,7 +696,7 @@ const randomRoomWithThemes = (ele, themes, seededRandom) => __awaiter(void 0, vo
     for (let i = 0; i < stress_test; i++) {
         room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], "images/Walkabout/Sprites/humanoid_crow.gif", "testing"));
     }
-    room.addBlorbo(new Peewee_1.Peewee(room, 0, 350, 50, 50));
+    room.addBlorbo(new Peewee_1.Peewee(room, 150, 350, 50, 50));
     return room;
 });
 exports.randomRoomWithThemes = randomRoomWithThemes;
@@ -4910,10 +5028,16 @@ var map = {
 	"./Objects/Memory.ts": 7953,
 	"./Objects/MovementAlgs/BaseMovement": 9059,
 	"./Objects/MovementAlgs/BaseMovement.ts": 9059,
+	"./Objects/MovementAlgs/MoveToEastDoor": 1146,
+	"./Objects/MovementAlgs/MoveToEastDoor.ts": 1146,
 	"./Objects/MovementAlgs/MoveToNorthDoor": 6003,
 	"./Objects/MovementAlgs/MoveToNorthDoor.ts": 6003,
+	"./Objects/MovementAlgs/MoveToSouthDoor": 9380,
+	"./Objects/MovementAlgs/MoveToSouthDoor.ts": 9380,
 	"./Objects/MovementAlgs/MoveToSpecificLocation": 7805,
 	"./Objects/MovementAlgs/MoveToSpecificLocation.ts": 7805,
+	"./Objects/MovementAlgs/MoveToWestDoor": 9991,
+	"./Objects/MovementAlgs/MoveToWestDoor.ts": 9991,
 	"./Objects/MovementAlgs/NoMovement": 4956,
 	"./Objects/MovementAlgs/NoMovement.ts": 4956,
 	"./Objects/MovementAlgs/RandomMovement": 5997,

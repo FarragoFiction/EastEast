@@ -171,6 +171,26 @@ textarea{
   cursor: pointer;
 }
 
+.sass{
+  border: 2px solid black;
+  z-index: 12;
+  border-radius: 5px;
+  padding: 2px;
+  position: absolute;
+  top: -128px;
+  font-size: 12px;
+  left: -100px;
+  color: black;
+  padding-left: 13px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  padding-right: 5px;
+  margin: 5px;
+  background: #d1b056;
+  line-height: 17px;
+  box-shadow: 2px 2px 2px 3px rgba(0, 0, 0, .2);
+}
+
 #northDoor{
   position: absolute;
   display: block;

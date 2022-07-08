@@ -32,6 +32,7 @@ export class PhysicalObject{
     src: string; //needed so i can rerender them as required
     name: string; //only living creatures have names, not items, its used to update them
     parent?: HTMLElement;
+    container = document.createElement("div");
     image = document.createElement("img");
     rand: SeededRandom;
 
@@ -55,6 +56,10 @@ export class PhysicalObject{
         this.src = src;
     }
 
+    customShit = ()=>{
+        //for example, living creatures might say things
+    }
+
     updateRendering = ()=>{
         requestAnimationFrame(()=>{
             /* this is too inefficient
@@ -63,7 +68,8 @@ export class PhysicalObject{
             */
             //console.log(`JR NOTE: moving ${this.x}, ${this.y} which offset is ${this.original_x-this.x}, ${this.original_y-this.y}`)
 
-           this.image.style.transform=`translate(${this.x-this.original_x}px,${this.y-this.original_y}px)`;
+           this.container.style.transform=`translate(${this.x-this.original_x}px,${this.y-this.original_y}px)`;
+           this.customShit();
         })
 
     }
@@ -71,15 +77,15 @@ export class PhysicalObject{
     attachToParent = (parent: HTMLElement)=>{
         this.parent = parent;
         this.image.src = this.src;
-        this.image.style.display = "block";
-        this.image.style.zIndex = `${this.layer+10}`;
-        (this.image.style as any) ["jrsayshi"] ="test";
-        this.image.style.position = "absolute";
-        this.image.style.top = `${this.y}px`;
-        this.image.style.left = `${this.x}px`;
         this.image.style.width = `${this.width}px`;
+        this.container.style.display = "block";
+        this.container.style.zIndex = `${this.layer+10}`;
+        this.container.style.position = "absolute";
+        this.container.style.top = `${this.y}px`;
+        this.container.style.left = `${this.x}px`;
+        this.container.append(this.image);
+        this.parent.append(this.container);
 
-        this.parent.append(this.image);
     }
 
 
