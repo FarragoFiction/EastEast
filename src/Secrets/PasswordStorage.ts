@@ -103,10 +103,38 @@ export interface PasswordMap {
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
 /*
-INFINITE AMOUNT OF PAIN
+
 CAST ASIDE ALL ASPIRATIONS OF MORTALITY
-BITS OF THE PAST LEAK INTO THE PRESENT
 SLAUGHTERHOUSE 9
+PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH 
+*/
+
+/*
+    What I love the most about the blorbos is that.  They, all of them, have trauma in their pasts.
+
+    Things that are hard to get over.
+
+    When the training team first came to the Echidna they couldn't even watch media because everything, EVERYTHING had bad memories.
+
+    But here is a Truth.
+
+    This too, shall pass.
+
+    You can get better. 
+
+    Things can get better.
+
+    There is always reason to hope.
+
+    Always.
+
+    The blorbos support each other and rest and recover and learn to care again.
+
+    No matter how deep they seem to be sunk into their problems, their fears, their bad habits. 
+
+    It's okay if everything feels too much right now.
+
+    All you need to do is survive.
 */
 export const passwords: PasswordMap = {
     "STANDARD EXPECTOPATRONUM": new Secret("Confessionals 0", undefined, "Secrets/Content/0.js")
@@ -135,10 +163,14 @@ export const passwords: PasswordMap = {
     , "LEAVE YOUR MARK": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/22.js")
     , "TAKE YOUR PLACE IN HISTORY": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/23.js")
     , "THE FOOL IS DEAD": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/24.js")
+    , "BITS OF THE PAST LEAK INTO THE PRESENT": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/26.js")
+
+    , "INFINITE AMOUNT OF PAIN": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/27.js")
 
     , "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts") 
     , "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts") 
 
 
 };
+//future me, don't forget https://www.tumblr.com/blog/view/jadedresearcher/688182806608838656?source=share
 export const text = `.\n.\n.\n.\n ${Object.keys(passwords).join("\n")}`;

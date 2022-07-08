@@ -1,11 +1,11 @@
 //base level Entity object. quotidians can turn into anything
 
-import SeededRandom from "../Utils/SeededRandom";
-import { Movement } from "./MovementAlgs/BaseMovement";
-import { RandomMovement } from "./MovementAlgs/RandomMovement";
-import { PhysicalObject } from "./PhysicalObject";
-import { Room } from "./RoomEngine/Room";
-import { Theme } from "./Theme";
+import { RandomMovement } from "../MovementAlgs/RandomMovement";
+import { PhysicalObject } from "../PhysicalObject";
+import { Room } from "../RoomEngine/Room";
+import { Theme } from "../Theme";
+
+
 
 export enum Direction {
     UP = 1,
@@ -36,8 +36,8 @@ export class Quotidian extends PhysicalObject{
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
 
-    constructor(room: Room,name:string, x: number, y:number, width: number, height: number, themes:Theme[], layer: number, src: string, flavorText:string){
-        super(room,"Quotidan", x,y,width,height,themes,layer,src,flavorText);
+    constructor(room: Room,name:string, x: number, y:number, width: number, height: number, themes:Theme[], src: string, flavorText:string){
+        super(room,name, x,y,width,height,themes,2,src,flavorText);
     }
 
     tick = ()=>{

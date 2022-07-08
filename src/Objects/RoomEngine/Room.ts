@@ -2,9 +2,10 @@ import { all_themes, Theme } from "../Theme";
 import { FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, SPYING, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
 import { createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
-import { Quotidian } from "../Quotidian";
+import { Quotidian } from "../Entities/Quotidian";
 import { PhysicalObject, RenderedItem } from "../PhysicalObject";
 import { addImageProcess } from "../../Utils/URLUtils";
+import { Peewee } from "../Entities/Peewee";
 
 
 
@@ -183,8 +184,9 @@ export const randomRoomWithThemes = async (ele: HTMLElement, themes: Theme[], se
 
     const stress_test = 3;
     for(let i = 0; i< stress_test; i++){
-        room.addBlorbo(new Quotidian(room,"Quotidian",150,150,50,50, [all_themes[SPYING]],2,"images/Walkabout/Sprites/humanoid_crow.gif","testing"));
+        room.addBlorbo(new Quotidian(room,"Quotidian",150,150,50,50, [all_themes[SPYING]],"images/Walkabout/Sprites/humanoid_crow.gif","testing"));
     }
+    room.addBlorbo(new Peewee(room,150,150,50,50));
 
 
     return room;

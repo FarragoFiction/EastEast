@@ -1,7 +1,96 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 953:
+/***/ 1160:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//base level Entity object. quotidians can turn into anything
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Peewee = void 0;
+const NoMovement_1 = __webpack_require__(4956);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6647);
+//what, did you think the REAL eye killer would be so formulaic? 
+class Peewee extends Quotidian_1.Quotidian {
+    //TODO have a movement algorithm (effects can shift this)
+    /*
+    example movement algorithm
+    * random
+    * searching pattern
+    * to north
+    * to south
+    * to east
+    * to ENTITY
+    * to OBJECT
+    */
+    //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
+    constructor(room, x, y, width, height) {
+        super(room, "Peewee", x, y, width, height, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], "images/Walkabout/Sprites/peewee.PNG", "It's you. After all this time.");
+        this.maxSpeed = 20;
+        this.minSpeed = 1;
+        this.currentSpeed = 10;
+        this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
+        this.movement_alg = new NoMovement_1.NoMovement(this);
+    }
+}
+exports.Peewee = Peewee;
+
+
+/***/ }),
+
+/***/ 6647:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//base level Entity object. quotidians can turn into anything
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Quotidian = exports.Direction = void 0;
+const RandomMovement_1 = __webpack_require__(5997);
+const PhysicalObject_1 = __webpack_require__(8466);
+var Direction;
+(function (Direction) {
+    Direction[Direction["UP"] = 1] = "UP";
+    Direction[Direction["DOWN"] = 2] = "DOWN";
+    Direction[Direction["LEFT"] = 3] = "LEFT";
+    Direction[Direction["RIGHT"] = 4] = "RIGHT";
+})(Direction = exports.Direction || (exports.Direction = {}));
+//what, did you think the REAL eye killer would be so formulaic? 
+class Quotidian extends PhysicalObject_1.PhysicalObject {
+    //TODO have a movement algorithm (effects can shift this)
+    /*
+    example movement algorithm
+    * random
+    * searching pattern
+    * to north
+    * to south
+    * to east
+    * to ENTITY
+    * to OBJECT
+    */
+    //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
+    constructor(room, name, x, y, width, height, themes, src, flavorText) {
+        super(room, name, x, y, width, height, themes, 2, src, flavorText);
+        this.maxSpeed = 20;
+        this.minSpeed = 1;
+        this.currentSpeed = 10;
+        this.direction = Direction.DOWN; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+        this.tick = () => {
+            this.movement_alg.tick();
+            this.updateRendering();
+        };
+    }
+}
+exports.Quotidian = Quotidian;
+
+
+/***/ }),
+
+/***/ 7953:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -31,7 +120,7 @@ exports.Memory = Memory;
 
 /***/ }),
 
-/***/ 59:
+/***/ 9059:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -39,7 +128,7 @@ exports.Memory = Memory;
 //given an Entity (which will have access to location and any other pertinent information)
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Movement = void 0;
-const Quotidian_1 = __webpack_require__(580);
+const Quotidian_1 = __webpack_require__(6647);
 //decides where to move next.
 //mostly useful for testing, just keeps going int he direction its going and bounces off walls
 class Movement {
@@ -130,7 +219,30 @@ exports.Movement = Movement;
 
 /***/ }),
 
-/***/ 997:
+/***/ 4956:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//given an Entity (which will have access to location and any other pertinent information)
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.NoMovement = void 0;
+const BaseMovement_1 = __webpack_require__(9059);
+//decides where to move next.
+class NoMovement extends BaseMovement_1.Movement {
+    constructor() {
+        super(...arguments);
+        this.tick = () => {
+            //does nothing rip
+        };
+    }
+}
+exports.NoMovement = NoMovement;
+
+
+/***/ }),
+
+/***/ 5997:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -138,8 +250,8 @@ exports.Movement = Movement;
 //given an Entity (which will have access to location and any other pertinent information)
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RandomMovement = void 0;
-const NonSeededRandUtils_1 = __webpack_require__(258);
-const BaseMovement_1 = __webpack_require__(59);
+const NonSeededRandUtils_1 = __webpack_require__(8258);
+const BaseMovement_1 = __webpack_require__(9059);
 //decides where to move next.
 class RandomMovement extends BaseMovement_1.Movement {
     constructor() {
@@ -156,7 +268,7 @@ exports.RandomMovement = RandomMovement;
 
 /***/ }),
 
-/***/ 466:
+/***/ 8466:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -208,56 +320,7 @@ exports.PhysicalObject = PhysicalObject;
 
 /***/ }),
 
-/***/ 580:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-//base level Entity object. quotidians can turn into anything
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Quotidian = exports.Direction = void 0;
-const RandomMovement_1 = __webpack_require__(997);
-const PhysicalObject_1 = __webpack_require__(466);
-var Direction;
-(function (Direction) {
-    Direction[Direction["UP"] = 1] = "UP";
-    Direction[Direction["DOWN"] = 2] = "DOWN";
-    Direction[Direction["LEFT"] = 3] = "LEFT";
-    Direction[Direction["RIGHT"] = 4] = "RIGHT";
-})(Direction = exports.Direction || (exports.Direction = {}));
-//what, did you think the REAL eye killer would be so formulaic? 
-class Quotidian extends PhysicalObject_1.PhysicalObject {
-    //TODO have a movement algorithm (effects can shift this)
-    /*
-    example movement algorithm
-    * random
-    * searching pattern
-    * to north
-    * to south
-    * to east
-    * to ENTITY
-    * to OBJECT
-    */
-    //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
-    constructor(room, name, x, y, width, height, themes, layer, src, flavorText) {
-        super(room, "Quotidan", x, y, width, height, themes, layer, src, flavorText);
-        this.maxSpeed = 20;
-        this.minSpeed = 1;
-        this.currentSpeed = 10;
-        this.direction = Direction.DOWN; //movement algorithm can change or use this.
-        this.movement_alg = new RandomMovement_1.RandomMovement(this);
-        this.tick = () => {
-            this.movement_alg.tick();
-            this.updateRendering();
-        };
-    }
-}
-exports.Quotidian = Quotidian;
-
-
-/***/ }),
-
-/***/ 202:
+/***/ 6202:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -273,12 +336,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.spawnWallObjects = exports.randomRoomWithThemes = exports.Room = void 0;
-const Theme_1 = __webpack_require__(702);
-const ThemeStorage_1 = __webpack_require__(288);
-const misc_1 = __webpack_require__(79);
-const Quotidian_1 = __webpack_require__(580);
-const PhysicalObject_1 = __webpack_require__(466);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const misc_1 = __webpack_require__(4079);
+const Quotidian_1 = __webpack_require__(6647);
+const PhysicalObject_1 = __webpack_require__(8466);
 const URLUtils_1 = __webpack_require__(389);
+const Peewee_1 = __webpack_require__(1160);
 class Room {
     //objects
     //people
@@ -427,8 +491,9 @@ const randomRoomWithThemes = (ele, themes, seededRandom) => __awaiter(void 0, vo
     }
     const stress_test = 3;
     for (let i = 0; i < stress_test; i++) {
-        room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], 2, "images/Walkabout/Sprites/humanoid_crow.gif", "testing"));
+        room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], "images/Walkabout/Sprites/humanoid_crow.gif", "testing"));
     }
+    room.addBlorbo(new Peewee_1.Peewee(room, 150, 150, 50, 50));
     return room;
 });
 exports.randomRoomWithThemes = randomRoomWithThemes;
@@ -501,7 +566,7 @@ const spawnFloorObjects = (width, height, layer, key, folder, seededRandom, them
 
 /***/ }),
 
-/***/ 137:
+/***/ 9137:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -626,7 +691,7 @@ exports.StatMapWithMultiple = StatMapWithMultiple;
 
 /***/ }),
 
-/***/ 702:
+/***/ 9702:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -656,8 +721,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.initThemes = exports.keysToThemes = exports.aggregateOpinionsOnThemes = exports.Theme = exports.all_themes = void 0;
-const Stat = __importStar(__webpack_require__(137));
-const ThemeStorage = __importStar(__webpack_require__(288));
+const Stat = __importStar(__webpack_require__(9137));
+const ThemeStorage = __importStar(__webpack_require__(1288));
 //auto populated by creating themes. 
 exports.all_themes = {};
 class Theme {
@@ -782,7 +847,7 @@ exports.initThemes = initThemes;
 
 /***/ }),
 
-/***/ 288:
+/***/ 1288:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -814,9 +879,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ENDINGS = exports.KNOWING = exports.GUIDING = exports.CRAFTING = exports.LANGUAGE = exports.BUGS = exports.QUESTING = exports.DEFENSE = exports.MUSIC = exports.KILLING = exports.DARKNESS = exports.OBFUSCATION = exports.DOLLS = exports.HEALING = exports.SPYING = exports.ADDICTION = exports.NULL = exports.SPRITES = exports.FLOORFOREGROUND = exports.FLOORBACKGROUND = exports.WALLFOREGROUND = exports.WALLBACKGROUND = exports.THEME_OPINIONS = exports.FILTERS = exports.FLOOR = exports.WALL = exports.EFFECTS = exports.SOUND = exports.FEELING = exports.TASTE = exports.SMELL = exports.MONSTER_DESC = exports.LOC_DESC = exports.PHILOSOPHY = exports.SONG = exports.MIRACLE = exports.GENERALBACKSTORY = exports.CHILDBACKSTORY = exports.CITYNAME = exports.ASPECT = exports.CLASS = exports.MENU = exports.MEMORIES = exports.LOCATION = exports.OBJECT = exports.SUPERMOVE = exports.INSULT = exports.COMPLIMENT = exports.ADJ = exports.PERSON = void 0;
 exports.sound_possibilities = exports.monster_desc = exports.loc_desc = exports.philosophy = exports.miracles = exports.child_backstories = exports.general_backstories = exports.location_possibilities = exports.object_possibilities = exports.person_posibilities = exports.stats_map = exports.sprite_possibilities = exports.floor_foregrounds = exports.floor_backgrounds = exports.wall_backgrounds = exports.wall_foregrounds = exports.keys = exports.TECHNOLOGY = exports.ART = exports.TIME = exports.SPACE = exports.OCEAN = exports.LONELY = exports.FIRE = exports.FREEDOM = exports.STEALING = exports.BURIED = exports.FLESH = exports.SCIENCE = exports.MATH = exports.TWISTING = exports.DEATH = exports.APOCALYPSE = exports.WASTE = exports.SERVICE = exports.FAMILY = exports.MAGIC = exports.LIGHT = exports.ANGELS = exports.HUNTING = exports.CLOWNS = exports.PLANTS = exports.DECAY = exports.CHOICES = exports.ZAP = exports.LOVE = exports.SOUL = exports.ANGER = exports.WEB = exports.ROYALTY = void 0;
 exports.initThemes = exports.checkIfAllKeysPresent = exports.super_name_possibilities_map = exports.memories = exports.compliment_possibilities = exports.filter_possibilities = exports.theme_opinions = exports.floor_possibilities = exports.wall_possibilities = exports.song_possibilities = exports.insult_possibilities = exports.adj_possibilities = exports.menu_options = exports.effect_possibilities = exports.smell_possibilities = exports.feeling_possibilities = exports.taste_possibilities = void 0;
-const constants_1 = __webpack_require__(817);
-const Memory_1 = __webpack_require__(953);
-const Stat = __importStar(__webpack_require__(137));
+const constants_1 = __webpack_require__(8817);
+const Memory_1 = __webpack_require__(7953);
+const Stat = __importStar(__webpack_require__(9137));
 //categories within a theme
 exports.PERSON = "person";
 exports.ADJ = "adj";
@@ -2651,7 +2716,7 @@ exports.initThemes = initThemes;
 
 /***/ }),
 
-/***/ 867:
+/***/ 9867:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -2665,7 +2730,7 @@ exports.initThemes = initThemes;
 //hell, if you can even do a majority I'd love to hear it, in all sincerity. I love hearing people find my work interesting :)
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.text = exports.passwords = exports.Secret = exports.initRabbitHole = exports.translate = exports.albhed_map = void 0;
-const Transcript_1 = __webpack_require__(122);
+const Transcript_1 = __webpack_require__(8122);
 //look, okay, al bhed from ffx is something that for *some* percent of the population feels in their bones
 //so this will drive home a nagging sense of familiarity, that it MUST be important
 //at the same time when you look at it in writing it's gibberish
@@ -2743,10 +2808,37 @@ exports.Secret = Secret;
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
 /*
-INFINITE AMOUNT OF PAIN
+
 CAST ASIDE ALL ASPIRATIONS OF MORTALITY
-BITS OF THE PAST LEAK INTO THE PRESENT
 SLAUGHTERHOUSE 9
+PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH
+*/
+/*
+    What I love the most about the blorbos is that.  They, all of them, have trauma in their pasts.
+
+    Things that are hard to get over.
+
+    When the training team first came to the Echidna they couldn't even watch media because everything, EVERYTHING had bad memories.
+
+    But here is a Truth.
+
+    This too, shall pass.
+
+    You can get better.
+
+    Things can get better.
+
+    There is always reason to hope.
+
+    Always.
+
+    The blorbos support each other and rest and recover and learn to care again.
+
+    No matter how deep they seem to be sunk into their problems, their fears, their bad habits.
+
+    It's okay if everything feels too much right now.
+
+    All you need to do is survive.
 */
 exports.passwords = {
     "STANDARD EXPECTOPATRONUM": new Secret("Confessionals 0", undefined, "Secrets/Content/0.js"),
@@ -2776,15 +2868,18 @@ exports.passwords = {
     "LEAVE YOUR MARK": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/22.js"),
     "TAKE YOUR PLACE IN HISTORY": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/23.js"),
     "THE FOOL IS DEAD": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/24.js"),
+    "BITS OF THE PAST LEAK INTO THE PRESENT": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/26.js"),
+    "INFINITE AMOUNT OF PAIN": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/27.js"),
     "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts")
 };
+//future me, don't forget https://www.tumblr.com/blog/view/jadedresearcher/688182806608838656?source=share
 exports.text = `.\n.\n.\n.\n ${Object.keys(exports.passwords).join("\n")}`;
 
 
 /***/ }),
 
-/***/ 122:
+/***/ 8122:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2800,9 +2895,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TranscriptEngine = void 0;
-const __1 = __webpack_require__(607);
-const misc_1 = __webpack_require__(79);
-const PasswordStorage_1 = __webpack_require__(867);
+const __1 = __webpack_require__(3607);
+const misc_1 = __webpack_require__(4079);
+const PasswordStorage_1 = __webpack_require__(9867);
 const defaultSpeed = 66;
 class TranscriptEngine {
     constructor(parent) {
@@ -2944,7 +3039,7 @@ exports.TranscriptEngine = TranscriptEngine;
 
 /***/ }),
 
-/***/ 907:
+/***/ 3907:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2969,14 +3064,14 @@ exports.uniq = uniq;
 
 /***/ }),
 
-/***/ 565:
+/***/ 5565:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.valueAsArray = exports.initEmptyArrayAtKey = exports.removeStringFromArrayWithKey = exports.addNumToArrayWithKey = exports.addStringToArrayWithKey = exports.isStringInArrayWithKey = void 0;
-const ArrayUtils_1 = __webpack_require__(907);
+const ArrayUtils_1 = __webpack_require__(3907);
 const isStringInArrayWithKey = (key, target) => {
     return (0, exports.valueAsArray)(key).includes(target);
 };
@@ -3018,7 +3113,7 @@ exports.valueAsArray = valueAsArray;
 
 /***/ }),
 
-/***/ 258:
+/***/ 8258:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3058,7 +3153,7 @@ exports.shuffle = shuffle;
 
 /***/ }),
 
-/***/ 450:
+/***/ 3450:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3136,7 +3231,7 @@ exports.addImageProcess = addImageProcess;
 
 /***/ }),
 
-/***/ 817:
+/***/ 8817:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3201,7 +3296,7 @@ exports.max_values_for_menus = {
 
 /***/ }),
 
-/***/ 79:
+/***/ 4079:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3233,7 +3328,7 @@ exports.createElementWithId = createElementWithId;
 
 /***/ }),
 
-/***/ 607:
+/***/ 3607:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -3252,13 +3347,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.loadSecretText = void 0;
-const Stat_1 = __webpack_require__(137);
-const Theme_1 = __webpack_require__(702);
-const ThemeStorage_1 = __webpack_require__(288);
-const PasswordStorage_1 = __webpack_require__(867);
-const Room_1 = __webpack_require__(202);
-const NonSeededRandUtils_1 = __webpack_require__(258);
-const SeededRandom_1 = __importDefault(__webpack_require__(450));
+const Stat_1 = __webpack_require__(9137);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const PasswordStorage_1 = __webpack_require__(9867);
+const Room_1 = __webpack_require__(6202);
+const NonSeededRandUtils_1 = __webpack_require__(8258);
+const SeededRandom_1 = __importDefault(__webpack_require__(3450));
 window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
     const ele = document.querySelector("#current-room");
     (0, Stat_1.initStats)();
@@ -3275,14 +3370,14 @@ window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 //the text should be a javascript file exporting const text.
 function loadSecretText(location) {
-    return __webpack_require__(116)(`./${location}`).text;
+    return __webpack_require__(8116)(`./${location}`).text;
 }
 exports.loadSecretText = loadSecretText;
 
 
 /***/ }),
 
-/***/ 243:
+/***/ 6243:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3307,7 +3402,7 @@ Inside of it, he waited.
 
 /***/ }),
 
-/***/ 489:
+/***/ 6489:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3333,7 +3428,7 @@ He tries not to hold it against her. He forgives her, and she leaves without ano
 
 /***/ }),
 
-/***/ 591:
+/***/ 8591:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3373,7 +3468,7 @@ Truly a mystery.
 
 /***/ }),
 
-/***/ 937:
+/***/ 8937:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3406,7 +3501,7 @@ Together we focus on practicing the 5-4-3-2-1 method for coping with anxiety, wh
 
 /***/ }),
 
-/***/ 270:
+/***/ 7270:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3445,7 +3540,7 @@ refuses to provide therapy like services in his 'off hours'
 
 /***/ }),
 
-/***/ 12:
+/***/ 4012:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3477,7 +3572,7 @@ Note: The Whispers Within me call for Ronin. I have taken steps to mitigate any 
 
 /***/ }),
 
-/***/ 574:
+/***/ 4574:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3516,7 +3611,7 @@ So close this file and think about one of your other patients, okay?
 
 /***/ }),
 
-/***/ 377:
+/***/ 9377:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3544,7 +3639,7 @@ This Heresy that has befallen him may yet have a cure, but in the mean time I wo
 
 /***/ }),
 
-/***/ 715:
+/***/ 8715:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3577,7 +3672,7 @@ NOTE: We are working on getting him to kidnap me less often.
 
 /***/ }),
 
-/***/ 765:
+/***/ 6765:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3609,7 +3704,7 @@ Overall, he seems to have a standard case of Eye Mania, which up until this poin
 
 /***/ }),
 
-/***/ 314:
+/***/ 3314:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3640,7 +3735,7 @@ As for the Latter? Should I choose it, I could shatter him with the slightest of
 
 /***/ }),
 
-/***/ 714:
+/***/ 1714:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3670,7 +3765,7 @@ Together we are working on small ways for him to feel like his purpose is being 
 
 /***/ }),
 
-/***/ 180:
+/***/ 8180:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3876,7 +3971,7 @@ I could continue, but I'm alread bored. Cya! ^_^
 
 /***/ }),
 
-/***/ 375:
+/***/ 5375:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3970,7 +4065,7 @@ It's like.  Poetry.
 
 /***/ }),
 
-/***/ 451:
+/***/ 2451:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4000,7 +4095,7 @@ Even after all those years-- long, regrettable years-- his index finger coiled i
 
 /***/ }),
 
-/***/ 16:
+/***/ 4016:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4037,7 +4132,7 @@ If there was one thing he swore above anything else, it was that Yongki was smil
 
 /***/ }),
 
-/***/ 693:
+/***/ 4693:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4074,7 +4169,174 @@ Their subordinates should've ran when they could. By then, when K came to check 
 
 /***/ }),
 
-/***/ 52:
+/***/ 4939:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+
+
+There's a tumblr post I saw today, that baited me into non-zampanio posting, but there is more I'd like to say, but in a place where there are less Eyes.
+
+Part of the post was: "People are always shocked when I tell them yes, I'm in pain right now. I'm always in pain. I sometimes take painkillers, but it's not feasible to take them all the time and if I did they'd stop working. I just live like this, and some days are worse or better than others, but I am always, ALWAYS in pain. And there isn't really anything else the doctors can do about that."
+
+And yeah.
+
+This.
+
+I remember my own shock when I realized that there were so very many things that doctors couldn't even diagnose except by excluding other things.
+
+So many things where even if you get a diagnosis there isn't a shot or a pill or a surgery you can have that fixes things.
+
+And I remember having to deal with that initial shock while ALSO navigating the shock of the people around me?
+
+I went into work, back when I was a Researcher, on all but the very worst days.
+
+I remember HR coming to me. 
+
+I remember not actually being able to sit up, so I had a little cot under my desk and was doing my job on a laptop.
+
+HR told me I could take disability leave, that I should focus on "getting better".
+
+And I had a conversation with her, that did help me feel better (because it always makes me feel better to put my thoughts out in the world instead of leaving them rattling in my head).
+
+I told her that I didn't think I WOULD get better. That there were no more tests scheduled.
+
+That I was a few months away from my appointment with a specialist.
+
+And she seemed so lost at that, and I felt so lost at that.
+
+Because in the TV, if your body suddenly stops working they put you in the hospital and they don't let you leave till they F1X TH1S.
+
+But when I stopped being able to move at random intervals and I went to the ER they just did a blood test and told me I'd need to see a Neurologist and they didn't have one on staff. 
+
+So they just...let me go.
+
+And my regular Neurologist could do a few tests, enough to go "yup, your body is fucked" but not enough to say WHY. And even that came after months of other tests that showed nothing.
+
+There was no group of highly motivated specialists just THERE at the hospital ready to help me.
+
+Deadend after deadend.
+
+The only specialist I could find on any of the things it might be was able to confirm I DIDN'T have his thing?
+
+And that's when I decided to stop.  The tests were painful. Getting to appointments that were further and further away was painful and hard. My main neurologist just went and quit his practice and I didn't have the energy to find a new one.  The energy to find new specialists to try, either.
+
+They call it a 'diagnosis of exclusion'. 
+
+When you have ruled out everything that plays nicer with tests and you're left with something harder to test for.
+
+It FEELS less legitimate? To have no 'proof'.  Especially when I saw more than a few shit doctors who were all too happy to tell me it was "all in my head" without even looking at my tests.
+
+But, and this in no way constitutes medical advice, yada yada yada...
+
+BUT.
+
+I went from being in a wheel chair most days to having no symptoms at all most days.
+
+Because the diagnosis that everyone avoided because its so damn hard to prove if you don't have the five most common genes for it (when theres  over 30 identified)...
+
+Was something called Periodic Paralysis. 
+
+And turns OUT. 
+
+It can be managed. 
+
+Not cured.
+
+Not even controlled.
+
+But. 
+
+That's not nothing. 
+
+Even if there is no doctor within a thousand miles that apparently could diagnosis it.
+
+Even if I don't KNOW I have that thing.
+
+I can follow the tips and tricks to manage it and for the first time, something *worked*.
+
+Fuck potasium, I guess. Turns out its my kryptonite.
+
+With this new lens I could look back at when it all started and see that every single stress response I had to suddenly being disabled was flat out on the list of "don't do this if you have Periodic Paralysis".
+
+I could even see that a lot of my childhood physical "quirks" were a milder form of it. That it got worse in my early twenties but we thought I was "fainting" (p sure past me posting about this might be part of what made people think i died as eon337), even if I wasn't losing consciousness.
+
+And after spending so much time researching on my own, I learned it tends to go from "full body paralysis but only for a second or two" to partial paralysis but for longer as you age. i.e. from 'fainting' to "stuck in a wheelchair all day because i can kinda move but not enough to stand up"
+
+Suddenly my life made SENSE? I felt in control?
+
+Point is.
+
+There's plenty of things doctors can't cure or fix.  (But srsly, still a good idea to rule out what CAN be ruled out with doctors. I don't think I would have even HEARD of Periodic Paralysis without them, and believe you me, there were dozens of possibilities that the tests and doctors ruled out that I wouldn't have been able to.)
+
+
+`;
+
+/***/ }),
+
+/***/ 3875:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+
+Does this look familiar?
+
+
+http://farragofiction.com/CodexOfRuin/viewer.html?name=The%20Reflection&data=N4IgdghgtgpiBcIAqALGACASjAZgGxgGMAXASwHswQAaEAExgGdSBzSMyhEAGQFoAGXgEkAjDRAAnUowDWXJAFEkACXHE0sRlwCyAQQDiC6iJEBmatqEA5ACLVT59JcyYA8pgDKx6ru6LMVrqK1OgAHACsIQCqVkIAagqeCl4m5twKujaJHspCAAreNkKYSNQALPzUAGIZmN7aCtruAJreAMLuRqb84ozEEMRaiAoAGv6B3MZm1ELaeUFCClaloQBMM1m+Qh5IQm3UAGwH1G1RmEKuUSnT3K7NvuVl1EuJhrv7qeIwAB4QJHgATwA+uoJDAYCDSAAHIY8AS8TAidCECBgdAAI1wUhgYDo6FRAPQ-QkLBgxAAdCE+IJEegAO6kPB4dBgcjEdCk9kDfqENB0SnoGzkFls9AEdnUhFI0hgYgwCR-dkM9ToPgAdQE-FM5PEMr6MpIXDi8sJylYKBCxokpvNlpN6DNLAt6CtNqddutDvNurAzCdxCN9sdztdXvdLqDtojnuDHrdKHE3L+KFgssDMajodj0fjcbDIcjTvEYKhYMYzE4iCzmcLBYz4erDdrvX66MZpGIwIIADcYHguKZizA6ECGDgcYw4Ih+OSxLQ6SgOxCxxOpyAZ3OQOi8H8ZKPcKuuBvxFCIAR9+PfWvj7RSFAWEDGBJCFwUMRiFD4AB6L84CASBUWHIHBSBICgwHJQhyCgL8kDpch9AgAEAClyBkJgvw8YhyGxRgv20ABXCQGAkRDYCEKDfS-dR5VwAgwMockoTAFgWxw4EGH6RlYQUb5CHlKFiBCbRSAAnD0GA9BdDoAArAi+lTCkAB0wBUpTkBQchJ3pTT0D-fiiQ0Sc8F7Rh0BlQyMCgUSJHEqAkPxKEoRgf9LPQRhoBgEJ0QI9kLMVAizw7AEQhowkUAgXsMSIaCMCgqAoXFPtCToUgcHHMFZXQZzyESmByXUtTVJ4cg0JlFhzNlYUaPQayxIkWqCLwMg8qJO8mHpRlmRYBU6ECplCRcrk6QcygYEATAIzJQAj7LAYL0AI2VGUswlMXijAZVS-UWII6QIu3DAcFsqB8XQTSmXIOlhzO+SZAknBTtmkJGGFFFfPA8yzIgOhu2kYcCpAIqirfD9v1-f9AOA0COAg+KvzaPBLrAGxSH-AEPDvL8iuUDAIrMzEcXQMF8CIOU8Ww4VZsJMhNHJdBUFoz6RXUcqxVwdlsKJmBEr+XG7wK1SwF0MBCTq2yGvUAYuZJkgprvZEIEEoiOoBcgCNCiB0LM1X1a5nn+O1tXOpVHWBZU5ojYXYV-wwVl2R1sVSpkMy1Y5lBbIIp0WRgOl0BgAEmDNsALYInTrbBZn0Ad-o8GdolhR1hqjtIHE6EYZ6CG5syLMT6L+SKkPOqZb3ewasFiCIiCirUaExEQFG8QdmRWV9h2UTRYcO0sycAH4a6hVYuDVCL2QipyJ3Mh7o+tPvaBawdEGHqWoBwjAGWLh3JxgPuAF8gA
+
+`;
+
+/***/ }),
+
+/***/ 1370:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+
+
+
+The first person K ever killed? 
+
+Frankly, unlike what seemed to be the assumption those days, he didn't go out of his way to kill. What was the use of that? Those beneath his concern weren't worth killing, those above him he simply had to outsmart, as they often grew lazy in their power...
+
+Those equal to him, though. The teammates? Those were competitors. If he didn't knock them down a peg, they might take the opportunity to do it to him! He couldn't have that. He was smarter than that. So all he had to do was... deny them the opportunity.
+
+He had to have been around fourteen when he claimed his first kill. 
+
+They'd found a perfect place to strike for some quick cash: just outside of syndicate presence, some small mom and pop shop ran by some nobody. A nice and easy target. Not the most dignified steal, but they needed food and money quick-- his more ambitious schemes could wait until after they'd stopped running on red. It wasn't like either of them had homes they were eager to come back to, anyway.
+
+So, it was them, or this shop. And he was happy enough to take from those who didn't watch their own backs.
+
+Him and his buddy snuck in in the dead of night, not even the incessant halogen street lights of the city to give them company, and began to shove shit in their bags as fast as they could. Then, there was the issue of evidence: they knocked out the security cameras, destroyed the records-- there was no way a tiny shop like this could afford to replace them-- and made sure to cover up their tracks by cutting the patterns out of their soles, their shoes deliberately of identical size. It was the perfect hit.
+
+Of course, one thing was committing the crime and the other was getting away with it, and someone had to croak.
+
+He should've seen it coming. If his 'friend' had gotten their way, they would've handed him right into the hands of authorities in order to clear the string of previous allegations stacked against them. 'Just come see me,' they texted him. 'I got good loot to show.'
+
+K knew better than that. Their screams paled compared to his when he beat them to a pulp, tearing chunks off their face with their wired bat.
+
+This world was a dog-eat dog one. And to hell if anyone thought they could cross him like that again.
+
+`;
+
+/***/ }),
+
+/***/ 3052:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4097,7 +4359,7 @@ He can't even forgive him, let alone process it, as the man flees out the door m
 
 /***/ }),
 
-/***/ 892:
+/***/ 2892:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4118,7 +4380,7 @@ The door slams open, hurried steps bolting into the depths of the mall. He cough
 
 /***/ }),
 
-/***/ 952:
+/***/ 1952:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4137,7 +4399,7 @@ She sits there for a while longer, and then she stands up. He forgives her, and 
 
 /***/ }),
 
-/***/ 178:
+/***/ 1178:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4179,7 +4441,7 @@ She adjusts her bouncy blond hair in one of the many mirrors, grabs her bag (imm
 
 /***/ }),
 
-/***/ 791:
+/***/ 8791:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4208,7 +4470,7 @@ Dr. Fiona Slaughter
 
 /***/ }),
 
-/***/ 882:
+/***/ 4997:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4276,7 +4538,7 @@ It should be noted that her attempts to control reality tends towards "ending re
 
 /***/ }),
 
-/***/ 934:
+/***/ 8934:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4292,8 +4554,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "stringtoseed": () => (/* binding */ stringtoseed),
 /* harmony export */   "titleCase": () => (/* binding */ titleCase)
 /* harmony export */ });
-/* harmony import */ var _NonSeededRandUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(258);
-/* harmony import */ var _SeededRandom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(450);
+/* harmony import */ var _NonSeededRandUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(8258);
+/* harmony import */ var _SeededRandom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3450);
 
 
 
@@ -4550,101 +4812,111 @@ var Zalgo = {
 
 /***/ }),
 
-/***/ 116:
+/***/ 8116:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var map = {
-	"./": 607,
-	"./Objects/Memory": 953,
-	"./Objects/Memory.ts": 953,
-	"./Objects/MovementAlgs/BaseMovement": 59,
-	"./Objects/MovementAlgs/BaseMovement.ts": 59,
-	"./Objects/MovementAlgs/RandomMovement": 997,
-	"./Objects/MovementAlgs/RandomMovement.ts": 997,
-	"./Objects/PhysicalObject": 466,
-	"./Objects/PhysicalObject.ts": 466,
-	"./Objects/Quotidian": 580,
-	"./Objects/Quotidian.ts": 580,
-	"./Objects/RoomEngine/Room": 202,
-	"./Objects/RoomEngine/Room.ts": 202,
-	"./Objects/Stat": 137,
-	"./Objects/Stat.ts": 137,
-	"./Objects/Theme": 702,
-	"./Objects/Theme.ts": 702,
-	"./Objects/ThemeStorage": 288,
-	"./Objects/ThemeStorage.ts": 288,
-	"./Secrets/Content/0": 243,
-	"./Secrets/Content/0.js": 243,
-	"./Secrets/Content/1": 489,
-	"./Secrets/Content/1.js": 489,
-	"./Secrets/Content/10": 591,
-	"./Secrets/Content/10.js": 591,
-	"./Secrets/Content/11": 937,
-	"./Secrets/Content/11.js": 937,
-	"./Secrets/Content/12": 270,
-	"./Secrets/Content/12.js": 270,
-	"./Secrets/Content/13": 12,
-	"./Secrets/Content/13.js": 12,
-	"./Secrets/Content/14": 574,
-	"./Secrets/Content/14.js": 574,
-	"./Secrets/Content/15": 377,
-	"./Secrets/Content/15.js": 377,
-	"./Secrets/Content/16": 715,
-	"./Secrets/Content/16.js": 715,
-	"./Secrets/Content/17": 765,
-	"./Secrets/Content/17.js": 765,
-	"./Secrets/Content/18": 314,
-	"./Secrets/Content/18.js": 314,
-	"./Secrets/Content/19": 714,
-	"./Secrets/Content/19.js": 714,
-	"./Secrets/Content/2": 180,
-	"./Secrets/Content/2.js": 180,
+	"./": 3607,
+	"./Objects/Entities/Peewee": 1160,
+	"./Objects/Entities/Peewee.ts": 1160,
+	"./Objects/Entities/Quotidian": 6647,
+	"./Objects/Entities/Quotidian.ts": 6647,
+	"./Objects/Memory": 7953,
+	"./Objects/Memory.ts": 7953,
+	"./Objects/MovementAlgs/BaseMovement": 9059,
+	"./Objects/MovementAlgs/BaseMovement.ts": 9059,
+	"./Objects/MovementAlgs/NoMovement": 4956,
+	"./Objects/MovementAlgs/NoMovement.ts": 4956,
+	"./Objects/MovementAlgs/RandomMovement": 5997,
+	"./Objects/MovementAlgs/RandomMovement.ts": 5997,
+	"./Objects/PhysicalObject": 8466,
+	"./Objects/PhysicalObject.ts": 8466,
+	"./Objects/RoomEngine/Room": 6202,
+	"./Objects/RoomEngine/Room.ts": 6202,
+	"./Objects/Stat": 9137,
+	"./Objects/Stat.ts": 9137,
+	"./Objects/Theme": 9702,
+	"./Objects/Theme.ts": 9702,
+	"./Objects/ThemeStorage": 1288,
+	"./Objects/ThemeStorage.ts": 1288,
+	"./Secrets/Content/0": 6243,
+	"./Secrets/Content/0.js": 6243,
+	"./Secrets/Content/1": 6489,
+	"./Secrets/Content/1.js": 6489,
+	"./Secrets/Content/10": 8591,
+	"./Secrets/Content/10.js": 8591,
+	"./Secrets/Content/11": 8937,
+	"./Secrets/Content/11.js": 8937,
+	"./Secrets/Content/12": 7270,
+	"./Secrets/Content/12.js": 7270,
+	"./Secrets/Content/13": 4012,
+	"./Secrets/Content/13.js": 4012,
+	"./Secrets/Content/14": 4574,
+	"./Secrets/Content/14.js": 4574,
+	"./Secrets/Content/15": 9377,
+	"./Secrets/Content/15.js": 9377,
+	"./Secrets/Content/16": 8715,
+	"./Secrets/Content/16.js": 8715,
+	"./Secrets/Content/17": 6765,
+	"./Secrets/Content/17.js": 6765,
+	"./Secrets/Content/18": 3314,
+	"./Secrets/Content/18.js": 3314,
+	"./Secrets/Content/19": 1714,
+	"./Secrets/Content/19.js": 1714,
+	"./Secrets/Content/2": 8180,
+	"./Secrets/Content/2.js": 8180,
 	"./Secrets/Content/20": 121,
 	"./Secrets/Content/20.js": 121,
-	"./Secrets/Content/21": 375,
-	"./Secrets/Content/21.js": 375,
-	"./Secrets/Content/22": 451,
-	"./Secrets/Content/22.js": 451,
-	"./Secrets/Content/23": 16,
-	"./Secrets/Content/23.js": 16,
-	"./Secrets/Content/24": 693,
-	"./Secrets/Content/24.js": 693,
-	"./Secrets/Content/3": 52,
-	"./Secrets/Content/3.js": 52,
-	"./Secrets/Content/4": 892,
-	"./Secrets/Content/4.js": 892,
-	"./Secrets/Content/5": 952,
-	"./Secrets/Content/5.js": 952,
-	"./Secrets/Content/6": 178,
-	"./Secrets/Content/6.js": 178,
-	"./Secrets/Content/7": 791,
-	"./Secrets/Content/7.js": 791,
-	"./Secrets/Content/8": 882,
-	"./Secrets/Content/8.js": 882,
+	"./Secrets/Content/21": 5375,
+	"./Secrets/Content/21.js": 5375,
+	"./Secrets/Content/22": 2451,
+	"./Secrets/Content/22.js": 2451,
+	"./Secrets/Content/23": 4016,
+	"./Secrets/Content/23.js": 4016,
+	"./Secrets/Content/24": 4693,
+	"./Secrets/Content/24.js": 4693,
+	"./Secrets/Content/25": 4939,
+	"./Secrets/Content/25.js": 4939,
+	"./Secrets/Content/26": 3875,
+	"./Secrets/Content/26.js": 3875,
+	"./Secrets/Content/27": 1370,
+	"./Secrets/Content/27.js": 1370,
+	"./Secrets/Content/3": 3052,
+	"./Secrets/Content/3.js": 3052,
+	"./Secrets/Content/4": 2892,
+	"./Secrets/Content/4.js": 2892,
+	"./Secrets/Content/5": 1952,
+	"./Secrets/Content/5.js": 1952,
+	"./Secrets/Content/6": 1178,
+	"./Secrets/Content/6.js": 1178,
+	"./Secrets/Content/7": 8791,
+	"./Secrets/Content/7.js": 8791,
+	"./Secrets/Content/8": 4997,
+	"./Secrets/Content/8.js": 4997,
 	"./Secrets/Content/9": 842,
 	"./Secrets/Content/9.js": 842,
-	"./Secrets/PasswordStorage": 867,
-	"./Secrets/PasswordStorage.ts": 867,
-	"./Secrets/Transcript": 122,
-	"./Secrets/Transcript.ts": 122,
-	"./Utils/ArrayUtils": 907,
-	"./Utils/ArrayUtils.ts": 907,
-	"./Utils/LocalStorageUtils": 565,
-	"./Utils/LocalStorageUtils.ts": 565,
-	"./Utils/NonSeededRandUtils": 258,
-	"./Utils/NonSeededRandUtils.ts": 258,
-	"./Utils/SeededRandom": 450,
-	"./Utils/SeededRandom.ts": 450,
-	"./Utils/StringUtils": 934,
-	"./Utils/StringUtils.js": 934,
+	"./Secrets/PasswordStorage": 9867,
+	"./Secrets/PasswordStorage.ts": 9867,
+	"./Secrets/Transcript": 8122,
+	"./Secrets/Transcript.ts": 8122,
+	"./Utils/ArrayUtils": 3907,
+	"./Utils/ArrayUtils.ts": 3907,
+	"./Utils/LocalStorageUtils": 5565,
+	"./Utils/LocalStorageUtils.ts": 5565,
+	"./Utils/NonSeededRandUtils": 8258,
+	"./Utils/NonSeededRandUtils.ts": 8258,
+	"./Utils/SeededRandom": 3450,
+	"./Utils/SeededRandom.ts": 3450,
+	"./Utils/StringUtils": 8934,
+	"./Utils/StringUtils.js": 8934,
 	"./Utils/URLUtils": 389,
 	"./Utils/URLUtils.ts": 389,
-	"./Utils/constants": 817,
-	"./Utils/constants.ts": 817,
-	"./Utils/misc": 79,
-	"./Utils/misc.ts": 79,
-	"./index": 607,
-	"./index.ts": 607
+	"./Utils/constants": 8817,
+	"./Utils/constants.ts": 8817,
+	"./Utils/misc": 4079,
+	"./Utils/misc.ts": 4079,
+	"./index": 3607,
+	"./index.ts": 3607
 };
 
 
@@ -4665,7 +4937,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 116;
+webpackContext.id = 8116;
 
 /***/ })
 
@@ -4729,7 +5001,7 @@ webpackContext.id = 116;
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(607);
+/******/ 	var __webpack_exports__ = __webpack_require__(3607);
 /******/ 	
 /******/ })()
 ;
