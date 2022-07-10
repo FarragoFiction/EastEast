@@ -96,6 +96,7 @@ export class Secret {
 
 }
 
+//lets play of south is summarized here by the Guide: https://www.tumblr.com/blog/view/figuringoutnothing/689403345728847873?source=share
 
 export interface PasswordMap {
     [details: string]: Secret;

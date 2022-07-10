@@ -13,7 +13,7 @@ export class MoveToWestDoor extends Movement{
         super(entity);
     }
     customShit =()=>{
-        this.entity.emitSass("THERES NO DOOR TO THE WEST, DUNKASS (please, stop making me, go there).")
+        this.entity.emitSass("THERES NO DOOR TO THE WEST, DUNKASS (please, stop making me, try to walk through a wall).")
     }
 
     tick = ()=>{

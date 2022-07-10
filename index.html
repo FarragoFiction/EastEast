@@ -16,11 +16,12 @@
     </div>
     <div class="player-container" id="story-container">
       <div class="story-so-far">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id mauris sed orci placerat iaculis quis quis orci. Sed non dolor nisi. Vivamus sed fringilla urna, vel varius augue. Aliquam non aliquam lacus. Morbi quam tellus, pulvinar non dui ut, aliquam eleifend ligula. Fusce libero purus, blandit sed lectus in, tempor dapibus tortor. Fusce fermentum, dolor eget consequat semper, ipsum enim ullamcorper neque, non posuere magna libero non urna. Mauris vitae suscipit ligula. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tincidunt sollicitudin justo a condimentum.</p>>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id mauris sed orci placerat iaculis quis quis orci. Sed non dolor nisi. Vivamus sed fringilla urna, vel varius augue. Aliquam non aliquam lacus. Morbi quam tellus, pulvinar non dui ut, aliquam eleifend ligula. Fusce libero purus, blandit sed lectus in, tempor dapibus tortor. Fusce fermentum, dolor eget consequat semper, ipsum enim ullamcorper neque, non posuere magna libero non urna. Mauris vitae suscipit ligula. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tincidunt sollicitudin justo a condimentum.</p>
       </div>
       <div class="command">
-        <input placeholder="Command Peewee"></input>
+        <form id="puppet-command" action="" method="post" style="display: inline-block;">
+          <input id="puppet-input" placeholder="Command Peewee">
+          <button type="submit">Submit</button>
+        </form>
       </div>
     </div>
 
@@ -36,26 +37,34 @@
     * same for south and east
     * if you say west, peewee says something sassy
 
-    * if an ai touches the door, remove them from the room (despawn them), put them in the child room whose door they touched
-* if peewee touches a door, current room is changed (and in ALL rooms, blorbo has random chance of going to another room, if one exists)(ai is peewee based because its an immune system. it doesn't move unless he does)
-* spawn quotidian that always tries to go to a door to test
-*  upgrade peewee system so if you say "north" "south" or "east" pee wee gets a movement alg to go to the door 
-* begin writing basic trigger/effect ai system so quotidians can randomly cycle between moving randomly, approaching peewee, and fleeing to doors
-**  fractal spiraling graphic of the arms of Zampanio, possibly as part of the Attic for East East
-like practical guide to evil, AI can have IMPORTANT GOAL CARDS that they will 100% do if possible (things that lead to Plot). but all their other lil ai stuff might fuck with
+    * if an ai touches the door, remove them from the room (despawn them), put them in the child room whose door they
+    touched
+    * if peewee touches a door, current room is changed (and in ALL rooms, blorbo has random chance of going to another
+    room, if one exists)(ai is peewee based because its an immune system. it doesn't move unless he does)
+    * spawn quotidian that always tries to go to a door to test
+    * upgrade peewee system so if you say "north" "south" or "east" pee wee gets a movement alg to go to the door
+    * begin writing basic trigger/effect ai system so quotidians can randomly cycle between moving randomly, approaching
+    peewee, and fleeing to doors
+    ** fractal spiraling graphic of the arms of Zampanio, possibly as part of the Attic for East East
+    like practical guide to evil, AI can have IMPORTANT GOAL CARDS that they will 100% do if possible (things that lead
+    to Plot). but all their other lil ai stuff might fuck with
     <li>* fractal spiraling graphic of the arms of Zampanio, possibly as part of the Attic for East East
     </li>
-    <li>north south and east doors, if you type "go north, south or east" to peewee you shift rooms (peewee doesn't render yet)</li>
+    <li>north south and east doors, if you type "go north, south or east" to peewee you shift rooms (peewee doesn't
+      render yet)</li>
     <li>MoveAlgorithm for blorbos, for now just pick "random" (blorbos innately don't leave bounds)</li>
     <li>simple trigger effect ai engine , like quest engine. first trigger is "entity is in combat range" and first
-      effect is "quip". (if a quotidian bumps into anything it comments on it) has a human readable version of trigger and effect, plus flavor for both (like quest engine) </li>
+      effect is "quip". (if a quotidian bumps into anything it comments on it) has a human readable version of trigger
+      and effect, plus flavor for both (like quest engine) </li>
     <li>* pull in eye killers assets, render her on screen, she kills anything that gets close, but otherwise doens't
       move</li>
-      <li>simple objects, same format as east (triggers are looking for words in either flavor text or name)</li>
-      <li>quotidians move randomly, picking up objects</li>
-      <li>StoryEngine, much like MazeStorySim. When an effect triggers, print out trigger/effect pair plus flavor text much like Quest engine. </li>
-      <li>peewee is an ai like any other, but player issues commands. like "go north" or "go to bird", much like ThisIsAGame. or ai dungeon.</li>
-      <li>peewees ai is STRICTLY for being sassy. popovers complaining about things, for example.</li>
+    <li>simple objects, same format as east (triggers are looking for words in either flavor text or name)</li>
+    <li>quotidians move randomly, picking up objects</li>
+    <li>StoryEngine, much like MazeStorySim. When an effect triggers, print out trigger/effect pair plus flavor text
+      much like Quest engine. </li>
+    <li>peewee is an ai like any other, but player issues commands. like "go north" or "go to bird", much like
+      ThisIsAGame. or ai dungeon.</li>
+    <li>peewees ai is STRICTLY for being sassy. popovers complaining about things, for example.</li>
   </ul>
 
 </body>

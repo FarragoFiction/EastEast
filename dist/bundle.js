@@ -1,6 +1,34 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 7042:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Action = void 0;
+class Action {
+    constructor() {
+        this.recognizedCommands = []; //nothing, so its default
+        this.smellPhrase = (room) => {
+            const phrases = [`Why does it smell like ${room.getSmell()} all of a sudden?`];
+            if (room.rand.nextDouble() > .75) {
+                return "";
+            }
+            return room.rand.pickFrom(phrases);
+        };
+        this.applyAction = (subject, current_room, object) => {
+            //JR NOTE: todo flesh this out. should be able to access the whole maze really.
+            return `${subject.name} stands around doing sweet FA. ${this.smellPhrase(current_room)}`;
+        };
+    }
+}
+exports.Action = Action;
+
+
+/***/ }),
+
 /***/ 1160:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -12,8 +40,9 @@ exports.Peewee = void 0;
 const MoveToWestDoor_1 = __webpack_require__(9991);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
+const BaseAction_1 = __webpack_require__(7042);
 const Quotidian_1 = __webpack_require__(6647);
-//what, did you think the REAL eye killer would be so formulaic? 
+//what, did you think any real being could be so formulaic? 
 class Peewee extends Quotidian_1.Quotidian {
     //TODO have a movement algorithm (effects can shift this)
     /*
@@ -32,8 +61,21 @@ class Peewee extends Quotidian_1.Quotidian {
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
+        this.possibleActions = []; //ordered by priority
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new MoveToWestDoor_1.MoveToWestDoor(this);
+        //peewee's ai is user based. you can tell him to do various actions. 
+        //there is no trigger. only actions.
+        this.processStorybeat = (beat) => {
+            for (let action of this.possibleActions) {
+                if (action.recognizedCommands.includes(beat.command.toUpperCase())) {
+                    beat.response = action.applyAction(this, this.room);
+                }
+            }
+            if (beat.response.trim() === "") {
+                beat.response = new BaseAction_1.Action().applyAction(this, this.room);
+            }
+        };
     }
 }
 exports.Peewee = Peewee;
@@ -404,7 +446,7 @@ class MoveToWestDoor extends BaseMovement_1.Movement {
     constructor(entity) {
         super(entity);
         this.customShit = () => {
-            this.entity.emitSass("THERES NO DOOR TO THE WEST, DUNKASS (please, stop making me, go there).");
+            this.entity.emitSass("THERES NO DOOR TO THE WEST, DUNKASS (please, stop making me, try to walk through a wall).");
         };
         this.tick = () => {
             this.customShit();
@@ -523,6 +565,79 @@ exports.PhysicalObject = PhysicalObject;
 
 /***/ }),
 
+/***/ 7194:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Maze = void 0;
+const PasswordStorage_1 = __webpack_require__(9867);
+const misc_1 = __webpack_require__(4079);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Room_1 = __webpack_require__(6202);
+const StoryBeat_1 = __webpack_require__(5504);
+class Maze {
+    constructor(ele, storySoFar, rand) {
+        this.storybeats = []; //can be added to by peewee and by the ai
+        this.fxAudio = new Audio("audio/264828__cmdrobot__text-message-or-videogame-jump.mp3");
+        this.initialize = () => __awaiter(this, void 0, void 0, function* () {
+            const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]];
+            this.room = yield (0, Room_1.randomRoomWithThemes)(this, this.ele, themes, this.rand);
+            yield this.room.propagateMaze(3);
+            console.log("JR NOTE: room now has these children: ", this.room.children);
+            this.room.render();
+            this.peewee = this.room.peewee;
+            (0, PasswordStorage_1.initRabbitHole)(this.room);
+            this.handleCommands();
+        });
+        this.addStorybeat = (beat) => {
+            if (this.peewee) {
+                this.peewee.processStorybeat(beat);
+            }
+            this.fxAudio.play();
+            this.storybeats.push(beat);
+            const beatele = (0, misc_1.createElementWithIdAndParent)("div", this.storySoFar, undefined, "storybeat");
+            const commandele = (0, misc_1.createElementWithIdAndParent)("div", beatele, undefined, "historical-command");
+            const responseele = (0, misc_1.createElementWithIdAndParent)("div", beatele, undefined, "response");
+            commandele.innerHTML = beat.command;
+            responseele.innerHTML = beat.response;
+        };
+        this.handleCommands = () => {
+            const form = document.querySelector("#puppet-command");
+            const input = document.querySelector("#puppet-input");
+            console.log("JR NOTE: form and input are", { form, input });
+            if (form && input) {
+                console.log("JR NOTE: setting up both");
+                form.onsubmit = (event) => {
+                    event.preventDefault();
+                    this.addStorybeat(new StoryBeat_1.StoryBeat(input.value, ""));
+                    input.value = "";
+                    return false;
+                };
+            }
+        };
+        this.rand = rand;
+        this.ele = ele;
+        this.storySoFar = storySoFar;
+        this.initialize();
+    }
+}
+exports.Maze = Maze;
+
+
+/***/ }),
+
 /***/ 6202:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
@@ -550,7 +665,7 @@ class Room {
     //objects
     //people
     //really theres just the one room, we keep clearing it out.
-    constructor(themes, element, rand) {
+    constructor(maze, themes, element, rand) {
         this.floor = "glitch.png";
         this.wall = "glitch.png";
         this.wallHeight = 100;
@@ -561,6 +676,10 @@ class Room {
         this.ticking = false;
         this.tickRate = 100;
         this.children = [];
+        this.getSmell = () => {
+            const theme = this.rand.pickFrom(this.themes);
+            return theme.pickPossibilityFor(this.rand, ThemeStorage_1.SMELL);
+        };
         this.stopTicking = () => {
             this.ticking = false;
         };
@@ -662,7 +781,7 @@ class Room {
             }
         };
         this.spawnChildRoom = () => __awaiter(this, void 0, void 0, function* () {
-            return yield (0, exports.randomRoomWithThemes)(this.element, this.childRoomThemes(), this.rand);
+            return yield (0, exports.randomRoomWithThemes)(this.maze, this.element, this.childRoomThemes(), this.rand);
         });
         //when i first make the maze, we generate its structure to a certain depth, and then from there one room at a time.
         this.propagateMaze = (depthRemaining) => __awaiter(this, void 0, void 0, function* () {
@@ -677,13 +796,14 @@ class Room {
         });
         this.themes = themes;
         this.rand = rand;
+        this.maze = maze;
         this.element = element;
         this.init();
     }
 }
 exports.Room = Room;
-const randomRoomWithThemes = (ele, themes, seededRandom) => __awaiter(void 0, void 0, void 0, function* () {
-    const room = new Room(themes, ele, seededRandom);
+const randomRoomWithThemes = (maze, ele, themes, seededRandom) => __awaiter(void 0, void 0, void 0, function* () {
+    const room = new Room(maze, themes, ele, seededRandom);
     const items1 = yield (0, exports.spawnWallObjects)(room.width, room.height, 0, ThemeStorage_1.WALLBACKGROUND, "BackWallObjects", seededRandom, themes);
     const items3 = yield spawnFloorObjects(room.width, room.height, 0, ThemeStorage_1.FLOORBACKGROUND, "UnderFloorObjects", seededRandom, themes);
     const items2 = yield (0, exports.spawnWallObjects)(room.width, room.height, 1, ThemeStorage_1.WALLFOREGROUND, "FrontWallObjects", seededRandom, themes);
@@ -696,7 +816,8 @@ const randomRoomWithThemes = (ele, themes, seededRandom) => __awaiter(void 0, vo
     for (let i = 0; i < stress_test; i++) {
         room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], "images/Walkabout/Sprites/humanoid_crow.gif", "testing"));
     }
-    room.addBlorbo(new Peewee_1.Peewee(room, 150, 350, 50, 50));
+    room.peewee = new Peewee_1.Peewee(room, 150, 350, 50, 50);
+    room.addBlorbo(room.peewee);
     return room;
 });
 exports.randomRoomWithThemes = randomRoomWithThemes;
@@ -765,6 +886,24 @@ const spawnFloorObjects = (width, height, layer, key, folder, seededRandom, them
     }
     return ret;
 });
+
+
+/***/ }),
+
+/***/ 5504:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.StoryBeat = void 0;
+class StoryBeat {
+    constructor(command, response) {
+        this.command = command;
+        this.response = response;
+    }
+}
+exports.StoryBeat = StoryBeat;
 
 
 /***/ }),
@@ -2971,7 +3110,8 @@ exports.albhed_map = {
     "z": "W",
     "0": "https://www.tumblr.com/blog/view/figuringoutnothing/688028145704665088?source=share",
     "1": "http://farragofiction.com/DevonaFears",
-    "2": "http://farragofiction.com/NotesOnStealingPeoplesShit/"
+    "2": "http://farragofiction.com/NotesOnStealingPeoplesShit/",
+    "3": "https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8" //by the watcher of threads
 };
 const translate = (word) => {
     let ret = word.toLowerCase();
@@ -3552,23 +3692,17 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.loadSecretText = void 0;
 const Stat_1 = __webpack_require__(9137);
 const Theme_1 = __webpack_require__(9702);
-const ThemeStorage_1 = __webpack_require__(1288);
-const PasswordStorage_1 = __webpack_require__(9867);
-const Room_1 = __webpack_require__(6202);
 const NonSeededRandUtils_1 = __webpack_require__(8258);
 const SeededRandom_1 = __importDefault(__webpack_require__(3450));
+const Maze_1 = __webpack_require__(7194);
 window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
     const ele = document.querySelector("#current-room");
+    const storySoFar = document.querySelector(".story-so-far");
     (0, Stat_1.initStats)();
     (0, Theme_1.initThemes)();
-    const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]];
     const seed = (0, NonSeededRandUtils_1.getRandomNumberBetween)(1, 113);
-    if (ele) {
-        const room = yield (0, Room_1.randomRoomWithThemes)(ele, themes, new SeededRandom_1.default(seed));
-        yield room.propagateMaze(3);
-        console.log("JR NOTE: room now has these children: ", room.children);
-        room.render();
-        (0, PasswordStorage_1.initRabbitHole)(room);
+    if (ele && storySoFar) {
+        new Maze_1.Maze(ele, storySoFar, new SeededRandom_1.default(seed));
     }
 });
 //the text should be a javascript file exporting const text.
@@ -5020,6 +5154,8 @@ var Zalgo = {
 
 var map = {
 	"./": 3607,
+	"./Objects/Entities/Actions/BaseAction": 7042,
+	"./Objects/Entities/Actions/BaseAction.ts": 7042,
 	"./Objects/Entities/Peewee": 1160,
 	"./Objects/Entities/Peewee.ts": 1160,
 	"./Objects/Entities/Quotidian": 6647,
@@ -5044,8 +5180,12 @@ var map = {
 	"./Objects/MovementAlgs/RandomMovement.ts": 5997,
 	"./Objects/PhysicalObject": 8466,
 	"./Objects/PhysicalObject.ts": 8466,
+	"./Objects/RoomEngine/Maze": 7194,
+	"./Objects/RoomEngine/Maze.ts": 7194,
 	"./Objects/RoomEngine/Room": 6202,
 	"./Objects/RoomEngine/Room.ts": 6202,
+	"./Objects/RoomEngine/StoryBeat": 5504,
+	"./Objects/RoomEngine/StoryBeat.ts": 5504,
 	"./Objects/Stat": 9137,
 	"./Objects/Stat.ts": 9137,
 	"./Objects/Theme": 9702,

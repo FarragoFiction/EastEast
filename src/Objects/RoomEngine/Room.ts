@@ -1,16 +1,18 @@
 import { all_themes, Theme } from "../Theme";
-import { FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, SPYING, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
+import { FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, SMELL, SPYING, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
 import { createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 import { Quotidian } from "../Entities/Quotidian";
 import { PhysicalObject, RenderedItem } from "../PhysicalObject";
 import { addImageProcess } from "../../Utils/URLUtils";
 import { Peewee } from "../Entities/Peewee";
+import { Maze } from "./Maze";
 
 
 
 export class Room {
     themes: Theme[];
+    maze: Maze;
     floor = "glitch.png"
     wall = "glitch.png"
     wallHeight = 100;
@@ -19,6 +21,7 @@ export class Room {
     width = 400;
     height = 600;
     blorbos: Quotidian[] = [];
+    peewee?: Peewee; //peewee is optional to the universe;
     items: PhysicalObject[] = [];
     ticking = false;
     tickRate = 100;
@@ -28,13 +31,19 @@ export class Room {
     //objects
     //people
     //really theres just the one room, we keep clearing it out.
-    constructor(themes: Theme[], element: HTMLElement, rand: SeededRandom) {
+    constructor(maze: Maze,themes: Theme[], element: HTMLElement, rand: SeededRandom) {
         this.themes = themes;
         this.rand = rand;
+        this.maze = maze;
         this.element = element;
         this.init();
     }
 
+    getSmell = ()=>{
+        const theme = this.rand.pickFrom(this.themes);
+        return theme.pickPossibilityFor(this.rand, SMELL);
+
+    }
     stopTicking = ()=>{
         this.ticking = false;
     }
@@ -154,7 +163,7 @@ export class Room {
     }
 
     spawnChildRoom = async () => {
-        return await randomRoomWithThemes(this.element,this.childRoomThemes(), this.rand );
+        return await randomRoomWithThemes(this.maze,this.element,this.childRoomThemes(), this.rand );
     }
 
     //when i first make the maze, we generate its structure to a certain depth, and then from there one room at a time.
@@ -171,8 +180,8 @@ export class Room {
 
 }
 
-export const randomRoomWithThemes = async (ele: HTMLElement, themes: Theme[], seededRandom: SeededRandom) => {
-    const room = new Room(themes, ele, seededRandom);
+export const randomRoomWithThemes = async (maze: Maze,ele: HTMLElement, themes: Theme[], seededRandom: SeededRandom) => {
+    const room = new Room(maze,themes, ele, seededRandom);
     const items1: RenderedItem[] = await spawnWallObjects(room.width,room.height, 0,WALLBACKGROUND, "BackWallObjects", seededRandom, themes);
     const items3: RenderedItem[] = await spawnFloorObjects(room.width,room.height,0, FLOORBACKGROUND, "UnderFloorObjects", seededRandom, themes);
     const items2: RenderedItem[] = await spawnWallObjects(room.width,room.height,1, WALLFOREGROUND, "FrontWallObjects", seededRandom, themes);
@@ -186,7 +195,8 @@ export const randomRoomWithThemes = async (ele: HTMLElement, themes: Theme[], se
     for(let i = 0; i< stress_test; i++){
         room.addBlorbo(new Quotidian(room,"Quotidian",150,150,50,50, [all_themes[SPYING]],"images/Walkabout/Sprites/humanoid_crow.gif","testing"));
     }
-    room.addBlorbo(new Peewee(room,150,350,50,50));
+    room.peewee = new Peewee(room,150,350,50,50);
+    room.addBlorbo(room.peewee);
 
 
     return room;

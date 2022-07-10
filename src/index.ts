@@ -6,21 +6,20 @@ import {albhed_map, initRabbitHole} from "./Secrets/PasswordStorage";
 import { randomRoomWithThemes, Room } from "./Objects/RoomEngine/Room";
 import { getRandomNumberBetween } from "./Utils/NonSeededRandUtils";
 import SeededRandom from "./Utils/SeededRandom";
+import { Maze } from "./Objects/RoomEngine/Maze";
 window.onload = async()=>{
     const ele = document.querySelector("#current-room") as HTMLElement;
+    const storySoFar = document.querySelector(".story-so-far") as HTMLElement;
     initStats();
     initThemes();
-    const themes = [all_themes[ENDINGS],all_themes[WEB],all_themes[TWISTING],all_themes[CLOWNS]]
     const seed = getRandomNumberBetween(1,113);
-    if(ele){
-        const room = await randomRoomWithThemes(ele, themes,new SeededRandom(seed));
-        await room.propagateMaze(3);
-        console.log("JR NOTE: room now has these children: ", room.children)
-        room.render();
-        initRabbitHole(room);
-
+    if(ele && storySoFar){
+        new Maze(ele,storySoFar, new SeededRandom(seed));
     }
+
 }
+
+
 
 //the text should be a javascript file exporting const text.
 export function loadSecretText(location:string){
