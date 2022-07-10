@@ -1,5 +1,5 @@
 import { all_themes, Theme } from "../Theme";
-import { FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, SMELL, SPYING, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
+import { FEELING, FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, SMELL, SOUND, SPYING, TASTE, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
 import { createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 import { Quotidian } from "../Entities/Quotidian";
@@ -39,11 +39,11 @@ export class Room {
         this.init();
     }
 
-    getSmell = ()=>{
+    getRandomThemeConcept = (concept: string)=>{
         const theme = this.rand.pickFrom(this.themes);
-        return theme.pickPossibilityFor(this.rand, SMELL);
-
+        return theme.pickPossibilityFor(this.rand, concept);
     }
+
     stopTicking = ()=>{
         this.ticking = false;
     }

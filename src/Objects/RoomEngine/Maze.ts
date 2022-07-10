@@ -46,8 +46,10 @@ export class Maze {
         const beatele = createElementWithIdAndParent("div",this.storySoFar,undefined,"storybeat")
         const commandele = createElementWithIdAndParent("div",beatele,undefined,"historical-command")
         const responseele = createElementWithIdAndParent("div",beatele,undefined,"response")
-        commandele.innerHTML = beat.command;
+        commandele.innerHTML = `>${beat.command}`;
         responseele.innerHTML = beat.response;
+        this.storySoFar.scrollTo(0, this.storySoFar.scrollHeight);
+
 
     }
 

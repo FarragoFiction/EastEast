@@ -2,25 +2,29 @@
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 7042:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Action = void 0;
+const ThemeStorage_1 = __webpack_require__(1288);
 class Action {
     constructor() {
         this.recognizedCommands = []; //nothing, so its default
-        this.smellPhrase = (room) => {
-            const phrases = [`Why does it smell like ${room.getSmell()} all of a sudden?`];
-            if (room.rand.nextDouble() > .75) {
+        this.sensePhrase = (room) => {
+            const smell = room.getRandomThemeConcept(ThemeStorage_1.SMELL);
+            const taste = room.getRandomThemeConcept(ThemeStorage_1.TASTE);
+            const sound = room.getRandomThemeConcept(ThemeStorage_1.SOUND);
+            const phrases = [`You can hear the sound of ${sound} in the distant.`, `The taste of ${taste} floods your mouth.`, `Why does it smell like ${smell} all of a sudden?`];
+            if (room.rand.nextDouble() < .5) {
                 return "";
             }
             return room.rand.pickFrom(phrases);
         };
         this.applyAction = (subject, current_room, object) => {
             //JR NOTE: todo flesh this out. should be able to access the whole maze really.
-            return `${subject.name} stands around doing sweet FA. ${this.smellPhrase(current_room)}`;
+            return `${subject.name} stands around doing sweet FA. ${this.sensePhrase(current_room)}`;
         };
     }
 }
@@ -37,7 +41,7 @@ exports.Action = Action;
 //base level Entity object. quotidians can turn into anything
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Peewee = void 0;
-const MoveToWestDoor_1 = __webpack_require__(9991);
+const NoMovement_1 = __webpack_require__(4956);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const BaseAction_1 = __webpack_require__(7042);
@@ -63,7 +67,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.currentSpeed = 10;
         this.possibleActions = []; //ordered by priority
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
-        this.movement_alg = new MoveToWestDoor_1.MoveToWestDoor(this);
+        this.movement_alg = new NoMovement_1.NoMovement(this);
         //peewee's ai is user based. you can tell him to do various actions. 
         //there is no trigger. only actions.
         this.processStorybeat = (beat) => {
@@ -610,8 +614,9 @@ class Maze {
             const beatele = (0, misc_1.createElementWithIdAndParent)("div", this.storySoFar, undefined, "storybeat");
             const commandele = (0, misc_1.createElementWithIdAndParent)("div", beatele, undefined, "historical-command");
             const responseele = (0, misc_1.createElementWithIdAndParent)("div", beatele, undefined, "response");
-            commandele.innerHTML = beat.command;
+            commandele.innerHTML = `>${beat.command}`;
             responseele.innerHTML = beat.response;
+            this.storySoFar.scrollTo(0, this.storySoFar.scrollHeight);
         };
         this.handleCommands = () => {
             const form = document.querySelector("#puppet-command");
@@ -676,9 +681,9 @@ class Room {
         this.ticking = false;
         this.tickRate = 100;
         this.children = [];
-        this.getSmell = () => {
+        this.getRandomThemeConcept = (concept) => {
             const theme = this.rand.pickFrom(this.themes);
-            return theme.pickPossibilityFor(this.rand, ThemeStorage_1.SMELL);
+            return theme.pickPossibilityFor(this.rand, concept);
         };
         this.stopTicking = () => {
             this.ticking = false;
