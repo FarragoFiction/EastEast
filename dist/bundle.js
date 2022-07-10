@@ -630,6 +630,7 @@ class Maze {
                     input.value = "";
                     return false;
                 };
+                this.addStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands"));
             }
         };
         this.rand = rand;

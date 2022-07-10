@@ -12,7 +12,7 @@ export class Action{ //lawsuit
         const taste = room.getRandomThemeConcept(TASTE);
         const sound = room.getRandomThemeConcept(SOUND);
 
-       const phrases = [`You can hear the sound of ${sound} in the distant.`,`The taste of ${taste} floods your mouth.`, `Why does it smell like ${smell} all of a sudden?`];
+       const phrases = [`You can hear the sound of ${sound} in the distance.`,`The taste of ${taste} floods your mouth.`, `Why does it smell like ${smell} all of a sudden?`];
        if(room.rand.nextDouble() <.5){
            return "";
        }

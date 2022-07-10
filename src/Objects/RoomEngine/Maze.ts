@@ -65,6 +65,7 @@ export class Maze {
                 input.value="";
                 return false;
             }
+            this.addStorybeat(new StoryBeat("Peewee: Await Commands","Peewee is awaiting the Observers commands"));
         }
     }
 
