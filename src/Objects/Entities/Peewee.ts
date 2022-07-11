@@ -7,6 +7,11 @@ import { StoryBeat } from "../RoomEngine/StoryBeat";
 import { all_themes } from "../Theme";
 import { ENDINGS, WEB, TWISTING, CLOWNS } from "../ThemeStorage";
 import { Action } from "./Actions/BaseAction";
+import { GoEast } from "./Actions/GoEast";
+import { GoNorth } from "./Actions/GoNorth";
+import { GoSouth } from "./Actions/GoSouth";
+import { GoWest } from "./Actions/GoWest";
+import { StopMoving } from "./Actions/StopMoving";
 import { Direction, Quotidian } from "./Quotidian";
 
 
@@ -17,7 +22,7 @@ export class Peewee extends Quotidian{
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
-    possibleActions: Action[]  = []; //ordered by priority
+    possibleActions: Action[]  = [new StopMoving(), new GoNorth(),new GoEast(),new GoSouth(),new GoWest()]; //ordered by priority
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
     movement_alg:Movement = new NoMovement(this);
@@ -43,8 +48,11 @@ export class Peewee extends Quotidian{
     processStorybeat=(beat: StoryBeat)=>{
 
         for(let action of this.possibleActions){
-            if(action.recognizedCommands.includes(beat.command.toUpperCase())){
+            const words = beat.command.split(" ");
+            for(let word of words)
+            if(action.recognizedCommands.includes(word.toUpperCase())){
                 beat.response = action.applyAction(this,this.room);
+                return;
             }
         }
 

@@ -177,11 +177,11 @@ textarea{
   border-radius: 5px;
   padding: 2px;
   position: absolute;
-  top: -128px;
+  top: -25px;
   font-size: 12px;
-  left: -100px;
+  left: 0px;
   color: black;
-  padding-left: 13px;
+  padding-left: 5px;
   font-family: 'Courier New', monospace;
   font-weight: bold;
   padding-right: 5px;

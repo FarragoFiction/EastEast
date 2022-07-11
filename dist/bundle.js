@@ -16,7 +16,7 @@ class Action {
             const smell = room.getRandomThemeConcept(ThemeStorage_1.SMELL);
             const taste = room.getRandomThemeConcept(ThemeStorage_1.TASTE);
             const sound = room.getRandomThemeConcept(ThemeStorage_1.SOUND);
-            const phrases = [`You can hear the sound of ${sound} in the distant.`, `The taste of ${taste} floods your mouth.`, `Why does it smell like ${smell} all of a sudden?`];
+            const phrases = [`You can hear the sound of ${sound} in the distance.`, `The taste of ${taste} floods your mouth.`, `Why does it smell like ${smell} all of a sudden?`];
             if (room.rand.nextDouble() < .5) {
                 return "";
             }
@@ -33,6 +33,135 @@ exports.Action = Action;
 
 /***/ }),
 
+/***/ 7192:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GoEast = void 0;
+const MoveToEastDoor_1 = __webpack_require__(1146);
+const BaseAction_1 = __webpack_require__(7042);
+class GoEast extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["EAST", "RIGHT"]; //nothing, so its default
+        this.applyAction = (subject, current_room, object) => {
+            //JR NOTE: todo flesh this out. should be able to access the whole maze really.
+            subject.movement_alg = new MoveToEastDoor_1.MoveToEastDoor(subject);
+            subject.emitSass("OK");
+            return `${subject.name} starts heading to the EAST DOOR.`;
+        };
+    }
+}
+exports.GoEast = GoEast;
+
+
+/***/ }),
+
+/***/ 7415:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GoNorth = void 0;
+const MoveToNorthDoor_1 = __webpack_require__(6003);
+const BaseAction_1 = __webpack_require__(7042);
+class GoNorth extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["NORTH", "DOOR", "UP"]; //nothing, so its default
+        this.applyAction = (subject, current_room, object) => {
+            //JR NOTE: todo flesh this out. should be able to access the whole maze really.
+            subject.movement_alg = new MoveToNorthDoor_1.MoveToNorthDoor(subject);
+            subject.emitSass("OK");
+            return `${subject.name} starts heading to the NORTH DOOR.`;
+        };
+    }
+}
+exports.GoNorth = GoNorth;
+
+
+/***/ }),
+
+/***/ 3535:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GoSouth = void 0;
+const MoveToSouthDoor_1 = __webpack_require__(9380);
+const BaseAction_1 = __webpack_require__(7042);
+class GoSouth extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["SOUTH", "DOWN"]; //nothing, so its default
+        this.applyAction = (subject, current_room, object) => {
+            //JR NOTE: todo flesh this out. should be able to access the whole maze really.
+            subject.movement_alg = new MoveToSouthDoor_1.MoveToSouthDoor(subject);
+            subject.emitSass("OK");
+            return `${subject.name} starts heading to the SOUTH DOOR.`;
+        };
+    }
+}
+exports.GoSouth = GoSouth;
+
+
+/***/ }),
+
+/***/ 4834:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GoWest = void 0;
+const MoveToWestDoor_1 = __webpack_require__(9991);
+const BaseAction_1 = __webpack_require__(7042);
+class GoWest extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["WEST", "LEFT"]; //nothing, so its default
+        this.applyAction = (subject, current_room, object) => {
+            //JR NOTE: todo flesh this out. should be able to access the whole maze really.
+            subject.movement_alg = new MoveToWestDoor_1.MoveToWestDoor(subject);
+            subject.emitSass(":(");
+            return `${subject.name} flips you off. "ASSHOLE! THERE IS NO DOOR TO THE WEST (please, stop making, me try to do, the impossible...)"`;
+        };
+    }
+}
+exports.GoWest = GoWest;
+
+
+/***/ }),
+
+/***/ 4469:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.StopMoving = void 0;
+const NoMovement_1 = __webpack_require__(4956);
+const BaseAction_1 = __webpack_require__(7042);
+class StopMoving extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["STOP", "FREEZE", "STILL", "STAND"]; //nothing, so its default
+        this.applyAction = (subject, current_room, object) => {
+            //JR NOTE: todo flesh this out. should be able to access the whole maze really.
+            subject.movement_alg = new NoMovement_1.NoMovement(subject);
+            return `${subject.name} comes to a halt.`;
+        };
+    }
+}
+exports.StopMoving = StopMoving;
+
+
+/***/ }),
+
 /***/ 1160:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -45,6 +174,11 @@ const NoMovement_1 = __webpack_require__(4956);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const BaseAction_1 = __webpack_require__(7042);
+const GoEast_1 = __webpack_require__(7192);
+const GoNorth_1 = __webpack_require__(7415);
+const GoSouth_1 = __webpack_require__(3535);
+const GoWest_1 = __webpack_require__(4834);
+const StopMoving_1 = __webpack_require__(4469);
 const Quotidian_1 = __webpack_require__(6647);
 //what, did you think any real being could be so formulaic? 
 class Peewee extends Quotidian_1.Quotidian {
@@ -65,16 +199,19 @@ class Peewee extends Quotidian_1.Quotidian {
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
-        this.possibleActions = []; //ordered by priority
+        this.possibleActions = [new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
         //peewee's ai is user based. you can tell him to do various actions. 
         //there is no trigger. only actions.
         this.processStorybeat = (beat) => {
             for (let action of this.possibleActions) {
-                if (action.recognizedCommands.includes(beat.command.toUpperCase())) {
-                    beat.response = action.applyAction(this, this.room);
-                }
+                const words = beat.command.split(" ");
+                for (let word of words)
+                    if (action.recognizedCommands.includes(word.toUpperCase())) {
+                        beat.response = action.applyAction(this, this.room);
+                        return;
+                    }
             }
             if (beat.response.trim() === "") {
                 beat.response = new BaseAction_1.Action().applyAction(this, this.room);
@@ -449,12 +586,6 @@ const BaseMovement_1 = __webpack_require__(9059);
 class MoveToWestDoor extends BaseMovement_1.Movement {
     constructor(entity) {
         super(entity);
-        this.customShit = () => {
-            this.entity.emitSass("THERES NO DOOR TO THE WEST, DUNKASS (please, stop making me, try to walk through a wall).");
-        };
-        this.tick = () => {
-            this.customShit();
-        };
     }
 }
 exports.MoveToWestDoor = MoveToWestDoor;
@@ -5162,6 +5293,16 @@ var map = {
 	"./": 3607,
 	"./Objects/Entities/Actions/BaseAction": 7042,
 	"./Objects/Entities/Actions/BaseAction.ts": 7042,
+	"./Objects/Entities/Actions/GoEast": 7192,
+	"./Objects/Entities/Actions/GoEast.ts": 7192,
+	"./Objects/Entities/Actions/GoNorth": 7415,
+	"./Objects/Entities/Actions/GoNorth.ts": 7415,
+	"./Objects/Entities/Actions/GoSouth": 3535,
+	"./Objects/Entities/Actions/GoSouth.ts": 3535,
+	"./Objects/Entities/Actions/GoWest": 4834,
+	"./Objects/Entities/Actions/GoWest.ts": 4834,
+	"./Objects/Entities/Actions/StopMoving": 4469,
+	"./Objects/Entities/Actions/StopMoving.ts": 4469,
 	"./Objects/Entities/Peewee": 1160,
 	"./Objects/Entities/Peewee.ts": 1160,
 	"./Objects/Entities/Quotidian": 6647,
