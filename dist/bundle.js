@@ -200,6 +200,8 @@ class Peewee extends Quotidian_1.Quotidian {
         this.minSpeed = 1;
         this.currentSpeed = 10;
         this.possibleActions = [new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
+        //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
+        this.possibleReactions = [];
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
         //peewee's ai is user based. you can tell him to do various actions. 
@@ -269,13 +271,16 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 this.sass = (0, misc_1.createElementWithIdAndParent)("div", this.container, undefined, "sass");
                 this.sass.innerText = sass;
                 this.sassBegun = new Date();
+                setTimeout(() => {
+                    if (this.sass) {
+                        this.sass.className = "sass fadeout";
+                    }
+                }, 2000);
+                setTimeout(() => {
+                    var _a;
+                    (_a = this.sass) === null || _a === void 0 ? void 0 : _a.remove();
+                }, 3000);
             }
-        };
-        this.customShit = () => {
-            //if there is sass
-            //and the sass hasn't expired
-            // if there isn't a popup on the object, make one now.
-            //otherwise you're fine
         };
         this.tick = () => {
             this.movement_alg.tick();

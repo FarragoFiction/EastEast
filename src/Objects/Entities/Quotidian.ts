@@ -50,17 +50,21 @@ export class Quotidian extends PhysicalObject{
             this.sass = createElementWithIdAndParent("div",this.container,undefined,"sass");
             this.sass.innerText = sass;
             this.sassBegun = new Date();
+
+            setTimeout(()=>{
+                if(this.sass){
+                    this.sass.className="sass fadeout";
+                }
+            },2000);
+
+            setTimeout(()=>{
+                this.sass?.remove();
+            },3000);
         }
 
     }
 
-    customShit = ()=>{
-        //if there is sass
-        //and the sass hasn't expired
-        // if there isn't a popup on the object, make one now.
-        //otherwise you're fine
 
-    }
 
     tick = ()=>{
         this.movement_alg.tick();

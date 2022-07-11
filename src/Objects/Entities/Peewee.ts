@@ -23,6 +23,8 @@ export class Peewee extends Quotidian{
     minSpeed = 1;
     currentSpeed = 10;
     possibleActions: Action[]  = [new StopMoving(), new GoNorth(),new GoEast(),new GoSouth(),new GoWest()]; //ordered by priority
+    //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
+    possibleReactions: Action[]  = [];
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
     movement_alg:Movement = new NoMovement(this);

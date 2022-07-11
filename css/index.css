@@ -185,10 +185,16 @@ textarea{
   font-family: 'Courier New', monospace;
   font-weight: bold;
   padding-right: 5px;
+  opacity: 100;
   margin: 5px;
-  background: #d1b056;
+  background-color: #d1b056;
   line-height: 17px;
   box-shadow: 2px 2px 2px 3px rgba(0, 0, 0, .2);
+  transition: opacity 1s linear;
+}
+
+.sass.fadeout{
+  opacity: 0;
 }
 
 #northDoor{
