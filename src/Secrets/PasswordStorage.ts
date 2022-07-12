@@ -48,7 +48,8 @@ export const albhed_map = {
     "0":"https://www.tumblr.com/blog/view/figuringoutnothing/688028145704665088?source=share",
     "1":"http://farragofiction.com/DevonaFears",
     "2":"http://farragofiction.com/NotesOnStealingPeoplesShit/",
-    "3":"https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8" //by the watcher of threads
+    "3":"https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8", //by the watcher of threads
+    "4":"http://farragofiction.com/PerfectHeist/"
 
 }
 

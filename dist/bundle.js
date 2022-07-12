@@ -548,25 +548,34 @@ const BaseMovement_1 = __webpack_require__(9059);
 class MoveToSpecificLocation extends BaseMovement_1.Movement {
     constructor(x, y, entity) {
         super(entity);
-        this.pickNewDirection = () => {
-            //vary between picking x or y so you don't look like a robot so much
-            if (this.entity.rand.nextDouble() > 0.5) {
-                //if object x is bigger than mine, need to go right, so d
-                if (this.x > this.entity.x) {
-                    this.entity.direction = Quotidian_1.Direction.RIGHT;
-                }
-                else {
-                    this.entity.direction = Quotidian_1.Direction.LEFT;
-                }
+        this.moveX = (remaining_x) => {
+            //if object x is bigger than mine, need to go right, so d
+            if (remaining_x > 0) {
+                this.entity.direction = Quotidian_1.Direction.RIGHT;
             }
             else {
-                //if object y is bigger than mine, need to go down, so s
-                if (this.y > this.entity.y) {
-                    this.entity.direction = Quotidian_1.Direction.DOWN;
-                }
-                else {
-                    this.entity.direction = Quotidian_1.Direction.UP;
-                }
+                this.entity.direction = Quotidian_1.Direction.LEFT;
+            }
+        };
+        this.moveY = (remaining_y) => {
+            //if object y is bigger than mine, need to go down, so s
+            if (remaining_y > 0) {
+                this.entity.direction = Quotidian_1.Direction.DOWN;
+            }
+            else {
+                this.entity.direction = Quotidian_1.Direction.UP;
+            }
+        };
+        this.pickNewDirection = () => {
+            let remaining_x = this.x - this.entity.x;
+            let remaining_y = this.y - this.entity.y;
+            console.log("JR NOTE: remaining x,y is ", { remaining_x, remaining_y });
+            //vary between picking x or y so you don't look like a robot so much
+            if (Math.abs(remaining_x) > Math.abs(remaining_y)) {
+                this.moveX(remaining_x);
+            }
+            else {
+                this.moveY(remaining_y);
             }
         };
         this.x = x;
@@ -3253,7 +3262,8 @@ exports.albhed_map = {
     "0": "https://www.tumblr.com/blog/view/figuringoutnothing/688028145704665088?source=share",
     "1": "http://farragofiction.com/DevonaFears",
     "2": "http://farragofiction.com/NotesOnStealingPeoplesShit/",
-    "3": "https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8" //by the watcher of threads
+    "3": "https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8",
+    "4": "http://farragofiction.com/PerfectHeist/"
 };
 const translate = (word) => {
     let ret = word.toLowerCase();

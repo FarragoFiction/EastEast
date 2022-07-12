@@ -14,24 +14,35 @@ export class MoveToSpecificLocation extends Movement{
         this.y = y;
     }
 
-    pickNewDirection = ()=>{
-        //vary between picking x or y so you don't look like a robot so much
-        if(this.entity.rand.nextDouble()>0.5){
-            //if object x is bigger than mine, need to go right, so d
-            if(this.x>this.entity.x){
-                this.entity.direction = Direction.RIGHT;
-            }else{
-                this.entity.direction =Direction.LEFT;
-            }
+    moveX = (remaining_x: number)=>{
+        //if object x is bigger than mine, need to go right, so d
+        if(remaining_x>0){
+            this.entity.direction = Direction.RIGHT;
         }else{
+            this.entity.direction =Direction.LEFT;
+        }
+    }
+
+    moveY = (remaining_y: number)=>{
             //if object y is bigger than mine, need to go down, so s
-            if(this.y>this.entity.y){
+            if(remaining_y >0){
                 this.entity.direction = Direction.DOWN;
             }else{
                 this.entity.direction = Direction.UP;
             }
+    }
+
+    pickNewDirection = ()=>{
+        let remaining_x = this.x - this.entity.x;
+        let remaining_y = this.y - this.entity.y;
+        console.log("JR NOTE: remaining x,y is ",{remaining_x,remaining_y})
+        //vary between picking x or y so you don't look like a robot so much
+
+        if(Math.abs(remaining_x) >Math.abs(remaining_y)){
+            this.moveX(remaining_x);
+        }else{
+            this.moveY(remaining_y);
         }
-        
     }
    
 }
