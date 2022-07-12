@@ -1,6 +1,6 @@
 import { all_themes, Theme } from "../Theme";
 import { FEELING, FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, SMELL, SOUND, SPYING, TASTE, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
-import { createElementWithIdAndParent } from "../../Utils/misc";
+import { createElementWithIdAndParent, pointWithinBoundingBox } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 import { Quotidian } from "../Entities/Quotidian";
 import { PhysicalObject, RenderedItem } from "../PhysicalObject";
@@ -111,11 +111,66 @@ export class Room {
         this.blorbos.push(blorbo);
     }
 
+    teardown = ()=>{
+        this.ticking = false;
+        this.peewee = undefined;
+    }
+
+
+    //if any blorbo is near a door, move them into the room whose door they are near.
+    checkForDoors = (blorbo: Quotidian)=>{
+        this.checkNorthDoor(blorbo);
+        this.checkSouthDoor(blorbo);
+        this.checkEastDoor(blorbo);
+    }
+
+    checkNorthDoor = (blorbo: Quotidian)=>{
+        const door = document.querySelector("#northDoorRug") as HTMLElement;
+        const x = door.offsetLeft
+        const y = door.offsetTop;
+        const blorboCenter = blorbo.centerPos();
+        if(door){
+            if(pointWithinBoundingBox(blorboCenter.x, blorboCenter.y, x,y,50,50)){
+                this.maze.playDoorSound();
+            }
+        }
+    }
+
+    checkSouthDoor = (blorbo: Quotidian)=>{
+        const door = document.querySelector("#southDoor") as HTMLElement;
+        const x = door.offsetLeft
+        const y = door.offsetTop;
+        const blorboCenter = blorbo.centerPos();
+        console.log("JR NOTE: my center is",blorboCenter, "is that within the door?", {x,y})
+
+        if(door){
+            if(pointWithinBoundingBox(blorboCenter.x, blorboCenter.y, x,y,50,50)){
+                this.maze.playDoorSound();
+            }
+        }
+    }
+
+    checkEastDoor = (blorbo: Quotidian)=>{
+        const door = document.querySelector("#eastDoor") as HTMLElement;
+        const x = door.offsetLeft
+        const y = door.offsetTop;
+        const blorboCenter = blorbo.centerPos();
+
+        if(door){
+            if(pointWithinBoundingBox(blorboCenter.x, blorboCenter.y, x,y,50,50)){
+                this.maze.playDoorSound();
+            }
+        }
+    }
+    
+
     tick = () => {
         //TODO blorbos all tick
         for(let blorbo of this.blorbos){
             blorbo.tick();
+            this.checkForDoors(blorbo);
         }
+
         if(this.ticking){
             setTimeout(this.tick,this.tickRate);
         }

@@ -483,11 +483,10 @@ class MoveToNorthDoor extends MoveToSpecificLocation_1.MoveToSpecificLocation {
             }
         };
         this.detectDoor = () => {
-            const door = document.querySelector("#northDoor");
+            const door = document.querySelector("#northDoorRug");
             if (door) {
                 this.x = door.offsetLeft;
                 this.y = door.offsetTop;
-                console.log("JR NOTE: I found the door it is", { x: this.x, y: this.y });
                 this.doorDetected = true;
             }
         };
@@ -657,13 +656,14 @@ exports.RandomMovement = RandomMovement;
 /***/ }),
 
 /***/ 8466:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 //knows what it looks like, knows where it is
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PhysicalObject = void 0;
+const misc_1 = __webpack_require__(4079);
 class PhysicalObject {
     constructor(room, name, x, y, width, height, themes, layer, src, flavorText) {
         this.container = document.createElement("div");
@@ -681,6 +681,9 @@ class PhysicalObject {
                 this.container.style.transform = `translate(${this.x - this.original_x}px,${this.y - this.original_y}px)`;
                 this.customShit();
             });
+        };
+        this.centerPos = () => {
+            return (0, misc_1.getElementCenterPoint)(this.container);
         };
         this.attachToParent = (parent) => {
             this.parent = parent;
@@ -739,7 +742,8 @@ const StoryBeat_1 = __webpack_require__(5504);
 class Maze {
     constructor(ele, storySoFar, rand) {
         this.storybeats = []; //can be added to by peewee and by the ai
-        this.fxAudio = new Audio("audio/264828__cmdrobot__text-message-or-videogame-jump.mp3");
+        this.boopAudio = new Audio("audio/264828__cmdrobot__text-message-or-videogame-jump.mp3");
+        this.doorAudio = new Audio("audio/close_door_1.mp3");
         this.initialize = () => __awaiter(this, void 0, void 0, function* () {
             const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]];
             this.room = yield (0, Room_1.randomRoomWithThemes)(this, this.ele, themes, this.rand);
@@ -750,11 +754,22 @@ class Maze {
             (0, PasswordStorage_1.initRabbitHole)(this.room);
             this.handleCommands();
         });
+        this.playDoorSound = () => {
+            this.doorAudio.play();
+        };
+        this.changeRoom = (room) => {
+            if (this.room) {
+                this.room.teardown();
+            }
+            this.room = room;
+            this.room.peewee = this.peewee;
+            this.room.render();
+        };
         this.addStorybeat = (beat) => {
             if (this.peewee) {
                 this.peewee.processStorybeat(beat);
             }
-            this.fxAudio.play();
+            this.boopAudio.play();
             this.storybeats.push(beat);
             const beatele = (0, misc_1.createElementWithIdAndParent)("div", this.storySoFar, undefined, "storybeat");
             const commandele = (0, misc_1.createElementWithIdAndParent)("div", beatele, undefined, "historical-command");
@@ -884,10 +899,55 @@ class Room {
         this.addBlorbo = (blorbo) => {
             this.blorbos.push(blorbo);
         };
+        this.teardown = () => {
+            this.ticking = false;
+            this.peewee = undefined;
+        };
+        //if any blorbo is near a door, move them into the room whose door they are near.
+        this.checkForDoors = (blorbo) => {
+            this.checkNorthDoor(blorbo);
+            this.checkSouthDoor(blorbo);
+            this.checkEastDoor(blorbo);
+        };
+        this.checkNorthDoor = (blorbo) => {
+            const door = document.querySelector("#northDoorRug");
+            const x = door.offsetLeft;
+            const y = door.offsetTop;
+            const blorboCenter = blorbo.centerPos();
+            if (door) {
+                if ((0, misc_1.pointWithinBoundingBox)(blorboCenter.x, blorboCenter.y, x, y, 50, 50)) {
+                    this.maze.playDoorSound();
+                }
+            }
+        };
+        this.checkSouthDoor = (blorbo) => {
+            const door = document.querySelector("#southDoor");
+            const x = door.offsetLeft;
+            const y = door.offsetTop;
+            const blorboCenter = blorbo.centerPos();
+            console.log("JR NOTE: my center is", blorboCenter, "is that within the door?", { x, y });
+            if (door) {
+                if ((0, misc_1.pointWithinBoundingBox)(blorboCenter.x, blorboCenter.y, x, y, 50, 50)) {
+                    this.maze.playDoorSound();
+                }
+            }
+        };
+        this.checkEastDoor = (blorbo) => {
+            const door = document.querySelector("#eastDoor");
+            const x = door.offsetLeft;
+            const y = door.offsetTop;
+            const blorboCenter = blorbo.centerPos();
+            if (door) {
+                if ((0, misc_1.pointWithinBoundingBox)(blorboCenter.x, blorboCenter.y, x, y, 50, 50)) {
+                    this.maze.playDoorSound();
+                }
+            }
+        };
         this.tick = () => {
             //TODO blorbos all tick
             for (let blorbo of this.blorbos) {
                 blorbo.tick();
+                this.checkForDoors(blorbo);
             }
             if (this.ticking) {
                 setTimeout(this.tick, this.tickRate);
@@ -3797,7 +3857,7 @@ exports.max_values_for_menus = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createElementWithId = exports.createElementWithIdAndParent = exports.sleep = void 0;
+exports.pointWithinBoundingBox = exports.withinX = exports.withinY = exports.distanceWithinRadius = exports.distance = exports.getElementCenterPoint = exports.createElementWithId = exports.createElementWithIdAndParent = exports.sleep = void 0;
 const sleep = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 };
@@ -3819,6 +3879,35 @@ const createElementWithId = (eleName, id, className) => {
     return ele;
 };
 exports.createElementWithId = createElementWithId;
+const getElementCenterPoint = (ele) => {
+    const x = ele.offsetLeft;
+    const y = ele.offsetTop;
+    const rect = ele.getBoundingClientRect();
+    return { x: x + rect.width / 2, y: y + rect.height / 2 };
+};
+exports.getElementCenterPoint = getElementCenterPoint;
+const distance = (x1, y1, x2, y2) => {
+    const first = Math.pow((x1 - x2), 2);
+    const second = Math.pow((y1 - y2), 2);
+    return Math.pow((first + second), 0.5);
+};
+exports.distance = distance;
+const distanceWithinRadius = (radius, x1, y1, x2, y2) => {
+    return (0, exports.distance)(x1, y2, x2, y2) < radius;
+};
+exports.distanceWithinRadius = distanceWithinRadius;
+const withinY = (myY, objectY, objectHeight) => {
+    return myY > objectY && myY < objectY + objectHeight;
+};
+exports.withinY = withinY;
+const withinX = (myX, objectX, objectWidth) => {
+    return myX > objectX && myX < objectX + objectWidth;
+};
+exports.withinX = withinX;
+const pointWithinBoundingBox = (myX, myY, objectX, objectY, objectWidth, objectHeight) => {
+    return (0, exports.withinX)(myX, objectX, objectWidth) && (0, exports.withinY)(myY, objectY, objectHeight);
+};
+exports.pointWithinBoundingBox = pointWithinBoundingBox;
 
 
 /***/ }),

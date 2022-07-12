@@ -17,7 +17,8 @@ export class Maze {
     peewee?: Peewee; //all are quotidians in this twisted farce of a play. could a simulation capture their nuance? their depth?
     storybeats: StoryBeat[] = []; //can be added to by peewee and by the ai
     storySoFar: HTMLElement;
-    fxAudio = new Audio("audio/264828__cmdrobot__text-message-or-videogame-jump.mp3")
+    boopAudio = new Audio("audio/264828__cmdrobot__text-message-or-videogame-jump.mp3")
+    doorAudio = new Audio("audio/close_door_1.mp3")
 
     constructor(ele: HTMLElement, storySoFar: HTMLElement, rand: SeededRandom,) {
         this.rand = rand;
@@ -37,11 +38,24 @@ export class Maze {
         this.handleCommands();
     }
 
+    playDoorSound = ()=>{
+        this.doorAudio.play();
+    }
+
+    changeRoom = (room: Room)=>{
+        if(this.room){
+            this.room.teardown();
+        }
+        this.room = room;
+        this.room.peewee = this.peewee;
+        this.room.render();
+    }
+
     addStorybeat = (beat: StoryBeat)=>{
         if(this.peewee){
             this.peewee.processStorybeat(beat);
         }
-        this.fxAudio.play();
+        this.boopAudio.play();
         this.storybeats.push(beat);
         const beatele = createElementWithIdAndParent("div",this.storySoFar,undefined,"storybeat")
         const commandele = createElementWithIdAndParent("div",beatele,undefined,"historical-command")

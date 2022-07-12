@@ -1,7 +1,7 @@
 //base level Entity object. quotidians can turn into anything
 
 import { isThisTypeNode } from "typescript";
-import { createElementWithIdAndParent } from "../../Utils/misc";
+import { createElementWithIdAndParent, getElementCenterPoint } from "../../Utils/misc";
 import { RandomMovement } from "../MovementAlgs/RandomMovement";
 import { PhysicalObject } from "../PhysicalObject";
 import { Room } from "../RoomEngine/Room";
@@ -63,8 +63,6 @@ export class Quotidian extends PhysicalObject{
         }
 
     }
-
-
 
     tick = ()=>{
         this.movement_alg.tick();

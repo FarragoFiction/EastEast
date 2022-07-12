@@ -20,11 +20,10 @@ export class MoveToNorthDoor extends MoveToSpecificLocation{
     }
 
     detectDoor = ()=>{
-        const door = document.querySelector("#northDoor") as HTMLElement;
+        const door = document.querySelector("#northDoorRug") as HTMLElement;
         if(door){
             this.x = door.offsetLeft
             this.y = door.offsetTop;
-            console.log("JR NOTE: I found the door it is",{x:this.x,y:this.y})
             this.doorDetected= true;
         }
     }

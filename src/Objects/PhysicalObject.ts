@@ -1,5 +1,6 @@
 //knows what it looks like, knows where it is
 
+import { getElementCenterPoint } from "../Utils/misc";
 import SeededRandom from "../Utils/SeededRandom";
 import { Room } from "./RoomEngine/Room";
 import { Theme } from "./Theme";
@@ -72,6 +73,10 @@ export class PhysicalObject{
            this.customShit();
         })
 
+    }
+
+    centerPos = ()=>{
+        return getElementCenterPoint(this.container)
     }
 
     attachToParent = (parent: HTMLElement)=>{
