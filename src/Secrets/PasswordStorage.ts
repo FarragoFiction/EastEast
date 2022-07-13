@@ -169,6 +169,7 @@ export const passwords: PasswordMap = {
     , "BITS OF THE PAST LEAK INTO THE PRESENT": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/26.js")
 
     , "INFINITE AMOUNT OF PAIN": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/27.js")
+    , "PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH ": new Secret("Hostage's Lament", undefined, "Secrets/Content/28.js")
 
     , "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts") 
     , "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts") 
