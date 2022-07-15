@@ -7,6 +7,7 @@ import { PhysicalObject, RenderedItem } from "../PhysicalObject";
 import { addImageProcess } from "../../Utils/URLUtils";
 import { Peewee } from "../Entities/Peewee";
 import { Maze } from "./Maze";
+import { removeItemOnce } from "../../Utils/ArrayUtils";
 
 
 
@@ -111,6 +112,11 @@ export class Room {
         this.blorbos.push(blorbo);
     }
 
+    removeBlorbo = (blorbo: Quotidian) => {
+        console.log("JR NOTE: removing blorbo", blorbo.name)
+        removeItemOnce(this.blorbos, blorbo);
+    }
+
     teardown = ()=>{
         this.ticking = false;
         this.peewee = undefined;
@@ -126,39 +132,50 @@ export class Room {
 
     checkNorthDoor = (blorbo: Quotidian)=>{
         const door = document.querySelector("#northDoorRug") as HTMLElement;
-        const x = door.offsetLeft
-        const y = door.offsetTop;
+        const doorRect = door.getBoundingClientRect()
         const blorboCenter = blorbo.centerPos();
         if(door){
-            if(pointWithinBoundingBox(blorboCenter.x, blorboCenter.y, x,y,50,50)){
+            if(pointWithinBoundingBox(blorboCenter.x, blorboCenter.y, doorRect.x,doorRect.y,doorRect.width,doorRect.height)){
                 this.maze.playDoorSound();
+                if(blorbo.name !== "Peewee"){
+                    console.log("JR NOTE: removing a non peewee cause blorbo is at",blorboCenter, "and north door is at", {x:doorRect.x,y:doorRect.y} )
+                    this.removeBlorbo(blorbo);
+                    this.getNorth().addBlorbo(blorbo);
+                }
             }
         }
     }
 
     checkSouthDoor = (blorbo: Quotidian)=>{
         const door = document.querySelector("#southDoor") as HTMLElement;
-        const x = door.offsetLeft
-        const y = door.offsetTop;
+        const doorRect = door.getBoundingClientRect()
+        ;
         const blorboCenter = blorbo.centerPos();
-        console.log("JR NOTE: my center is",blorboCenter, "is that within the door?", {x,y})
-
         if(door){
-            if(pointWithinBoundingBox(blorboCenter.x, blorboCenter.y, x,y,50,50)){
+            if(pointWithinBoundingBox(blorboCenter.x, blorboCenter.y, doorRect.x,doorRect.y,doorRect.width,doorRect.height)){
                 this.maze.playDoorSound();
+                if(blorbo.name !== "Peewee"){
+                    console.log("JR NOTE: removing a non peewee cause blorbo is at",blorboCenter, "and south door is at", {x:doorRect.x,y:doorRect.y} )
+                    this.removeBlorbo(blorbo);
+                    this.getSouth().addBlorbo(blorbo);
+                }
             }
         }
     }
 
     checkEastDoor = (blorbo: Quotidian)=>{
         const door = document.querySelector("#eastDoor") as HTMLElement;
-        const x = door.offsetLeft
-        const y = door.offsetTop;
-        const blorboCenter = blorbo.centerPos();
+        const doorRect = door.getBoundingClientRect()
 
+        const blorboCenter = blorbo.centerPos();
         if(door){
-            if(pointWithinBoundingBox(blorboCenter.x, blorboCenter.y, x,y,50,50)){
+            if(pointWithinBoundingBox(blorboCenter.x, blorboCenter.y, doorRect.x,doorRect.y,doorRect.width,doorRect.height)){
                 this.maze.playDoorSound();
+                if(blorbo.name !== "Peewee"){
+                    console.log("JR NOTE: removing a non peewee cause blorbo is at",blorboCenter, "and east door is at", {x:doorRect.x,y:doorRect.y} )
+                    this.removeBlorbo(blorbo);
+                    this.getEast().addBlorbo(blorbo);
+                }
             }
         }
     }

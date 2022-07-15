@@ -20,10 +20,8 @@ export const createElementWithId = (eleName: string, id?: string, className?: st
 }
 
 export const getElementCenterPoint = (ele: HTMLElement)=>{
-    const x = ele.offsetLeft
-    const y = ele.offsetTop;
     const rect = ele.getBoundingClientRect()
-    return {x: x+rect.width/2, y: y+rect.height/2}
+    return {x: rect.x+rect.width/2, y: rect.y+rect.height/2}
 }
 
 export const distance = (x1: number, y1: number, x2: number, y2: number) => {

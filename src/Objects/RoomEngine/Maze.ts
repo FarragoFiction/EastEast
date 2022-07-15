@@ -39,7 +39,11 @@ export class Maze {
     }
 
     playDoorSound = ()=>{
-        this.doorAudio.play();
+        try{
+            this.doorAudio.play();
+        }catch(e){
+            console.warn("JR NOTE: remember to require a click before starting")
+        }
     }
 
     changeRoom = (room: Room)=>{
