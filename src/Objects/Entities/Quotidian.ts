@@ -2,6 +2,10 @@
 
 import { isThisTypeNode } from "typescript";
 import { createElementWithIdAndParent, getElementCenterPoint } from "../../Utils/misc";
+import { pickFrom } from "../../Utils/NonSeededRandUtils";
+import { MoveToEastDoor } from "../MovementAlgs/MoveToEastDoor";
+import { MoveToNorthDoor } from "../MovementAlgs/MoveToNorthDoor";
+import { MoveToSouthDoor } from "../MovementAlgs/MoveToSouthDoor";
 import { RandomMovement } from "../MovementAlgs/RandomMovement";
 import { PhysicalObject } from "../PhysicalObject";
 import { Room } from "../RoomEngine/Room";
@@ -26,7 +30,8 @@ export class Quotidian extends PhysicalObject{
     sassBegun?:Date;
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
-    movement_alg = new RandomMovement(this);
+    possible_random_move_algs = [new RandomMovement(this),new MoveToEastDoor(this), new MoveToNorthDoor(this), new MoveToSouthDoor(this)]
+    movement_alg = pickFrom(this.possible_random_move_algs)
     //TODO have a movement algorithm (effects can shift this)
     /*
     example movement algorithm

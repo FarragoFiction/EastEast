@@ -115,6 +115,8 @@ export class Room {
     removeBlorbo = (blorbo: Quotidian) => {
         console.log("JR NOTE: removing blorbo", blorbo.name)
         removeItemOnce(this.blorbos, blorbo);
+        blorbo.container.remove();
+        console.log("JR NOTE: just so you know, children are", this.children)
     }
 
     teardown = ()=>{

@@ -235,6 +235,10 @@ exports.Peewee = Peewee;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Quotidian = exports.Direction = void 0;
 const misc_1 = __webpack_require__(4079);
+const NonSeededRandUtils_1 = __webpack_require__(8258);
+const MoveToEastDoor_1 = __webpack_require__(1146);
+const MoveToNorthDoor_1 = __webpack_require__(6003);
+const MoveToSouthDoor_1 = __webpack_require__(9380);
 const RandomMovement_1 = __webpack_require__(5997);
 const PhysicalObject_1 = __webpack_require__(8466);
 var Direction;
@@ -264,7 +268,8 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.minSpeed = 1;
         this.currentSpeed = 10;
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
-        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+        this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this), new MoveToEastDoor_1.MoveToEastDoor(this), new MoveToNorthDoor_1.MoveToNorthDoor(this), new MoveToSouthDoor_1.MoveToSouthDoor(this)];
+        this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
         this.emitSass = (sass) => {
             //debounce essentially
             if (!this.sass || this.sass.innerText != sass) {
@@ -908,6 +913,8 @@ class Room {
         this.removeBlorbo = (blorbo) => {
             console.log("JR NOTE: removing blorbo", blorbo.name);
             (0, ArrayUtils_1.removeItemOnce)(this.blorbos, blorbo);
+            blorbo.container.remove();
+            console.log("JR NOTE: just so you know, children are", this.children);
         };
         this.teardown = () => {
             this.ticking = false;
