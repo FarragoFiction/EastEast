@@ -103,7 +103,6 @@ export class Quotidian extends PhysicalObject {
         }
         const src = `${baseImageLocation}${chosen.src}`;
         if( !this.image.src.includes(src)){
-            console.log("JR NOTE: resetting image because ", src , "is not, this.image.src", this.image.src)
             this.image.src =src ;
             this.image.style.width = `${chosen.width}px`;
         }

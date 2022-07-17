@@ -4,14 +4,26 @@ import { Direction, Quotidian } from "../Entities/Quotidian";
 import { Movement } from "./BaseMovement";
 
 //decides where to move next.
-export class MoveToSpecificLocation extends Movement{
-    x: number;
-    y: number;
+export class MoveToSpecificElement extends Movement{
+    ele?: HTMLElement
+    ele_id:string;
 
-    constructor(x:number,y:number,entity: Quotidian){
+    constructor(ele_id: string,entity: Quotidian){
         super(entity);
-        this.x = x;
-        this.y = y;
+        this.ele_id = ele_id;
+    }
+
+    customShit =()=>{
+        if(!this.ele){
+            this.detectEle();
+        }
+    }
+
+    detectEle = ()=>{
+        const door = document.querySelector(this.ele_id) as HTMLElement;
+        if(door){
+            this.ele = door;
+        }
     }
 
     moveX = (remaining_x: number)=>{
@@ -33,14 +45,22 @@ export class MoveToSpecificLocation extends Movement{
     }
 
     pickNewDirection = ()=>{
-        let remaining_x = this.x - this.entity.x;
-        let remaining_y = this.y - this.entity.y;
-        //vary between picking x or y so you don't look like a robot so much
+        if(!this.ele){
+            return;
+        }
+        const myRect = this.ele.getBoundingClientRect();
+        const clientRect = this.entity.container.getBoundingClientRect();
+        let remaining_x = myRect.x -clientRect.x;
+        let remaining_y = myRect.y - clientRect.y;
+        if(remaining_y>0){
+            //coming from above, so shoot for the bottom to touch.
+            remaining_y = myRect.bottom - clientRect.bottom;
+        }
 
         const shouldX = ()=>{
-            if(Math.abs(remaining_x) ===0){ //if theres no reaosn to go x, don't
+            if(Math.abs(remaining_x) < this.entity.currentSpeed){ //if theres no reaosn to go x, don't
                 return false;
-            }else if(Math.abs(remaining_y) === 0){ //no sense doing y, it won't do anything
+            }else if(Math.abs(remaining_y) < this.entity.currentSpeed){ //no sense doing y, it won't do anything
                 return true;
             }else{
                 return Math.abs( Math.abs(remaining_x) - Math.abs(remaining_y)) > this.entity.width*3;

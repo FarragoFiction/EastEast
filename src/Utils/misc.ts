@@ -42,6 +42,15 @@ export const withinX = (myX: number, objectX: number, objectWidth: number) => {
     return myX > objectX && myX < objectX + objectWidth;
 }
 
+export const boundingBoxesIntersect = (rect1: DOMRect, rect2: DOMRect)=>{
+    return !(
+        rect1.top > rect2.bottom ||
+        rect1.right < rect2.left ||
+        rect1.bottom < rect2.top ||
+        rect1.left > rect2.right
+      );
+}
+
 export const pointWithinBoundingBox = (myX: number, myY: number, objectX: number, objectY: number, objectWidth: number, objectHeight: number) => {
 
     return withinX(myX, objectX, objectWidth) && withinY(myY, objectY, objectHeight);

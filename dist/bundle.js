@@ -315,7 +315,6 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             }
             const src = `${baseImageLocation}${chosen.src}`;
             if (!this.image.src.includes(src)) {
-                console.log("JR NOTE: resetting image because ", src, "is not, this.image.src", this.image.src);
                 this.image.src = src;
                 this.image.style.width = `${chosen.width}px`;
             }
@@ -473,27 +472,11 @@ exports.Movement = Movement;
 //given an Entity (which will have access to location and any other pertinent information)
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MoveToEastDoor = void 0;
-const MoveToSpecificLocation_1 = __webpack_require__(7805);
+const MoveToSpecificElement_1 = __webpack_require__(4476);
 //decides where to move next.
-class MoveToEastDoor extends MoveToSpecificLocation_1.MoveToSpecificLocation {
+class MoveToEastDoor extends MoveToSpecificElement_1.MoveToSpecificElement {
     constructor(entity) {
-        let x = 0;
-        let y = 0;
-        super(x, y, entity);
-        this.doorDetected = false;
-        this.customShit = () => {
-            if (!this.doorDetected) {
-                this.detectDoor();
-            }
-        };
-        this.detectDoor = () => {
-            const door = document.querySelector("#eastDoor");
-            if (door) {
-                this.x = door.offsetLeft;
-                this.y = door.offsetTop;
-                this.doorDetected = true;
-            }
-        };
+        super("#eastDoor", entity);
     }
 }
 exports.MoveToEastDoor = MoveToEastDoor;
@@ -509,27 +492,11 @@ exports.MoveToEastDoor = MoveToEastDoor;
 //given an Entity (which will have access to location and any other pertinent information)
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MoveToNorthDoor = void 0;
-const MoveToSpecificLocation_1 = __webpack_require__(7805);
+const MoveToSpecificElement_1 = __webpack_require__(4476);
 //decides where to move next.
-class MoveToNorthDoor extends MoveToSpecificLocation_1.MoveToSpecificLocation {
+class MoveToNorthDoor extends MoveToSpecificElement_1.MoveToSpecificElement {
     constructor(entity) {
-        let x = 0;
-        let y = 0;
-        super(x, y, entity);
-        this.doorDetected = false;
-        this.customShit = () => {
-            if (!this.doorDetected) {
-                this.detectDoor();
-            }
-        };
-        this.detectDoor = () => {
-            const door = document.querySelector("#northDoorRug");
-            if (door) {
-                this.x = door.offsetLeft;
-                this.y = door.offsetTop;
-                this.doorDetected = true;
-            }
-        };
+        super("#northDoorRug", entity);
     }
 }
 exports.MoveToNorthDoor = MoveToNorthDoor;
@@ -545,30 +512,98 @@ exports.MoveToNorthDoor = MoveToNorthDoor;
 //given an Entity (which will have access to location and any other pertinent information)
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MoveToSouthDoor = void 0;
-const MoveToSpecificLocation_1 = __webpack_require__(7805);
+const MoveToSpecificElement_1 = __webpack_require__(4476);
 //decides where to move next.
-class MoveToSouthDoor extends MoveToSpecificLocation_1.MoveToSpecificLocation {
+class MoveToSouthDoor extends MoveToSpecificElement_1.MoveToSpecificElement {
     constructor(entity) {
-        let x = 0;
-        let y = 0;
-        super(x, y, entity);
-        this.doorDetected = false;
-        this.customShit = () => {
-            if (!this.doorDetected) {
-                this.detectDoor();
-            }
-        };
-        this.detectDoor = () => {
-            const door = document.querySelector("#southDoor");
-            if (door) {
-                this.x = door.offsetLeft;
-                this.y = door.offsetTop;
-                this.doorDetected = true;
-            }
-        };
+        super("#southDoor", entity);
     }
 }
 exports.MoveToSouthDoor = MoveToSouthDoor;
+
+
+/***/ }),
+
+/***/ 4476:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//given an Entity (which will have access to location and any other pertinent information)
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MoveToSpecificElement = void 0;
+const Quotidian_1 = __webpack_require__(6647);
+const BaseMovement_1 = __webpack_require__(9059);
+//decides where to move next.
+class MoveToSpecificElement extends BaseMovement_1.Movement {
+    constructor(ele_id, entity) {
+        super(entity);
+        this.customShit = () => {
+            if (!this.ele) {
+                this.detectEle();
+            }
+        };
+        this.detectEle = () => {
+            const door = document.querySelector(this.ele_id);
+            if (door) {
+                this.ele = door;
+            }
+        };
+        this.moveX = (remaining_x) => {
+            //if object x is bigger than mine, need to go right, so d
+            if (remaining_x > 0) {
+                this.entity.direction = Quotidian_1.Direction.RIGHT;
+            }
+            else {
+                this.entity.direction = Quotidian_1.Direction.LEFT;
+            }
+        };
+        this.moveY = (remaining_y) => {
+            //if object y is bigger than mine, need to go down, so s
+            if (remaining_y > 0) {
+                this.entity.direction = Quotidian_1.Direction.DOWN;
+            }
+            else {
+                this.entity.direction = Quotidian_1.Direction.UP;
+            }
+        };
+        this.pickNewDirection = () => {
+            if (!this.ele) {
+                return;
+            }
+            const myRect = this.ele.getBoundingClientRect();
+            const clientRect = this.entity.container.getBoundingClientRect();
+            let remaining_x = myRect.x - clientRect.x;
+            let remaining_y = myRect.y - clientRect.y;
+            if (remaining_y > 0) {
+                //coming from above, so shoot for the bottom to touch.
+                remaining_y = myRect.bottom - clientRect.bottom;
+            }
+            const shouldX = () => {
+                if (Math.abs(remaining_x) < this.entity.currentSpeed) { //if theres no reaosn to go x, don't
+                    return false;
+                }
+                else if (Math.abs(remaining_y) < this.entity.currentSpeed) { //no sense doing y, it won't do anything
+                    return true;
+                }
+                else {
+                    return Math.abs(Math.abs(remaining_x) - Math.abs(remaining_y)) > this.entity.width * 3;
+                }
+            };
+            if (this.entity.name === "Peewee") {
+                console.log("JR NOTE: i am peewee and remaining x is", remaining_x, "and remaining y is", remaining_y);
+            }
+            if (shouldX()) {
+                this.moveX(remaining_x);
+            }
+            else {
+                this.moveY(remaining_y);
+            }
+        };
+        this.ele_id = ele_id;
+    }
+}
+exports.MoveToSpecificElement = MoveToSpecificElement;
 
 
 /***/ }),
@@ -609,7 +644,21 @@ class MoveToSpecificLocation extends BaseMovement_1.Movement {
             let remaining_x = this.x - this.entity.x;
             let remaining_y = this.y - this.entity.y;
             //vary between picking x or y so you don't look like a robot so much
-            if (Math.abs(remaining_x) > Math.abs(remaining_y)) {
+            const shouldX = () => {
+                if (Math.abs(remaining_x) === 0) { //if theres no reaosn to go x, don't
+                    return false;
+                }
+                else if (Math.abs(remaining_y) === 0) { //no sense doing y, it won't do anything
+                    return true;
+                }
+                else {
+                    return Math.abs(Math.abs(remaining_x) - Math.abs(remaining_y)) > this.entity.width * 3;
+                }
+            };
+            if (this.entity.name === "Peewee") {
+                console.log("JR NOTE: i am peewee and remaining x is", remaining_x, "and remaining y is", remaining_y);
+            }
+            if (shouldX()) {
                 this.moveX(remaining_x);
             }
             else {
@@ -914,13 +963,13 @@ class Room {
             this.tick();
         };
         this.getNorth = () => {
-            return this.children[0];
+            return this.children.length > 0 && this.children[0];
         };
         this.getEast = () => {
-            return this.children[1];
+            return this.children.length > 1 && this.children[1];
         };
         this.getSouth = () => {
-            return this.children[2];
+            return this.children.length > 2 && this.children[2];
         };
         this.renderNorthDoor = () => {
             if (this.getNorth()) {
@@ -961,46 +1010,58 @@ class Room {
             this.checkEastDoor(blorbo);
         };
         this.checkNorthDoor = (blorbo) => {
+            if (!this.getNorth()) {
+                return;
+            }
             const door = document.querySelector("#northDoorRug");
             const doorRect = door.getBoundingClientRect();
             const blorboCenter = blorbo.centerPos();
             if (door) {
-                if ((0, misc_1.pointWithinBoundingBox)(blorboCenter.x, blorboCenter.y, doorRect.x, doorRect.y, doorRect.width, doorRect.height)) {
+                if ((0, misc_1.boundingBoxesIntersect)(doorRect, blorbo.container.getBoundingClientRect())) {
                     this.maze.playDoorSound();
                     if (blorbo.name !== "Peewee") {
                         console.log("JR NOTE: removing a non peewee cause blorbo is at", blorboCenter, "and north door is at", { x: doorRect.x, y: doorRect.y });
                         this.removeBlorbo(blorbo);
-                        this.getNorth().addBlorbo(blorbo);
+                        const room = this.getNorth();
+                        room && room.addBlorbo(blorbo);
                     }
                 }
             }
         };
         this.checkSouthDoor = (blorbo) => {
+            if (!this.getSouth()) {
+                return;
+            }
             const door = document.querySelector("#southDoor");
             const doorRect = door.getBoundingClientRect();
             const blorboCenter = blorbo.centerPos();
             if (door) {
-                if ((0, misc_1.pointWithinBoundingBox)(blorboCenter.x, blorboCenter.y, doorRect.x, doorRect.y, doorRect.width, doorRect.height)) {
+                if ((0, misc_1.boundingBoxesIntersect)(doorRect, blorbo.container.getBoundingClientRect())) {
                     this.maze.playDoorSound();
                     if (blorbo.name !== "Peewee") {
                         console.log("JR NOTE: removing a non peewee cause blorbo is at", blorboCenter, "and south door is at", { x: doorRect.x, y: doorRect.y });
                         this.removeBlorbo(blorbo);
-                        this.getSouth().addBlorbo(blorbo);
+                        const room = this.getSouth();
+                        room && room.addBlorbo(blorbo);
                     }
                 }
             }
         };
         this.checkEastDoor = (blorbo) => {
+            if (!this.getEast()) {
+                return;
+            }
             const door = document.querySelector("#eastDoor");
             const doorRect = door.getBoundingClientRect();
             const blorboCenter = blorbo.centerPos();
             if (door) {
-                if ((0, misc_1.pointWithinBoundingBox)(blorboCenter.x, blorboCenter.y, doorRect.x, doorRect.y, doorRect.width, doorRect.height)) {
+                if ((0, misc_1.boundingBoxesIntersect)(doorRect, blorbo.container.getBoundingClientRect())) {
                     this.maze.playDoorSound();
                     if (blorbo.name !== "Peewee") {
                         console.log("JR NOTE: removing a non peewee cause blorbo is at", blorboCenter, "and east door is at", { x: doorRect.x, y: doorRect.y });
                         this.removeBlorbo(blorbo);
-                        this.getEast().addBlorbo(blorbo);
+                        const room = this.getEast();
+                        room && room.addBlorbo(blorbo);
                     }
                 }
             }
@@ -3942,7 +4003,7 @@ exports.max_values_for_menus = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.pointWithinBoundingBox = exports.withinX = exports.withinY = exports.distanceWithinRadius = exports.distance = exports.getElementCenterPoint = exports.createElementWithId = exports.createElementWithIdAndParent = exports.sleep = void 0;
+exports.pointWithinBoundingBox = exports.boundingBoxesIntersect = exports.withinX = exports.withinY = exports.distanceWithinRadius = exports.distance = exports.getElementCenterPoint = exports.createElementWithId = exports.createElementWithIdAndParent = exports.sleep = void 0;
 const sleep = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 };
@@ -3987,6 +4048,13 @@ const withinX = (myX, objectX, objectWidth) => {
     return myX > objectX && myX < objectX + objectWidth;
 };
 exports.withinX = withinX;
+const boundingBoxesIntersect = (rect1, rect2) => {
+    return !(rect1.top > rect2.bottom ||
+        rect1.right < rect2.left ||
+        rect1.bottom < rect2.top ||
+        rect1.left > rect2.right);
+};
+exports.boundingBoxesIntersect = boundingBoxesIntersect;
 const pointWithinBoundingBox = (myX, myY, objectX, objectY, objectWidth, objectHeight) => {
     return (0, exports.withinX)(myX, objectX, objectWidth) && (0, exports.withinY)(myY, objectY, objectHeight);
 };
@@ -5567,6 +5635,8 @@ var map = {
 	"./Objects/MovementAlgs/MoveToNorthDoor.ts": 6003,
 	"./Objects/MovementAlgs/MoveToSouthDoor": 9380,
 	"./Objects/MovementAlgs/MoveToSouthDoor.ts": 9380,
+	"./Objects/MovementAlgs/MoveToSpecificElement": 4476,
+	"./Objects/MovementAlgs/MoveToSpecificElement.ts": 4476,
 	"./Objects/MovementAlgs/MoveToSpecificLocation": 7805,
 	"./Objects/MovementAlgs/MoveToSpecificLocation.ts": 7805,
 	"./Objects/MovementAlgs/MoveToWestDoor": 9991,

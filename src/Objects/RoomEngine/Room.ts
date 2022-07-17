@@ -1,6 +1,6 @@
 import { all_themes, Theme } from "../Theme";
 import { DARKNESS, FEELING, FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, OBFUSCATION, SMELL, SOUND, SPYING, TASTE, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
-import { createElementWithIdAndParent, pointWithinBoundingBox } from "../../Utils/misc";
+import { boundingBoxesIntersect, createElementWithIdAndParent, pointWithinBoundingBox } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 import { Quotidian } from "../Entities/Quotidian";
 import { PhysicalObject, RenderedItem } from "../PhysicalObject";
@@ -75,14 +75,14 @@ export class Room {
     }
 
     getNorth = ()=>{
-        return this.children[0];
+        return this.children.length > 0 && this.children[0];
     }
     getEast = ()=>{
-        return this.children[1];
+        return this.children.length > 1 && this.children[1];
 
     }
     getSouth = ()=>{
-        return this.children[2];
+        return this.children.length > 2 && this.children[2];
     }
 
     renderNorthDoor = ()=>{
@@ -134,50 +134,63 @@ export class Room {
     }
 
     checkNorthDoor = (blorbo: Quotidian)=>{
+        if(!this.getNorth()){
+            return;
+        }
         const door = document.querySelector("#northDoorRug") as HTMLElement;
         const doorRect = door.getBoundingClientRect()
         const blorboCenter = blorbo.centerPos();
         if(door){
-            if(pointWithinBoundingBox(blorboCenter.x, blorboCenter.y, doorRect.x,doorRect.y,doorRect.width,doorRect.height)){
+            if(boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())){
                 this.maze.playDoorSound();
                 if(blorbo.name !== "Peewee"){
                     console.log("JR NOTE: removing a non peewee cause blorbo is at",blorboCenter, "and north door is at", {x:doorRect.x,y:doorRect.y} )
                     this.removeBlorbo(blorbo);
-                    this.getNorth().addBlorbo(blorbo);
+                    const room = this.getNorth();
+                    room && room.addBlorbo(blorbo);
                 }
             }
         }
     }
 
     checkSouthDoor = (blorbo: Quotidian)=>{
+        if(!this.getSouth()){
+            return;
+        }
         const door = document.querySelector("#southDoor") as HTMLElement;
         const doorRect = door.getBoundingClientRect()
         ;
         const blorboCenter = blorbo.centerPos();
         if(door){
-            if(pointWithinBoundingBox(blorboCenter.x, blorboCenter.y, doorRect.x,doorRect.y,doorRect.width,doorRect.height)){
+            if(boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())){
                 this.maze.playDoorSound();
                 if(blorbo.name !== "Peewee"){
                     console.log("JR NOTE: removing a non peewee cause blorbo is at",blorboCenter, "and south door is at", {x:doorRect.x,y:doorRect.y} )
                     this.removeBlorbo(blorbo);
-                    this.getSouth().addBlorbo(blorbo);
+                    const room = this.getSouth();
+                    room && room.addBlorbo(blorbo);
                 }
             }
         }
     }
 
     checkEastDoor = (blorbo: Quotidian)=>{
+        if(!this.getEast()){
+            return;
+        }
         const door = document.querySelector("#eastDoor") as HTMLElement;
         const doorRect = door.getBoundingClientRect()
 
+
         const blorboCenter = blorbo.centerPos();
         if(door){
-            if(pointWithinBoundingBox(blorboCenter.x, blorboCenter.y, doorRect.x,doorRect.y,doorRect.width,doorRect.height)){
+            if(boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())){
                 this.maze.playDoorSound();
                 if(blorbo.name !== "Peewee"){
                     console.log("JR NOTE: removing a non peewee cause blorbo is at",blorboCenter, "and east door is at", {x:doorRect.x,y:doorRect.y} )
                     this.removeBlorbo(blorbo);
-                    this.getEast().addBlorbo(blorbo);
+                    const room = this.getEast();
+                    room && room.addBlorbo(blorbo);
                 }
             }
         }
