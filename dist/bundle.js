@@ -181,6 +181,10 @@ const GoWest_1 = __webpack_require__(4834);
 const StopMoving_1 = __webpack_require__(4469);
 const Quotidian_1 = __webpack_require__(6647);
 //what, did you think any real being could be so formulaic? 
+//regarding the real peewee, wanda is actually quite THRILLED there is a competing parasite in the Echidna distracting the immune system (and tbf, preventing an immune disorder in the form of the eye killer)
+//the universe is AWARE of the dangers to it and endlessly expands its immune system response
+//becoming ever more inflamed
+//but it can never be enough
 class Peewee extends Quotidian_1.Quotidian {
     //TODO have a movement algorithm (effects can shift this)
     /*
@@ -196,7 +200,11 @@ class Peewee extends Quotidian_1.Quotidian {
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "Peewee/Peeweee Walk left.gif", width: 90, height: 90 }
+            default_src: { src: "Peewee/left.gif", width: 90, height: 90 },
+            left_src: { src: "Peewee/left.gif", width: 90, height: 90 },
+            right_src: { src: "Peewee/right.gif", width: 90, height: 90 },
+            up_src: { src: "Peewee/back.gif", width: 45, height: 90 },
+            down_src: { src: "Peewee/front.gif", width: 45, height: 90 }
         };
         super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], sprite, "It's you. After all this time.");
         this.maxSpeed = 20;
@@ -291,8 +299,30 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 }, 3000);
             }
         };
+        this.syncSpriteToDirection = () => {
+            let chosen = this.directionalSprite.default_src;
+            if (this.direction === Direction.DOWN) {
+                chosen = this.directionalSprite.down_src || this.directionalSprite.default_src;
+            }
+            else if (this.direction === Direction.UP) {
+                chosen = this.directionalSprite.up_src || this.directionalSprite.default_src;
+            }
+            else if (this.direction === Direction.LEFT) {
+                chosen = this.directionalSprite.left_src || this.directionalSprite.default_src;
+            }
+            else if (this.direction === Direction.RIGHT) {
+                chosen = this.directionalSprite.right_src || this.directionalSprite.default_src;
+            }
+            const src = `${baseImageLocation}${chosen.src}`;
+            if (!this.image.src.includes(src)) {
+                console.log("JR NOTE: resetting image because ", src, "is not, this.image.src", this.image.src);
+                this.image.src = src;
+                this.image.style.width = `${chosen.width}px`;
+            }
+        };
         this.tick = () => {
             this.movement_alg.tick();
+            this.syncSpriteToDirection();
             this.updateRendering();
         };
         this.directionalSprite = sprite;
@@ -578,7 +608,6 @@ class MoveToSpecificLocation extends BaseMovement_1.Movement {
         this.pickNewDirection = () => {
             let remaining_x = this.x - this.entity.x;
             let remaining_y = this.y - this.entity.y;
-            console.log("JR NOTE: remaining x,y is ", { remaining_x, remaining_y });
             //vary between picking x or y so you don't look like a robot so much
             if (Math.abs(remaining_x) > Math.abs(remaining_y)) {
                 this.moveX(remaining_x);
@@ -1101,14 +1130,24 @@ const spawnFloorObjects = (width, height, layer, key, folder, seededRandom, them
     const debug = false;
     const baseLocation = "images/Walkabout/Objects/";
     const clutter_rate = seededRandom.nextDouble(0.75, 0.99); //smaller is more cluttered
-    const artifacts = [{ name: "Unos Artifact Book", layer: layer, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." }];
+    const artifacts = [
+        { name: "Unos Artifact Book", layer: layer, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." },
+        { name: "Duo Mask", layer: layer, src: `Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A faceless theater mask with a 2 on the inside of the forehead." },
+        { name: "Tres Bottle", layer: layer, src: `Artifacts/Zampanio_Artifact_03_Bottle.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A simple glass milk bottle with a 3 emblazoned on it." },
+        { name: "Quatro Blade", layer: layer, src: `Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade." },
+        { name: "Quinque Cloak", layer: layer, src: `Artifacts/Zampanio_Artifact_05_Cloak.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: " A simple matte blue cloak with a 5 embroidered on the back in shiny red thread. " },
+        { name: "Sextant", layer: layer, src: `Artifacts/Zampanio_Artifact_06_Sextant.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A highly polished brass sextant. There is a 6 carved onto the main knob." },
+        { name: "Septum Coin", layer: layer, src: `Artifacts/Zampanio_Artifact_07_Coin_Bronze.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "An old bronze coin. There is a theater mask on one side, and a 7 on the other." },
+        { name: "Octome", layer: layer, src: `Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back." },
+        { name: "Novum Mirror", layer: layer, src: `Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces." }
+    ];
     while (current_y + padding < height) {
         current_x = padding;
         while (current_x < width) {
             let chosen_theme = seededRandom.pickFrom(themes);
             let scale = 1.5;
             let item = chosen_theme.pickPossibilityFor(seededRandom, key);
-            if (layer === 1 && seededRandom.nextDouble() > 0.5) {
+            if (layer === 1 && seededRandom.nextDouble() > 0.95) {
                 item = seededRandom.pickFrom(artifacts);
                 chosen_theme = seededRandom.pickFrom(item.themes);
                 scale = 1.0;

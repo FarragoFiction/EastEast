@@ -35,7 +35,6 @@ export class MoveToSpecificLocation extends Movement{
     pickNewDirection = ()=>{
         let remaining_x = this.x - this.entity.x;
         let remaining_y = this.y - this.entity.y;
-        console.log("JR NOTE: remaining x,y is ",{remaining_x,remaining_y})
         //vary between picking x or y so you don't look like a robot so much
 
         if(Math.abs(remaining_x) >Math.abs(remaining_y)){

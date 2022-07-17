@@ -47,11 +47,11 @@ export class Peewee extends Quotidian{
 
     constructor(room: Room, x: number, y:number){
         const sprite = {
-            default_src:{src:"Peewee/Peeweee Walk left.gif",width:90,height:90},
-            left_src:{src:"Peewee/Peeweee Walk left.gif",width:90,height:90},
-            right_src:{src:"Peewee/Peeweee Walk right.gif",width:90,height:90},
-            up_src:{src:"Peewee/Peeweee Walk back.gif",width:45,height:90},
-            down_src:{src:"Peewee/Peeweee Walk front.gif",width:45,height:90}
+            default_src:{src:"Peewee/left.gif",width:90,height:90},
+            left_src:{src:"Peewee/left.gif",width:90,height:90},
+            right_src:{src:"Peewee/right.gif",width:90,height:90},
+            up_src:{src:"Peewee/back.gif",width:45,height:90},
+            down_src:{src:"Peewee/front.gif",width:45,height:90}
 
         };
         super(room,"Peewee", x,y,[all_themes[ENDINGS],all_themes[WEB],all_themes[TWISTING],all_themes[CLOWNS]],sprite,"It's you. After all this time.");

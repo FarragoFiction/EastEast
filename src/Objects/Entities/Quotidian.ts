@@ -18,35 +18,35 @@ export enum Direction {
     DOWN,
     LEFT,
     RIGHT,
-  }
+}
 
-  export interface Source{
-      src: string,
-      width: number,
-      height: number,
-  }
+export interface Source {
+    src: string,
+    width: number,
+    height: number,
+}
 
-  export interface  DirectionalSprite {
+export interface DirectionalSprite {
     default_src: Source
-    left_src?:Source
-    right_src?:Source
-    up_src?:Source
-    down_src?:Source
-  }
+    left_src?: Source
+    right_src?: Source
+    up_src?: Source
+    down_src?: Source
+}
 
-  const baseImageLocation  = "images/Walkabout/Sprites/";
+const baseImageLocation = "images/Walkabout/Sprites/";
 
 //what, did you think the REAL eye killer would be so formulaic? 
-export class Quotidian extends PhysicalObject{
+export class Quotidian extends PhysicalObject {
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
-    sass?:HTMLElement;
-    sassBegun?:Date;
+    sass?: HTMLElement;
+    sassBegun?: Date;
     directionalSprite: DirectionalSprite;
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
-    possible_random_move_algs = [new RandomMovement(this),new MoveToEastDoor(this), new MoveToNorthDoor(this), new MoveToSouthDoor(this)]
+    possible_random_move_algs = [new RandomMovement(this), new MoveToEastDoor(this), new MoveToNorthDoor(this), new MoveToSouthDoor(this)]
     movement_alg = pickFrom(this.possible_random_move_algs)
     //TODO have a movement algorithm (effects can shift this)
     /*
@@ -61,33 +61,58 @@ export class Quotidian extends PhysicalObject{
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
 
-    constructor(room: Room,name:string, x: number, y:number, themes:Theme[], sprite: DirectionalSprite, flavorText:string){
-        super(room,name, x,y,sprite.default_src.width,sprite.default_src.height,themes,11,`${baseImageLocation}${sprite.default_src.src}`,flavorText);
+    constructor(room: Room, name: string, x: number, y: number, themes: Theme[], sprite: DirectionalSprite, flavorText: string) {
+        super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText);
         this.directionalSprite = sprite;
     }
 
-    emitSass = (sass: string)=>{
+    emitSass = (sass: string) => {
         //debounce essentially
-        if(!this.sass || this.sass.innerText != sass){
-            this.sass = createElementWithIdAndParent("div",this.container,undefined,"sass");
+        if (!this.sass || this.sass.innerText != sass) {
+            this.sass = createElementWithIdAndParent("div", this.container, undefined, "sass");
             this.sass.innerText = sass;
             this.sassBegun = new Date();
 
-            setTimeout(()=>{
-                if(this.sass){
-                    this.sass.className="sass fadeout";
+            setTimeout(() => {
+                if (this.sass) {
+                    this.sass.className = "sass fadeout";
                 }
-            },2000);
+            }, 2000);
 
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.sass?.remove();
-            },3000);
+            }, 3000);
         }
 
     }
 
-    tick = ()=>{
+
+
+    syncSpriteToDirection = () => {
+        let chosen = this.directionalSprite.default_src;
+        if (this.direction === Direction.DOWN) {
+            chosen = this.directionalSprite.down_src || this.directionalSprite.default_src;
+        } else if (this.direction === Direction.UP) {
+            chosen = this.directionalSprite.up_src || this.directionalSprite.default_src;
+
+        } else if (this.direction === Direction.LEFT) {
+            chosen = this.directionalSprite.left_src || this.directionalSprite.default_src;
+
+        } else if (this.direction === Direction.RIGHT) {
+            chosen = this.directionalSprite.right_src || this.directionalSprite.default_src;
+        }
+        const src = `${baseImageLocation}${chosen.src}`;
+        if( !this.image.src.includes(src)){
+            console.log("JR NOTE: resetting image because ", src , "is not, this.image.src", this.image.src)
+            this.image.src =src ;
+            this.image.style.width = `${chosen.width}px`;
+        }
+
+    }
+
+    tick = () => {
         this.movement_alg.tick();
+        this.syncSpriteToDirection();
         this.updateRendering();
 
     }
