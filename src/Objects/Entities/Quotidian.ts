@@ -20,6 +20,20 @@ export enum Direction {
     RIGHT,
   }
 
+  export interface Source{
+      src: string,
+      width: number,
+      height: number,
+  }
+
+  export interface  DirectionalSprite {
+    default_src: Source
+    left_src?:Source
+    right_src?:Source
+    up_src?:Source
+    down_src?:Source
+  }
+
   const baseImageLocation  = "images/Walkabout/Sprites/";
 
 //what, did you think the REAL eye killer would be so formulaic? 
@@ -29,6 +43,7 @@ export class Quotidian extends PhysicalObject{
     currentSpeed = 10;
     sass?:HTMLElement;
     sassBegun?:Date;
+    directionalSprite: DirectionalSprite;
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
     possible_random_move_algs = [new RandomMovement(this),new MoveToEastDoor(this), new MoveToNorthDoor(this), new MoveToSouthDoor(this)]
@@ -46,8 +61,9 @@ export class Quotidian extends PhysicalObject{
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
 
-    constructor(room: Room,name:string, x: number, y:number, width: number, height: number, themes:Theme[], src: string, flavorText:string){
-        super(room,name, x,y,width,height,themes,11,`${baseImageLocation}${src}`,flavorText);
+    constructor(room: Room,name:string, x: number, y:number, themes:Theme[], sprite: DirectionalSprite, flavorText:string){
+        super(room,name, x,y,sprite.default_src.width,sprite.default_src.height,themes,11,`${baseImageLocation}${sprite.default_src.src}`,flavorText);
+        this.directionalSprite = sprite;
     }
 
     emitSass = (sass: string)=>{

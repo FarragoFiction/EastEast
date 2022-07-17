@@ -268,7 +268,7 @@ export const randomRoomWithThemes = async (maze: Maze,ele: HTMLElement, themes: 
 
     const stress_test = 3;
     for(let i = 0; i< stress_test; i++){
-        room.addBlorbo(new Quotidian(room,"Quotidian",150,150,50,50, [all_themes[SPYING]],"humanoid_crow.gif","testing"));
+        room.addBlorbo(new Quotidian(room,"Quotidian",150,150, [all_themes[SPYING]],{default_src:{src:"humanoid_crow.gif",width:50,height:50}},"testing"));
     }
     room.peewee = new Peewee(room,150,350);
     room.addBlorbo(room.peewee);

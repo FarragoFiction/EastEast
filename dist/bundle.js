@@ -195,7 +195,10 @@ class Peewee extends Quotidian_1.Quotidian {
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
     constructor(room, x, y) {
-        super(room, "Peewee", x, y, 90, 90, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], "Peewee/Peeweee Walk left.gif", "It's you. After all this time.");
+        const sprite = {
+            default_src: { src: "Peewee/Peeweee Walk left.gif", width: 90, height: 90 }
+        };
+        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], sprite, "It's you. After all this time.");
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
@@ -263,8 +266,8 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
     * to OBJECT
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
-    constructor(room, name, x, y, width, height, themes, src, flavorText) {
-        super(room, name, x, y, width, height, themes, 11, `${baseImageLocation}${src}`, flavorText);
+    constructor(room, name, x, y, themes, sprite, flavorText) {
+        super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText);
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
@@ -292,6 +295,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             this.movement_alg.tick();
             this.updateRendering();
         };
+        this.directionalSprite = sprite;
     }
 }
 exports.Quotidian = Quotidian;
@@ -1054,7 +1058,7 @@ const randomRoomWithThemes = (maze, ele, themes, seededRandom) => __awaiter(void
     }
     const stress_test = 3;
     for (let i = 0; i < stress_test; i++) {
-        room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], "humanoid_crow.gif", "testing"));
+        room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing"));
     }
     room.peewee = new Peewee_1.Peewee(room, 150, 350);
     room.addBlorbo(room.peewee);
@@ -3400,7 +3404,12 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 */
 /*
 
-CAST ASIDE ALL ASPIRATIONS OF MORTALITY
+TELLBRAK3700  (from customer service doc)
+Elias Smith (from customer service doc, bought the game for his daughter)
+Penny Wickner (couldn't find the game locally, got deluxe)
+Natalie Yemet (thinks their mom is the customer service rep. has an order for a game they don't remember)
+231223 (actual literal baby)
+some kind of mafia scheme (accuses eyedol of kidnapping)
 SLAUGHTERHOUSE 9
 PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH
 */
