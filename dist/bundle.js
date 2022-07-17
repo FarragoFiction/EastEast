@@ -195,7 +195,7 @@ class Peewee extends Quotidian_1.Quotidian {
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
     constructor(room, x, y, width, height) {
-        super(room, "Peewee", x, y, width, height, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], "images/Walkabout/Sprites/peewee.PNG", "It's you. After all this time.");
+        super(room, "Peewee", x, y, width, height, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], "Peewee/Peeweee Walk left.gif", "It's you. After all this time.");
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
@@ -248,6 +248,7 @@ var Direction;
     Direction[Direction["LEFT"] = 3] = "LEFT";
     Direction[Direction["RIGHT"] = 4] = "RIGHT";
 })(Direction = exports.Direction || (exports.Direction = {}));
+const baseImageLocation = "images/Walkabout/Sprites/";
 //what, did you think the REAL eye killer would be so formulaic? 
 class Quotidian extends PhysicalObject_1.PhysicalObject {
     //TODO have a movement algorithm (effects can shift this)
@@ -263,7 +264,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
     constructor(room, name, x, y, width, height, themes, src, flavorText) {
-        super(room, name, x, y, width, height, themes, 11, src, flavorText);
+        super(room, name, x, y, width, height, themes, 11, `${baseImageLocation}${src}`, flavorText);
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
@@ -1053,7 +1054,7 @@ const randomRoomWithThemes = (maze, ele, themes, seededRandom) => __awaiter(void
     }
     const stress_test = 3;
     for (let i = 0; i < stress_test; i++) {
-        room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], "images/Walkabout/Sprites/humanoid_crow.gif", "testing"));
+        room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], "humanoid_crow.gif", "testing"));
     }
     room.peewee = new Peewee_1.Peewee(room, 150, 350, 50, 50);
     room.addBlorbo(room.peewee);

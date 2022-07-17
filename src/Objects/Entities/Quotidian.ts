@@ -20,9 +20,10 @@ export enum Direction {
     RIGHT,
   }
 
+  const baseImageLocation  = "images/Walkabout/Sprites/";
+
 //what, did you think the REAL eye killer would be so formulaic? 
 export class Quotidian extends PhysicalObject{
-
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
@@ -46,7 +47,7 @@ export class Quotidian extends PhysicalObject{
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
 
     constructor(room: Room,name:string, x: number, y:number, width: number, height: number, themes:Theme[], src: string, flavorText:string){
-        super(room,name, x,y,width,height,themes,11,src,flavorText);
+        super(room,name, x,y,width,height,themes,11,`${baseImageLocation}${src}`,flavorText);
     }
 
     emitSass = (sass: string)=>{

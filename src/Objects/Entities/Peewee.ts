@@ -42,7 +42,7 @@ export class Peewee extends Quotidian{
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
 
     constructor(room: Room, x: number, y:number, width: number, height: number){
-        super(room,"Peewee", x,y,width,height,[all_themes[ENDINGS],all_themes[WEB],all_themes[TWISTING],all_themes[CLOWNS]],"images/Walkabout/Sprites/peewee.PNG","It's you. After all this time.");
+        super(room,"Peewee", x,y,width,height,[all_themes[ENDINGS],all_themes[WEB],all_themes[TWISTING],all_themes[CLOWNS]],"Peewee/Peeweee Walk left.gif","It's you. After all this time.");
     }
 
     //peewee's ai is user based. you can tell him to do various actions. 
