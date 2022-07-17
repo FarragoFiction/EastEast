@@ -1,5 +1,5 @@
 import { all_themes, Theme } from "../Theme";
-import { FEELING, FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, SMELL, SOUND, SPYING, TASTE, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
+import { DARKNESS, FEELING, FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, OBFUSCATION, SMELL, SOUND, SPYING, TASTE, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
 import { createElementWithIdAndParent, pointWithinBoundingBox } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 import { Quotidian } from "../Entities/Quotidian";
@@ -8,6 +8,7 @@ import { addImageProcess } from "../../Utils/URLUtils";
 import { Peewee } from "../Entities/Peewee";
 import { Maze } from "./Maze";
 import { removeItemOnce } from "../../Utils/ArrayUtils";
+import { pickFrom } from "../../Utils/NonSeededRandUtils";
 
 
 
@@ -269,7 +270,7 @@ export const randomRoomWithThemes = async (maze: Maze,ele: HTMLElement, themes: 
     for(let i = 0; i< stress_test; i++){
         room.addBlorbo(new Quotidian(room,"Quotidian",150,150,50,50, [all_themes[SPYING]],"humanoid_crow.gif","testing"));
     }
-    room.peewee = new Peewee(room,150,350,50,50);
+    room.peewee = new Peewee(room,150,350);
     room.addBlorbo(room.peewee);
 
 
@@ -308,17 +309,24 @@ const spawnFloorObjects = async (width:number, height:number,layer: number, key:
     let current_y = floor_bottom;
     const padding = 10;
     const ret: RenderedItem[] = [];
-    const scale = 1.5;
     const y_wiggle = 50;
     const debug = false;
+    const baseLocation = "images/Walkabout/Objects/";
     const clutter_rate = seededRandom.nextDouble(0.75,0.99); //smaller is more cluttered
+    const artifacts = [{name: "Unos Artifact Book", layer: layer, src:`Artifacts/Zampanio_Artifact_01_Book.png`, themes: [OBFUSCATION], flavorText: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." }];
     while (current_y + padding < height) {
         current_x = padding;
         while (current_x < width) {
-            const chosen_theme: Theme = seededRandom.pickFrom(themes);
-            const item = chosen_theme.pickPossibilityFor(seededRandom, key);
+            let chosen_theme: Theme = seededRandom.pickFrom(themes);
+            let scale = 1.5;
+            let item = chosen_theme.pickPossibilityFor(seededRandom, key);
+            if(layer === 1 && seededRandom.nextDouble()>0.5){
+                item = seededRandom.pickFrom(artifacts);
+                chosen_theme = seededRandom.pickFrom(item.themes);
+                scale = 1.0;
+            }
             if (item && item.src && seededRandom.nextDouble() > clutter_rate) {
-                const image: any = await addImageProcess(`images/Walkabout/Objects/${folder}/${item.src}`) as HTMLImageElement;
+                const image: any = await addImageProcess(`${baseLocation}${folder}/${item.src}`) as HTMLImageElement;
                 current_x += image.width * scale;
                 //don't clip the wall border, don't go past the floor
                 if (current_x + padding + image.width * scale > width) {
@@ -328,7 +336,7 @@ const spawnFloorObjects = async (width:number, height:number,layer: number, key:
                 if (y + padding + image.height * scale > height) {
                     break;
                 }
-                ret.push({name:"Generic Object", layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width*scale, height: image.height*scale, flavorText: item.desc })
+                ret.push({name:"Generic Object", layer: layer, src: `${baseLocation}${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width*scale, height: image.height*scale, flavorText: item.desc })
             } else {
                 current_x += 100;
             }

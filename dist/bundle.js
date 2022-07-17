@@ -194,8 +194,8 @@ class Peewee extends Quotidian_1.Quotidian {
     * to OBJECT
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
-    constructor(room, x, y, width, height) {
-        super(room, "Peewee", x, y, width, height, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], "Peewee/Peeweee Walk left.gif", "It's you. After all this time.");
+    constructor(room, x, y) {
+        super(room, "Peewee", x, y, 90, 90, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], "Peewee/Peeweee Walk left.gif", "It's you. After all this time.");
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
@@ -1056,7 +1056,7 @@ const randomRoomWithThemes = (maze, ele, themes, seededRandom) => __awaiter(void
     for (let i = 0; i < stress_test; i++) {
         room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, 50, 50, [Theme_1.all_themes[ThemeStorage_1.SPYING]], "humanoid_crow.gif", "testing"));
     }
-    room.peewee = new Peewee_1.Peewee(room, 150, 350, 50, 50);
+    room.peewee = new Peewee_1.Peewee(room, 150, 350);
     room.addBlorbo(room.peewee);
     return room;
 });
@@ -1093,17 +1093,24 @@ const spawnFloorObjects = (width, height, layer, key, folder, seededRandom, them
     let current_y = floor_bottom;
     const padding = 10;
     const ret = [];
-    const scale = 1.5;
     const y_wiggle = 50;
     const debug = false;
+    const baseLocation = "images/Walkabout/Objects/";
     const clutter_rate = seededRandom.nextDouble(0.75, 0.99); //smaller is more cluttered
+    const artifacts = [{ name: "Unos Artifact Book", layer: layer, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." }];
     while (current_y + padding < height) {
         current_x = padding;
         while (current_x < width) {
-            const chosen_theme = seededRandom.pickFrom(themes);
-            const item = chosen_theme.pickPossibilityFor(seededRandom, key);
+            let chosen_theme = seededRandom.pickFrom(themes);
+            let scale = 1.5;
+            let item = chosen_theme.pickPossibilityFor(seededRandom, key);
+            if (layer === 1 && seededRandom.nextDouble() > 0.5) {
+                item = seededRandom.pickFrom(artifacts);
+                chosen_theme = seededRandom.pickFrom(item.themes);
+                scale = 1.0;
+            }
             if (item && item.src && seededRandom.nextDouble() > clutter_rate) {
-                const image = yield (0, URLUtils_1.addImageProcess)(`images/Walkabout/Objects/${folder}/${item.src}`);
+                const image = yield (0, URLUtils_1.addImageProcess)(`${baseLocation}${folder}/${item.src}`);
                 current_x += image.width * scale;
                 //don't clip the wall border, don't go past the floor
                 if (current_x + padding + image.width * scale > width) {
@@ -1113,7 +1120,7 @@ const spawnFloorObjects = (width, height, layer, key, folder, seededRandom, them
                 if (y + padding + image.height * scale > height) {
                     break;
                 }
-                ret.push({ name: "Generic Object", layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * scale, height: image.height * scale, flavorText: item.desc });
+                ret.push({ name: "Generic Object", layer: layer, src: `${baseLocation}${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * scale, height: image.height * scale, flavorText: item.desc });
             }
             else {
                 current_x += 100;

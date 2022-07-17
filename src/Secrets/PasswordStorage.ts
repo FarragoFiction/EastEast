@@ -107,7 +107,12 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 */
 /*
 
-CAST ASIDE ALL ASPIRATIONS OF MORTALITY
+TELLBRAK3700  (from customer service doc)
+Elias Smith (from customer service doc, bought the game for his daughter)
+Penny Wickner (couldn't find the game locally, got deluxe)
+Natalie Yemet (thinks their mom is the customer service rep. has an order for a game they don't remember)
+231223 (actual literal baby)
+some kind of mafia scheme (accuses eyedol of kidnapping)
 SLAUGHTERHOUSE 9
 PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH 
 */
