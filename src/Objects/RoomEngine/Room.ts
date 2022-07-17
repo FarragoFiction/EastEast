@@ -313,14 +313,24 @@ const spawnFloorObjects = async (width:number, height:number,layer: number, key:
     const debug = false;
     const baseLocation = "images/Walkabout/Objects/";
     const clutter_rate = seededRandom.nextDouble(0.75,0.99); //smaller is more cluttered
-    const artifacts = [{name: "Unos Artifact Book", layer: layer, src:`Artifacts/Zampanio_Artifact_01_Book.png`, themes: [OBFUSCATION], flavorText: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." }];
+    const artifacts = [
+        {name: "Unos Artifact Book", layer: layer, src:`Artifacts/Zampanio_Artifact_01_Book.png`, themes: [OBFUSCATION], flavorText: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." }
+        ,{name: "Duo Mask", layer: layer, src:`Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [OBFUSCATION], flavorText: "A faceless theater mask with a 2 on the inside of the forehead." }
+        ,{name: "Tres Bottle", layer: layer, src:`Artifacts/Zampanio_Artifact_03_Bottle.png`, themes: [OBFUSCATION], flavorText: "A simple glass milk bottle with a 3 emblazoned on it." }
+        ,{name: "Quatro Blade", layer: layer, src:`Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [OBFUSCATION], flavorText: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade." }
+        ,{name: "Quinque Cloak", layer: layer, src:`Artifacts/Zampanio_Artifact_05_Cloak.png`, themes: [OBFUSCATION], flavorText: " A simple matte blue cloak with a 5 embroidered on the back in shiny red thread. " }
+        ,{name: "Sextant", layer: layer, src:`Artifacts/Zampanio_Artifact_06_Sextant.png`, themes: [OBFUSCATION], flavorText: "A highly polished brass sextant. There is a 6 carved onto the main knob." }
+        ,{name: "Septum Coin", layer: layer, src:`Artifacts/Zampanio_Artifact_07_Coin_Bronze.png`, themes: [OBFUSCATION], flavorText: "An old bronze coin. There is a theater mask on one side, and a 7 on the other." }
+        ,{name: "Octome", layer: layer, src:`Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [OBFUSCATION], flavorText: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back." }
+        ,{name: "Novum Mirror", layer: layer, src:`Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [OBFUSCATION], flavorText: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces." }
+    ];
     while (current_y + padding < height) {
         current_x = padding;
         while (current_x < width) {
             let chosen_theme: Theme = seededRandom.pickFrom(themes);
             let scale = 1.5;
             let item = chosen_theme.pickPossibilityFor(seededRandom, key);
-            if(layer === 1 && seededRandom.nextDouble()>0.5){
+            if(layer === 1 && seededRandom.nextDouble()>0.95){
                 item = seededRandom.pickFrom(artifacts);
                 chosen_theme = seededRandom.pickFrom(item.themes);
                 scale = 1.0;

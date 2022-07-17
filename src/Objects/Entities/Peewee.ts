@@ -17,6 +17,10 @@ import { Direction, Quotidian } from "./Quotidian";
 
 
 //what, did you think any real being could be so formulaic? 
+//regarding the real peewee, wanda is actually quite THRILLED there is a competing parasite in the Echidna distracting the immune system (and tbf, preventing an immune disorder in the form of the eye killer)
+//the universe is AWARE of the dangers to it and endlessly expands its immune system response
+//becoming ever more inflamed
+//but it can never be enough
 export class Peewee extends Quotidian{
 
     maxSpeed = 20;
@@ -43,7 +47,12 @@ export class Peewee extends Quotidian{
 
     constructor(room: Room, x: number, y:number){
         const sprite = {
-            default_src:{src:"Peewee/Peeweee Walk left.gif",width:90,height:90}
+            default_src:{src:"Peewee/Peeweee Walk left.gif",width:90,height:90},
+            left_src:{src:"Peewee/Peeweee Walk left.gif",width:90,height:90},
+            right_src:{src:"Peewee/Peeweee Walk right.gif",width:90,height:90},
+            up_src:{src:"Peewee/Peeweee Walk back.gif",width:45,height:90},
+            down_src:{src:"Peewee/Peeweee Walk front.gif",width:45,height:90}
+
         };
         super(room,"Peewee", x,y,[all_themes[ENDINGS],all_themes[WEB],all_themes[TWISTING],all_themes[CLOWNS]],sprite,"It's you. After all this time.");
     }
