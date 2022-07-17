@@ -60,7 +60,7 @@ export class Peewee extends Quotidian{
     //peewee's ai is user based. you can tell him to do various actions. 
     //there is no trigger. only actions.
     processStorybeat=(beat: StoryBeat)=>{
-
+        this.container.id = "PeeweePuppet"
         for(let action of this.possibleActions){
             const words = beat.command.split(" ");
             for(let word of words)

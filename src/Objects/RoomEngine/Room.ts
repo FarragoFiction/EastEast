@@ -139,12 +139,10 @@ export class Room {
         }
         const door = document.querySelector("#northDoorRug") as HTMLElement;
         const doorRect = door.getBoundingClientRect()
-        const blorboCenter = blorbo.centerPos();
         if(door){
             if(boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())){
                 this.maze.playDoorSound();
                 if(blorbo.name !== "Peewee"){
-                    console.log("JR NOTE: removing a non peewee cause blorbo is at",blorboCenter, "and north door is at", {x:doorRect.x,y:doorRect.y} )
                     this.removeBlorbo(blorbo);
                     const room = this.getNorth();
                     room && room.addBlorbo(blorbo);
@@ -158,14 +156,11 @@ export class Room {
             return;
         }
         const door = document.querySelector("#southDoor") as HTMLElement;
-        const doorRect = door.getBoundingClientRect()
-        ;
-        const blorboCenter = blorbo.centerPos();
+        const doorRect = door.getBoundingClientRect();
         if(door){
             if(boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())){
                 this.maze.playDoorSound();
                 if(blorbo.name !== "Peewee"){
-                    console.log("JR NOTE: removing a non peewee cause blorbo is at",blorboCenter, "and south door is at", {x:doorRect.x,y:doorRect.y} )
                     this.removeBlorbo(blorbo);
                     const room = this.getSouth();
                     room && room.addBlorbo(blorbo);
@@ -181,13 +176,10 @@ export class Room {
         const door = document.querySelector("#eastDoor") as HTMLElement;
         const doorRect = door.getBoundingClientRect()
 
-
-        const blorboCenter = blorbo.centerPos();
         if(door){
             if(boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())){
                 this.maze.playDoorSound();
                 if(blorbo.name !== "Peewee"){
-                    console.log("JR NOTE: removing a non peewee cause blorbo is at",blorboCenter, "and east door is at", {x:doorRect.x,y:doorRect.y} )
                     this.removeBlorbo(blorbo);
                     const room = this.getEast();
                     room && room.addBlorbo(blorbo);

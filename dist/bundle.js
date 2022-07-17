@@ -218,6 +218,7 @@ class Peewee extends Quotidian_1.Quotidian {
         //peewee's ai is user based. you can tell him to do various actions. 
         //there is no trigger. only actions.
         this.processStorybeat = (beat) => {
+            this.container.id = "PeeweePuppet";
             for (let action of this.possibleActions) {
                 const words = beat.command.split(" ");
                 for (let word of words)
@@ -1015,12 +1016,10 @@ class Room {
             }
             const door = document.querySelector("#northDoorRug");
             const doorRect = door.getBoundingClientRect();
-            const blorboCenter = blorbo.centerPos();
             if (door) {
                 if ((0, misc_1.boundingBoxesIntersect)(doorRect, blorbo.container.getBoundingClientRect())) {
                     this.maze.playDoorSound();
                     if (blorbo.name !== "Peewee") {
-                        console.log("JR NOTE: removing a non peewee cause blorbo is at", blorboCenter, "and north door is at", { x: doorRect.x, y: doorRect.y });
                         this.removeBlorbo(blorbo);
                         const room = this.getNorth();
                         room && room.addBlorbo(blorbo);
@@ -1034,12 +1033,10 @@ class Room {
             }
             const door = document.querySelector("#southDoor");
             const doorRect = door.getBoundingClientRect();
-            const blorboCenter = blorbo.centerPos();
             if (door) {
                 if ((0, misc_1.boundingBoxesIntersect)(doorRect, blorbo.container.getBoundingClientRect())) {
                     this.maze.playDoorSound();
                     if (blorbo.name !== "Peewee") {
-                        console.log("JR NOTE: removing a non peewee cause blorbo is at", blorboCenter, "and south door is at", { x: doorRect.x, y: doorRect.y });
                         this.removeBlorbo(blorbo);
                         const room = this.getSouth();
                         room && room.addBlorbo(blorbo);
@@ -1053,12 +1050,10 @@ class Room {
             }
             const door = document.querySelector("#eastDoor");
             const doorRect = door.getBoundingClientRect();
-            const blorboCenter = blorbo.centerPos();
             if (door) {
                 if ((0, misc_1.boundingBoxesIntersect)(doorRect, blorbo.container.getBoundingClientRect())) {
                     this.maze.playDoorSound();
                     if (blorbo.name !== "Peewee") {
-                        console.log("JR NOTE: removing a non peewee cause blorbo is at", blorboCenter, "and east door is at", { x: doorRect.x, y: doorRect.y });
                         this.removeBlorbo(blorbo);
                         const room = this.getEast();
                         room && room.addBlorbo(blorbo);
