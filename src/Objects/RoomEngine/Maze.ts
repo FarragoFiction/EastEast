@@ -1,11 +1,9 @@
-import { EntityName } from "typescript";
 import { initRabbitHole } from "../../Secrets/PasswordStorage";
 import { createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 import { Peewee } from "../Entities/Peewee";
-import { Quotidian } from "../Entities/Quotidian";
 import { all_themes } from "../Theme";
-import { ENDINGS, WEB, TWISTING, CLOWNS } from "../ThemeStorage";
+import { ENDINGS, WEB, TWISTING, CLOWNS, SPYING } from "../ThemeStorage";
 import { randomRoomWithThemes, Room } from "./Room";
 import { StoryBeat } from "./StoryBeat";
 
@@ -30,6 +28,8 @@ export class Maze {
     initialize = async () => {
         const themes = [all_themes[ENDINGS], all_themes[WEB], all_themes[TWISTING], all_themes[CLOWNS]]
         this.room = await randomRoomWithThemes(this,this.ele, themes, this.rand);
+        this.room.initialRoomWithBlorbos();
+
         await this.room.propagateMaze(3);
         console.log("JR NOTE: room now has these children: ", this.room.children)
         this.room.render();
@@ -50,8 +50,16 @@ export class Maze {
         if(this.room){
             this.room.teardown();
         }
+        if(this.peewee){
+            this.peewee.x = 150;
+            this.peewee.y  = 350;
+        }
         this.room = room;
         this.room.peewee = this.peewee;
+        if(this.peewee){
+            room.addBlorbo(this.peewee);
+            this.peewee.goStill();
+        }
         this.room.render();
     }
 

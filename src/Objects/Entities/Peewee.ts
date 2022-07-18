@@ -46,6 +46,7 @@ export class Peewee extends Quotidian{
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
 
     constructor(room: Room, x: number, y:number){
+        console.log("JR NOTE: making a new peewee");
         const sprite = {
             default_src:{src:"Peewee/left.gif",width:90,height:90},
             left_src:{src:"Peewee/left.gif",width:90,height:90},
@@ -57,10 +58,13 @@ export class Peewee extends Quotidian{
         super(room,"Peewee", x,y,[all_themes[ENDINGS],all_themes[WEB],all_themes[TWISTING],all_themes[CLOWNS]],sprite,"It's you. After all this time.");
     }
 
+
     //peewee's ai is user based. you can tell him to do various actions. 
     //there is no trigger. only actions.
     processStorybeat=(beat: StoryBeat)=>{
         this.container.id = "PeeweePuppet"
+        console.log("JR NOTE: i am peewee, i just got a command, i want to emit sass, my container is", this.container)
+        this.emitSass("...")
         for(let action of this.possibleActions){
             const words = beat.command.split(" ");
             for(let word of words)

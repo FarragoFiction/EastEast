@@ -7,9 +7,11 @@ import { randomRoomWithThemes, Room } from "./Objects/RoomEngine/Room";
 import { getRandomNumberBetween } from "./Utils/NonSeededRandUtils";
 import SeededRandom from "./Utils/SeededRandom";
 import { Maze } from "./Objects/RoomEngine/Maze";
+import { createElementWithIdAndParent } from "./Utils/misc";
 window.onload = async()=>{
     const ele = document.querySelector("#current-room") as HTMLElement;
     const storySoFar = document.querySelector(".story-so-far") as HTMLElement;
+    storySoFar.innerHTML  = "";
     initStats();
     initThemes();
     const seed = getRandomNumberBetween(1,113);

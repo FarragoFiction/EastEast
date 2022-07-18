@@ -6,6 +6,7 @@ import { pickFrom } from "../../Utils/NonSeededRandUtils";
 import { MoveToEastDoor } from "../MovementAlgs/MoveToEastDoor";
 import { MoveToNorthDoor } from "../MovementAlgs/MoveToNorthDoor";
 import { MoveToSouthDoor } from "../MovementAlgs/MoveToSouthDoor";
+import { NoMovement } from "../MovementAlgs/NoMovement";
 import { RandomMovement } from "../MovementAlgs/RandomMovement";
 import { PhysicalObject } from "../PhysicalObject";
 import { Room } from "../RoomEngine/Room";
@@ -66,8 +67,13 @@ export class Quotidian extends PhysicalObject {
         this.directionalSprite = sprite;
     }
 
+    goStill = ()=>{
+        this.movement_alg = new NoMovement(this);
+    }
+
     emitSass = (sass: string) => {
         //debounce essentially
+        console.log("JR NOTE: i want to sass", sass, "and my sass container is", this.sass, "and my regular container is ", this.container);
         if (!this.sass || this.sass.innerText != sass) {
             this.sass = createElementWithIdAndParent("div", this.container, undefined, "sass");
             this.sass.innerText = sass;

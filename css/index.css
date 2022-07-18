@@ -197,6 +197,12 @@ textarea{
   opacity: 0;
 }
 
+.error{
+  color: red;
+  animation: glitch 1s linear infinite;
+  display: inline-block;
+}
+
 #northDoor{
   position: absolute;
   display: block;

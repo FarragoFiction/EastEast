@@ -51,6 +51,7 @@ export class Room {
     }
 
     render = () => {
+        console.log("JR NOTE: rendering a room");
         this.element.innerHTML = "";
         this.width = this.element.getBoundingClientRect().width;
         this.height = this.element.getBoundingClientRect().height;
@@ -114,15 +115,20 @@ export class Room {
     }
 
     removeBlorbo = (blorbo: Quotidian) => {
-        console.log("JR NOTE: removing blorbo", blorbo.name)
         removeItemOnce(this.blorbos, blorbo);
         blorbo.container.remove();
-        console.log("JR NOTE: just so you know, children are", this.children)
     }
 
     teardown = ()=>{
         this.ticking = false;
+        if(this.peewee){
+             this.removeBlorbo(this.peewee);
+        }
         this.peewee = undefined;
+        while (this.element.firstChild) {
+            this.element.removeChild(this.element.firstChild);
+        }
+
     }
 
 
@@ -146,6 +152,9 @@ export class Room {
                     this.removeBlorbo(blorbo);
                     const room = this.getNorth();
                     room && room.addBlorbo(blorbo);
+                }else{
+                    const room = this.getNorth();
+                    room && this.maze.changeRoom(room);
                 }
             }
         }
@@ -164,6 +173,9 @@ export class Room {
                     this.removeBlorbo(blorbo);
                     const room = this.getSouth();
                     room && room.addBlorbo(blorbo);
+                }else{
+                    const room = this.getSouth();
+                    room && this.maze.changeRoom(room);
                 }
             }
         }
@@ -183,9 +195,21 @@ export class Room {
                     this.removeBlorbo(blorbo);
                     const room = this.getEast();
                     room && room.addBlorbo(blorbo);
+                }else{
+                    const room = this.getEast();
+                    room && this.maze.changeRoom(room);
                 }
             }
         }
+    }
+
+    initialRoomWithBlorbos= ()=>{
+        const stress_test = 3;
+        for(let i = 0; i< stress_test; i++){
+            this.addBlorbo(new Quotidian(this,"Quotidian",150,150, [all_themes[SPYING]],{default_src:{src:"humanoid_crow.gif",width:50,height:50}},"testing"));
+        }
+        this.peewee = new Peewee(this,150,350);
+        this.addBlorbo(this.peewee);
     }
     
 
@@ -270,15 +294,6 @@ export const randomRoomWithThemes = async (maze: Maze,ele: HTMLElement, themes: 
     for(let item of items){
         room.addItem(new PhysicalObject(room,item.name,item.x,item.y,item.width,item.height,item.themes,item.layer,item.src,item.flavorText))
     }
-
-    const stress_test = 3;
-    for(let i = 0; i< stress_test; i++){
-        room.addBlorbo(new Quotidian(room,"Quotidian",150,150, [all_themes[SPYING]],{default_src:{src:"humanoid_crow.gif",width:50,height:50}},"testing"));
-    }
-    room.peewee = new Peewee(room,150,350);
-    room.addBlorbo(room.peewee);
-
-
     return room;
 }
 

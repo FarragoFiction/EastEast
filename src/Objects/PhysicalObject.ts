@@ -80,14 +80,16 @@ export class PhysicalObject{
     }
 
     attachToParent = (parent: HTMLElement)=>{
+        console.log("JR NOTE: attaching to parent, i'm", this.name)
         this.parent = parent;
         this.image.src = this.src;
         this.image.style.width = `${this.width}px`;
         this.container.style.display = "block";
+        this.container.className = this.name;
         this.container.style.zIndex = `${this.layer+10}`;
         this.container.style.position = "absolute";
-        this.container.style.top = `${this.y}px`;
-        this.container.style.left = `${this.x}px`;
+        this.container.style.top = `${this.original_y}px`;
+        this.container.style.left = `${this.original_x}px`;
         this.container.append(this.image);
         this.parent.append(this.container);
 

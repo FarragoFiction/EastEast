@@ -199,6 +199,7 @@ class Peewee extends Quotidian_1.Quotidian {
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
     constructor(room, x, y) {
+        console.log("JR NOTE: making a new peewee");
         const sprite = {
             default_src: { src: "Peewee/left.gif", width: 90, height: 90 },
             left_src: { src: "Peewee/left.gif", width: 90, height: 90 },
@@ -219,6 +220,8 @@ class Peewee extends Quotidian_1.Quotidian {
         //there is no trigger. only actions.
         this.processStorybeat = (beat) => {
             this.container.id = "PeeweePuppet";
+            console.log("JR NOTE: i am peewee, i just got a command, i want to emit sass, my container is", this.container);
+            this.emitSass("...");
             for (let action of this.possibleActions) {
                 const words = beat.command.split(" ");
                 for (let word of words)
@@ -251,6 +254,7 @@ const NonSeededRandUtils_1 = __webpack_require__(8258);
 const MoveToEastDoor_1 = __webpack_require__(1146);
 const MoveToNorthDoor_1 = __webpack_require__(6003);
 const MoveToSouthDoor_1 = __webpack_require__(9380);
+const NoMovement_1 = __webpack_require__(4956);
 const RandomMovement_1 = __webpack_require__(5997);
 const PhysicalObject_1 = __webpack_require__(8466);
 var Direction;
@@ -283,8 +287,12 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this), new MoveToEastDoor_1.MoveToEastDoor(this), new MoveToNorthDoor_1.MoveToNorthDoor(this), new MoveToSouthDoor_1.MoveToSouthDoor(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
+        this.goStill = () => {
+            this.movement_alg = new NoMovement_1.NoMovement(this);
+        };
         this.emitSass = (sass) => {
             //debounce essentially
+            console.log("JR NOTE: i want to sass", sass, "and my sass container is", this.sass, "and my regular container is ", this.container);
             if (!this.sass || this.sass.innerText != sass) {
                 this.sass = (0, misc_1.createElementWithIdAndParent)("div", this.container, undefined, "sass");
                 this.sass.innerText = sass;
@@ -775,14 +783,16 @@ class PhysicalObject {
             return (0, misc_1.getElementCenterPoint)(this.container);
         };
         this.attachToParent = (parent) => {
+            console.log("JR NOTE: attaching to parent, i'm", this.name);
             this.parent = parent;
             this.image.src = this.src;
             this.image.style.width = `${this.width}px`;
             this.container.style.display = "block";
+            this.container.className = this.name;
             this.container.style.zIndex = `${this.layer + 10}`;
             this.container.style.position = "absolute";
-            this.container.style.top = `${this.y}px`;
-            this.container.style.left = `${this.x}px`;
+            this.container.style.top = `${this.original_y}px`;
+            this.container.style.left = `${this.original_x}px`;
             this.container.append(this.image);
             this.parent.append(this.container);
         };
@@ -836,6 +846,7 @@ class Maze {
         this.initialize = () => __awaiter(this, void 0, void 0, function* () {
             const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]];
             this.room = yield (0, Room_1.randomRoomWithThemes)(this, this.ele, themes, this.rand);
+            this.room.initialRoomWithBlorbos();
             yield this.room.propagateMaze(3);
             console.log("JR NOTE: room now has these children: ", this.room.children);
             this.room.render();
@@ -855,8 +866,16 @@ class Maze {
             if (this.room) {
                 this.room.teardown();
             }
+            if (this.peewee) {
+                this.peewee.x = 150;
+                this.peewee.y = 350;
+            }
             this.room = room;
             this.room.peewee = this.peewee;
+            if (this.peewee) {
+                room.addBlorbo(this.peewee);
+                this.peewee.goStill();
+            }
             this.room.render();
         };
         this.addStorybeat = (beat) => {
@@ -945,6 +964,7 @@ class Room {
             this.ticking = false;
         };
         this.render = () => {
+            console.log("JR NOTE: rendering a room");
             this.element.innerHTML = "";
             this.width = this.element.getBoundingClientRect().width;
             this.height = this.element.getBoundingClientRect().height;
@@ -995,14 +1015,18 @@ class Room {
             this.blorbos.push(blorbo);
         };
         this.removeBlorbo = (blorbo) => {
-            console.log("JR NOTE: removing blorbo", blorbo.name);
             (0, ArrayUtils_1.removeItemOnce)(this.blorbos, blorbo);
             blorbo.container.remove();
-            console.log("JR NOTE: just so you know, children are", this.children);
         };
         this.teardown = () => {
             this.ticking = false;
+            if (this.peewee) {
+                this.removeBlorbo(this.peewee);
+            }
             this.peewee = undefined;
+            while (this.element.firstChild) {
+                this.element.removeChild(this.element.firstChild);
+            }
         };
         //if any blorbo is near a door, move them into the room whose door they are near.
         this.checkForDoors = (blorbo) => {
@@ -1024,6 +1048,10 @@ class Room {
                         const room = this.getNorth();
                         room && room.addBlorbo(blorbo);
                     }
+                    else {
+                        const room = this.getNorth();
+                        room && this.maze.changeRoom(room);
+                    }
                 }
             }
         };
@@ -1040,6 +1068,10 @@ class Room {
                         this.removeBlorbo(blorbo);
                         const room = this.getSouth();
                         room && room.addBlorbo(blorbo);
+                    }
+                    else {
+                        const room = this.getSouth();
+                        room && this.maze.changeRoom(room);
                     }
                 }
             }
@@ -1058,8 +1090,20 @@ class Room {
                         const room = this.getEast();
                         room && room.addBlorbo(blorbo);
                     }
+                    else {
+                        const room = this.getEast();
+                        room && this.maze.changeRoom(room);
+                    }
                 }
             }
+        };
+        this.initialRoomWithBlorbos = () => {
+            const stress_test = 3;
+            for (let i = 0; i < stress_test; i++) {
+                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 150, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing"));
+            }
+            this.peewee = new Peewee_1.Peewee(this, 150, 350);
+            this.addBlorbo(this.peewee);
         };
         this.tick = () => {
             //TODO blorbos all tick
@@ -1141,12 +1185,6 @@ const randomRoomWithThemes = (maze, ele, themes, seededRandom) => __awaiter(void
     for (let item of items) {
         room.addItem(new PhysicalObject_1.PhysicalObject(room, item.name, item.x, item.y, item.width, item.height, item.themes, item.layer, item.src, item.flavorText));
     }
-    const stress_test = 3;
-    for (let i = 0; i < stress_test; i++) {
-        room.addBlorbo(new Quotidian_1.Quotidian(room, "Quotidian", 150, 150, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing"));
-    }
-    room.peewee = new Peewee_1.Peewee(room, 150, 350);
-    room.addBlorbo(room.peewee);
     return room;
 });
 exports.randomRoomWithThemes = randomRoomWithThemes;
@@ -4085,6 +4123,7 @@ const Maze_1 = __webpack_require__(7194);
 window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
     const ele = document.querySelector("#current-room");
     const storySoFar = document.querySelector(".story-so-far");
+    storySoFar.innerHTML = "";
     (0, Stat_1.initStats)();
     (0, Theme_1.initThemes)();
     const seed = (0, NonSeededRandUtils_1.getRandomNumberBetween)(1, 113);

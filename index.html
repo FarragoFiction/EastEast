@@ -6,6 +6,13 @@
   <script src="dist/bundle.js"></script>
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/transcript.css">
+  <script>
+        window.onerror = (e)=>{
+        const err = createElementWithIdAndParent("p", storySoFar, undefined, "error");
+        err.title = "ERROR";
+        err.innerHTML = e.toString();
+    }
+    </script>
 
 </head>
 
@@ -16,6 +23,7 @@
     </div>
     <div class="player-container" id="story-container">
       <div class="story-so-far">
+        <p>Loading...</p>
       </div>
       <div class="command">
         <form id="puppet-command" action="" method="post" style="display: inline-block;">
@@ -32,6 +40,7 @@
 
   <ul>
     * loading screen for bundle? (have bundle remove the loading graphic? click to start for sounds)
+    * add a weird non-puppet peewee that doens't listen (bug i found) (arm2 peewee)
     * if peewee touches a door, current room is changed (and in ALL rooms, blorbo has random chance of going to another
     room, if one exists)(ai is peewee based because its an immune system. it doesn't move unless he does)
 
