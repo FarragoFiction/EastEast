@@ -63,8 +63,6 @@ export class Peewee extends Quotidian{
     //there is no trigger. only actions.
     processStorybeat=(beat: StoryBeat)=>{
         this.container.id = "PeeweePuppet"
-        console.log("JR NOTE: i am peewee, i just got a command, i want to emit sass, my container is", this.container)
-        this.emitSass("...")
         for(let action of this.possibleActions){
             const words = beat.command.split(" ");
             for(let word of words)

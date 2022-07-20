@@ -73,7 +73,6 @@ export class Quotidian extends PhysicalObject {
 
     emitSass = (sass: string) => {
         //debounce essentially
-        console.log("JR NOTE: i want to sass", sass, "and my sass container is", this.sass, "and my regular container is ", this.container);
         if (!this.sass || this.sass.innerText != sass) {
             this.sass = createElementWithIdAndParent("div", this.container, undefined, "sass");
             this.sass.innerText = sass;

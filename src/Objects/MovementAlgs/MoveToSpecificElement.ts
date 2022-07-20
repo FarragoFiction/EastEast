@@ -67,11 +67,6 @@ export class MoveToSpecificElement extends Movement{
             }
         }
 
-        if(this.entity.name === "Peewee"){
-            console.log("JR NOTE: i am peewee and remaining x is", remaining_x, "and remaining y is", remaining_y)
-
-        }
-
         if(shouldX()){
             this.moveX(remaining_x);
         }else{

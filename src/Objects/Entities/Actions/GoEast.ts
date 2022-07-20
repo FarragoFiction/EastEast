@@ -12,9 +12,14 @@ export class GoEast extends Action{ //lawsuit
     applyAction = (subject: Quotidian,current_room: Room,object?: Quotidian, )=>{
         //JR NOTE: todo flesh this out. should be able to access the whole maze really.
         subject.movement_alg = new MoveToEastDoor(subject);
-        subject.emitSass("OK")
-
-        return `${subject.name} starts heading to the EAST DOOR.`;
+        subject.movement_alg.detectEle();
+        if (subject.movement_alg.ele) {
+            subject.emitSass("OK")
+            return `${subject.name} starts heading to the EAST DOOR.`;
+        }else{
+            subject.emitSass("???")
+            return `${subject.name} can't find the EAST DOOR. They start pacing anxiously.`;  
+        }
     }
 
 

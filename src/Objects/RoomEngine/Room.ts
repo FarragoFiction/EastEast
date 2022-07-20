@@ -27,13 +27,13 @@ export class Room {
     items: PhysicalObject[] = [];
     ticking = false;
     tickRate = 100;
-    children:Room[] =[];
+    children: Room[] = [];
 
 
     //objects
     //people
     //really theres just the one room, we keep clearing it out.
-    constructor(maze: Maze,themes: Theme[], element: HTMLElement, rand: SeededRandom) {
+    constructor(maze: Maze, themes: Theme[], element: HTMLElement, rand: SeededRandom) {
         this.themes = themes;
         this.rand = rand;
         this.maze = maze;
@@ -41,12 +41,12 @@ export class Room {
         this.init();
     }
 
-    getRandomThemeConcept = (concept: string)=>{
+    getRandomThemeConcept = (concept: string) => {
         const theme = this.rand.pickFrom(this.themes);
         return theme.pickPossibilityFor(this.rand, concept);
     }
 
-    stopTicking = ()=>{
+    stopTicking = () => {
         this.ticking = false;
     }
 
@@ -59,11 +59,11 @@ export class Room {
         const wall = createElementWithIdAndParent("div", this.element, "wall");
         wall.style.backgroundImage = `url(images/Walkabout/wall/${this.wall})`;
 
-        for(let item of this.items){
+        for (let item of this.items) {
             item.attachToParent(this.element);
         }
 
-        for(let blorbo of this.blorbos){
+        for (let blorbo of this.blorbos) {
             blorbo.attachToParent(this.element);
         }
         this.renderNorthDoor();
@@ -75,19 +75,19 @@ export class Room {
         this.tick();
     }
 
-    getNorth = ()=>{
+    getNorth = () => {
         return this.children.length > 0 && this.children[0];
     }
-    getEast = ()=>{
+    getEast = () => {
         return this.children.length > 1 && this.children[1];
 
     }
-    getSouth = ()=>{
+    getSouth = () => {
         return this.children.length > 2 && this.children[2];
     }
 
-    renderNorthDoor = ()=>{
-        if(this.getNorth()){
+    renderNorthDoor = () => {
+        if (this.getNorth()) {
             const image = createElementWithIdAndParent("img", this.element, "northDoor") as HTMLImageElement;
             image.src = "images/Walkabout/door.png";
             const rug = createElementWithIdAndParent("img", this.element, "northDoorRug") as HTMLImageElement;
@@ -95,15 +95,18 @@ export class Room {
         }
     }
 
-    renderEastDoor = ()=>{
-        const rug = createElementWithIdAndParent("img", this.element, "eastDoor") as HTMLImageElement;
-        rug.src = "images/Walkabout/rug.png";
-
+    renderEastDoor = () => {
+        if (this.getEast()) {
+            const rug = createElementWithIdAndParent("img", this.element, "eastDoor") as HTMLImageElement;
+            rug.src = "images/Walkabout/rug.png";
+        }
     }
 
-    renderSouthDoor = ()=>{
-        const rug = createElementWithIdAndParent("img", this.element, "southDoor") as HTMLImageElement;
-        rug.src = "images/Walkabout/rug.png";
+    renderSouthDoor = () => {
+        if (this.getSouth()) {
+            const rug = createElementWithIdAndParent("img", this.element, "southDoor") as HTMLImageElement;
+            rug.src = "images/Walkabout/rug.png";
+        }
     }
 
     addItem = (obj: PhysicalObject) => {
@@ -119,40 +122,44 @@ export class Room {
         blorbo.container.remove();
     }
 
-    teardown = ()=>{
+    teardown = () => {
         this.ticking = false;
-        if(this.peewee){
-             this.removeBlorbo(this.peewee);
+        if (this.peewee) {
+            this.removeBlorbo(this.peewee);
         }
         this.peewee = undefined;
         while (this.element.firstChild) {
+            const child = this.element.firstChild;
+            child.remove();
             this.element.removeChild(this.element.firstChild);
         }
+
+        console.log("JR NOTE: tore down the room, its children are", this.element.children);
 
     }
 
 
     //if any blorbo is near a door, move them into the room whose door they are near.
-    checkForDoors = (blorbo: Quotidian)=>{
+    checkForDoors = (blorbo: Quotidian) => {
         this.checkNorthDoor(blorbo);
         this.checkSouthDoor(blorbo);
         this.checkEastDoor(blorbo);
     }
 
-    checkNorthDoor = (blorbo: Quotidian)=>{
-        if(!this.getNorth()){
+    checkNorthDoor = (blorbo: Quotidian) => {
+        if (!this.getNorth()) {
             return;
         }
         const door = document.querySelector("#northDoorRug") as HTMLElement;
         const doorRect = door.getBoundingClientRect()
-        if(door){
-            if(boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())){
+        if (door) {
+            if (boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())) {
                 this.maze.playDoorSound();
-                if(blorbo.name !== "Peewee"){
+                if (blorbo.name !== "Peewee") {
                     this.removeBlorbo(blorbo);
                     const room = this.getNorth();
                     room && room.addBlorbo(blorbo);
-                }else{
+                } else {
                     const room = this.getNorth();
                     room && this.maze.changeRoom(room);
                 }
@@ -160,20 +167,24 @@ export class Room {
         }
     }
 
-    checkSouthDoor = (blorbo: Quotidian)=>{
-        if(!this.getSouth()){
+    checkSouthDoor = (blorbo: Quotidian) => {
+        if (!this.getSouth()) {
             return;
         }
         const door = document.querySelector("#southDoor") as HTMLElement;
         const doorRect = door.getBoundingClientRect();
-        if(door){
-            if(boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())){
+        const blorboRect = blorbo.container.getBoundingClientRect();
+        if (door) {
+            if (blorbo.name === "Peewee") {
+                // console.log("JR NOTE: is peewee near the south door?", doorRect, blorboRect,boundingBoxesIntersect(doorRect, blorboRect))
+            }
+            if (boundingBoxesIntersect(doorRect, blorboRect)) {
                 this.maze.playDoorSound();
-                if(blorbo.name !== "Peewee"){
+                if (blorbo.name !== "Peewee") {
                     this.removeBlorbo(blorbo);
                     const room = this.getSouth();
                     room && room.addBlorbo(blorbo);
-                }else{
+                } else {
                     const room = this.getSouth();
                     room && this.maze.changeRoom(room);
                 }
@@ -181,21 +192,21 @@ export class Room {
         }
     }
 
-    checkEastDoor = (blorbo: Quotidian)=>{
-        if(!this.getEast()){
+    checkEastDoor = (blorbo: Quotidian) => {
+        if (!this.getEast()) {
             return;
         }
         const door = document.querySelector("#eastDoor") as HTMLElement;
         const doorRect = door.getBoundingClientRect()
 
-        if(door){
-            if(boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())){
+        if (door) {
+            if (boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())) {
                 this.maze.playDoorSound();
-                if(blorbo.name !== "Peewee"){
+                if (blorbo.name !== "Peewee") {
                     this.removeBlorbo(blorbo);
                     const room = this.getEast();
                     room && room.addBlorbo(blorbo);
-                }else{
+                } else {
                     const room = this.getEast();
                     room && this.maze.changeRoom(room);
                 }
@@ -203,25 +214,25 @@ export class Room {
         }
     }
 
-    initialRoomWithBlorbos= ()=>{
+    initialRoomWithBlorbos = () => {
         const stress_test = 3;
-        for(let i = 0; i< stress_test; i++){
-            this.addBlorbo(new Quotidian(this,"Quotidian",150,150, [all_themes[SPYING]],{default_src:{src:"humanoid_crow.gif",width:50,height:50}},"testing"));
+        for (let i = 0; i < stress_test; i++) {
+            this.addBlorbo(new Quotidian(this, "Quotidian", 150, 150, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing"));
         }
-        this.peewee = new Peewee(this,150,350);
+        this.peewee = new Peewee(this, 150, 350);
         this.addBlorbo(this.peewee);
     }
-    
+
 
     tick = () => {
         //TODO blorbos all tick
-        for(let blorbo of this.blorbos){
+        for (let blorbo of this.blorbos) {
             blorbo.tick();
             this.checkForDoors(blorbo);
         }
 
-        if(this.ticking){
-            setTimeout(this.tick,this.tickRate);
+        if (this.ticking) {
+            setTimeout(this.tick, this.tickRate);
         }
     }
 
@@ -267,38 +278,38 @@ export class Room {
     }
 
     spawnChildRoom = async () => {
-        return await randomRoomWithThemes(this.maze,this.element,this.childRoomThemes(), this.rand );
+        return await randomRoomWithThemes(this.maze, this.element, this.childRoomThemes(), this.rand);
     }
 
     //when i first make the maze, we generate its structure to a certain depth, and then from there one room at a time.
-    propagateMaze = async (depthRemaining: number)=>{
+    propagateMaze = async (depthRemaining: number) => {
         const numberChildren = this.rand.getRandomNumberBetween(1,3);
-        for(let i =0; i<numberChildren; i++){
+        for (let i = 0; i < numberChildren; i++) {
             const child = await this.spawnChildRoom();
             this.children.push(child);
-            if(depthRemaining >0){
-                child.propagateMaze(depthRemaining-1);
+            if (depthRemaining > 0) {
+                child.propagateMaze(depthRemaining - 1);
             }
         }
     }
 
 }
 
-export const randomRoomWithThemes = async (maze: Maze,ele: HTMLElement, themes: Theme[], seededRandom: SeededRandom) => {
-    const room = new Room(maze,themes, ele, seededRandom);
-    const items1: RenderedItem[] = await spawnWallObjects(room.width,room.height, 0,WALLBACKGROUND, "BackWallObjects", seededRandom, themes);
-    const items3: RenderedItem[] = await spawnFloorObjects(room.width,room.height,0, FLOORBACKGROUND, "UnderFloorObjects", seededRandom, themes);
-    const items2: RenderedItem[] = await spawnWallObjects(room.width,room.height,1, WALLFOREGROUND, "FrontWallObjects", seededRandom, themes);
-    const items4: RenderedItem[] = await spawnFloorObjects(room.width,room.height,1, FLOORFOREGROUND, "TopFloorObjects", seededRandom, themes);
+export const randomRoomWithThemes = async (maze: Maze, ele: HTMLElement, themes: Theme[], seededRandom: SeededRandom) => {
+    const room = new Room(maze, themes, ele, seededRandom);
+    const items1: RenderedItem[] = await spawnWallObjects(room.width, room.height, 0, WALLBACKGROUND, "BackWallObjects", seededRandom, themes);
+    const items3: RenderedItem[] = await spawnFloorObjects(room.width, room.height, 0, FLOORBACKGROUND, "UnderFloorObjects", seededRandom, themes);
+    const items2: RenderedItem[] = await spawnWallObjects(room.width, room.height, 1, WALLFOREGROUND, "FrontWallObjects", seededRandom, themes);
+    const items4: RenderedItem[] = await spawnFloorObjects(room.width, room.height, 1, FLOORFOREGROUND, "TopFloorObjects", seededRandom, themes);
     const items = items3.concat(items2.concat(items4));
-    for(let item of items){
-        room.addItem(new PhysicalObject(room,item.name,item.x,item.y,item.width,item.height,item.themes,item.layer,item.src,item.flavorText))
+    for (let item of items) {
+        room.addItem(new PhysicalObject(room, item.name, item.x, item.y, item.width, item.height, item.themes, item.layer, item.src, item.flavorText))
     }
     return room;
 }
 
 //has to be async because it checks the image size for positioning
-export const spawnWallObjects = async (width:number, height:number,layer: number, key: string, folder: string, seededRandom: SeededRandom, themes: Theme[]) => {
+export const spawnWallObjects = async (width: number, height: number, layer: number, key: string, folder: string, seededRandom: SeededRandom, themes: Theme[]) => {
     let current_x = 0;
     const padding = 10;
     const ret: RenderedItem[] = [];
@@ -307,13 +318,13 @@ export const spawnWallObjects = async (width:number, height:number,layer: number
         const item = chosen_theme.pickPossibilityFor(seededRandom, key);
         if (item && item.src && seededRandom.nextDouble() > 0.3) {
             const image: any = await addImageProcess((`images/Walkabout/Objects/${folder}/${item.src}`)) as HTMLImageElement;
-            current_x += image.width*2;
+            current_x += image.width * 2;
             //don't clip the wall border, don't go past the floor
             if (current_x + padding + image.width > width) {
                 return ret;
             }
             const y = seededRandom.getRandomNumberBetween(padding, Math.max(padding, image.height));
-            ret.push({name:"Generic Object", layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width*2, height: image.height, flavorText: item.desc })
+            ret.push({ name: "Generic Object", layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * 2, height: image.height, flavorText: item.desc })
         } else {
             current_x += 50;
         }
@@ -323,7 +334,7 @@ export const spawnWallObjects = async (width:number, height:number,layer: number
 
 
 //has to be async because it checks the image size for positioning
-const spawnFloorObjects = async (width:number, height:number,layer: number, key: string, folder: string, seededRandom: SeededRandom, themes: Theme[]) => {
+const spawnFloorObjects = async (width: number, height: number, layer: number, key: string, folder: string, seededRandom: SeededRandom, themes: Theme[]) => {
     let current_x = 0;
     const floor_bottom = 140;
     let current_y = floor_bottom;
@@ -332,17 +343,17 @@ const spawnFloorObjects = async (width:number, height:number,layer: number, key:
     const y_wiggle = 50;
     const debug = false;
     const baseLocation = "images/Walkabout/Objects/";
-    const clutter_rate = seededRandom.nextDouble(0.75,0.99); //smaller is more cluttered
+    const clutter_rate = seededRandom.nextDouble(0.75, 0.99); //smaller is more cluttered
     const artifacts = [
-        {name: "Unos Artifact Book", layer: layer, src:`Artifacts/Zampanio_Artifact_01_Book.png`, themes: [OBFUSCATION], flavorText: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." }
-        ,{name: "Duo Mask", layer: layer, src:`Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [OBFUSCATION], flavorText: "A faceless theater mask with a 2 on the inside of the forehead." }
-        ,{name: "Tres Bottle", layer: layer, src:`Artifacts/Zampanio_Artifact_03_Bottle.png`, themes: [OBFUSCATION], flavorText: "A simple glass milk bottle with a 3 emblazoned on it." }
-        ,{name: "Quatro Blade", layer: layer, src:`Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [OBFUSCATION], flavorText: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade." }
-        ,{name: "Quinque Cloak", layer: layer, src:`Artifacts/Zampanio_Artifact_05_Cloak.png`, themes: [OBFUSCATION], flavorText: " A simple matte blue cloak with a 5 embroidered on the back in shiny red thread. " }
-        ,{name: "Sextant", layer: layer, src:`Artifacts/Zampanio_Artifact_06_Sextant.png`, themes: [OBFUSCATION], flavorText: "A highly polished brass sextant. There is a 6 carved onto the main knob." }
-        ,{name: "Septum Coin", layer: layer, src:`Artifacts/Zampanio_Artifact_07_Coin_Bronze.png`, themes: [OBFUSCATION], flavorText: "An old bronze coin. There is a theater mask on one side, and a 7 on the other." }
-        ,{name: "Octome", layer: layer, src:`Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [OBFUSCATION], flavorText: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back." }
-        ,{name: "Novum Mirror", layer: layer, src:`Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [OBFUSCATION], flavorText: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces." }
+        { name: "Unos Artifact Book", layer: layer, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [OBFUSCATION], flavorText: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." }
+        , { name: "Duo Mask", layer: layer, src: `Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [OBFUSCATION], flavorText: "A faceless theater mask with a 2 on the inside of the forehead." }
+        , { name: "Tres Bottle", layer: layer, src: `Artifacts/Zampanio_Artifact_03_Bottle.png`, themes: [OBFUSCATION], flavorText: "A simple glass milk bottle with a 3 emblazoned on it." }
+        , { name: "Quatro Blade", layer: layer, src: `Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [OBFUSCATION], flavorText: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade." }
+        , { name: "Quinque Cloak", layer: layer, src: `Artifacts/Zampanio_Artifact_05_Cloak.png`, themes: [OBFUSCATION], flavorText: " A simple matte blue cloak with a 5 embroidered on the back in shiny red thread. " }
+        , { name: "Sextant", layer: layer, src: `Artifacts/Zampanio_Artifact_06_Sextant.png`, themes: [OBFUSCATION], flavorText: "A highly polished brass sextant. There is a 6 carved onto the main knob." }
+        , { name: "Septum Coin", layer: layer, src: `Artifacts/Zampanio_Artifact_07_Coin_Bronze.png`, themes: [OBFUSCATION], flavorText: "An old bronze coin. There is a theater mask on one side, and a 7 on the other." }
+        , { name: "Octome", layer: layer, src: `Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [OBFUSCATION], flavorText: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back." }
+        , { name: "Novum Mirror", layer: layer, src: `Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [OBFUSCATION], flavorText: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces." }
     ];
     while (current_y + padding < height) {
         current_x = padding;
@@ -350,7 +361,7 @@ const spawnFloorObjects = async (width:number, height:number,layer: number, key:
             let chosen_theme: Theme = seededRandom.pickFrom(themes);
             let scale = 1.5;
             let item = chosen_theme.pickPossibilityFor(seededRandom, key);
-            if(layer === 1 && seededRandom.nextDouble()>0.95){
+            if (layer === 1 && seededRandom.nextDouble() > 0.95) {
                 item = seededRandom.pickFrom(artifacts);
                 chosen_theme = seededRandom.pickFrom(item.themes);
                 scale = 1.0;
@@ -366,7 +377,7 @@ const spawnFloorObjects = async (width:number, height:number,layer: number, key:
                 if (y + padding + image.height * scale > height) {
                     break;
                 }
-                ret.push({name:"Generic Object", layer: layer, src: `${baseLocation}${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width*scale, height: image.height*scale, flavorText: item.desc })
+                ret.push({ name: "Generic Object", layer: layer, src: `${baseLocation}${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * scale, height: image.height * scale, flavorText: item.desc })
             } else {
                 current_x += 100;
             }

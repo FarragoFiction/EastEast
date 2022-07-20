@@ -49,8 +49,15 @@ class GoEast extends BaseAction_1.Action {
         this.applyAction = (subject, current_room, object) => {
             //JR NOTE: todo flesh this out. should be able to access the whole maze really.
             subject.movement_alg = new MoveToEastDoor_1.MoveToEastDoor(subject);
-            subject.emitSass("OK");
-            return `${subject.name} starts heading to the EAST DOOR.`;
+            subject.movement_alg.detectEle();
+            if (subject.movement_alg.ele) {
+                subject.emitSass("OK");
+                return `${subject.name} starts heading to the EAST DOOR.`;
+            }
+            else {
+                subject.emitSass("???");
+                return `${subject.name} can't find the EAST DOOR. They start pacing anxiously.`;
+            }
         };
     }
 }
@@ -75,8 +82,15 @@ class GoNorth extends BaseAction_1.Action {
         this.applyAction = (subject, current_room, object) => {
             //JR NOTE: todo flesh this out. should be able to access the whole maze really.
             subject.movement_alg = new MoveToNorthDoor_1.MoveToNorthDoor(subject);
-            subject.emitSass("OK");
-            return `${subject.name} starts heading to the NORTH DOOR.`;
+            subject.movement_alg.detectEle();
+            if (subject.movement_alg.ele) {
+                subject.emitSass("OK");
+                return `${subject.name} starts heading to the NORTH DOOR.`;
+            }
+            else {
+                subject.emitSass("???");
+                return `${subject.name} can't find the NORTH DOOR. They start pacing anxiously.`;
+            }
         };
     }
 }
@@ -101,8 +115,15 @@ class GoSouth extends BaseAction_1.Action {
         this.applyAction = (subject, current_room, object) => {
             //JR NOTE: todo flesh this out. should be able to access the whole maze really.
             subject.movement_alg = new MoveToSouthDoor_1.MoveToSouthDoor(subject);
-            subject.emitSass("OK");
-            return `${subject.name} starts heading to the SOUTH DOOR.`;
+            subject.movement_alg.detectEle();
+            if (subject.movement_alg.ele) {
+                subject.emitSass("OK");
+                return `${subject.name} starts heading to the SOUTH DOOR.`;
+            }
+            else {
+                subject.emitSass("???");
+                return `${subject.name} can't find the SOUTH DOOR. They start pacing anxiously.`;
+            }
         };
     }
 }
@@ -220,8 +241,6 @@ class Peewee extends Quotidian_1.Quotidian {
         //there is no trigger. only actions.
         this.processStorybeat = (beat) => {
             this.container.id = "PeeweePuppet";
-            console.log("JR NOTE: i am peewee, i just got a command, i want to emit sass, my container is", this.container);
-            this.emitSass("...");
             for (let action of this.possibleActions) {
                 const words = beat.command.split(" ");
                 for (let word of words)
@@ -292,7 +311,6 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         };
         this.emitSass = (sass) => {
             //debounce essentially
-            console.log("JR NOTE: i want to sass", sass, "and my sass container is", this.sass, "and my regular container is ", this.container);
             if (!this.sass || this.sass.innerText != sass) {
                 this.sass = (0, misc_1.createElementWithIdAndParent)("div", this.container, undefined, "sass");
                 this.sass.innerText = sass;
@@ -599,9 +617,6 @@ class MoveToSpecificElement extends BaseMovement_1.Movement {
                     return Math.abs(Math.abs(remaining_x) - Math.abs(remaining_y)) > this.entity.width * 3;
                 }
             };
-            if (this.entity.name === "Peewee") {
-                console.log("JR NOTE: i am peewee and remaining x is", remaining_x, "and remaining y is", remaining_y);
-            }
             if (shouldX()) {
                 this.moveX(remaining_x);
             }
@@ -1001,12 +1016,16 @@ class Room {
             }
         };
         this.renderEastDoor = () => {
-            const rug = (0, misc_1.createElementWithIdAndParent)("img", this.element, "eastDoor");
-            rug.src = "images/Walkabout/rug.png";
+            if (this.getEast()) {
+                const rug = (0, misc_1.createElementWithIdAndParent)("img", this.element, "eastDoor");
+                rug.src = "images/Walkabout/rug.png";
+            }
         };
         this.renderSouthDoor = () => {
-            const rug = (0, misc_1.createElementWithIdAndParent)("img", this.element, "southDoor");
-            rug.src = "images/Walkabout/rug.png";
+            if (this.getSouth()) {
+                const rug = (0, misc_1.createElementWithIdAndParent)("img", this.element, "southDoor");
+                rug.src = "images/Walkabout/rug.png";
+            }
         };
         this.addItem = (obj) => {
             this.items.push(obj);
@@ -1025,8 +1044,11 @@ class Room {
             }
             this.peewee = undefined;
             while (this.element.firstChild) {
+                const child = this.element.firstChild;
+                child.remove();
                 this.element.removeChild(this.element.firstChild);
             }
+            console.log("JR NOTE: tore down the room, its children are", this.element.children);
         };
         //if any blorbo is near a door, move them into the room whose door they are near.
         this.checkForDoors = (blorbo) => {
@@ -1061,8 +1083,12 @@ class Room {
             }
             const door = document.querySelector("#southDoor");
             const doorRect = door.getBoundingClientRect();
+            const blorboRect = blorbo.container.getBoundingClientRect();
             if (door) {
-                if ((0, misc_1.boundingBoxesIntersect)(doorRect, blorbo.container.getBoundingClientRect())) {
+                if (blorbo.name === "Peewee") {
+                    // console.log("JR NOTE: is peewee near the south door?", doorRect, blorboRect,boundingBoxesIntersect(doorRect, blorboRect))
+                }
+                if ((0, misc_1.boundingBoxesIntersect)(doorRect, blorboRect)) {
                     this.maze.playDoorSound();
                     if (blorbo.name !== "Peewee") {
                         this.removeBlorbo(blorbo);
@@ -1158,7 +1184,8 @@ class Room {
         });
         //when i first make the maze, we generate its structure to a certain depth, and then from there one room at a time.
         this.propagateMaze = (depthRemaining) => __awaiter(this, void 0, void 0, function* () {
-            const numberChildren = this.rand.getRandomNumberBetween(1, 3);
+            //const numberChildren = this.rand.getRandomNumberBetween(1,3);
+            const numberChildren = 1;
             for (let i = 0; i < numberChildren; i++) {
                 const child = yield this.spawnChildRoom();
                 this.children.push(child);
@@ -3496,7 +3523,8 @@ exports.albhed_map = {
     "1": "http://farragofiction.com/DevonaFears",
     "2": "http://farragofiction.com/NotesOnStealingPeoplesShit/",
     "3": "https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8",
-    "4": "http://farragofiction.com/PerfectHeist/"
+    "4": "http://farragofiction.com/PerfectHeist/",
+    "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers"
 };
 const translate = (word) => {
     let ret = word.toLowerCase();
