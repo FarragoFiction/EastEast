@@ -1,5 +1,5 @@
 import { all_themes, Theme } from "../Theme";
-import { DARKNESS, FEELING, FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, OBFUSCATION, SMELL, SOUND, SPYING, TASTE, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
+import { ADJ, DARKNESS, FEELING, FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, LOCATION, OBFUSCATION, SMELL, SOUND, SPYING, TASTE, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
 import { boundingBoxesIntersect, createElementWithIdAndParent, pointWithinBoundingBox } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 import { Quotidian } from "../Entities/Quotidian";
@@ -8,8 +8,7 @@ import { addImageProcess } from "../../Utils/URLUtils";
 import { Peewee } from "../Entities/Peewee";
 import { Maze } from "./Maze";
 import { removeItemOnce } from "../../Utils/ArrayUtils";
-import { pickFrom } from "../../Utils/NonSeededRandUtils";
-
+import {titleCase} from "../../Utils/StringUtils";
 
 
 export class Room {
@@ -22,12 +21,14 @@ export class Room {
     element: HTMLElement;
     width = 400;
     height = 600;
+    timesVisited = 0;
     blorbos: Quotidian[] = [];
     peewee?: Peewee; //peewee is optional to the universe;
     items: PhysicalObject[] = [];
     ticking = false;
     tickRate = 100;
     children: Room[] = [];
+    name = "???";
 
 
     //objects
@@ -50,13 +51,38 @@ export class Room {
         this.ticking = false;
     }
 
-    render = () => {
-        console.log("JR NOTE: rendering a room");
+    spawnChildrenIfNeeded = async () => {
+        console.log("JR NOTE: checking for needed children")
+        if (this.children.length === 0) { //don't let anything have NO exits
+            console.log("JR NOTE: no rooms found, making first one")
+            const child = await this.spawnChildRoom();
+            this.addChild(child);
+        } else if (this.children.length < 4 && this.rand.nextDouble() > 0.75) {//1/4 chance of things changing.
+            console.log("JR NOTE: theres room for more rooms, making a new one")
+            const child = await this.spawnChildRoom();
+            this.addChild(child);
+
+        } else if (this.rand.nextDouble() > 0.95) {// 1/20 chance of a familiar door leading somewhere new.
+            console.log("JR NOTE: sowing chaos just cuz")
+            removeItemOnce(this.children, this.rand.pickFrom(this.children));
+            const child = await this.spawnChildRoom();
+            this.addChild(child);
+        }
+    }
+
+    render = async () => {
+        this.timesVisited ++;
+        console.log("JR NOTE: about to render but first checking for neded children")
+        await this.spawnChildrenIfNeeded();
+        console.log("JR NOTE: trying to render room", this)
         this.element.innerHTML = "";
         this.width = this.element.getBoundingClientRect().width;
         this.height = this.element.getBoundingClientRect().height;
         this.element.style.backgroundImage = `url(images/Walkabout/floor/${this.floor})`;
         const wall = createElementWithIdAndParent("div", this.element, "wall");
+        const name = createElementWithIdAndParent("div", this.element, undefined, "roomName");
+        name.innerText = `${this.name}: ${this.timesVisited}`;
+
         wall.style.backgroundImage = `url(images/Walkabout/wall/${this.wall})`;
 
         for (let item of this.items) {
@@ -87,25 +113,32 @@ export class Room {
     }
 
     renderNorthDoor = () => {
-        if (this.getNorth()) {
+        const door = this.getNorth();
+        if (door) {
             const image = createElementWithIdAndParent("img", this.element, "northDoor") as HTMLImageElement;
             image.src = "images/Walkabout/door.png";
+            image.title = door.name;
             const rug = createElementWithIdAndParent("img", this.element, "northDoorRug") as HTMLImageElement;
             rug.src = "images/Walkabout/rug.png";
         }
     }
 
     renderEastDoor = () => {
-        if (this.getEast()) {
+        const door = this.getEast();
+
+        if (door) {
             const rug = createElementWithIdAndParent("img", this.element, "eastDoor") as HTMLImageElement;
             rug.src = "images/Walkabout/rug.png";
+            rug.title = door.name;
         }
     }
 
     renderSouthDoor = () => {
-        if (this.getSouth()) {
+        const door = this.getSouth();
+        if (door) {
             const rug = createElementWithIdAndParent("img", this.element, "southDoor") as HTMLImageElement;
             rug.src = "images/Walkabout/rug.png";
+            rug.title = door.name;
         }
     }
 
@@ -130,7 +163,6 @@ export class Room {
         this.peewee = undefined;
         while (this.element.firstChild) {
             const child = this.element.firstChild;
-            child.remove();
             this.element.removeChild(this.element.firstChild);
         }
 
@@ -151,8 +183,8 @@ export class Room {
             return;
         }
         const door = document.querySelector("#northDoorRug") as HTMLElement;
-        const doorRect = door.getBoundingClientRect()
         if (door) {
+            const doorRect = door.getBoundingClientRect()
             if (boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())) {
                 this.maze.playDoorSound();
                 if (blorbo.name !== "Peewee") {
@@ -172,12 +204,9 @@ export class Room {
             return;
         }
         const door = document.querySelector("#southDoor") as HTMLElement;
-        const doorRect = door.getBoundingClientRect();
         const blorboRect = blorbo.container.getBoundingClientRect();
         if (door) {
-            if (blorbo.name === "Peewee") {
-                // console.log("JR NOTE: is peewee near the south door?", doorRect, blorboRect,boundingBoxesIntersect(doorRect, blorboRect))
-            }
+            const doorRect = door.getBoundingClientRect();
             if (boundingBoxesIntersect(doorRect, blorboRect)) {
                 this.maze.playDoorSound();
                 if (blorbo.name !== "Peewee") {
@@ -197,9 +226,9 @@ export class Room {
             return;
         }
         const door = document.querySelector("#eastDoor") as HTMLElement;
-        const doorRect = door.getBoundingClientRect()
 
         if (door) {
+            const doorRect = door.getBoundingClientRect()
             if (boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())) {
                 this.maze.playDoorSound();
                 if (blorbo.name !== "Peewee") {
@@ -237,6 +266,7 @@ export class Room {
     }
 
     init = () => {
+        this.name = `${titleCase(this.getRandomThemeConcept(ADJ))} ${titleCase(this.getRandomThemeConcept(LOCATION))}`;
         this.initFloor();
         this.initWall();
     }
@@ -277,16 +307,23 @@ export class Room {
         }
     }
 
+    addChild = (child: Room) => {
+        this.children.push(child);
+        //north is always back, this is just the rules of this mazes, what you think GEOMETRY should matter here?
+        child.children[0] = this;
+
+    }
+
     spawnChildRoom = async () => {
         return await randomRoomWithThemes(this.maze, this.element, this.childRoomThemes(), this.rand);
     }
 
     //when i first make the maze, we generate its structure to a certain depth, and then from there one room at a time.
     propagateMaze = async (depthRemaining: number) => {
-        const numberChildren = this.rand.getRandomNumberBetween(1,3);
+        const numberChildren = this.rand.getRandomNumberBetween(1, 2);
         for (let i = 0; i < numberChildren; i++) {
             const child = await this.spawnChildRoom();
-            this.children.push(child);
+            this.addChild(child);
             if (depthRemaining > 0) {
                 child.propagateMaze(depthRemaining - 1);
             }
@@ -324,7 +361,7 @@ export const spawnWallObjects = async (width: number, height: number, layer: num
                 return ret;
             }
             const y = seededRandom.getRandomNumberBetween(padding, Math.max(padding, image.height));
-            ret.push({ name: "Generic Object", layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * 2, height: image.height, flavorText: item.desc })
+            ret.push({ name:item.name, layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * 2, height: image.height, flavorText: item.desc })
         } else {
             current_x += 50;
         }
@@ -367,6 +404,9 @@ const spawnFloorObjects = async (width: number, height: number, layer: number, k
                 scale = 1.0;
             }
             if (item && item.src && seededRandom.nextDouble() > clutter_rate) {
+                if(!item.name){
+                    item.name = `${titleCase(chosen_theme.key)} Object`;
+                }
                 const image: any = await addImageProcess(`${baseLocation}${folder}/${item.src}`) as HTMLImageElement;
                 current_x += image.width * scale;
                 //don't clip the wall border, don't go past the floor
@@ -377,7 +417,7 @@ const spawnFloorObjects = async (width: number, height: number, layer: number, k
                 if (y + padding + image.height * scale > height) {
                     break;
                 }
-                ret.push({ name: "Generic Object", layer: layer, src: `${baseLocation}${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * scale, height: image.height * scale, flavorText: item.desc })
+                ret.push({ name: item.name, layer: layer, src: `${baseLocation}${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * scale, height: image.height * scale, flavorText: item.desc })
             } else {
                 current_x += 100;
             }

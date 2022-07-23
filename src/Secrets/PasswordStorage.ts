@@ -50,7 +50,8 @@ export const albhed_map = {
     "2":"http://farragofiction.com/NotesOnStealingPeoplesShit/",
     "3":"https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8", //by the watcher of threads
     "4":"http://farragofiction.com/PerfectHeist/",
-    "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers"
+    "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers (The Watcher says they won't spell it out)",
+    "7":"https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane"//yellow
 
 }
 

@@ -158,6 +158,55 @@ exports.GoWest = GoWest;
 
 /***/ }),
 
+/***/ 2741:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Look = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const BaseAction_1 = __webpack_require__(7042);
+//assume only peewee can look
+class Look extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE"];
+        this.applyAction = (subject, current_room, object) => {
+            let thingsSeen = "";
+            if (current_room.children.length === 1) {
+                thingsSeen = `${thingsSeen} a door.`;
+            }
+            else {
+                thingsSeen = `${thingsSeen} ${current_room.children.length} doors.`;
+            }
+            const north = current_room.getNorth();
+            const south = current_room.getSouth();
+            const east = current_room.getEast();
+            if (north) {
+                thingsSeen = `${thingsSeen} <p>On the NORTH door, he sees a sign labeled ${north.name}.</p>`;
+            }
+            if (south) {
+                thingsSeen = `${thingsSeen} <p>On the SOUTH door, he sees a sign labeled ${south.name}.</p>`;
+            }
+            if (east) {
+                thingsSeen = `${thingsSeen} <p>On the EAST door, he sees a sign labeled ${east.name}.</p>`;
+            }
+            if (current_room.items) {
+                thingsSeen = `${thingsSeen} <p>He also sees ${current_room.items.length} item(s). Looking closer, they are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(current_room.items.map((e) => e.name))}.</p>`;
+            }
+            if (current_room.blorbos) {
+                thingsSeen = `${thingsSeen} <p>He also sees ${current_room.blorbos.length} blorbos(s). Looking closer, they are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(current_room.blorbos.map((e) => e.name))}.</p>`;
+            }
+            return `${subject.name} looks around. He sees ${thingsSeen}`;
+        };
+    }
+}
+exports.Look = Look;
+
+
+/***/ }),
+
 /***/ 4469:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -199,6 +248,7 @@ const GoEast_1 = __webpack_require__(7192);
 const GoNorth_1 = __webpack_require__(7415);
 const GoSouth_1 = __webpack_require__(3535);
 const GoWest_1 = __webpack_require__(4834);
+const Look_1 = __webpack_require__(2741);
 const StopMoving_1 = __webpack_require__(4469);
 const Quotidian_1 = __webpack_require__(6647);
 //what, did you think any real being could be so formulaic? 
@@ -232,7 +282,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
-        this.possibleActions = [new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
+        this.possibleActions = [new StopMoving_1.StopMoving(), new Look_1.Look(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.possibleReactions = [];
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
@@ -859,11 +909,11 @@ class Maze {
         this.boopAudio = new Audio("audio/264828__cmdrobot__text-message-or-videogame-jump.mp3");
         this.doorAudio = new Audio("audio/close_door_1.mp3");
         this.initialize = () => __awaiter(this, void 0, void 0, function* () {
-            const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]];
+            const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ZAP]];
             this.room = yield (0, Room_1.randomRoomWithThemes)(this, this.ele, themes, this.rand);
             this.room.initialRoomWithBlorbos();
             yield this.room.propagateMaze(3);
-            console.log("JR NOTE: room now has these children: ", this.room.children);
+            console.log("JR NOTE: room now has these children: ", this.room.children.map((e) => e.name).join(","), this.room.children);
             this.room.render();
             this.peewee = this.room.peewee;
             (0, PasswordStorage_1.initRabbitHole)(this.room);
@@ -918,7 +968,7 @@ class Maze {
                     input.value = "";
                     return false;
                 };
-                this.addStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands"));
+                this.addStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: 5 minute todo is let peewee LOOK at the doors to see what their labels are. let him GO to those locations just like NorthEast. also find out where those blorbos are going."));
             }
         };
         this.rand = rand;
@@ -956,6 +1006,7 @@ const PhysicalObject_1 = __webpack_require__(8466);
 const URLUtils_1 = __webpack_require__(389);
 const Peewee_1 = __webpack_require__(1160);
 const ArrayUtils_1 = __webpack_require__(3907);
+const StringUtils_1 = __webpack_require__(7036);
 class Room {
     //objects
     //people
@@ -966,11 +1017,13 @@ class Room {
         this.wallHeight = 100;
         this.width = 400;
         this.height = 600;
+        this.timesVisited = 0;
         this.blorbos = [];
         this.items = [];
         this.ticking = false;
         this.tickRate = 100;
         this.children = [];
+        this.name = "???";
         this.getRandomThemeConcept = (concept) => {
             const theme = this.rand.pickFrom(this.themes);
             return theme.pickPossibilityFor(this.rand, concept);
@@ -978,13 +1031,37 @@ class Room {
         this.stopTicking = () => {
             this.ticking = false;
         };
-        this.render = () => {
-            console.log("JR NOTE: rendering a room");
+        this.spawnChildrenIfNeeded = () => __awaiter(this, void 0, void 0, function* () {
+            console.log("JR NOTE: checking for needed children");
+            if (this.children.length === 0) { //don't let anything have NO exits
+                console.log("JR NOTE: no rooms found, making first one");
+                const child = yield this.spawnChildRoom();
+                this.addChild(child);
+            }
+            else if (this.children.length < 4 && this.rand.nextDouble() > 0.75) { //1/4 chance of things changing.
+                console.log("JR NOTE: theres room for more rooms, making a new one");
+                const child = yield this.spawnChildRoom();
+                this.addChild(child);
+            }
+            else if (this.rand.nextDouble() > 0.95) { // 1/20 chance of a familiar door leading somewhere new.
+                console.log("JR NOTE: sowing chaos just cuz");
+                (0, ArrayUtils_1.removeItemOnce)(this.children, this.rand.pickFrom(this.children));
+                const child = yield this.spawnChildRoom();
+                this.addChild(child);
+            }
+        });
+        this.render = () => __awaiter(this, void 0, void 0, function* () {
+            this.timesVisited++;
+            console.log("JR NOTE: about to render but first checking for neded children");
+            yield this.spawnChildrenIfNeeded();
+            console.log("JR NOTE: trying to render room", this);
             this.element.innerHTML = "";
             this.width = this.element.getBoundingClientRect().width;
             this.height = this.element.getBoundingClientRect().height;
             this.element.style.backgroundImage = `url(images/Walkabout/floor/${this.floor})`;
             const wall = (0, misc_1.createElementWithIdAndParent)("div", this.element, "wall");
+            const name = (0, misc_1.createElementWithIdAndParent)("div", this.element, undefined, "roomName");
+            name.innerText = `${this.name}: ${this.timesVisited}`;
             wall.style.backgroundImage = `url(images/Walkabout/wall/${this.wall})`;
             for (let item of this.items) {
                 item.attachToParent(this.element);
@@ -997,7 +1074,7 @@ class Room {
             this.renderSouthDoor();
             this.ticking = true;
             this.tick();
-        };
+        });
         this.getNorth = () => {
             return this.children.length > 0 && this.children[0];
         };
@@ -1008,23 +1085,29 @@ class Room {
             return this.children.length > 2 && this.children[2];
         };
         this.renderNorthDoor = () => {
-            if (this.getNorth()) {
+            const door = this.getNorth();
+            if (door) {
                 const image = (0, misc_1.createElementWithIdAndParent)("img", this.element, "northDoor");
                 image.src = "images/Walkabout/door.png";
+                image.title = door.name;
                 const rug = (0, misc_1.createElementWithIdAndParent)("img", this.element, "northDoorRug");
                 rug.src = "images/Walkabout/rug.png";
             }
         };
         this.renderEastDoor = () => {
-            if (this.getEast()) {
+            const door = this.getEast();
+            if (door) {
                 const rug = (0, misc_1.createElementWithIdAndParent)("img", this.element, "eastDoor");
                 rug.src = "images/Walkabout/rug.png";
+                rug.title = door.name;
             }
         };
         this.renderSouthDoor = () => {
-            if (this.getSouth()) {
+            const door = this.getSouth();
+            if (door) {
                 const rug = (0, misc_1.createElementWithIdAndParent)("img", this.element, "southDoor");
                 rug.src = "images/Walkabout/rug.png";
+                rug.title = door.name;
             }
         };
         this.addItem = (obj) => {
@@ -1045,7 +1128,6 @@ class Room {
             this.peewee = undefined;
             while (this.element.firstChild) {
                 const child = this.element.firstChild;
-                child.remove();
                 this.element.removeChild(this.element.firstChild);
             }
             console.log("JR NOTE: tore down the room, its children are", this.element.children);
@@ -1061,8 +1143,8 @@ class Room {
                 return;
             }
             const door = document.querySelector("#northDoorRug");
-            const doorRect = door.getBoundingClientRect();
             if (door) {
+                const doorRect = door.getBoundingClientRect();
                 if ((0, misc_1.boundingBoxesIntersect)(doorRect, blorbo.container.getBoundingClientRect())) {
                     this.maze.playDoorSound();
                     if (blorbo.name !== "Peewee") {
@@ -1082,12 +1164,9 @@ class Room {
                 return;
             }
             const door = document.querySelector("#southDoor");
-            const doorRect = door.getBoundingClientRect();
             const blorboRect = blorbo.container.getBoundingClientRect();
             if (door) {
-                if (blorbo.name === "Peewee") {
-                    // console.log("JR NOTE: is peewee near the south door?", doorRect, blorboRect,boundingBoxesIntersect(doorRect, blorboRect))
-                }
+                const doorRect = door.getBoundingClientRect();
                 if ((0, misc_1.boundingBoxesIntersect)(doorRect, blorboRect)) {
                     this.maze.playDoorSound();
                     if (blorbo.name !== "Peewee") {
@@ -1107,8 +1186,8 @@ class Room {
                 return;
             }
             const door = document.querySelector("#eastDoor");
-            const doorRect = door.getBoundingClientRect();
             if (door) {
+                const doorRect = door.getBoundingClientRect();
                 if ((0, misc_1.boundingBoxesIntersect)(doorRect, blorbo.container.getBoundingClientRect())) {
                     this.maze.playDoorSound();
                     if (blorbo.name !== "Peewee") {
@@ -1142,6 +1221,7 @@ class Room {
             }
         };
         this.init = () => {
+            this.name = `${(0, StringUtils_1.titleCase)(this.getRandomThemeConcept(ThemeStorage_1.ADJ))} ${(0, StringUtils_1.titleCase)(this.getRandomThemeConcept(ThemeStorage_1.LOCATION))}`;
             this.initFloor();
             this.initWall();
         };
@@ -1179,16 +1259,20 @@ class Room {
                 return [...this.themes.slice(1), this.rand.pickFrom(Object.values(Theme_1.all_themes))];
             }
         };
+        this.addChild = (child) => {
+            this.children.push(child);
+            //north is always back, this is just the rules of this mazes, what you think GEOMETRY should matter here?
+            child.children[0] = this;
+        };
         this.spawnChildRoom = () => __awaiter(this, void 0, void 0, function* () {
             return yield (0, exports.randomRoomWithThemes)(this.maze, this.element, this.childRoomThemes(), this.rand);
         });
         //when i first make the maze, we generate its structure to a certain depth, and then from there one room at a time.
         this.propagateMaze = (depthRemaining) => __awaiter(this, void 0, void 0, function* () {
-            //const numberChildren = this.rand.getRandomNumberBetween(1,3);
-            const numberChildren = 1;
+            const numberChildren = this.rand.getRandomNumberBetween(1, 2);
             for (let i = 0; i < numberChildren; i++) {
                 const child = yield this.spawnChildRoom();
-                this.children.push(child);
+                this.addChild(child);
                 if (depthRemaining > 0) {
                     child.propagateMaze(depthRemaining - 1);
                 }
@@ -1231,7 +1315,7 @@ const spawnWallObjects = (width, height, layer, key, folder, seededRandom, theme
                 return ret;
             }
             const y = seededRandom.getRandomNumberBetween(padding, Math.max(padding, image.height));
-            ret.push({ name: "Generic Object", layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * 2, height: image.height, flavorText: item.desc });
+            ret.push({ name: item.name, layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * 2, height: image.height, flavorText: item.desc });
         }
         else {
             current_x += 50;
@@ -1274,6 +1358,9 @@ const spawnFloorObjects = (width, height, layer, key, folder, seededRandom, them
                 scale = 1.0;
             }
             if (item && item.src && seededRandom.nextDouble() > clutter_rate) {
+                if (!item.name) {
+                    item.name = `${(0, StringUtils_1.titleCase)(chosen_theme.key)} Object`;
+                }
                 const image = yield (0, URLUtils_1.addImageProcess)(`${baseLocation}${folder}/${item.src}`);
                 current_x += image.width * scale;
                 //don't clip the wall border, don't go past the floor
@@ -1284,7 +1371,7 @@ const spawnFloorObjects = (width, height, layer, key, folder, seededRandom, them
                 if (y + padding + image.height * scale > height) {
                     break;
                 }
-                ret.push({ name: "Generic Object", layer: layer, src: `${baseLocation}${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * scale, height: image.height * scale, flavorText: item.desc });
+                ret.push({ name: item.name, layer: layer, src: `${baseLocation}${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * scale, height: image.height * scale, flavorText: item.desc });
             }
             else {
                 current_x += 100;
@@ -3524,7 +3611,8 @@ exports.albhed_map = {
     "2": "http://farragofiction.com/NotesOnStealingPeoplesShit/",
     "3": "https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8",
     "4": "http://farragofiction.com/PerfectHeist/",
-    "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers"
+    "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers (The Watcher says they won't spell it out)",
+    "7": "https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane" //yellow
 };
 const translate = (word) => {
     let ret = word.toLowerCase();
@@ -3807,7 +3895,7 @@ exports.TranscriptEngine = TranscriptEngine;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.uniq = exports.removeItemOnce = void 0;
+exports.turnArrayIntoHumanSentence = exports.uniq = exports.removeItemOnce = void 0;
 function removeItemOnce(arr, value) {
     var index = arr.indexOf(value);
     if (index > -1) {
@@ -3822,6 +3910,10 @@ function onlyUnique(value, index, self) {
 }
 const uniq = (a) => { return a.filter(onlyUnique); };
 exports.uniq = uniq;
+const turnArrayIntoHumanSentence = (retArray) => {
+    return [retArray.slice(0, retArray.length - 1).join(', '), retArray[retArray.length - 1]].join(retArray.length < 2 ? '' : ' and ');
+};
+exports.turnArrayIntoHumanSentence = turnArrayIntoHumanSentence;
 
 
 /***/ }),
@@ -3955,6 +4047,270 @@ class SeededRandom {
     }
 }
 exports["default"] = SeededRandom;
+
+
+/***/ }),
+
+/***/ 7036:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Zalgo = exports.isNumeric = exports.getTimeString = exports.checkTime = exports.domWordMeaningFuckery = exports.stringtoseed = exports.replaceStringAt = exports.sentenceCase = exports.titleCase = void 0;
+const NonSeededRandUtils_1 = __webpack_require__(8258);
+const SeededRandom_1 = __importDefault(__webpack_require__(3450));
+const titleCase = (input) => {
+    const pieces = input.split(" ");
+    const ret = [];
+    for (let piece of pieces) {
+        if (piece[0]) {
+            ret.push(replaceStringAt(piece, 0, piece[0].toUpperCase()));
+        }
+    }
+    return ret.join(" ");
+};
+exports.titleCase = titleCase;
+const sentenceCase = (input) => {
+    if (!input.length) {
+        return input;
+    }
+    return replaceStringAt(input, 0, input[0].toUpperCase());
+};
+exports.sentenceCase = sentenceCase;
+function replaceStringAt(str, index, character) {
+    return str.substr(0, index) + character + str.substr(index + character.length);
+}
+exports.replaceStringAt = replaceStringAt;
+function stringtoseed(seed) {
+    var output = 0;
+    for (var i = 0, len = seed.length; i < len; i++) {
+        output += seed[i].charCodeAt(0);
+    }
+    return output;
+}
+exports.stringtoseed = stringtoseed;
+//https://media.discordapp.net/attachments/468574691087613952/863079687276986388/tumblr_qaosxmi6ET1xf64vf.mp4
+//https://en.m.wikipedia.org/wiki/Wordplay_(The_Twilight_Zone)
+//takes in a sentence, for each word in it decides if its going to fuck it up today.
+//seed_multiplier handles making it so that EVERY instance of the word "dog" is treated the same but each time i ask i might decide dog is changeable vs not
+function domWordMeaningFuckery() {
+    const root = document.querySelector('body');
+    const seed_multiplier = (0, NonSeededRandUtils_1.getRandomNumberBetween)(0, 300);
+    if (root) {
+        const children = root.querySelectorAll("*");
+        for (let child of children) {
+            const subchildren = child.querySelectorAll("*");
+            if (subchildren.length === 0) {
+                if (child.textContent) {
+                    child.textContent = gaslightWordMeanings(child.textContent, seed_multiplier);
+                }
+            }
+        }
+    }
+}
+exports.domWordMeaningFuckery = domWordMeaningFuckery;
+//https://stackoverflow.com/questions/18229022/how-to-show-current-time-in-javascript-in-the-format-hhmmss
+function checkTime(i) {
+    let ret = `${i}`;
+    if (i < 10) {
+        ret = "0" + i;
+    }
+    return ret;
+}
+exports.checkTime = checkTime;
+function getTimeString(date) {
+    let h = `${date.getHours()}`;
+    let m = `${date.getMinutes()}`;
+    let s = `${date.getSeconds()}`;
+    // add a zero in front of numbers<10
+    m = checkTime(date.getMinutes());
+    s = checkTime(date.getSeconds());
+    return h + ":" + m + ":" + s;
+}
+exports.getTimeString = getTimeString;
+function gaslightWordMeanings(sentence, seed_multiplier) {
+    const words = sentence.split(" ");
+    for (let i = 0; i < words.length; i++) {
+        words[i] = getWordReplacement(words[i], seed_multiplier);
+    }
+    return words.join(" ");
+}
+//takes in a word, turns it into a random seed and if rngesus says so, turns it into another word
+function getWordReplacement(word, seed_multiplier) {
+    if (word === "you") {
+        return "ya'll";
+    }
+    const gaslightOptions = ["echidna", "[REDACTED]", "null", "dark", "friendless", "alone", "minotaur", "hunt", "flesh", "changeling", "distortion", "watcher", "filth", "minotaur", "worm", "bug", "gas", "flavor", "evil fox", "lazy dog", "quick fox", "dead fox", "terrible fox", "bad fox", "fox", "untrustworthy fox", "taste", "smell", "feeling", "failure", "fear", "horror", "mistake", "line", "stay", "good dog", "canine", "good boy", "good boi", "bark", "garbage", "curious dog", "squirming dog", "make dog", "dog CODE", "artist", "musician", "programmer", "console", "hacker", "secret", "gaslight", "robot", "dog", "boredom", "corridor", "hallway", "backroom", "labyrinth", "minotaur", "maze", "door", "distortion", "spiral", "gravestone", "dinner", "ThisIsNotABG", "player", "ThisIsNotAGame", "ThisIsNotABlog", "situation", "canada", "bot", "observer", "camera", "watcher", "ThisIsNotAnEye", "ThisIsNotASpiral", "wednesday", "trumpets", "sunflower", "dinosaur"];
+    const multiplied_seed = stringtoseed(word.toUpperCase()) * seed_multiplier;
+    let chance = .99;
+    if (window.megaGasLight) {
+        chance = 0.90;
+    }
+    let rand = new SeededRandom_1.default(multiplied_seed);
+    if (rand.nextDouble() > chance) {
+        const seed = stringtoseed(word.toUpperCase());
+        let rand2 = new SeededRandom_1.default(seed);
+        let ret = rand2.pickFrom(gaslightOptions);
+        if (word[0] === word[0].toUpperCase()) {
+            ret = (0, exports.titleCase)(ret);
+        }
+        return ret;
+    }
+    return word;
+}
+//hate
+//https://stackoverflow.com/questions/175739/built-in-way-in-javascript-to-check-if-a-string-is-a-valid-number
+function isNumeric(str) {
+    if (typeof str != "string")
+        return false; // we only process strings!  
+    return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+        !isNaN(parseFloat(str)); // ...and ensure strings of whitespace fail
+}
+exports.isNumeric = isNumeric;
+exports.Zalgo = {
+    chars: [
+        [
+            '\u030d',
+            '\u030e',
+            '\u0304',
+            '\u0305',
+            '\u033f',
+            '\u0311',
+            '\u0306',
+            '\u0310',
+            '\u0352',
+            '\u0357',
+            '\u0351',
+            '\u0307',
+            '\u0308',
+            '\u030a',
+            '\u0342',
+            '\u0343',
+            '\u0344',
+            '\u034a',
+            '\u034b',
+            '\u034c',
+            '\u0303',
+            '\u0302',
+            '\u030c',
+            '\u0350',
+            '\u0300',
+            '\u0301',
+            '\u030b',
+            '\u030f',
+            '\u0312',
+            '\u0313',
+            '\u0314',
+            '\u033d',
+            '\u0309',
+            '\u0363',
+            '\u0364',
+            '\u0365',
+            '\u0366',
+            '\u0367',
+            '\u0368',
+            '\u0369',
+            '\u036a',
+            '\u036b',
+            '\u036c',
+            '\u036d',
+            '\u036e',
+            '\u036f',
+            '\u033e',
+            '\u035b',
+            '\u0346',
+            '\u031a' /*     ̚     */
+        ],
+        [
+            '\u0316',
+            '\u0317',
+            '\u0318',
+            '\u0319',
+            '\u031c',
+            '\u031d',
+            '\u031e',
+            '\u031f',
+            '\u0320',
+            '\u0324',
+            '\u0325',
+            '\u0326',
+            '\u0329',
+            '\u032a',
+            '\u032b',
+            '\u032c',
+            '\u032d',
+            '\u032e',
+            '\u032f',
+            '\u0330',
+            '\u0331',
+            '\u0332',
+            '\u0333',
+            '\u0339',
+            '\u033a',
+            '\u033b',
+            '\u033c',
+            '\u0345',
+            '\u0347',
+            '\u0348',
+            '\u0349',
+            '\u034d',
+            '\u034e',
+            '\u0353',
+            '\u0354',
+            '\u0355',
+            '\u0356',
+            '\u0359',
+            '\u035a',
+            '\u0323' /*     ̣     */
+        ],
+        [
+            '\u0315',
+            '\u031b',
+            '\u0340',
+            '\u0341',
+            '\u0358',
+            '\u0321',
+            '\u0322',
+            '\u0327',
+            '\u0328',
+            '\u0334',
+            '\u0335',
+            '\u0336',
+            '\u034f',
+            '\u035c',
+            '\u035d',
+            '\u035e',
+            '\u035f',
+            '\u0360',
+            '\u0362',
+            '\u0338',
+            '\u0337',
+            '\u0361',
+            '\u0489' /*     ҉_     */
+        ]
+    ],
+    random: function (len) {
+        if (len === 1)
+            return 0;
+        return !!len ? Math.floor(Math.random() * len + 1) - 1 : Math.random();
+    },
+    generate: function (str) {
+        var str_arr = str.split(''), output = str_arr.map(function (a) {
+            if (a === " ")
+                return a;
+            for (var i = 0, l = exports.Zalgo.random(16); i < l; i++) {
+                var rand = exports.Zalgo.random(3);
+                a += exports.Zalgo.chars[rand][exports.Zalgo.random(exports.Zalgo.chars[rand].length)];
+            }
+            return a;
+        });
+        return output.join('');
+    }
+};
 
 
 /***/ }),
@@ -4145,7 +4501,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.loadSecretText = void 0;
 const Stat_1 = __webpack_require__(9137);
 const Theme_1 = __webpack_require__(9702);
-const NonSeededRandUtils_1 = __webpack_require__(8258);
 const SeededRandom_1 = __importDefault(__webpack_require__(3450));
 const Maze_1 = __webpack_require__(7194);
 window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -4154,7 +4509,7 @@ window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
     storySoFar.innerHTML = "";
     (0, Stat_1.initStats)();
     (0, Theme_1.initThemes)();
-    const seed = (0, NonSeededRandUtils_1.getRandomNumberBetween)(1, 113);
+    const seed = 85;
     if (ele && storySoFar) {
         new Maze_1.Maze(ele, storySoFar, new SeededRandom_1.default(seed));
     }
@@ -5392,280 +5747,6 @@ It should be noted that her attempts to control reality tends towards "ending re
 
 /***/ }),
 
-/***/ 8934:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Zalgo": () => (/* binding */ Zalgo),
-/* harmony export */   "checkTime": () => (/* binding */ checkTime),
-/* harmony export */   "domWordMeaningFuckery": () => (/* binding */ domWordMeaningFuckery),
-/* harmony export */   "getTimeString": () => (/* binding */ getTimeString),
-/* harmony export */   "isNumeric": () => (/* binding */ isNumeric),
-/* harmony export */   "replaceStringAt": () => (/* binding */ replaceStringAt),
-/* harmony export */   "sentenceCase": () => (/* binding */ sentenceCase),
-/* harmony export */   "stringtoseed": () => (/* binding */ stringtoseed),
-/* harmony export */   "titleCase": () => (/* binding */ titleCase)
-/* harmony export */ });
-/* harmony import */ var _NonSeededRandUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(8258);
-/* harmony import */ var _SeededRandom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3450);
-
-
-
-const titleCase = (input)=>{
-    const pieces = input.split(" ");
-    const ret = [];
-    for(let piece of pieces){
-        if(piece[0]){
-            ret.push(replaceStringAt(piece,0 , piece[0].toUpperCase()));
-        }
-    }
-    return ret.join(" ");
-}
-
-const sentenceCase = (input)=>{
-    if(!input.length){
-        return input;
-    }
-    return replaceStringAt(input, 0, input[0].toUpperCase());
-}
-
-function replaceStringAt(str, index, character){
-    return str.substr(0, index) + character + str.substr(index+character.length);
-}
-
-function stringtoseed(seed){
-    var output = 0;
-   for (var i = 0, len = seed.length; i < len; i++) {
-      output += seed[i].charCodeAt(0)
-    }
-    return output
-}
-
-//https://media.discordapp.net/attachments/468574691087613952/863079687276986388/tumblr_qaosxmi6ET1xf64vf.mp4
-//https://en.m.wikipedia.org/wiki/Wordplay_(The_Twilight_Zone)
-//takes in a sentence, for each word in it decides if its going to fuck it up today.
-//seed_multiplier handles making it so that EVERY instance of the word "dog" is treated the same but each time i ask i might decide dog is changeable vs not
-function domWordMeaningFuckery(){
-    const root = document.querySelector('body');
-    const seed_multiplier = (0,_NonSeededRandUtils__WEBPACK_IMPORTED_MODULE_0__.getRandomNumberBetween)(0,300);
-    if(root){
-        const children = root.querySelectorAll("*");
-        for(let child of children){
-            const subchildren = child.querySelectorAll("*");
-            if(subchildren.length === 0){
-                child.textContent = gaslightWordMeanings(child.textContent, seed_multiplier);
-            }
-        }
-    }
-
-}
-
-//https://stackoverflow.com/questions/18229022/how-to-show-current-time-in-javascript-in-the-format-hhmmss
-function checkTime(i) {
-    if (i < 10) {
-        i = "0" + i;
-    }
-    return i;
-}
-
-function getTimeString(date) {
-    var h = date.getHours();
-    var m = date.getMinutes();
-    var s = date.getSeconds();
-    // add a zero in front of numbers<10
-    m = checkTime(m);
-    s = checkTime(s);
-    return h + ":" + m + ":" + s;
-}
-
-function gaslightWordMeanings(sentence, seed_multiplier){
-    const words = sentence.split(" ");
-    for(let i = 0; i<words.length; i++){
-        words[i] = getWordReplacement(words[i],seed_multiplier)
-    }
-    return words.join(" ");
-}
-
-//takes in a word, turns it into a random seed and if rngesus says so, turns it into another word
- function getWordReplacement(word,seed_multiplier){
-     if(word === "you"){
-         return "ya'll";
-     }
-    const gaslightOptions = ["echidna","[REDACTED]","null","dark","friendless","alone","minotaur","hunt","flesh","changeling","distortion","watcher","filth","minotaur","worm","bug","gas","flavor","evil fox","lazy dog","quick fox","dead fox","terrible fox","bad fox","fox","untrustworthy fox","taste","smell","feeling","failure","fear","horror","mistake","line","stay","good dog","canine","good boy","good boi","bark","garbage","curious dog","squirming dog", "make dog", "dog CODE","artist","musician","programmer","console","hacker","secret","gaslight","robot","dog","boredom","corridor","hallway","backroom","labyrinth","minotaur","maze","door","distortion","spiral","gravestone","dinner","ThisIsNotABG","player","ThisIsNotAGame","ThisIsNotABlog","situation","canada","bot","observer","camera","watcher","ThisIsNotAnEye","ThisIsNotASpiral","wednesday","trumpets","sunflower","dinosaur"];
-    const multiplied_seed = stringtoseed(word.toUpperCase())*seed_multiplier;
-    let chance = .99;
-    if(window.megaGasLight){
-        chance = 0.90;
-    }
-    let rand = new _SeededRandom__WEBPACK_IMPORTED_MODULE_1__["default"](multiplied_seed);
-    if(rand.nextDouble()>chance){
-        const seed = stringtoseed(word.toUpperCase());
-        let rand2 = new _SeededRandom__WEBPACK_IMPORTED_MODULE_1__["default"](seed);
-        let ret= rand2.pickFrom(gaslightOptions);
-        if(word[0]===word[0].toUpperCase()){
-            ret = titleCase(ret);
-        }
-        return ret;
-    }
-    return word;
-}
-
-//hate
-//https://stackoverflow.com/questions/175739/built-in-way-in-javascript-to-check-if-a-string-is-a-valid-number
-function isNumeric(str) {
-    if (typeof str != "string") return false // we only process strings!  
-    return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-           !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
-  }
-
-var Zalgo = {
-    chars: {
-        0 : [ /* up */
-    '\u030d', /*     ̍     */
-    '\u030e', /*     ̎     */
-    '\u0304', /*     ̄     */
-    '\u0305', /*     ̅     */
-    '\u033f', /*     ̿     */
-    '\u0311', /*     ̑     */
-    '\u0306', /*     ̆     */
-    '\u0310', /*     ̐     */
-    '\u0352', /*     ͒     */
-    '\u0357', /*     ͗     */
-    '\u0351', /*     ͑     */
-    '\u0307', /*     ̇     */
-    '\u0308', /*     ̈     */
-    '\u030a', /*     ̊     */
-    '\u0342', /*     ͂     */
-    '\u0343', /*     ̓     */
-    '\u0344', /*     ̈́     */
-    '\u034a', /*     ͊     */
-    '\u034b', /*     ͋     */
-    '\u034c', /*     ͌     */
-    '\u0303', /*     ̃     */
-    '\u0302', /*     ̂     */
-    '\u030c', /*     ̌     */
-    '\u0350', /*     ͐     */
-    '\u0300', /*     ̀     */
-    '\u0301', /*     ́     */
-    '\u030b', /*     ̋     */
-    '\u030f', /*     ̏     */
-    '\u0312', /*     ̒     */
-    '\u0313', /*     ̓     */
-    '\u0314', /*     ̔     */
-    '\u033d', /*     ̽     */
-    '\u0309', /*     ̉     */
-    '\u0363', /*     ͣ     */
-    '\u0364', /*     ͤ     */
-    '\u0365', /*     ͥ     */
-    '\u0366', /*     ͦ     */
-    '\u0367', /*     ͧ     */
-    '\u0368', /*     ͨ     */
-    '\u0369', /*     ͩ     */
-    '\u036a', /*     ͪ     */
-    '\u036b', /*     ͫ     */
-    '\u036c', /*     ͬ     */
-    '\u036d', /*     ͭ     */
-    '\u036e', /*     ͮ     */
-    '\u036f', /*     ͯ     */
-    '\u033e', /*     ̾     */
-    '\u035b', /*     ͛     */
-    '\u0346', /*     ͆     */
-    '\u031a'  /*     ̚     */
-    ],
-    1 : [ /* down */
-    '\u0316', /*     ̖     */
-    '\u0317', /*     ̗     */
-    '\u0318', /*     ̘     */
-    '\u0319', /*     ̙     */
-    '\u031c', /*     ̜     */
-    '\u031d', /*     ̝     */
-    '\u031e', /*     ̞     */
-    '\u031f', /*     ̟     */
-    '\u0320', /*     ̠     */
-    '\u0324', /*     ̤     */
-    '\u0325', /*     ̥     */
-    '\u0326', /*     ̦     */
-    '\u0329', /*     ̩     */
-    '\u032a', /*     ̪     */
-    '\u032b', /*     ̫     */
-    '\u032c', /*     ̬     */
-    '\u032d', /*     ̭     */
-    '\u032e', /*     ̮     */
-    '\u032f', /*     ̯     */
-    '\u0330', /*     ̰     */
-    '\u0331', /*     ̱     */
-    '\u0332', /*     ̲     */
-    '\u0333', /*     ̳     */
-    '\u0339', /*     ̹     */
-    '\u033a', /*     ̺     */
-    '\u033b', /*     ̻     */
-    '\u033c', /*     ̼     */
-    '\u0345', /*     ͅ     */
-    '\u0347', /*     ͇     */
-    '\u0348', /*     ͈     */
-    '\u0349', /*     ͉     */
-    '\u034d', /*     ͍     */
-    '\u034e', /*     ͎     */
-    '\u0353', /*     ͓     */
-    '\u0354', /*     ͔     */
-    '\u0355', /*     ͕     */
-    '\u0356', /*     ͖     */
-    '\u0359', /*     ͙     */
-    '\u035a', /*     ͚     */
-    '\u0323'  /*     ̣     */
-        ],
-    2 : [ /* mid */
-    '\u0315', /*     ̕     */
-    '\u031b', /*     ̛     */
-    '\u0340', /*     ̀     */
-    '\u0341', /*     ́     */
-    '\u0358', /*     ͘     */
-    '\u0321', /*     ̡     */
-    '\u0322', /*     ̢     */
-    '\u0327', /*     ̧     */
-    '\u0328', /*     ̨     */
-    '\u0334', /*     ̴     */
-    '\u0335', /*     ̵     */
-    '\u0336', /*     ̶     */
-    '\u034f', /*     ͏     */
-    '\u035c', /*     ͜     */
-    '\u035d', /*     ͝     */
-    '\u035e', /*     ͞     */
-    '\u035f', /*     ͟     */
-    '\u0360', /*     ͠     */
-    '\u0362', /*     ͢     */
-    '\u0338', /*     ̸     */
-    '\u0337', /*     ̷      */
-    '\u0361', /*     ͡     */
-    '\u0489' /*     ҉_     */
-    ]
-
-    },
-    random: function(len) {
-        if (len === 1) return 0;
-        return !!len ? Math.floor(Math.random() * len + 1) - 1 : Math.random();
-    },
-    generate: function(str) {
-        var str_arr = str.split(''),
-            output = str_arr.map(function(a) {
-                if(a === " ") return a;
-                for(var i = 0, l = Zalgo.random(16);
-                    i<l;i++){
-                        var rand = Zalgo.random(3);
-                    a += Zalgo.chars[rand][
-                        Zalgo.random(Zalgo.chars[rand].length)
-                        ];
-                 }
-                return a;
-            });
-        return output.join('');
-    }
-};
-
-/***/ }),
-
 /***/ 8116:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -5681,6 +5762,8 @@ var map = {
 	"./Objects/Entities/Actions/GoSouth.ts": 3535,
 	"./Objects/Entities/Actions/GoWest": 4834,
 	"./Objects/Entities/Actions/GoWest.ts": 4834,
+	"./Objects/Entities/Actions/Look": 2741,
+	"./Objects/Entities/Actions/Look.ts": 2741,
 	"./Objects/Entities/Actions/StopMoving": 4469,
 	"./Objects/Entities/Actions/StopMoving.ts": 4469,
 	"./Objects/Entities/Peewee": 1160,
@@ -5791,8 +5874,8 @@ var map = {
 	"./Utils/NonSeededRandUtils.ts": 8258,
 	"./Utils/SeededRandom": 3450,
 	"./Utils/SeededRandom.ts": 3450,
-	"./Utils/StringUtils": 8934,
-	"./Utils/StringUtils.js": 8934,
+	"./Utils/StringUtils": 7036,
+	"./Utils/StringUtils.ts": 7036,
 	"./Utils/URLUtils": 389,
 	"./Utils/URLUtils.ts": 389,
 	"./Utils/constants": 8817,

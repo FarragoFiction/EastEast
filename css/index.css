@@ -197,6 +197,22 @@ textarea{
   opacity: 0;
 }
 
+.roomName{
+  position: absolute; 
+  top: 15px;
+  color: black;
+  border-radius: 5px;
+  border: 2px solid black;
+  z-index: 13;
+  font-weight: bolder;
+  font-size: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #d1b056;
+  left: 15px;
+
+}
+
 .error{
   color: red;
   animation: glitch 1s linear infinite;

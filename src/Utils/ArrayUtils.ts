@@ -12,3 +12,7 @@ export function removeItemOnce(arr:any[], value:any) {
   }
 
   export const uniq  =(a:any[]) =>{return a.filter(onlyUnique)};
+
+  export  const turnArrayIntoHumanSentence = (retArray:string[]) =>{
+    return [retArray.slice(0, retArray.length - 1).join(', '), retArray[retArray.length-1]].join(retArray.length < 2 ? '' : ' and ');
+}

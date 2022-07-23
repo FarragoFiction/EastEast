@@ -11,6 +11,7 @@ import { GoEast } from "./Actions/GoEast";
 import { GoNorth } from "./Actions/GoNorth";
 import { GoSouth } from "./Actions/GoSouth";
 import { GoWest } from "./Actions/GoWest";
+import { Look } from "./Actions/Look";
 import { StopMoving } from "./Actions/StopMoving";
 import { Direction, Quotidian } from "./Quotidian";
 
@@ -26,7 +27,7 @@ export class Peewee extends Quotidian{
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
-    possibleActions: Action[]  = [new StopMoving(), new GoNorth(),new GoEast(),new GoSouth(),new GoWest()]; //ordered by priority
+    possibleActions: Action[]  = [new StopMoving(),new Look(), new GoNorth(),new GoEast(),new GoSouth(),new GoWest()]; //ordered by priority
     //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
     possibleReactions: Action[]  = [];
 

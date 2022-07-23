@@ -3,7 +3,7 @@ import { createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 import { Peewee } from "../Entities/Peewee";
 import { all_themes } from "../Theme";
-import { ENDINGS, WEB, TWISTING, CLOWNS, SPYING } from "../ThemeStorage";
+import { ENDINGS, WEB, TWISTING, CLOWNS, SPYING, ZAP } from "../ThemeStorage";
 import { randomRoomWithThemes, Room } from "./Room";
 import { StoryBeat } from "./StoryBeat";
 
@@ -26,12 +26,12 @@ export class Maze {
     }
 
     initialize = async () => {
-        const themes = [all_themes[ENDINGS], all_themes[WEB], all_themes[TWISTING], all_themes[CLOWNS]]
+        const themes = [all_themes[ENDINGS], all_themes[WEB], all_themes[ZAP]]
         this.room = await randomRoomWithThemes(this,this.ele, themes, this.rand);
         this.room.initialRoomWithBlorbos();
 
         await this.room.propagateMaze(3);
-        console.log("JR NOTE: room now has these children: ", this.room.children)
+        console.log("JR NOTE: room now has these children: ",this.room.children.map((e)=>e.name).join(","), this.room.children)
         this.room.render();
         this.peewee = this.room.peewee;
         initRabbitHole(this.room);
@@ -91,7 +91,7 @@ export class Maze {
                 input.value="";
                 return false;
             }
-            this.addStorybeat(new StoryBeat("Peewee: Await Commands","Peewee is awaiting the Observers commands"));
+            this.addStorybeat(new StoryBeat("Peewee: Await Commands","Peewee is awaiting the Observers commands. Also: JR NOTE: 5 minute todo is let peewee LOOK at the doors to see what their labels are. let him GO to those locations just like NorthEast. also find out where those blorbos are going."));
         }
     }
 
