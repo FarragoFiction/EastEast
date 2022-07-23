@@ -148,6 +148,7 @@ export class Room {
 
     addBlorbo = (blorbo: Quotidian) => {
         this.blorbos.push(blorbo);
+        blorbo.room = this;
     }
 
     removeBlorbo = (blorbo: Quotidian) => {
