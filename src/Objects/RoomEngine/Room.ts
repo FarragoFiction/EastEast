@@ -9,6 +9,7 @@ import { Peewee } from "../Entities/Peewee";
 import { Maze } from "./Maze";
 import { removeItemOnce } from "../../Utils/ArrayUtils";
 import {titleCase} from "../../Utils/StringUtils";
+import { testBeat } from "../Entities/StoryBeats/BeatList";
 
 
 export class Room {
@@ -243,7 +244,7 @@ export class Room {
     initialRoomWithBlorbos = () => {
         const stress_test = 3;
         for (let i = 0; i < stress_test; i++) {
-            this.addBlorbo(new Quotidian(this, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing"));
+            this.addBlorbo(new Quotidian(this, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [testBeat.clone()]));
         }
         this.peewee = new Peewee(this, 150, 350);
         this.addBlorbo(this.peewee);

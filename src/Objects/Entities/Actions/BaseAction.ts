@@ -1,10 +1,11 @@
+import { PhysicalObject } from "../../PhysicalObject";
 import { Room } from "../../RoomEngine/Room";
 import { SMELL, SOUND, TASTE } from "../../ThemeStorage";
 import { Quotidian } from "../Quotidian";
 
 export class Action{ //lawsuit
 
-    
+    //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
     recognizedCommands:string[] = []; //nothing, so its default
 
     sensePhrase = (room:Room)=>{
@@ -18,7 +19,7 @@ export class Action{ //lawsuit
        }
        return room.rand.pickFrom(phrases);
     }
-    applyAction = (subject: Quotidian,current_room: Room,object?: Quotidian, )=>{
+    applyAction = (subject: Quotidian,current_room: Room,objects?: PhysicalObject[] )=>{
         //JR NOTE: todo flesh this out. should be able to access the whole maze really.
         return `${subject.name} stands around doing sweet FA. ${this.sensePhrase(current_room)}`;
     }

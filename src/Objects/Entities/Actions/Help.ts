@@ -5,6 +5,7 @@ import { FEELING, SMELL, SOUND, TASTE } from "../../ThemeStorage";
 import { Peewee } from "../Peewee";
 import { Quotidian } from "../Quotidian";
 import { Action } from "./BaseAction";
+import { PhysicalObject } from "../../PhysicalObject";
 
 //assume only peewee can look
 export class Help extends Action {
@@ -30,10 +31,10 @@ export class Help extends Action {
     */
 
 
-    recognizedCommands: string[] = ["HELP", "LOST", "OPERATOR", "ASSIST", "AID", "SUPPORT", "TRUTH"];
+    recognizedCommands: string[] = ["HELP", "LOST", "OPERATOR", "ASSIST", "AID", "SUPPORT", "TRUTH","LS","DIR","MAN"];
 
 
-    applyAction = (subject: Quotidian, current_room: Room, object?: Quotidian,) => {
+    applyAction = (subject: Quotidian, current_room: Room,objects?: PhysicalObject[]) => {
         
         const peewee = subject as Peewee;
         return `To best command Peewee, your base options are ${turnArrayIntoHumanSentence(peewee.possibleActions.map((i)=>i.recognizedCommands[0]))}.`;

@@ -4,6 +4,7 @@ import { Room } from "../../RoomEngine/Room";
 import { SMELL, SOUND, TASTE } from "../../ThemeStorage";
 import { Quotidian } from "../Quotidian";
 import { Action } from "./BaseAction";
+import { PhysicalObject } from "../../PhysicalObject";
 
 //assume only peewee can look
 export class Taste extends Action {
@@ -32,7 +33,7 @@ export class Taste extends Action {
     recognizedCommands: string[] = ["TASTE", "LICK", "EAT", 'FLAVOR', "MUNCH", "BITE", "TONGUE", "SLURP", "NOM"];
 
 
-    applyAction = (subject: Quotidian, current_room: Room, object?: Quotidian,) => {
+    applyAction = (subject: Quotidian, current_room: Room, objects?: PhysicalObject[]) => {
         let thingsHeard = `${current_room.getRandomThemeConcept(TASTE)}.`;
 
 

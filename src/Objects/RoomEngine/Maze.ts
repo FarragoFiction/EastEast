@@ -76,8 +76,6 @@ export class Maze {
         commandele.innerHTML = `>${beat.command}`;
         responseele.innerHTML = beat.response;
         this.storySoFar.scrollTo(0, this.storySoFar.scrollHeight);
-
-
     }
 
     handleCommands = () => {

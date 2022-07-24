@@ -11,6 +11,7 @@ exports.Action = void 0;
 const ThemeStorage_1 = __webpack_require__(1288);
 class Action {
     constructor() {
+        //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
         this.recognizedCommands = []; //nothing, so its default
         this.sensePhrase = (room) => {
             const smell = room.getRandomThemeConcept(ThemeStorage_1.SMELL);
@@ -22,7 +23,7 @@ class Action {
             }
             return room.rand.pickFrom(phrases);
         };
-        this.applyAction = (subject, current_room, object) => {
+        this.applyAction = (subject, current_room, objects) => {
             //JR NOTE: todo flesh this out. should be able to access the whole maze really.
             return `${subject.name} stands around doing sweet FA. ${this.sensePhrase(current_room)}`;
         };
@@ -67,7 +68,7 @@ class Feel extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["FEEL", "CARESS", "TOUCH", "FONDLE"];
-        this.applyAction = (subject, current_room, object) => {
+        this.applyAction = (subject, current_room, objects) => {
             let thingsHeard = `${current_room.getRandomThemeConcept(ThemeStorage_1.FEELING)}.`;
             const north = current_room.getNorth();
             const south = current_room.getSouth();
@@ -103,7 +104,7 @@ class GoEast extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
         this.recognizedCommands = ["EAST", "RIGHT"]; //nothing, so its default
-        this.applyAction = (subject, current_room, object) => {
+        this.applyAction = (subject, current_room, objects) => {
             //JR NOTE: todo flesh this out. should be able to access the whole maze really.
             subject.movement_alg = new MoveToEastDoor_1.MoveToEastDoor(subject);
             subject.movement_alg.detectEle();
@@ -136,7 +137,7 @@ class GoNorth extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
         this.recognizedCommands = ["NORTH", "DOOR", "UP"]; //nothing, so its default
-        this.applyAction = (subject, current_room, object) => {
+        this.applyAction = (subject, current_room, objects) => {
             //JR NOTE: todo flesh this out. should be able to access the whole maze really.
             subject.movement_alg = new MoveToNorthDoor_1.MoveToNorthDoor(subject);
             subject.movement_alg.detectEle();
@@ -169,7 +170,7 @@ class GoSouth extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
         this.recognizedCommands = ["SOUTH", "DOWN"]; //nothing, so its default
-        this.applyAction = (subject, current_room, object) => {
+        this.applyAction = (subject, current_room, objects) => {
             //JR NOTE: todo flesh this out. should be able to access the whole maze really.
             subject.movement_alg = new MoveToSouthDoor_1.MoveToSouthDoor(subject);
             subject.movement_alg.detectEle();
@@ -202,7 +203,7 @@ class GoWest extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
         this.recognizedCommands = ["WEST", "LEFT"]; //nothing, so its default
-        this.applyAction = (subject, current_room, object) => {
+        this.applyAction = (subject, current_room, objects) => {
             //JR NOTE: todo flesh this out. should be able to access the whole maze really.
             subject.movement_alg = new MoveToWestDoor_1.MoveToWestDoor(subject);
             subject.emitSass(":(");
@@ -248,8 +249,8 @@ class Help extends BaseAction_1.Action {
         past me is a treasure
         */
         super(...arguments);
-        this.recognizedCommands = ["HELP", "LOST", "OPERATOR", "ASSIST", "AID", "SUPPORT", "TRUTH"];
-        this.applyAction = (subject, current_room, object) => {
+        this.recognizedCommands = ["HELP", "LOST", "OPERATOR", "ASSIST", "AID", "SUPPORT", "TRUTH", "LS", "DIR", "MAN"];
+        this.applyAction = (subject, current_room, objects) => {
             const peewee = subject;
             return `To best command Peewee, your base options are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(peewee.possibleActions.map((i) => i.recognizedCommands[0]))}.`;
         };
@@ -294,7 +295,7 @@ class Listen extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["LISTEN", "HEAR"];
-        this.applyAction = (subject, current_room, object) => {
+        this.applyAction = (subject, current_room, objects) => {
             let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(ThemeStorage_1.SOUND)}.`;
             const north = current_room.getNorth();
             const south = current_room.getSouth();
@@ -351,7 +352,7 @@ class Look extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE", "OGLE"];
-        this.applyAction = (subject, current_room, object) => {
+        this.applyAction = (subject, current_room, objects) => {
             let thingsSeen = "";
             if (current_room.children.length === 1) {
                 thingsSeen = `${thingsSeen} a door.`;
@@ -420,7 +421,7 @@ class Smell extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["SNIFF", "SMELL", "SNORT", "INHALE", "WHIFF"];
-        this.applyAction = (subject, current_room, object) => {
+        this.applyAction = (subject, current_room, objects) => {
             let thingsHeard = `${current_room.getRandomThemeConcept(ThemeStorage_1.SMELL)}.`;
             const north = current_room.getNorth();
             const south = current_room.getSouth();
@@ -456,7 +457,7 @@ class StopMoving extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
         this.recognizedCommands = ["STOP", "FREEZE", "STILL", "STAND"]; //nothing, so its default
-        this.applyAction = (subject, current_room, object) => {
+        this.applyAction = (subject, current_room, objects) => {
             //JR NOTE: todo flesh this out. should be able to access the whole maze really.
             subject.movement_alg = new NoMovement_1.NoMovement(subject);
             return `${subject.name} comes to a halt.`;
@@ -502,7 +503,7 @@ class Taste extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["TASTE", "LICK", "EAT", 'FLAVOR', "MUNCH", "BITE", "TONGUE", "SLURP", "NOM"];
-        this.applyAction = (subject, current_room, object) => {
+        this.applyAction = (subject, current_room, objects) => {
             let thingsHeard = `${current_room.getRandomThemeConcept(ThemeStorage_1.TASTE)}.`;
             const north = current_room.getNorth();
             const south = current_room.getSouth();
@@ -575,13 +576,15 @@ class Peewee extends Quotidian_1.Quotidian {
             up_src: { src: "Peewee/back.gif", width: 45, height: 90 },
             down_src: { src: "Peewee/front.gif", width: 45, height: 90 }
         };
-        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], sprite, "It's you. After all this time.");
+        console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe");
+        const beats = [];
+        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], sprite, "It's you. After all this time.", beats);
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
+        //only for peewee
         this.possibleActions = [new StopMoving_1.StopMoving(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
-        this.possibleReactions = [];
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
         //peewee's ai is user based. you can tell him to do various actions. 
@@ -615,6 +618,7 @@ exports.Peewee = Peewee;
 //base level Entity object. quotidians can turn into anything
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Quotidian = exports.Direction = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
 const misc_1 = __webpack_require__(4079);
 const NonSeededRandUtils_1 = __webpack_require__(8258);
 const MoveToEastDoor_1 = __webpack_require__(1146);
@@ -645,7 +649,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
     * to OBJECT
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
-    constructor(room, name, x, y, themes, sprite, flavorText) {
+    constructor(room, name, x, y, themes, sprite, flavorText, beats) {
         super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText);
         this.maxSpeed = 20;
         this.minSpeed = 1;
@@ -693,15 +697,128 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 this.image.style.width = `${chosen.width}px`;
             }
         };
+        this.processAiBeat = () => {
+            const toRemove = [];
+            for (let beat of this.beats) {
+                if (beat.triggered(this)) {
+                    beat.performActions(this, this.room);
+                    if (!beat.permanent) {
+                        toRemove.push(beat);
+                    }
+                }
+            }
+            for (let beat of toRemove) {
+                (0, ArrayUtils_1.removeItemOnce)(this.beats, beat);
+            }
+        };
         this.tick = () => {
+            this.processAiBeat();
             this.movement_alg.tick();
             this.syncSpriteToDirection();
             this.updateRendering();
         };
         this.directionalSprite = sprite;
+        this.beats = beats;
     }
 }
 exports.Quotidian = Quotidian;
+
+
+/***/ }),
+
+/***/ 1708:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AiBeat = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const StoryBeat_1 = __webpack_require__(5504);
+class AiBeat {
+    //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
+    constructor(triggers, actions, permanent = false) {
+        this.targets = [];
+        this.clone = () => {
+            //doesn't clone targets, those are set per beat when resolved..
+            return new AiBeat(this.triggers, this.actions, this.permanent);
+        };
+        this.addStorybeatToScreen = (maze) => {
+            const beat = new StoryBeat_1.StoryBeat("<hr>", "");
+            maze.addStorybeat(beat);
+            return beat;
+        };
+        this.performActions = (owner, current_room) => {
+            let ret = "";
+            let causes = [];
+            let effects = [];
+            for (let t of this.triggers) {
+                causes.push(t.toString());
+            }
+            for (let a of this.actions) {
+                effects.push(a.applyAction(owner, current_room, this.targets));
+            }
+            const beat = this.addStorybeatToScreen(current_room.maze);
+            beat.response = `Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)} ${(effects.join("<br>"))}`;
+        };
+        //ALL triggers must be true for this to be true.
+        this.triggered = (owner) => {
+            console.log("JR NOTE: in some way triggers need to find targets for actions to apply to");
+            for (let t of this.triggers) {
+                if (!t.triggered(owner)) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        this.triggers = triggers;
+        this.actions = actions;
+        this.permanent = permanent;
+    }
+}
+exports.AiBeat = AiBeat;
+
+
+/***/ }),
+
+/***/ 2761:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.testBeat = void 0;
+const GoSouth_1 = __webpack_require__(3535);
+const BaseTrigger_1 = __webpack_require__(7206);
+const BaseBeat_1 = __webpack_require__(1708);
+//because they could, Quotidian starts heading towards the south door.
+exports.testBeat = new BaseBeat_1.AiBeat([new BaseTrigger_1.Trigger()], [new GoSouth_1.GoSouth()]);
+
+
+/***/ }),
+
+/***/ 7206:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Trigger = void 0;
+class Trigger {
+    //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
+    constructor(invert = false) {
+        this.invert = false;
+        this.toString = () => {
+            //format this like it might start with either because or and
+            return "they could";
+        };
+        this.triggered = (owner) => {
+            return true; //JR NOTE: children will overwrite this
+        };
+        this.invert = invert;
+    }
+}
+exports.Trigger = Trigger;
 
 
 /***/ }),
@@ -1305,6 +1422,7 @@ const URLUtils_1 = __webpack_require__(389);
 const Peewee_1 = __webpack_require__(1160);
 const ArrayUtils_1 = __webpack_require__(3907);
 const StringUtils_1 = __webpack_require__(7036);
+const BeatList_1 = __webpack_require__(2761);
 class Room {
     //objects
     //people
@@ -1501,7 +1619,7 @@ class Room {
         this.initialRoomWithBlorbos = () => {
             const stress_test = 3;
             for (let i = 0; i < stress_test; i++) {
-                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing"));
+                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.testBeat.clone()]));
             }
             this.peewee = new Peewee_1.Peewee(this, 150, 350);
             this.addBlorbo(this.peewee);
@@ -6076,6 +6194,12 @@ var map = {
 	"./Objects/Entities/Peewee.ts": 1160,
 	"./Objects/Entities/Quotidian": 6647,
 	"./Objects/Entities/Quotidian.ts": 6647,
+	"./Objects/Entities/StoryBeats/BaseBeat": 1708,
+	"./Objects/Entities/StoryBeats/BaseBeat.ts": 1708,
+	"./Objects/Entities/StoryBeats/BeatList": 2761,
+	"./Objects/Entities/StoryBeats/BeatList.ts": 2761,
+	"./Objects/Entities/Triggers/BaseTrigger": 7206,
+	"./Objects/Entities/Triggers/BaseTrigger.ts": 7206,
 	"./Objects/Memory": 7953,
 	"./Objects/Memory.ts": 7953,
 	"./Objects/MovementAlgs/BaseMovement": 9059,

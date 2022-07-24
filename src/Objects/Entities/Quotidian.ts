@@ -1,6 +1,7 @@
 //base level Entity object. quotidians can turn into anything
 
 import { isThisTypeNode } from "typescript";
+import { removeItemOnce } from "../../Utils/ArrayUtils";
 import { createElementWithIdAndParent, getElementCenterPoint } from "../../Utils/misc";
 import { pickFrom } from "../../Utils/NonSeededRandUtils";
 import { MoveToEastDoor } from "../MovementAlgs/MoveToEastDoor";
@@ -11,6 +12,8 @@ import { RandomMovement } from "../MovementAlgs/RandomMovement";
 import { PhysicalObject } from "../PhysicalObject";
 import { Room } from "../RoomEngine/Room";
 import { Theme } from "../Theme";
+import { Action } from "./Actions/BaseAction";
+import { AiBeat } from "./StoryBeats/BaseBeat";
 
 
 
@@ -42,6 +45,8 @@ export class Quotidian extends PhysicalObject {
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
+    beats: AiBeat[];
+
     sass?: HTMLElement;
     sassBegun?: Date;
     directionalSprite: DirectionalSprite;
@@ -62,14 +67,17 @@ export class Quotidian extends PhysicalObject {
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
 
-    constructor(room: Room, name: string, x: number, y: number, themes: Theme[], sprite: DirectionalSprite, flavorText: string) {
+    constructor(room: Room, name: string, x: number, y: number, themes: Theme[], sprite: DirectionalSprite, flavorText: string, beats: AiBeat[]) {
         super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText);
         this.directionalSprite = sprite;
+        this.beats = beats;
     }
 
-    goStill = ()=>{
+    goStill = () => {
         this.movement_alg = new NoMovement(this);
     }
+
+
 
     emitSass = (sass: string) => {
         //debounce essentially
@@ -107,18 +115,35 @@ export class Quotidian extends PhysicalObject {
             chosen = this.directionalSprite.right_src || this.directionalSprite.default_src;
         }
         const src = `${baseImageLocation}${chosen.src}`;
-        if( !this.image.src.includes(src)){
-            this.image.src =src ;
+        if (!this.image.src.includes(src)) {
+            this.image.src = src;
             this.image.style.width = `${chosen.width}px`;
         }
 
     }
 
+    processAiBeat = ()=>{
+        const toRemove:AiBeat[] = [];
+        for(let beat of this.beats){
+            if(beat.triggered(this)){
+                beat.performActions(this, this.room);
+                if(!beat.permanent){
+                    toRemove.push(beat);
+                }
+            }
+        }
+
+        for(let beat of toRemove){
+            removeItemOnce(this.beats, beat);
+        }
+
+    }
+
     tick = () => {
+        this.processAiBeat();
         this.movement_alg.tick();
         this.syncSpriteToDirection();
         this.updateRendering();
-
     }
 
 }

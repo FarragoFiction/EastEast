@@ -19,6 +19,7 @@ import { Smell } from "./Actions/Smell";
 import { StopMoving } from "./Actions/StopMoving";
 import { Taste } from "./Actions/Taste";
 import { Direction, Quotidian } from "./Quotidian";
+import { AiBeat } from "./StoryBeats/BaseBeat";
 
 
 
@@ -32,9 +33,9 @@ export class Peewee extends Quotidian{
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
+    //only for peewee
     possibleActions: Action[]  = [new StopMoving(),new Look(),new Listen(), new Smell(),new Feel(), new Help(), new Taste(),new GoNorth(),new GoEast(),new GoSouth(),new GoWest()]; //ordered by priority
     //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
-    possibleReactions: Action[]  = [];
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
     movement_alg:Movement = new NoMovement(this);
@@ -60,7 +61,9 @@ export class Peewee extends Quotidian{
             down_src:{src:"Peewee/front.gif",width:45,height:90}
 
         };
-        super(room,"Peewee", x,y,[all_themes[ENDINGS],all_themes[WEB],all_themes[TWISTING],all_themes[CLOWNS]],sprite,"It's you. After all this time.");
+        console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe")
+        const beats:AiBeat[] = [];
+        super(room,"Peewee", x,y,[all_themes[ENDINGS],all_themes[WEB],all_themes[TWISTING],all_themes[CLOWNS]],sprite,"It's you. After all this time.", beats);
     }
 
 
