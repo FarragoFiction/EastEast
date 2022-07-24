@@ -7,12 +7,17 @@ import { StoryBeat } from "../RoomEngine/StoryBeat";
 import { all_themes } from "../Theme";
 import { ENDINGS, WEB, TWISTING, CLOWNS } from "../ThemeStorage";
 import { Action } from "./Actions/BaseAction";
+import { Feel } from "./Actions/Feel";
 import { GoEast } from "./Actions/GoEast";
 import { GoNorth } from "./Actions/GoNorth";
 import { GoSouth } from "./Actions/GoSouth";
 import { GoWest } from "./Actions/GoWest";
+import { Help } from "./Actions/Help";
+import { Listen } from "./Actions/Listen";
 import { Look } from "./Actions/Look";
+import { Smell } from "./Actions/Smell";
 import { StopMoving } from "./Actions/StopMoving";
+import { Taste } from "./Actions/Taste";
 import { Direction, Quotidian } from "./Quotidian";
 
 
@@ -27,7 +32,7 @@ export class Peewee extends Quotidian{
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
-    possibleActions: Action[]  = [new StopMoving(),new Look(), new GoNorth(),new GoEast(),new GoSouth(),new GoWest()]; //ordered by priority
+    possibleActions: Action[]  = [new StopMoving(),new Look(),new Listen(), new Smell(),new Feel(), new Help(), new Taste(),new GoNorth(),new GoEast(),new GoSouth(),new GoWest()]; //ordered by priority
     //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
     possibleReactions: Action[]  = [];
 

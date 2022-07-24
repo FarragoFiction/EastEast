@@ -1,11 +1,12 @@
 
 import { turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
 import { Room } from "../../RoomEngine/Room";
+import { FEELING, SMELL, SOUND, TASTE } from "../../ThemeStorage";
 import { Quotidian } from "../Quotidian";
 import { Action } from "./BaseAction";
 
 //assume only peewee can look
-export class Look extends Action {
+export class Feel extends Action {
     /*
     KR points out that i managed to typo each one of these in a wholly unique way back in NorthEast. 
 
@@ -28,43 +29,29 @@ export class Look extends Action {
     */
 
 
-    recognizedCommands: string[] = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE","OGLE"];
+    recognizedCommands: string[] = ["FEEL", "CARESS", "TOUCH","FONDLE"];
 
 
     applyAction = (subject: Quotidian, current_room: Room, object?: Quotidian,) => {
-        let thingsSeen = "";
-        if (current_room.children.length === 1) {
-            thingsSeen = `${thingsSeen} a door.`;
+        let thingsHeard = `${current_room.getRandomThemeConcept(FEELING)}.`;
 
-        } else {
-            thingsSeen = `${thingsSeen} ${current_room.children.length} doors.`;
-        }
 
         const north = current_room.getNorth();
         const south = current_room.getSouth();
         const east = current_room.getEast();
         if (north) {
-            thingsSeen = `${thingsSeen} <p>On the NORTH door, he sees a sign labeled ${north.name}.</p>`;
+            thingsHeard = `${thingsHeard} <p>When he touches the frame of the NORTH DOOR he can't help but notice the distinct texture of ${north.getRandomThemeConcept(FEELING)}.</p>`;
         }
 
         if (south) {
-            thingsSeen = `${thingsSeen} <p>On the SOUTH door, he sees a sign labeled ${south.name}.</p>`;
+            thingsHeard = `${thingsHeard} <p>When he touches the frame of the SOUTH DOOR he can't help but notice the distinct texture of ${south.getRandomThemeConcept(FEELING)}.</p>`;
         }
 
         if (east) {
-            thingsSeen = `${thingsSeen} <p>On the EAST door, he sees a sign labeled ${east.name}.</p>`;
+            thingsHeard = `${thingsHeard} <p>When he touches the frame of the EAST DOOR he can't help but notice the distinct texture of ${east.getRandomThemeConcept(FEELING)}.</p>`;
         }
 
-        if (current_room.items) {
-            thingsSeen = `${thingsSeen} <p>He also sees ${current_room.items.length} item(s). Looking closer, they are ${turnArrayIntoHumanSentence(current_room.items.map((e) => e.name))}.</p>`;
-        }
-
-        if (current_room.blorbos) {
-            thingsSeen = `${thingsSeen} <p>He also sees ${current_room.blorbos.length} blorbos(s). Looking closer, they are ${turnArrayIntoHumanSentence(current_room.blorbos.map((e) => e.name))}.</p>`;
-        }
-
-
-        return `${subject.name} looks around. He sees ${thingsSeen}`;
+        return `Underneath Peewee's tail, the floor feels weirdly of ${thingsHeard}`;
     }
 
 

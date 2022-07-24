@@ -1,11 +1,12 @@
 
 import { turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
 import { Room } from "../../RoomEngine/Room";
+import { SOUND } from "../../ThemeStorage";
 import { Quotidian } from "../Quotidian";
 import { Action } from "./BaseAction";
 
 //assume only peewee can look
-export class Look extends Action {
+export class Listen extends Action {
     /*
     KR points out that i managed to typo each one of these in a wholly unique way back in NorthEast. 
 
@@ -28,43 +29,29 @@ export class Look extends Action {
     */
 
 
-    recognizedCommands: string[] = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE","OGLE"];
+    recognizedCommands: string[] = ["LISTEN", "HEAR"];
 
 
     applyAction = (subject: Quotidian, current_room: Room, object?: Quotidian,) => {
-        let thingsSeen = "";
-        if (current_room.children.length === 1) {
-            thingsSeen = `${thingsSeen} a door.`;
+        let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(SOUND)}.`;
 
-        } else {
-            thingsSeen = `${thingsSeen} ${current_room.children.length} doors.`;
-        }
 
         const north = current_room.getNorth();
         const south = current_room.getSouth();
         const east = current_room.getEast();
         if (north) {
-            thingsSeen = `${thingsSeen} <p>On the NORTH door, he sees a sign labeled ${north.name}.</p>`;
+            thingsHeard = `${thingsHeard} <p>Towards the NORTH, he hears ${north.getRandomThemeConcept(SOUND)}.</p>`;
         }
 
         if (south) {
-            thingsSeen = `${thingsSeen} <p>On the SOUTH door, he sees a sign labeled ${south.name}.</p>`;
+            thingsHeard = `${thingsHeard} <p>Towards the SOUTH, he hears ${south.getRandomThemeConcept(SOUND)}.</p>`;
         }
 
         if (east) {
-            thingsSeen = `${thingsSeen} <p>On the EAST door, he sees a sign labeled ${east.name}.</p>`;
+            thingsHeard = `${thingsHeard} <p>Towards the EAST, he hears ${east.getRandomThemeConcept(SOUND)}.</p>`;
         }
 
-        if (current_room.items) {
-            thingsSeen = `${thingsSeen} <p>He also sees ${current_room.items.length} item(s). Looking closer, they are ${turnArrayIntoHumanSentence(current_room.items.map((e) => e.name))}.</p>`;
-        }
-
-        if (current_room.blorbos) {
-            thingsSeen = `${thingsSeen} <p>He also sees ${current_room.blorbos.length} blorbos(s). Looking closer, they are ${turnArrayIntoHumanSentence(current_room.blorbos.map((e) => e.name))}.</p>`;
-        }
-
-
-        return `${subject.name} looks around. He sees ${thingsSeen}`;
+        return `${subject.name} listens  carefully. He hears ${thingsHeard}`;
     }
 
 

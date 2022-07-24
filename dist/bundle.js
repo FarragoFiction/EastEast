@@ -33,6 +33,63 @@ exports.Action = Action;
 
 /***/ }),
 
+/***/ 4543:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Feel = void 0;
+const ThemeStorage_1 = __webpack_require__(1288);
+const BaseAction_1 = __webpack_require__(7042);
+//assume only peewee can look
+class Feel extends BaseAction_1.Action {
+    constructor() {
+        /*
+        KR points out that i managed to typo each one of these in a wholly unique way back in NorthEast.
+    
+        const look_euphamemisms = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE"];
+        const greeting_euphamemisms = ["HELLO", "HI", "GREETINGS", "HULLO", "HOWDY", "SUP", "HEY", "WHAT'S UP"];
+        const farewell_euphamisms = ["BYE", "FAREWELL", "SEEYA", "CYA"];
+        //
+        const get_euphamemisms = ["TAKE", "PILFER", "LOOT", "GET", "STEAL", "POCKET", "OBTAIN", "GRAB", "CLUTCH", "WITHDRAW", "EXTRACT", "REMOVE", "PURLOIN", "YOINK"];
+    
+        const listen_euphamemism = ["LISTEN", "HEAR"];
+        //oh god why are you TASTING anything here.
+        const taste_euphamemisms = ["TASTE", "LICK", "EAT", 'FLAVOR', "MUNCH", "BITE", "TONGUE", "SLURP", "NOM"];
+        //should smell either faintly or overpoweringly
+        const smell_euphamism = ["SNIFF", "SMELL", "SNORT", "INHALE", "WHIFF"];
+        //should feel weird and fake
+        const touch_euphemisms = ["FEEL", "CARESS", "TOUCH"];
+        const help_euphemisms = ["HELP", "LOST", "OPERATOR", "ASSIST", "AID", "SUPPORT", "TRUTH"];
+    
+        past me is a treasure
+        */
+        super(...arguments);
+        this.recognizedCommands = ["FEEL", "CARESS", "TOUCH", "FONDLE"];
+        this.applyAction = (subject, current_room, object) => {
+            let thingsHeard = `${current_room.getRandomThemeConcept(ThemeStorage_1.FEELING)}.`;
+            const north = current_room.getNorth();
+            const south = current_room.getSouth();
+            const east = current_room.getEast();
+            if (north) {
+                thingsHeard = `${thingsHeard} <p>When he touches the frame of the NORTH DOOR he can't help but notice the distinct texture of ${north.getRandomThemeConcept(ThemeStorage_1.FEELING)}.</p>`;
+            }
+            if (south) {
+                thingsHeard = `${thingsHeard} <p>When he touches the frame of the SOUTH DOOR he can't help but notice the distinct texture of ${south.getRandomThemeConcept(ThemeStorage_1.FEELING)}.</p>`;
+            }
+            if (east) {
+                thingsHeard = `${thingsHeard} <p>When he touches the frame of the EAST DOOR he can't help but notice the distinct texture of ${east.getRandomThemeConcept(ThemeStorage_1.FEELING)}.</p>`;
+            }
+            return `Underneath Peewee's tail, the floor feels weirdly of ${thingsHeard}`;
+        };
+    }
+}
+exports.Feel = Feel;
+
+
+/***/ }),
+
 /***/ 7192:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -158,6 +215,108 @@ exports.GoWest = GoWest;
 
 /***/ }),
 
+/***/ 3256:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Help = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const BaseAction_1 = __webpack_require__(7042);
+//assume only peewee can look
+class Help extends BaseAction_1.Action {
+    constructor() {
+        /*
+        KR points out that i managed to typo each one of these in a wholly unique way back in NorthEast.
+    
+        const look_euphamemisms = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE"];
+        const greeting_euphamemisms = ["HELLO", "HI", "GREETINGS", "HULLO", "HOWDY", "SUP", "HEY", "WHAT'S UP"];
+        const farewell_euphamisms = ["BYE", "FAREWELL", "SEEYA", "CYA"];
+        //
+        const get_euphamemisms = ["TAKE", "PILFER", "LOOT", "GET", "STEAL", "POCKET", "OBTAIN", "GRAB", "CLUTCH", "WITHDRAW", "EXTRACT", "REMOVE", "PURLOIN", "YOINK"];
+    
+        const listen_euphamemism = ["LISTEN", "HEAR"];
+        //oh god why are you TASTING anything here.
+        const taste_euphamemisms = ["TASTE", "LICK", "EAT", 'FLAVOR', "MUNCH", "BITE", "TONGUE", "SLURP", "NOM"];
+        //should smell either faintly or overpoweringly
+        const smell_euphamism = ["SNIFF", "SMELL", "SNORT", "INHALE", "WHIFF"];
+        //should feel weird and fake
+        const touch_euphemisms = ["FEEL", "CARESS", "TOUCH"];
+        const help_euphemisms = ["HELP", "LOST", "OPERATOR", "ASSIST", "AID", "SUPPORT", "TRUTH"];
+    
+        past me is a treasure
+        */
+        super(...arguments);
+        this.recognizedCommands = ["HELP", "LOST", "OPERATOR", "ASSIST", "AID", "SUPPORT", "TRUTH"];
+        this.applyAction = (subject, current_room, object) => {
+            const peewee = subject;
+            return `To best command Peewee, your base options are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(peewee.possibleActions.map((i) => i.recognizedCommands[0]))}.`;
+        };
+    }
+}
+exports.Help = Help;
+
+
+/***/ }),
+
+/***/ 7576:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Listen = void 0;
+const ThemeStorage_1 = __webpack_require__(1288);
+const BaseAction_1 = __webpack_require__(7042);
+//assume only peewee can look
+class Listen extends BaseAction_1.Action {
+    constructor() {
+        /*
+        KR points out that i managed to typo each one of these in a wholly unique way back in NorthEast.
+    
+        const look_euphamemisms = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE"];
+        const greeting_euphamemisms = ["HELLO", "HI", "GREETINGS", "HULLO", "HOWDY", "SUP", "HEY", "WHAT'S UP"];
+        const farewell_euphamisms = ["BYE", "FAREWELL", "SEEYA", "CYA"];
+        //
+        const get_euphamemisms = ["TAKE", "PILFER", "LOOT", "GET", "STEAL", "POCKET", "OBTAIN", "GRAB", "CLUTCH", "WITHDRAW", "EXTRACT", "REMOVE", "PURLOIN", "YOINK"];
+    
+        const listen_euphamemism = ["LISTEN", "HEAR"];
+        //oh god why are you TASTING anything here.
+        const taste_euphamemisms = ["TASTE", "LICK", "EAT", 'FLAVOR', "MUNCH", "BITE", "TONGUE", "SLURP", "NOM"];
+        //should smell either faintly or overpoweringly
+        const smell_euphamism = ["SNIFF", "SMELL", "SNORT", "INHALE", "WHIFF"];
+        //should feel weird and fake
+        const touch_euphemisms = ["FEEL", "CARESS", "TOUCH"];
+        const help_euphemisms = ["HELP", "LOST", "OPERATOR", "ASSIST", "AID", "SUPPORT", "TRUTH"];
+    
+        past me is a treasure
+        */
+        super(...arguments);
+        this.recognizedCommands = ["LISTEN", "HEAR"];
+        this.applyAction = (subject, current_room, object) => {
+            let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(ThemeStorage_1.SOUND)}.`;
+            const north = current_room.getNorth();
+            const south = current_room.getSouth();
+            const east = current_room.getEast();
+            if (north) {
+                thingsHeard = `${thingsHeard} <p>Towards the NORTH, he hears ${north.getRandomThemeConcept(ThemeStorage_1.SOUND)}.</p>`;
+            }
+            if (south) {
+                thingsHeard = `${thingsHeard} <p>Towards the SOUTH, he hears ${south.getRandomThemeConcept(ThemeStorage_1.SOUND)}.</p>`;
+            }
+            if (east) {
+                thingsHeard = `${thingsHeard} <p>Towards the EAST, he hears ${east.getRandomThemeConcept(ThemeStorage_1.SOUND)}.</p>`;
+            }
+            return `${subject.name} listens  carefully. He hears ${thingsHeard}`;
+        };
+    }
+}
+exports.Listen = Listen;
+
+
+/***/ }),
+
 /***/ 2741:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -191,7 +350,7 @@ class Look extends BaseAction_1.Action {
         past me is a treasure
         */
         super(...arguments);
-        this.recognizedCommands = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE"];
+        this.recognizedCommands = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE", "OGLE"];
         this.applyAction = (subject, current_room, object) => {
             let thingsSeen = "";
             if (current_room.children.length === 1) {
@@ -227,6 +386,63 @@ exports.Look = Look;
 
 /***/ }),
 
+/***/ 3834:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Smell = void 0;
+const ThemeStorage_1 = __webpack_require__(1288);
+const BaseAction_1 = __webpack_require__(7042);
+//assume only peewee can look
+class Smell extends BaseAction_1.Action {
+    constructor() {
+        /*
+        KR points out that i managed to typo each one of these in a wholly unique way back in NorthEast.
+    
+        const look_euphamemisms = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE"];
+        const greeting_euphamemisms = ["HELLO", "HI", "GREETINGS", "HULLO", "HOWDY", "SUP", "HEY", "WHAT'S UP"];
+        const farewell_euphamisms = ["BYE", "FAREWELL", "SEEYA", "CYA"];
+        //
+        const get_euphamemisms = ["TAKE", "PILFER", "LOOT", "GET", "STEAL", "POCKET", "OBTAIN", "GRAB", "CLUTCH", "WITHDRAW", "EXTRACT", "REMOVE", "PURLOIN", "YOINK"];
+    
+        const listen_euphamemism = ["LISTEN", "HEAR"];
+        //oh god why are you TASTING anything here.
+        const taste_euphamemisms = ["TASTE", "LICK", "EAT", 'FLAVOR', "MUNCH", "BITE", "TONGUE", "SLURP", "NOM"];
+        //should smell either faintly or overpoweringly
+        const smell_euphamism = ["SNIFF", "SMELL", "SNORT", "INHALE", "WHIFF"];
+        //should feel weird and fake
+        const touch_euphemisms = ["FEEL", "CARESS", "TOUCH"];
+        const help_euphemisms = ["HELP", "LOST", "OPERATOR", "ASSIST", "AID", "SUPPORT", "TRUTH"];
+    
+        past me is a treasure
+        */
+        super(...arguments);
+        this.recognizedCommands = ["SNIFF", "SMELL", "SNORT", "INHALE", "WHIFF"];
+        this.applyAction = (subject, current_room, object) => {
+            let thingsHeard = `${current_room.getRandomThemeConcept(ThemeStorage_1.SMELL)}.`;
+            const north = current_room.getNorth();
+            const south = current_room.getSouth();
+            const east = current_room.getEast();
+            if (north) {
+                thingsHeard = `${thingsHeard} <p>Towards the NORTH, he can detect a whiff of ${north.getRandomThemeConcept(ThemeStorage_1.SMELL)}.</p>`;
+            }
+            if (south) {
+                thingsHeard = `${thingsHeard} <p>Towards the SOUTH, he can detect a whiff of ${south.getRandomThemeConcept(ThemeStorage_1.SMELL)}.</p>`;
+            }
+            if (east) {
+                thingsHeard = `${thingsHeard} <p>Towards the EAST, he can detect a whiff of ${east.getRandomThemeConcept(ThemeStorage_1.SMELL)}.</p>`;
+            }
+            return `${subject.name} takes in a lungful of air. His cybernetic nose detects traces of ${thingsHeard}`;
+        };
+    }
+}
+exports.Smell = Smell;
+
+
+/***/ }),
+
 /***/ 4469:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -252,6 +468,63 @@ exports.StopMoving = StopMoving;
 
 /***/ }),
 
+/***/ 8520:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Taste = void 0;
+const ThemeStorage_1 = __webpack_require__(1288);
+const BaseAction_1 = __webpack_require__(7042);
+//assume only peewee can look
+class Taste extends BaseAction_1.Action {
+    constructor() {
+        /*
+        KR points out that i managed to typo each one of these in a wholly unique way back in NorthEast.
+    
+        const look_euphamemisms = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE"];
+        const greeting_euphamemisms = ["HELLO", "HI", "GREETINGS", "HULLO", "HOWDY", "SUP", "HEY", "WHAT'S UP"];
+        const farewell_euphamisms = ["BYE", "FAREWELL", "SEEYA", "CYA"];
+        //
+        const get_euphamemisms = ["TAKE", "PILFER", "LOOT", "GET", "STEAL", "POCKET", "OBTAIN", "GRAB", "CLUTCH", "WITHDRAW", "EXTRACT", "REMOVE", "PURLOIN", "YOINK"];
+    
+        const listen_euphamemism = ["LISTEN", "HEAR"];
+        //oh god why are you TASTING anything here.
+        const taste_euphamemisms = ["TASTE", "LICK", "EAT", 'FLAVOR', "MUNCH", "BITE", "TONGUE", "SLURP", "NOM"];
+        //should smell either faintly or overpoweringly
+        const smell_euphamism = ["SNIFF", "SMELL", "SNORT", "INHALE", "WHIFF"];
+        //should feel weird and fake
+        const touch_euphemisms = ["FEEL", "CARESS", "TOUCH"];
+        const help_euphemisms = ["HELP", "LOST", "OPERATOR", "ASSIST", "AID", "SUPPORT", "TRUTH"];
+    
+        past me is a treasure
+        */
+        super(...arguments);
+        this.recognizedCommands = ["TASTE", "LICK", "EAT", 'FLAVOR', "MUNCH", "BITE", "TONGUE", "SLURP", "NOM"];
+        this.applyAction = (subject, current_room, object) => {
+            let thingsHeard = `${current_room.getRandomThemeConcept(ThemeStorage_1.TASTE)}.`;
+            const north = current_room.getNorth();
+            const south = current_room.getSouth();
+            const east = current_room.getEast();
+            if (north) {
+                thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the NORTH DOOR he tastes ${north.getRandomThemeConcept(ThemeStorage_1.TASTE)}.</p>`;
+            }
+            if (south) {
+                thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the SOUTH DOOR he tastes ${south.getRandomThemeConcept(ThemeStorage_1.TASTE)}.</p>`;
+            }
+            if (east) {
+                thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the EAST DOOR he tastes ${east.getRandomThemeConcept(ThemeStorage_1.TASTE)}.</p>`;
+            }
+            return `${subject.name} starts licking things at random. He has so many regrets. He will never forget the flavor of ${thingsHeard} Wow, he's really being thorough.`;
+        };
+    }
+}
+exports.Taste = Taste;
+
+
+/***/ }),
+
 /***/ 1160:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -264,12 +537,17 @@ const NoMovement_1 = __webpack_require__(4956);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const BaseAction_1 = __webpack_require__(7042);
+const Feel_1 = __webpack_require__(4543);
 const GoEast_1 = __webpack_require__(7192);
 const GoNorth_1 = __webpack_require__(7415);
 const GoSouth_1 = __webpack_require__(3535);
 const GoWest_1 = __webpack_require__(4834);
+const Help_1 = __webpack_require__(3256);
+const Listen_1 = __webpack_require__(7576);
 const Look_1 = __webpack_require__(2741);
+const Smell_1 = __webpack_require__(3834);
 const StopMoving_1 = __webpack_require__(4469);
+const Taste_1 = __webpack_require__(8520);
 const Quotidian_1 = __webpack_require__(6647);
 //what, did you think any real being could be so formulaic? 
 //regarding the real peewee, wanda is actually quite THRILLED there is a competing parasite in the Echidna distracting the immune system (and tbf, preventing an immune disorder in the form of the eye killer)
@@ -302,7 +580,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
-        this.possibleActions = [new StopMoving_1.StopMoving(), new Look_1.Look(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
+        this.possibleActions = [new StopMoving_1.StopMoving(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.possibleReactions = [];
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
@@ -5775,6 +6053,8 @@ var map = {
 	"./": 3607,
 	"./Objects/Entities/Actions/BaseAction": 7042,
 	"./Objects/Entities/Actions/BaseAction.ts": 7042,
+	"./Objects/Entities/Actions/Feel": 4543,
+	"./Objects/Entities/Actions/Feel.ts": 4543,
 	"./Objects/Entities/Actions/GoEast": 7192,
 	"./Objects/Entities/Actions/GoEast.ts": 7192,
 	"./Objects/Entities/Actions/GoNorth": 7415,
@@ -5783,10 +6063,18 @@ var map = {
 	"./Objects/Entities/Actions/GoSouth.ts": 3535,
 	"./Objects/Entities/Actions/GoWest": 4834,
 	"./Objects/Entities/Actions/GoWest.ts": 4834,
+	"./Objects/Entities/Actions/Help": 3256,
+	"./Objects/Entities/Actions/Help.ts": 3256,
+	"./Objects/Entities/Actions/Listen": 7576,
+	"./Objects/Entities/Actions/Listen.ts": 7576,
 	"./Objects/Entities/Actions/Look": 2741,
 	"./Objects/Entities/Actions/Look.ts": 2741,
+	"./Objects/Entities/Actions/Smell": 3834,
+	"./Objects/Entities/Actions/Smell.ts": 3834,
 	"./Objects/Entities/Actions/StopMoving": 4469,
 	"./Objects/Entities/Actions/StopMoving.ts": 4469,
+	"./Objects/Entities/Actions/Taste": 8520,
+	"./Objects/Entities/Actions/Taste.ts": 8520,
 	"./Objects/Entities/Peewee": 1160,
 	"./Objects/Entities/Peewee.ts": 1160,
 	"./Objects/Entities/Quotidian": 6647,
