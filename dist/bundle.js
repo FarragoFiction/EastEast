@@ -743,8 +743,8 @@ class AiBeat {
             //doesn't clone targets, those are set per beat when resolved..
             return new AiBeat(this.triggers, this.actions, this.permanent);
         };
-        this.addStorybeatToScreen = (maze) => {
-            const beat = new StoryBeat_1.StoryBeat("<hr>", "");
+        this.addStorybeatToScreen = (maze, response) => {
+            const beat = new StoryBeat_1.StoryBeat("AI: Tick", response);
             maze.addStorybeat(beat);
             return beat;
         };
@@ -758,8 +758,7 @@ class AiBeat {
             for (let a of this.actions) {
                 effects.push(a.applyAction(owner, current_room, this.targets));
             }
-            const beat = this.addStorybeatToScreen(current_room.maze);
-            beat.response = `Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)} ${(effects.join("<br>"))}`;
+            const beat = this.addStorybeatToScreen(current_room.maze, `Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)}... ${(effects.join("<br>"))}`);
         };
         //ALL triggers must be true for this to be true.
         this.triggered = (owner) => {
