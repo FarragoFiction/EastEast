@@ -52,18 +52,14 @@ export class Room {
     }
 
     spawnChildrenIfNeeded = async () => {
-        console.log("JR NOTE: checking for needed children")
         if (this.children.length === 0) { //don't let anything have NO exits
-            console.log("JR NOTE: no rooms found, making first one")
             const child = await this.spawnChildRoom();
             this.addChild(child);
         } else if (this.children.length < 4 && this.rand.nextDouble() > 0.75) {//1/4 chance of things changing.
-            console.log("JR NOTE: theres room for more rooms, making a new one")
             const child = await this.spawnChildRoom();
             this.addChild(child);
 
         } else if (this.rand.nextDouble() > 0.95) {// 1/20 chance of a familiar door leading somewhere new.
-            console.log("JR NOTE: sowing chaos just cuz")
             removeItemOnce(this.children, this.rand.pickFrom(this.children));
             const child = await this.spawnChildRoom();
             this.addChild(child);
@@ -72,9 +68,7 @@ export class Room {
 
     render = async () => {
         this.timesVisited ++;
-        console.log("JR NOTE: about to render but first checking for neded children")
         await this.spawnChildrenIfNeeded();
-        console.log("JR NOTE: trying to render room", this)
         this.element.innerHTML = "";
         this.width = this.element.getBoundingClientRect().width;
         this.height = this.element.getBoundingClientRect().height;
@@ -147,6 +141,10 @@ export class Room {
     }
 
     addBlorbo = (blorbo: Quotidian) => {
+        console.log("JR NOTE: ",this.name,"is adding blorbo", blorbo.name);
+        //so they don't spawn on a door
+        blorbo.x = 150;
+        blorbo.y = 350;
         this.blorbos.push(blorbo);
         blorbo.room = this;
     }
@@ -166,8 +164,6 @@ export class Room {
             const child = this.element.firstChild;
             this.element.removeChild(this.element.firstChild);
         }
-
-        console.log("JR NOTE: tore down the room, its children are", this.element.children);
 
     }
 
@@ -247,7 +243,7 @@ export class Room {
     initialRoomWithBlorbos = () => {
         const stress_test = 3;
         for (let i = 0; i < stress_test; i++) {
-            this.addBlorbo(new Quotidian(this, "Quotidian", 150, 150, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing"));
+            this.addBlorbo(new Quotidian(this, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing"));
         }
         this.peewee = new Peewee(this, 150, 350);
         this.addBlorbo(this.peewee);

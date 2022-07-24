@@ -47,6 +47,7 @@ export class Maze {
     }
 
     changeRoom = (room: Room)=>{
+        console.log("JR NOTE: changing room to ", room.name, " it has blorbos", room.blorbos)
         if(this.room){
             this.room.teardown();
         }
@@ -91,7 +92,7 @@ export class Maze {
                 input.value="";
                 return false;
             }
-            this.addStorybeat(new StoryBeat("Peewee: Await Commands","Peewee is awaiting the Observers commands. Also: JR NOTE: 5 minute todo is let peewee LOOK at the doors to see what their labels are. let him GO to those locations just like NorthEast. also find out where those blorbos are going."));
+            this.addStorybeat(new StoryBeat("Peewee: Await Commands","Peewee is awaiting the Observers commands. Also: JR NOTE: 5 minute todo is 'where are the blorbos going' and give them ai"));
         }
     }
 

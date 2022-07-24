@@ -371,10 +371,10 @@ class Look extends BaseAction_1.Action {
             if (east) {
                 thingsSeen = `${thingsSeen} <p>On the EAST door, he sees a sign labeled ${east.name}.</p>`;
             }
-            if (current_room.items) {
+            if (current_room.items.length > 0) {
                 thingsSeen = `${thingsSeen} <p>He also sees ${current_room.items.length} item(s). Looking closer, they are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(current_room.items.map((e) => e.name))}.</p>`;
             }
-            if (current_room.blorbos) {
+            if (current_room.blorbos.length > 0) {
                 thingsSeen = `${thingsSeen} <p>He also sees ${current_room.blorbos.length} blorbos(s). Looking closer, they are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(current_room.blorbos.map((e) => e.name))}.</p>`;
             }
             return `${subject.name} looks around. He sees ${thingsSeen}`;
@@ -568,7 +568,6 @@ class Peewee extends Quotidian_1.Quotidian {
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
     constructor(room, x, y) {
-        console.log("JR NOTE: making a new peewee");
         const sprite = {
             default_src: { src: "Peewee/left.gif", width: 90, height: 90 },
             left_src: { src: "Peewee/left.gif", width: 90, height: 90 },
@@ -1226,6 +1225,7 @@ class Maze {
             }
         };
         this.changeRoom = (room) => {
+            console.log("JR NOTE: changing room to ", room.name, " it has blorbos", room.blorbos);
             if (this.room) {
                 this.room.teardown();
             }
@@ -1266,7 +1266,7 @@ class Maze {
                     input.value = "";
                     return false;
                 };
-                this.addStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: 5 minute todo is let peewee LOOK at the doors to see what their labels are. let him GO to those locations just like NorthEast. also find out where those blorbos are going."));
+                this.addStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: 5 minute todo is 'where are the blorbos going' and give them ai"));
             }
         };
         this.rand = rand;
@@ -1330,19 +1330,15 @@ class Room {
             this.ticking = false;
         };
         this.spawnChildrenIfNeeded = () => __awaiter(this, void 0, void 0, function* () {
-            console.log("JR NOTE: checking for needed children");
             if (this.children.length === 0) { //don't let anything have NO exits
-                console.log("JR NOTE: no rooms found, making first one");
                 const child = yield this.spawnChildRoom();
                 this.addChild(child);
             }
             else if (this.children.length < 4 && this.rand.nextDouble() > 0.75) { //1/4 chance of things changing.
-                console.log("JR NOTE: theres room for more rooms, making a new one");
                 const child = yield this.spawnChildRoom();
                 this.addChild(child);
             }
             else if (this.rand.nextDouble() > 0.95) { // 1/20 chance of a familiar door leading somewhere new.
-                console.log("JR NOTE: sowing chaos just cuz");
                 (0, ArrayUtils_1.removeItemOnce)(this.children, this.rand.pickFrom(this.children));
                 const child = yield this.spawnChildRoom();
                 this.addChild(child);
@@ -1350,9 +1346,7 @@ class Room {
         });
         this.render = () => __awaiter(this, void 0, void 0, function* () {
             this.timesVisited++;
-            console.log("JR NOTE: about to render but first checking for neded children");
             yield this.spawnChildrenIfNeeded();
-            console.log("JR NOTE: trying to render room", this);
             this.element.innerHTML = "";
             this.width = this.element.getBoundingClientRect().width;
             this.height = this.element.getBoundingClientRect().height;
@@ -1412,6 +1406,10 @@ class Room {
             this.items.push(obj);
         };
         this.addBlorbo = (blorbo) => {
+            console.log("JR NOTE: ", this.name, "is adding blorbo", blorbo.name);
+            //so they don't spawn on a door
+            blorbo.x = 150;
+            blorbo.y = 350;
             this.blorbos.push(blorbo);
             blorbo.room = this;
         };
@@ -1429,7 +1427,6 @@ class Room {
                 const child = this.element.firstChild;
                 this.element.removeChild(this.element.firstChild);
             }
-            console.log("JR NOTE: tore down the room, its children are", this.element.children);
         };
         //if any blorbo is near a door, move them into the room whose door they are near.
         this.checkForDoors = (blorbo) => {
@@ -1504,7 +1501,7 @@ class Room {
         this.initialRoomWithBlorbos = () => {
             const stress_test = 3;
             for (let i = 0; i < stress_test; i++) {
-                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 150, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing"));
+                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing"));
             }
             this.peewee = new Peewee_1.Peewee(this, 150, 350);
             this.addBlorbo(this.peewee);

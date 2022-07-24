@@ -55,11 +55,11 @@ export class Look extends Action {
             thingsSeen = `${thingsSeen} <p>On the EAST door, he sees a sign labeled ${east.name}.</p>`;
         }
 
-        if (current_room.items) {
+        if (current_room.items.length > 0) {
             thingsSeen = `${thingsSeen} <p>He also sees ${current_room.items.length} item(s). Looking closer, they are ${turnArrayIntoHumanSentence(current_room.items.map((e) => e.name))}.</p>`;
         }
 
-        if (current_room.blorbos) {
+        if (current_room.blorbos.length > 0) {
             thingsSeen = `${thingsSeen} <p>He also sees ${current_room.blorbos.length} blorbos(s). Looking closer, they are ${turnArrayIntoHumanSentence(current_room.blorbos.map((e) => e.name))}.</p>`;
         }
 

@@ -52,7 +52,6 @@ export class Peewee extends Quotidian{
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
 
     constructor(room: Room, x: number, y:number){
-        console.log("JR NOTE: making a new peewee");
         const sprite = {
             default_src:{src:"Peewee/left.gif",width:90,height:90},
             left_src:{src:"Peewee/left.gif",width:90,height:90},
