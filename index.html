@@ -39,15 +39,21 @@
   <img id="rabbithole" src="images/rabbithole.png">
 
   <ul>
+
+    * * (might not need new action, can MoveToSpecificEle, confirm it works even if peewee moves)
+    * new trigger: target farther away than X 
+    * new action, deploy sass  (ask your subject blorbo for a scathing insult, put ">:(" in sass bubble and insult in narrative)
+    * set quotidians up so if peewee is far away, set movement alg to move towards him, and if they are close to him they sass him
+
+
+    * LONG TERM TODO spawn the eye killer who flees AWAY from peewee and kills if anything touches her
+
+
+
+
     *narratr is truth, obvs
     * why do some rooms lead to themselves?
-    * LOOK  (gets a list of all items in the room and their flavor text, plus all doors nad where they lead), LISTEN, SMELL, TASTE, FEEL, LOOK at items
     * add a weird non-puppet peewee that doens't listen (bug i found) (arm2 peewee)
-    * if peewee touches a door, current room is changed (and in ALL rooms, blorbo has random chance of going to another
-    room, if one exists)(ai is peewee based because its an immune system. it doesn't move unless he does)
-
-    * if an ai touches the door, remove them from the room (despawn them), put them in the child room whose door they
-    touched
 
     * begin writing basic trigger/effect ai system so quotidians can randomly cycle between moving randomly, approaching
     peewee, and fleeing to doors
@@ -61,9 +67,7 @@
     to Plot). but all their other lil ai stuff might fuck with
     <li>* fractal spiraling graphic of the arms of Zampanio, possibly as part of the Attic for East East
     </li>
-    <li>north south and east doors, if you type "go north, south or east" to peewee you shift rooms (peewee doesn't
-      render yet)</li>
-    <li>MoveAlgorithm for blorbos, for now just pick "random" (blorbos innately don't leave bounds)</li>
+
     <li>simple trigger effect ai engine , like quest engine. first trigger is "entity is in combat range" and first
       effect is "quip". (if a quotidian bumps into anything it comments on it) has a human readable version of trigger
       and effect, plus flavor for both (like quest engine) </li>
