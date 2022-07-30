@@ -1722,6 +1722,7 @@ const spawnWallObjects = (width, height, layer, key, folder, seededRandom, theme
         const item = chosen_theme.pickPossibilityFor(seededRandom, key);
         if (item && item.src && seededRandom.nextDouble() > 0.3) {
             const image = yield (0, URLUtils_1.addImageProcess)((`images/Walkabout/Objects/${folder}/${item.src}`));
+            image.width = `${parseInt(image.width) / 2}px`;
             current_x += image.width * 2;
             //don't clip the wall border, don't go past the floor
             if (current_x + padding + image.width > width) {

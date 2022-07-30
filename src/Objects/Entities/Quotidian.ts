@@ -14,6 +14,31 @@ import { Room } from "../RoomEngine/Room";
 import { Theme } from "../Theme";
 import { Action } from "./Actions/BaseAction";
 import { AiBeat } from "./StoryBeats/BaseBeat";
+//https://stuff.mit.edu/people/dpolicar/writing/prose/text/titleOfTheStory.html  fun story the Theorist showed everyone
+//https://tvtropes.org/pmwiki/pmwiki.php/Literature/ThisIsTheTitleOfThisStory
+//apparently the story is from  a 1982 story by David Moser and that strange loop guy quoted it, because ofc he did
+
+
+/*
+
+Closer: Witch of Lonely Motivation
+Solemn: Watching Sylph of Lonely Faith
+Doc Slaughter: Doctor of Hopeful Eyes
+Twins:  Bards of Hunting Day and Night
+End: Lone Knight of Fated Death
+Match: Burning Witch of Threaded Rage
+Eye Killer: Killer of Stalking Time
+Reflection: Scholar of Strange Minds
+Captain: Watcher of Strange Hearts
+K: Thief of Evershifting Light  (gaslight)
+_: Witch of Unseen Corruption
+Shot: Murderous Thief of Buried Space
+Wanda: Lord of Known Space
+Flower Chick: Waste of Extinguished Blood
+Alt: Stranger of Fleshy Dreams
+Neighbor: Friend of Strange Doom
+Tyrfing: Warrior of Destroyed Hope
+NAM: Apprentice of Fated Identities*/
 
 
 
@@ -46,6 +71,13 @@ export class Quotidian extends PhysicalObject {
     minSpeed = 1;
     currentSpeed = 10;
     beats: AiBeat[];
+    // 0 min, 5 max
+    fortitude = 0; //how brave are you, how physically fit
+    temperance = 0; // how much can you avoid obsessing over things (especially people), how good are you at charisma type stuff without getting attached
+    prudence = 5; //how much do you think things through, attention to detail
+    justice = 0; //how much do you trust your own judgement, how quick are you to judge
+
+
 
     sass?: HTMLElement;
     sassBegun?: Date;
