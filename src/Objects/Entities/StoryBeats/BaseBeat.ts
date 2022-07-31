@@ -1,5 +1,4 @@
 import { turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
-import { createElementWithIdAndParent } from "../../../Utils/misc";
 import { PhysicalObject } from "../../PhysicalObject";
 import { Maze } from "../../RoomEngine/Maze";
 import { Room } from "../../RoomEngine/Room";
@@ -13,6 +12,7 @@ export class AiBeat {
     triggers: Trigger[];
     actions: Action[];
     targets: PhysicalObject[] = [];
+    owner: Quotidian  | undefined;
 
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
 
@@ -24,9 +24,11 @@ export class AiBeat {
 
     }
 
-    clone = () => {
+    clone = (owner: Quotidian) => {
         //doesn't clone targets, those are set per beat when resolved..
-        return new AiBeat(this.triggers, this.actions, this.permanent);
+        const beat =  new AiBeat(this.triggers, this.actions, this.permanent);
+        beat.owner = owner;
+        return beat;
     }
 
     addStorybeatToScreen = (maze: Maze, response: string) => {
@@ -35,7 +37,10 @@ export class AiBeat {
         return beat;
     }
 
-    performActions = (owner: Quotidian, current_room: Room) => {
+    performActions = (current_room: Room) => {
+        if(!this. owner){
+            return console.error("ALWAYS clone beats, don't use them from list directly");
+        }
         let ret = "";
         let causes = [];
         let effects = [];
@@ -44,7 +49,7 @@ export class AiBeat {
         }
 
         for (let a of this.actions) {
-            effects.push(a.applyAction(owner, current_room, this.targets));
+            effects.push(a.applyAction(this.owner, current_room, this.targets));
         }
         const beat = this.addStorybeatToScreen(current_room.maze, `Because ${turnArrayIntoHumanSentence(causes)}... ${(effects.join("<br>"))}`);
     }
@@ -52,10 +57,12 @@ export class AiBeat {
 
 
     //ALL triggers must be true for this to be true.
-    triggered = (owner: Quotidian) => {
-        console.log("JR NOTE: in some way triggers need to find targets for actions to apply to")
+    triggered = (current_room: Room) => {
+        if(!this. owner){
+            return console.error("ALWAYS clone beats, don't use them from list directly");
+        }
         for (let t of this.triggers) {
-            if (!t.triggered(owner)) {
+            if (!t.triggered(this,current_room)) {
                 return false;
             }
         }

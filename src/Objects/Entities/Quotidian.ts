@@ -70,7 +70,7 @@ export class Quotidian extends PhysicalObject {
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
-    beats: AiBeat[];
+    beats: AiBeat[] = [];
     // 0 min, 5 max
     fortitude = 0; //how brave are you, how physically fit
     temperance = 0; // how much can you avoid obsessing over things (especially people), how good are you at charisma type stuff without getting attached
@@ -101,8 +101,15 @@ export class Quotidian extends PhysicalObject {
 
     constructor(room: Room, name: string, x: number, y: number, themes: Theme[], sprite: DirectionalSprite, flavorText: string, beats: AiBeat[]) {
         super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText);
+        
         this.directionalSprite = sprite;
-        this.beats = beats;
+        this.makeBeatsMyOwn(beats);
+    }
+
+    makeBeatsMyOwn = (beats: AiBeat[])=>{
+        for(let beat of beats){
+            this.beats.push(beat.clone(this));
+        }
     }
 
     goStill = () => {
@@ -157,8 +164,8 @@ export class Quotidian extends PhysicalObject {
     processAiBeat = ()=>{
         const toRemove:AiBeat[] = [];
         for(let beat of this.beats){
-            if(beat.triggered(this)){
-                beat.performActions(this, this.room);
+            if(beat.triggered(this.room)){
+                beat.performActions(this.room);
                 if(!beat.permanent){
                     toRemove.push(beat);
                 }
