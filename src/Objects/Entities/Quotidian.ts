@@ -69,6 +69,7 @@ const baseImageLocation = "images/Walkabout/Sprites/";
 export class Quotidian extends PhysicalObject {
     maxSpeed = 20;
     minSpeed = 1;
+    timeOfLastBeat = new Date().getTime();
     currentSpeed = 10;
     beats: AiBeat[] = [];
     // 0 min, 5 max
@@ -161,7 +162,15 @@ export class Quotidian extends PhysicalObject {
 
     }
 
+    itsBeenAwhileSinceLastBeat = ()=>{
+        return new Date().getTime() - this.timeOfLastBeat > 1000;
+    }
+
     processAiBeat = ()=>{
+        if(!this.itsBeenAwhileSinceLastBeat()){
+            return;
+        }
+        this.timeOfLastBeat = new Date().getTime();
         const toRemove:AiBeat[] = [];
         for(let beat of this.beats){
             if(beat.triggered(this.room)){

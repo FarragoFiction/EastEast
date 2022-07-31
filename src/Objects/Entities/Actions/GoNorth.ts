@@ -3,6 +3,7 @@ import { Room } from "../../RoomEngine/Room";
 import { Quotidian } from "../Quotidian";
 import { Action } from "./BaseAction";
 import { PhysicalObject } from "../../PhysicalObject";
+import { AiBeat } from "../StoryBeats/BaseBeat";
 
 export class GoNorth extends Action { //lawsuit
 
@@ -10,8 +11,11 @@ export class GoNorth extends Action { //lawsuit
     recognizedCommands: string[] = ["NORTH", "DOOR", "UP"]; //nothing, so its default
 
 
-    applyAction = (subject: Quotidian, current_room: Room, objects?: PhysicalObject[]) => {
-        //JR NOTE: todo flesh this out. should be able to access the whole maze really.
+    applyAction = (beat: AiBeat)=>{
+        const subject = beat.owner;
+        if(!subject){
+            return "";
+        }
         subject.movement_alg = new MoveToNorthDoor(subject);
         subject.movement_alg.detectEle();
         if (subject.movement_alg.ele) {

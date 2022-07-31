@@ -5,6 +5,7 @@ import { SOUND } from "../../ThemeStorage";
 import { Quotidian } from "../Quotidian";
 import { Action } from "./BaseAction";
 import { PhysicalObject } from "../../PhysicalObject";
+import { AiBeat } from "../StoryBeats/BaseBeat";
 
 //assume only peewee can look
 export class Listen extends Action {
@@ -33,7 +34,15 @@ export class Listen extends Action {
     recognizedCommands: string[] = ["LISTEN", "HEAR"];
 
 
-    applyAction = (subject: Quotidian, current_room: Room, objects?: PhysicalObject[]) => {
+    applyAction = (beat: AiBeat)=>{
+        const current_room = beat.owner?.room;
+        if(!current_room){
+            return "";
+        }
+        const subject = beat.owner;
+        if(!subject){
+            return "";
+        }
         let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(SOUND)}.`;
 
 

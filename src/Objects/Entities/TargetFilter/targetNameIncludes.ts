@@ -7,18 +7,18 @@ export  class TargetNameIncludes extends TargetFilter{
         //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
 
 
-    constructor(name:string, invert = false, kMode = false){
-        super(invert,kMode);
+    constructor(name:string, singleTarget = false,invert = false, kMode = false){
+        super(singleTarget, invert,kMode);
         this.name = name;
     }
 
    toString = ()=>{
        //format this like it might start with either because or and
-       return `they see someone named ${this.name}`;
+       return `they see something named ${this.name}`;
    }
 
-   applyFilterToSingleTarget = (target: PhysicalObject)=>{
-       let targetLocked = false;
+   applyFilterToSingleTarget = (owner: AiBeat, target: PhysicalObject)=>{
+    let targetLocked = false;
         if(target.name.includes(this.name)){
             targetLocked= true;
         }

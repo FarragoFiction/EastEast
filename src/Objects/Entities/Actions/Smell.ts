@@ -5,6 +5,7 @@ import { SMELL, SOUND } from "../../ThemeStorage";
 import { Quotidian } from "../Quotidian";
 import { Action } from "./BaseAction";
 import { PhysicalObject } from "../../PhysicalObject";
+import { AiBeat } from "../StoryBeats/BaseBeat";
 
 //assume only peewee can look
 export class Smell extends Action {
@@ -33,7 +34,15 @@ export class Smell extends Action {
     recognizedCommands: string[] = ["SNIFF", "SMELL", "SNORT", "INHALE", "WHIFF"];
 
 
-    applyAction = (subject: Quotidian, current_room: Room, objects?: PhysicalObject[]) => {
+    applyAction = (beat: AiBeat)=>{
+        const current_room = beat.owner?.room;
+        if(!current_room){
+            return "";
+        }
+        const subject = beat.owner;
+        if(!subject){
+            return "";
+        }
         let thingsHeard = `${current_room.getRandomThemeConcept(SMELL)}.`;
 
 

@@ -4,6 +4,7 @@ import { Room } from "../../RoomEngine/Room";
 import { Quotidian } from "../Quotidian";
 import { Action } from "./BaseAction";
 import { PhysicalObject } from "../../PhysicalObject";
+import { AiBeat } from "../StoryBeats/BaseBeat";
 
 //assume only peewee can look
 export class Look extends Action {
@@ -32,7 +33,15 @@ export class Look extends Action {
     recognizedCommands: string[] = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE","OGLE"];
 
 
-    applyAction = (subject: Quotidian, current_room: Room, objects?: PhysicalObject[]) => {
+    applyAction = (beat: AiBeat)=>{
+        const current_room = beat.owner?.room;
+        if(!current_room){
+            return "";
+        }
+        const subject = beat.owner;
+        if(!subject){
+            return "";
+        }
         let thingsSeen = "";
         if (current_room.children.length === 1) {
             thingsSeen = `${thingsSeen} a door.`;

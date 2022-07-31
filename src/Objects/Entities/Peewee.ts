@@ -75,13 +75,17 @@ export class Peewee extends Quotidian{
             const words = beat.command.split(" ");
             for(let word of words)
             if(action.recognizedCommands.includes(word.toUpperCase())){
-                beat.response = action.applyAction(this,this.room);
+                const aibeat = new AiBeat([], [action]);
+                aibeat.owner = this;
+                beat.response = action.applyAction(aibeat);
                 return;
             }
         }
 
         if(beat.response.trim() === ""){
-            beat.response = new Action().applyAction(this,this.room);
+            const aibeat = new AiBeat([], []);
+            aibeat.owner = this;
+            beat.response = new Action().applyAction(aibeat);
         }
 
     }

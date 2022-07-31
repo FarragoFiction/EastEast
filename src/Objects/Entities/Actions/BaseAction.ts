@@ -2,13 +2,17 @@ import { PhysicalObject } from "../../PhysicalObject";
 import { Room } from "../../RoomEngine/Room";
 import { SMELL, SOUND, TASTE } from "../../ThemeStorage";
 import { Quotidian } from "../Quotidian";
+import { AiBeat } from "../StoryBeats/BaseBeat";
 
 export class Action{ //lawsuit
 
     //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
     recognizedCommands:string[] = []; //nothing, so its default
 
-    sensePhrase = (room:Room)=>{
+    sensePhrase = (room?:Room)=>{
+        if(!room){
+            return "";
+        }
         const smell = room.getRandomThemeConcept(SMELL);
         const taste = room.getRandomThemeConcept(TASTE);
         const sound = room.getRandomThemeConcept(SOUND);
@@ -19,9 +23,9 @@ export class Action{ //lawsuit
        }
        return room.rand.pickFrom(phrases);
     }
-    applyAction = (subject: Quotidian,current_room: Room,objects?: PhysicalObject[] )=>{
+    applyAction = (beat: AiBeat)=>{
         //JR NOTE: todo flesh this out. should be able to access the whole maze really.
-        return `${subject.name} stands around doing sweet FA. ${this.sensePhrase(current_room)}`;
+        return `${beat.owner?.name} stands around doing sweet FA. ${this.sensePhrase(beat.owner?.room)}`;
     }
 
 

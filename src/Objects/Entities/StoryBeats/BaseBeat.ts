@@ -1,11 +1,11 @@
-import { turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
+import { removeItemOnce, turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
 import { PhysicalObject } from "../../PhysicalObject";
 import { Maze } from "../../RoomEngine/Maze";
 import { Room } from "../../RoomEngine/Room";
 import { StoryBeat } from "../../RoomEngine/StoryBeat";
 import { Action } from "../Actions/BaseAction";
 import { Quotidian } from "../Quotidian";
-import { TargetFilter } from "../TargetFilter/baseFilter";
+import { TargetFilter, TARGETSTRING } from "../TargetFilter/baseFilter";
 
 export class AiBeat {
     permanent: boolean; //is this a one and done or should it be forever. 
@@ -38,6 +38,10 @@ export class AiBeat {
         return beat;
     }
 
+    processTags = (text: string)=>{
+        return text.replaceAll(TARGETSTRING, turnArrayIntoHumanSentence(this.targets.map((t)=>t.name)));
+    }
+
     performActions = (current_room: Room) => {
         if(!this. owner){
             return console.error("ALWAYS clone beats, don't use them from list directly");
@@ -45,11 +49,11 @@ export class AiBeat {
         let causes = [];
         let effects = [];
         for (let t of this.filters) {
-            causes.push(t.toString());
+            causes.push(this.processTags(t.toString()));
         }
 
         for (let a of this.actions) {
-            effects.push(a.applyAction(this.owner, current_room, this.targets));
+            effects.push(a.applyAction(this));
         }
         console.log("JR NOTE: about to finish applying effects", this.actions)
         const beat = this.addStorybeatToScreen(current_room.maze, `Because ${turnArrayIntoHumanSentence(causes)}... ${(effects.join("<br>"))}`);
@@ -64,6 +68,7 @@ export class AiBeat {
         }
         //start out targeting EVERYTHING in this room
         this.targets = [...current_room.blorbos, ... current_room.items];
+        removeItemOnce(this.targets, this.owner); //unless you're specifically
         for (let t of this.filters) {
             this.targets = t.filter(this, this.targets)
             if (this.targets.length === 0) {

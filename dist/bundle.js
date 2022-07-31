@@ -14,6 +14,9 @@ class Action {
         //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
         this.recognizedCommands = []; //nothing, so its default
         this.sensePhrase = (room) => {
+            if (!room) {
+                return "";
+            }
             const smell = room.getRandomThemeConcept(ThemeStorage_1.SMELL);
             const taste = room.getRandomThemeConcept(ThemeStorage_1.TASTE);
             const sound = room.getRandomThemeConcept(ThemeStorage_1.SOUND);
@@ -23,13 +26,42 @@ class Action {
             }
             return room.rand.pickFrom(phrases);
         };
-        this.applyAction = (subject, current_room, objects) => {
+        this.applyAction = (beat) => {
             //JR NOTE: todo flesh this out. should be able to access the whole maze really.
-            return `${subject.name} stands around doing sweet FA. ${this.sensePhrase(current_room)}`;
+            return `${beat.owner?.name} stands around doing sweet FA. ${this.sensePhrase(beat.owner?.room)}`;
         };
     }
 }
 exports.Action = Action;
+
+
+/***/ }),
+
+/***/ 4237:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DeploySass = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+class DeploySass extends BaseAction_1.Action {
+    constructor(shortSass, longSass) {
+        super();
+        this.recognizedCommands = ["SASS", "SAY", "QUIP"]; //nothing, so its default
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            subject.emitSass(this.shortSass);
+            return `${subject.name} says "${subject.rand.pickFrom(this.longSass)}"`;
+        };
+        this.shortSass = shortSass;
+        this.longSass = longSass;
+    }
+}
+exports.DeploySass = DeploySass;
 
 
 /***/ }),
@@ -68,7 +100,11 @@ class Feel extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["FEEL", "CARESS", "TOUCH", "FONDLE"];
-        this.applyAction = (subject, current_room, objects) => {
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
             let thingsHeard = `${current_room.getRandomThemeConcept(ThemeStorage_1.FEELING)}.`;
             const north = current_room.getNorth();
             const south = current_room.getSouth();
@@ -91,6 +127,39 @@ exports.Feel = Feel;
 
 /***/ }),
 
+/***/ 744:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FollowObject = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const MoveToSpecificPhysicalObject_1 = __webpack_require__(8455);
+class FollowObject extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["FOLLOW", "GO AFTER", "ACCOMPANY", "GO ALONG WITH", "STICK TO"]; //not for peewee, not yet
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const target = beat.targets;
+            if (target.length < 1) {
+                return "";
+            }
+            subject.movement_alg = new MoveToSpecificPhysicalObject_1.MoveToSpecificPhysicalObject(target[0], subject);
+            subject.emitSass("!");
+            return `${subject.name} starts moving towards the ${target[0].name}.`;
+        };
+    }
+}
+exports.FollowObject = FollowObject;
+
+
+/***/ }),
+
 /***/ 7192:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -104,8 +173,11 @@ class GoEast extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
         this.recognizedCommands = ["EAST", "RIGHT"]; //nothing, so its default
-        this.applyAction = (subject, current_room, objects) => {
-            //JR NOTE: todo flesh this out. should be able to access the whole maze really.
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
             subject.movement_alg = new MoveToEastDoor_1.MoveToEastDoor(subject);
             subject.movement_alg.detectEle();
             if (subject.movement_alg.ele) {
@@ -137,8 +209,11 @@ class GoNorth extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
         this.recognizedCommands = ["NORTH", "DOOR", "UP"]; //nothing, so its default
-        this.applyAction = (subject, current_room, objects) => {
-            //JR NOTE: todo flesh this out. should be able to access the whole maze really.
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
             subject.movement_alg = new MoveToNorthDoor_1.MoveToNorthDoor(subject);
             subject.movement_alg.detectEle();
             if (subject.movement_alg.ele) {
@@ -170,8 +245,11 @@ class GoSouth extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
         this.recognizedCommands = ["SOUTH", "DOWN"]; //nothing, so its default
-        this.applyAction = (subject, current_room, objects) => {
-            //JR NOTE: todo flesh this out. should be able to access the whole maze really.
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
             subject.movement_alg = new MoveToSouthDoor_1.MoveToSouthDoor(subject);
             subject.movement_alg.detectEle();
             if (subject.movement_alg.ele) {
@@ -203,8 +281,11 @@ class GoWest extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
         this.recognizedCommands = ["WEST", "LEFT"]; //nothing, so its default
-        this.applyAction = (subject, current_room, objects) => {
-            //JR NOTE: todo flesh this out. should be able to access the whole maze really.
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
             subject.movement_alg = new MoveToWestDoor_1.MoveToWestDoor(subject);
             subject.emitSass(":(");
             return `${subject.name} flips you off. "ASSHOLE! THERE IS NO DOOR TO THE WEST (please, stop making, me try to do, the impossible...)"`;
@@ -250,7 +331,11 @@ class Help extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["HELP", "LOST", "OPERATOR", "ASSIST", "AID", "SUPPORT", "TRUTH", "LS", "DIR", "MAN"];
-        this.applyAction = (subject, current_room, objects) => {
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
             const peewee = subject;
             return `To best command Peewee, your base options are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(peewee.possibleActions.map((i) => i.recognizedCommands[0]))}.`;
         };
@@ -295,7 +380,15 @@ class Listen extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["LISTEN", "HEAR"];
-        this.applyAction = (subject, current_room, objects) => {
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
             let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(ThemeStorage_1.SOUND)}.`;
             const north = current_room.getNorth();
             const south = current_room.getSouth();
@@ -352,7 +445,15 @@ class Look extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE", "OGLE"];
-        this.applyAction = (subject, current_room, objects) => {
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
             let thingsSeen = "";
             if (current_room.children.length === 1) {
                 thingsSeen = `${thingsSeen} a door.`;
@@ -421,7 +522,15 @@ class Smell extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["SNIFF", "SMELL", "SNORT", "INHALE", "WHIFF"];
-        this.applyAction = (subject, current_room, objects) => {
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
             let thingsHeard = `${current_room.getRandomThemeConcept(ThemeStorage_1.SMELL)}.`;
             const north = current_room.getNorth();
             const south = current_room.getSouth();
@@ -457,8 +566,11 @@ class StopMoving extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
         this.recognizedCommands = ["STOP", "FREEZE", "STILL", "STAND"]; //nothing, so its default
-        this.applyAction = (subject, current_room, objects) => {
-            //JR NOTE: todo flesh this out. should be able to access the whole maze really.
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
             subject.movement_alg = new NoMovement_1.NoMovement(subject);
             return `${subject.name} comes to a halt.`;
         };
@@ -503,7 +615,15 @@ class Taste extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["TASTE", "LICK", "EAT", 'FLAVOR', "MUNCH", "BITE", "TONGUE", "SLURP", "NOM"];
-        this.applyAction = (subject, current_room, objects) => {
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
             let thingsHeard = `${current_room.getRandomThemeConcept(ThemeStorage_1.TASTE)}.`;
             const north = current_room.getNorth();
             const south = current_room.getSouth();
@@ -550,6 +670,7 @@ const Smell_1 = __webpack_require__(3834);
 const StopMoving_1 = __webpack_require__(4469);
 const Taste_1 = __webpack_require__(8520);
 const Quotidian_1 = __webpack_require__(6647);
+const BaseBeat_1 = __webpack_require__(1708);
 //what, did you think any real being could be so formulaic? 
 //regarding the real peewee, wanda is actually quite THRILLED there is a competing parasite in the Echidna distracting the immune system (and tbf, preventing an immune disorder in the form of the eye killer)
 //the universe is AWARE of the dangers to it and endlessly expands its immune system response
@@ -595,12 +716,16 @@ class Peewee extends Quotidian_1.Quotidian {
                 const words = beat.command.split(" ");
                 for (let word of words)
                     if (action.recognizedCommands.includes(word.toUpperCase())) {
-                        beat.response = action.applyAction(this, this.room);
+                        const aibeat = new BaseBeat_1.AiBeat([], [action]);
+                        aibeat.owner = this;
+                        beat.response = action.applyAction(aibeat);
                         return;
                     }
             }
             if (beat.response.trim() === "") {
-                beat.response = new BaseAction_1.Action().applyAction(this, this.room);
+                const aibeat = new BaseBeat_1.AiBeat([], []);
+                aibeat.owner = this;
+                beat.response = new BaseAction_1.Action().applyAction(aibeat);
             }
         };
     }
@@ -676,6 +801,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText);
         this.maxSpeed = 20;
         this.minSpeed = 1;
+        this.timeOfLastBeat = new Date().getTime();
         this.currentSpeed = 10;
         this.beats = [];
         // 0 min, 5 max
@@ -706,8 +832,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                     }
                 }, 2000);
                 setTimeout(() => {
-                    var _a;
-                    (_a = this.sass) === null || _a === void 0 ? void 0 : _a.remove();
+                    this.sass?.remove();
                 }, 3000);
             }
         };
@@ -731,7 +856,14 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 this.image.style.width = `${chosen.width}px`;
             }
         };
+        this.itsBeenAwhileSinceLastBeat = () => {
+            return new Date().getTime() - this.timeOfLastBeat > 1000;
+        };
         this.processAiBeat = () => {
+            if (!this.itsBeenAwhileSinceLastBeat()) {
+                return;
+            }
+            this.timeOfLastBeat = new Date().getTime();
             const toRemove = [];
             for (let beat of this.beats) {
                 if (beat.triggered(this.room)) {
@@ -770,6 +902,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AiBeat = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const StoryBeat_1 = __webpack_require__(5504);
+const baseFilter_1 = __webpack_require__(9505);
 class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
     constructor(triggers, actions, permanent = false) {
@@ -786,6 +919,9 @@ class AiBeat {
             maze.addStorybeat(beat);
             return beat;
         };
+        this.processTags = (text) => {
+            return text.replaceAll(baseFilter_1.TARGETSTRING, (0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.targets.map((t) => t.name)));
+        };
         this.performActions = (current_room) => {
             if (!this.owner) {
                 return console.error("ALWAYS clone beats, don't use them from list directly");
@@ -793,10 +929,10 @@ class AiBeat {
             let causes = [];
             let effects = [];
             for (let t of this.filters) {
-                causes.push(t.toString());
+                causes.push(this.processTags(t.toString()));
             }
             for (let a of this.actions) {
-                effects.push(a.applyAction(this.owner, current_room, this.targets));
+                effects.push(a.applyAction(this));
             }
             console.log("JR NOTE: about to finish applying effects", this.actions);
             const beat = this.addStorybeatToScreen(current_room.maze, `Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)}... ${(effects.join("<br>"))}`);
@@ -808,6 +944,7 @@ class AiBeat {
             }
             //start out targeting EVERYTHING in this room
             this.targets = [...current_room.blorbos, ...current_room.items];
+            (0, ArrayUtils_1.removeItemOnce)(this.targets, this.owner); //unless you're specifically
             for (let t of this.filters) {
                 this.targets = t.filter(this, this.targets);
                 if (this.targets.length === 0) {
@@ -833,15 +970,63 @@ exports.AiBeat = AiBeat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.testBeat2 = exports.testBeat = void 0;
+exports.SassObject = exports.FollowPeewee = exports.testBeat3 = exports.testBeat2 = exports.testBeat = void 0;
+const DeploySass_1 = __webpack_require__(4237);
+const FollowObject_1 = __webpack_require__(744);
+const GoEast_1 = __webpack_require__(7192);
 const GoNorth_1 = __webpack_require__(7415);
 const GoSouth_1 = __webpack_require__(3535);
 const baseFilter_1 = __webpack_require__(9505);
+const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const targetNameIncludes_1 = __webpack_require__(6024);
 const BaseBeat_1 = __webpack_require__(1708);
 //because they could, Quotidian starts heading towards the south door.
 exports.testBeat = new BaseBeat_1.AiBeat([new baseFilter_1.TargetFilter()], [new GoSouth_1.GoSouth()]);
 exports.testBeat2 = new BaseBeat_1.AiBeat([new targetNameIncludes_1.TargetNameIncludes("Peewee")], [new GoNorth_1.GoNorth()]);
+exports.testBeat3 = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(30, true)], [new GoEast_1.GoEast()]);
+exports.FollowPeewee = new BaseBeat_1.AiBeat([new targetNameIncludes_1.TargetNameIncludes("Peewee")], [new FollowObject_1.FollowObject()]);
+exports.SassObject = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass("Gross!", ["Wow you're really gross, aren't you?", "I don't like you!", "Wow! So boring!"])], true);
+
+
+/***/ }),
+
+/***/ 5535:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetIsWithinRadiusOfSelf = void 0;
+const misc_1 = __webpack_require__(4079);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetIsWithinRadiusOfSelf extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(radius, singleTarget = false, invert = false, kMode = false) {
+        super(singleTarget, invert, kMode);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            return `they are within ${this.radius} units of ${baseFilter_1.TARGETSTRING}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (!owner.owner) {
+                console.error("INVALID TO CALL A BEAT WITHOUT AN OWNER");
+                return null;
+            }
+            if ((0, misc_1.distanceWithinRadius)(this.radius, owner.owner?.x, owner.owner.y, target.x, target.y)) {
+                targetLocked = true;
+            }
+            if (targetLocked && !this.invert) {
+                return target;
+            }
+            else {
+                return null;
+            }
+        };
+        this.radius = radius;
+    }
+}
+exports.TargetIsWithinRadiusOfSelf = TargetIsWithinRadiusOfSelf;
 
 
 /***/ }),
@@ -852,17 +1037,19 @@ exports.testBeat2 = new BaseBeat_1.AiBeat([new targetNameIncludes_1.TargetNameIn
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TargetFilter = void 0;
+exports.TargetFilter = exports.TARGETSTRING = void 0;
+exports.TARGETSTRING = "[INSERTTARGETSHERE]";
 class TargetFilter {
-    constructor(invert = false, kMode = false) {
+    constructor(singleTarget = false, invert = false, kMode = false) {
         //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
         this.invert = false;
         this.kMode = false; //target self
+        this.singleTarget = false;
         this.toString = () => {
             //format this like it might start with either because or and
             return "they could";
         };
-        this.applyFilterToSingleTarget = (target) => {
+        this.applyFilterToSingleTarget = (owner, target) => {
             if (this.invert) {
                 return null;
             }
@@ -874,7 +1061,7 @@ class TargetFilter {
                 return [];
             }
             if (this.kMode) {
-                const survivor = this.applyFilterToSingleTarget(owner.owner);
+                const survivor = this.applyFilterToSingleTarget(owner, owner.owner);
                 if (survivor) {
                     return [survivor];
                 }
@@ -882,9 +1069,12 @@ class TargetFilter {
             else {
                 let targets = [];
                 for (let target of objects) {
-                    const survivor = this.applyFilterToSingleTarget(target);
+                    const survivor = this.applyFilterToSingleTarget(owner, target);
                     if (survivor) {
                         targets.push(survivor);
+                        if (this.singleTarget) { //if i only want a single target, i have it
+                            break;
+                        }
                     }
                 }
                 return targets;
@@ -892,6 +1082,8 @@ class TargetFilter {
             return [];
         };
         this.invert = invert;
+        this.kMode = kMode;
+        this.singleTarget = singleTarget;
     }
 }
 exports.TargetFilter = TargetFilter;
@@ -909,13 +1101,13 @@ exports.TargetNameIncludes = void 0;
 const baseFilter_1 = __webpack_require__(9505);
 class TargetNameIncludes extends baseFilter_1.TargetFilter {
     //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
-    constructor(name, invert = false, kMode = false) {
-        super(invert, kMode);
+    constructor(name, singleTarget = false, invert = false, kMode = false) {
+        super(singleTarget, invert, kMode);
         this.toString = () => {
             //format this like it might start with either because or and
-            return `they see someone named ${this.name}`;
+            return `they see something named ${this.name}`;
         };
-        this.applyFilterToSingleTarget = (target) => {
+        this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
             if (target.name.includes(this.name)) {
                 targetLocked = true;
@@ -1297,6 +1489,76 @@ exports.MoveToSpecificLocation = MoveToSpecificLocation;
 
 /***/ }),
 
+/***/ 8455:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//given an Entity (which will have access to location and any other pertinent information)
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MoveToSpecificPhysicalObject = void 0;
+const Quotidian_1 = __webpack_require__(6647);
+const BaseMovement_1 = __webpack_require__(9059);
+//decides where to move next.
+class MoveToSpecificPhysicalObject extends BaseMovement_1.Movement {
+    constructor(object, entity) {
+        super(entity);
+        this.customShit = () => {
+        };
+        this.moveX = (remaining_x) => {
+            //if object x is bigger than mine, need to go right, so d
+            if (remaining_x > 0) {
+                this.entity.direction = Quotidian_1.Direction.RIGHT;
+            }
+            else {
+                this.entity.direction = Quotidian_1.Direction.LEFT;
+            }
+        };
+        this.moveY = (remaining_y) => {
+            //if object y is bigger than mine, need to go down, so s
+            if (remaining_y > 0) {
+                this.entity.direction = Quotidian_1.Direction.DOWN;
+            }
+            else {
+                this.entity.direction = Quotidian_1.Direction.UP;
+            }
+        };
+        this.pickNewDirection = () => {
+            const ele = this.object.container;
+            const myRect = ele.getBoundingClientRect();
+            const clientRect = this.entity.container.getBoundingClientRect();
+            let remaining_x = myRect.x - clientRect.x;
+            let remaining_y = myRect.y - clientRect.y;
+            if (remaining_y > 0) {
+                //coming from above, so shoot for the bottom to touch.
+                remaining_y = myRect.bottom - clientRect.bottom;
+            }
+            const shouldX = () => {
+                if (Math.abs(remaining_x) < this.entity.currentSpeed) { //if theres no reaosn to go x, don't
+                    return false;
+                }
+                else if (Math.abs(remaining_y) < this.entity.currentSpeed) { //no sense doing y, it won't do anything
+                    return true;
+                }
+                else {
+                    return Math.abs(Math.abs(remaining_x) - Math.abs(remaining_y)) > this.entity.width * 3;
+                }
+            };
+            if (shouldX()) {
+                this.moveX(remaining_x);
+            }
+            else {
+                this.moveY(remaining_y);
+            }
+        };
+        this.object = object;
+    }
+}
+exports.MoveToSpecificPhysicalObject = MoveToSpecificPhysicalObject;
+
+
+/***/ }),
+
 /***/ 9991:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1431,19 +1693,10 @@ exports.PhysicalObject = PhysicalObject;
 /***/ }),
 
 /***/ 7194:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Maze = void 0;
 const PasswordStorage_1 = __webpack_require__(9867);
@@ -1457,17 +1710,17 @@ class Maze {
         this.storybeats = []; //can be added to by peewee and by the ai
         this.boopAudio = new Audio("audio/264828__cmdrobot__text-message-or-videogame-jump.mp3");
         this.doorAudio = new Audio("audio/close_door_1.mp3");
-        this.initialize = () => __awaiter(this, void 0, void 0, function* () {
+        this.initialize = async () => {
             const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ZAP]];
-            this.room = yield (0, Room_1.randomRoomWithThemes)(this, this.ele, themes, this.rand);
+            this.room = await (0, Room_1.randomRoomWithThemes)(this, this.ele, themes, this.rand);
             this.room.initialRoomWithBlorbos();
-            yield this.room.propagateMaze(3);
+            await this.room.propagateMaze(3);
             console.log("JR NOTE: room now has these children: ", this.room.children.map((e) => e.name).join(","), this.room.children);
             this.room.render();
             this.peewee = this.room.peewee;
             (0, PasswordStorage_1.initRabbitHole)(this.room);
             this.handleCommands();
-        });
+        };
         this.playDoorSound = () => {
             try {
                 this.doorAudio.play();
@@ -1533,19 +1786,10 @@ exports.Maze = Maze;
 /***/ }),
 
 /***/ 6202:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.spawnWallObjects = exports.randomRoomWithThemes = exports.Room = void 0;
 const Theme_1 = __webpack_require__(9702);
@@ -1582,24 +1826,24 @@ class Room {
         this.stopTicking = () => {
             this.ticking = false;
         };
-        this.spawnChildrenIfNeeded = () => __awaiter(this, void 0, void 0, function* () {
+        this.spawnChildrenIfNeeded = async () => {
             if (this.children.length === 0) { //don't let anything have NO exits
-                const child = yield this.spawnChildRoom();
+                const child = await this.spawnChildRoom();
                 this.addChild(child);
             }
             else if (this.children.length < 4 && this.rand.nextDouble() > 0.75) { //1/4 chance of things changing.
-                const child = yield this.spawnChildRoom();
+                const child = await this.spawnChildRoom();
                 this.addChild(child);
             }
             else if (this.rand.nextDouble() > 0.95) { // 1/20 chance of a familiar door leading somewhere new.
                 (0, ArrayUtils_1.removeItemOnce)(this.children, this.rand.pickFrom(this.children));
-                const child = yield this.spawnChildRoom();
+                const child = await this.spawnChildRoom();
                 this.addChild(child);
             }
-        });
-        this.render = () => __awaiter(this, void 0, void 0, function* () {
+        };
+        this.render = async () => {
             this.timesVisited++;
-            yield this.spawnChildrenIfNeeded();
+            await this.spawnChildrenIfNeeded();
             this.element.innerHTML = "";
             this.width = this.element.getBoundingClientRect().width;
             this.height = this.element.getBoundingClientRect().height;
@@ -1619,7 +1863,7 @@ class Room {
             this.renderSouthDoor();
             this.ticking = true;
             this.tick();
-        });
+        };
         this.getNorth = () => {
             return this.children.length > 0 && this.children[0];
         };
@@ -1752,9 +1996,9 @@ class Room {
             }
         };
         this.initialRoomWithBlorbos = () => {
-            const stress_test = 3;
+            const stress_test = 1;
             for (let i = 0; i < stress_test; i++) {
-                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.testBeat2, BeatList_1.testBeat]));
+                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject, BeatList_1.FollowPeewee]));
             }
             this.peewee = new Peewee_1.Peewee(this, 150, 350);
             this.addBlorbo(this.peewee);
@@ -1813,20 +2057,20 @@ class Room {
             //north is always back, this is just the rules of this mazes, what you think GEOMETRY should matter here?
             child.children[0] = this;
         };
-        this.spawnChildRoom = () => __awaiter(this, void 0, void 0, function* () {
-            return yield (0, exports.randomRoomWithThemes)(this.maze, this.element, this.childRoomThemes(), this.rand);
-        });
+        this.spawnChildRoom = async () => {
+            return await (0, exports.randomRoomWithThemes)(this.maze, this.element, this.childRoomThemes(), this.rand);
+        };
         //when i first make the maze, we generate its structure to a certain depth, and then from there one room at a time.
-        this.propagateMaze = (depthRemaining) => __awaiter(this, void 0, void 0, function* () {
+        this.propagateMaze = async (depthRemaining) => {
             const numberChildren = this.rand.getRandomNumberBetween(1, 2);
             for (let i = 0; i < numberChildren; i++) {
-                const child = yield this.spawnChildRoom();
+                const child = await this.spawnChildRoom();
                 this.addChild(child);
                 if (depthRemaining > 0) {
                     child.propagateMaze(depthRemaining - 1);
                 }
             }
-        });
+        };
         this.themes = themes;
         this.rand = rand;
         this.maze = maze;
@@ -1835,21 +2079,21 @@ class Room {
     }
 }
 exports.Room = Room;
-const randomRoomWithThemes = (maze, ele, themes, seededRandom) => __awaiter(void 0, void 0, void 0, function* () {
+const randomRoomWithThemes = async (maze, ele, themes, seededRandom) => {
     const room = new Room(maze, themes, ele, seededRandom);
-    const items1 = yield (0, exports.spawnWallObjects)(room.width, room.height, 0, ThemeStorage_1.WALLBACKGROUND, "BackWallObjects", seededRandom, themes);
-    const items3 = yield spawnFloorObjects(room.width, room.height, 0, ThemeStorage_1.FLOORBACKGROUND, "UnderFloorObjects", seededRandom, themes);
-    const items2 = yield (0, exports.spawnWallObjects)(room.width, room.height, 1, ThemeStorage_1.WALLFOREGROUND, "FrontWallObjects", seededRandom, themes);
-    const items4 = yield spawnFloorObjects(room.width, room.height, 1, ThemeStorage_1.FLOORFOREGROUND, "TopFloorObjects", seededRandom, themes);
+    const items1 = await (0, exports.spawnWallObjects)(room.width, room.height, 0, ThemeStorage_1.WALLBACKGROUND, "BackWallObjects", seededRandom, themes);
+    const items3 = await spawnFloorObjects(room.width, room.height, 0, ThemeStorage_1.FLOORBACKGROUND, "UnderFloorObjects", seededRandom, themes);
+    const items2 = await (0, exports.spawnWallObjects)(room.width, room.height, 1, ThemeStorage_1.WALLFOREGROUND, "FrontWallObjects", seededRandom, themes);
+    const items4 = await spawnFloorObjects(room.width, room.height, 1, ThemeStorage_1.FLOORFOREGROUND, "TopFloorObjects", seededRandom, themes);
     const items = items3.concat(items2.concat(items4));
     for (let item of items) {
         room.addItem(new PhysicalObject_1.PhysicalObject(room, item.name, item.x, item.y, item.width, item.height, item.themes, item.layer, item.src, item.flavorText));
     }
     return room;
-});
+};
 exports.randomRoomWithThemes = randomRoomWithThemes;
 //has to be async because it checks the image size for positioning
-const spawnWallObjects = (width, height, layer, key, folder, seededRandom, themes) => __awaiter(void 0, void 0, void 0, function* () {
+const spawnWallObjects = async (width, height, layer, key, folder, seededRandom, themes) => {
     let current_x = 0;
     const padding = 10;
     const ret = [];
@@ -1857,7 +2101,7 @@ const spawnWallObjects = (width, height, layer, key, folder, seededRandom, theme
         const chosen_theme = seededRandom.pickFrom(themes);
         const item = chosen_theme.pickPossibilityFor(seededRandom, key);
         if (item && item.src && seededRandom.nextDouble() > 0.3) {
-            const image = yield (0, URLUtils_1.addImageProcess)((`images/Walkabout/Objects/${folder}/${item.src}`));
+            const image = await (0, URLUtils_1.addImageProcess)((`images/Walkabout/Objects/${folder}/${item.src}`));
             image.width = `${parseInt(image.width) / 2}px`;
             current_x += image.width * 2;
             //don't clip the wall border, don't go past the floor
@@ -1875,10 +2119,10 @@ const spawnWallObjects = (width, height, layer, key, folder, seededRandom, theme
         }
     }
     return ret;
-});
+};
 exports.spawnWallObjects = spawnWallObjects;
 //has to be async because it checks the image size for positioning
-const spawnFloorObjects = (width, height, layer, key, folder, seededRandom, themes) => __awaiter(void 0, void 0, void 0, function* () {
+const spawnFloorObjects = async (width, height, layer, key, folder, seededRandom, themes) => {
     let current_x = 0;
     const floor_bottom = 140;
     let current_y = floor_bottom;
@@ -1914,7 +2158,7 @@ const spawnFloorObjects = (width, height, layer, key, folder, seededRandom, them
                 if (!item.name) {
                     item.name = `${(0, StringUtils_1.titleCase)(chosen_theme.key)} Object`;
                 }
-                const image = yield (0, URLUtils_1.addImageProcess)(`${baseLocation}${folder}/${item.src}`);
+                const image = await (0, URLUtils_1.addImageProcess)(`${baseLocation}${folder}/${item.src}`);
                 current_x += image.width * scale;
                 //don't clip the wall border, don't go past the floor
                 if (current_x + padding + image.width * scale > width) {
@@ -1936,7 +2180,7 @@ const spawnFloorObjects = (width, height, layer, key, folder, seededRandom, them
         current_y += y_wiggle;
     }
     return ret;
-});
+};
 
 
 /***/ }),
@@ -4283,19 +4527,10 @@ exports.text = `.\n.\n.\n.\n ${Object.keys(exports.passwords).join("\n")}`;
 /***/ }),
 
 /***/ 8122:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TranscriptEngine = void 0;
 const __1 = __webpack_require__(3607);
@@ -4368,7 +4603,7 @@ class TranscriptEngine {
         this.play = () => {
             this.transcript(this.text);
         };
-        this.transcript = (linesUnedited) => __awaiter(this, void 0, void 0, function* () {
+        this.transcript = async (linesUnedited) => {
             const lines = linesUnedited.split("\n");
             const terminal = document.querySelector("#terminal");
             if (!terminal) {
@@ -4378,10 +4613,10 @@ class TranscriptEngine {
             for (let line of lines) {
                 const element = document.createElement("p");
                 terminal.append(element);
-                yield this.typeWrite(terminal, element, line);
-                yield (0, misc_1.sleep)(this.speed * 10);
+                await this.typeWrite(terminal, element, line);
+                await (0, misc_1.sleep)(this.speed * 10);
             }
-        });
+        };
         //this version of typeWrite skips certain tags but does them all at once
         //(necessary to capture html)
         //v1 just skips lines that start with [
@@ -4392,7 +4627,7 @@ class TranscriptEngine {
         //and v1 is in ATranscript and ASecondTranscript
         //because YES the code is intentionally a shitty maze for my future self
         //and i guess any future Heirs
-        this.typeWrite = (scroll_element, element, text) => __awaiter(this, void 0, void 0, function* () {
+        this.typeWrite = async (scroll_element, element, text) => {
             this.typing = true;
             let skipping = false;
             for (let i = 0; i < text.length; i++) {
@@ -4402,7 +4637,7 @@ class TranscriptEngine {
                 }
                 if (!skipping) {
                     console.log("JR NOTE: about to sleep for ", this.speed, "current time is", Date.now());
-                    yield (0, misc_1.sleep)(this.speed);
+                    await (0, misc_1.sleep)(this.speed);
                     console.log("JR NOTE: slept current time is", Date.now());
                     this.clickAudio.play();
                     element.innerHTML += text.charAt(i);
@@ -4413,7 +4648,7 @@ class TranscriptEngine {
                     break;
                 }
             }
-        });
+        };
         this.doChunkAllAtOnce = (ele, start_index, text) => {
             const offset = 0;
             //look for ending offset
@@ -5001,9 +5236,9 @@ const getElementCenterPoint = (ele) => {
 };
 exports.getElementCenterPoint = getElementCenterPoint;
 const distance = (x1, y1, x2, y2) => {
-    const first = Math.pow((x1 - x2), 2);
-    const second = Math.pow((y1 - y2), 2);
-    return Math.pow((first + second), 0.5);
+    const first = (x1 - x2) ** 2;
+    const second = (y1 - y2) ** 2;
+    return (first + second) ** 0.5;
 };
 exports.distance = distance;
 const distanceWithinRadius = (radius, x1, y1, x2, y2) => {
@@ -5038,15 +5273,6 @@ exports.pointWithinBoundingBox = pointWithinBoundingBox;
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -5056,7 +5282,7 @@ const Stat_1 = __webpack_require__(9137);
 const Theme_1 = __webpack_require__(9702);
 const SeededRandom_1 = __importDefault(__webpack_require__(3450));
 const Maze_1 = __webpack_require__(7194);
-window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
+window.onload = async () => {
     const ele = document.querySelector("#current-room");
     const storySoFar = document.querySelector(".story-so-far");
     storySoFar.innerHTML = "";
@@ -5066,7 +5292,7 @@ window.onload = () => __awaiter(void 0, void 0, void 0, function* () {
     if (ele && storySoFar) {
         new Maze_1.Maze(ele, storySoFar, new SeededRandom_1.default(seed));
     }
-});
+};
 //the text should be a javascript file exporting const text.
 function loadSecretText(location) {
     return __webpack_require__(8116)(`./${location}`).text;
@@ -6307,8 +6533,12 @@ var map = {
 	"./": 3607,
 	"./Objects/Entities/Actions/BaseAction": 7042,
 	"./Objects/Entities/Actions/BaseAction.ts": 7042,
+	"./Objects/Entities/Actions/DeploySass": 4237,
+	"./Objects/Entities/Actions/DeploySass.ts": 4237,
 	"./Objects/Entities/Actions/Feel": 4543,
 	"./Objects/Entities/Actions/Feel.ts": 4543,
+	"./Objects/Entities/Actions/FollowObject": 744,
+	"./Objects/Entities/Actions/FollowObject.ts": 744,
 	"./Objects/Entities/Actions/GoEast": 7192,
 	"./Objects/Entities/Actions/GoEast.ts": 7192,
 	"./Objects/Entities/Actions/GoNorth": 7415,
@@ -6337,6 +6567,8 @@ var map = {
 	"./Objects/Entities/StoryBeats/BaseBeat.ts": 1708,
 	"./Objects/Entities/StoryBeats/BeatList": 2761,
 	"./Objects/Entities/StoryBeats/BeatList.ts": 2761,
+	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf": 5535,
+	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf.ts": 5535,
 	"./Objects/Entities/TargetFilter/baseFilter": 9505,
 	"./Objects/Entities/TargetFilter/baseFilter.ts": 9505,
 	"./Objects/Entities/TargetFilter/targetNameIncludes": 6024,
@@ -6357,6 +6589,8 @@ var map = {
 	"./Objects/MovementAlgs/MoveToSpecificElement.ts": 4476,
 	"./Objects/MovementAlgs/MoveToSpecificLocation": 7805,
 	"./Objects/MovementAlgs/MoveToSpecificLocation.ts": 7805,
+	"./Objects/MovementAlgs/MoveToSpecificPhysicalObject": 8455,
+	"./Objects/MovementAlgs/MoveToSpecificPhysicalObject.ts": 8455,
 	"./Objects/MovementAlgs/MoveToWestDoor": 9991,
 	"./Objects/MovementAlgs/MoveToWestDoor.ts": 9991,
 	"./Objects/MovementAlgs/NoMovement": 4956,

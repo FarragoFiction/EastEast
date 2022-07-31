@@ -6,10 +6,18 @@ import { Action } from "./BaseAction";
 import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 
-export class GoWest extends Action{ //lawsuit
+export class DeploySass extends Action{ //lawsuit
 
+    shortSass:string;
+    longSass:string[];
     
-    recognizedCommands:string[] = ["WEST","LEFT"]; //nothing, so its default
+    recognizedCommands:string[] = ["SASS","SAY","QUIP"]; //nothing, so its default
+
+    constructor(shortSass:string, longSass:string[]){
+        super();
+        this.shortSass = shortSass;
+        this.longSass = longSass;
+    }
 
 
     applyAction = (beat: AiBeat)=>{
@@ -17,9 +25,8 @@ export class GoWest extends Action{ //lawsuit
         if(!subject){
             return "";
         }      
-        subject.movement_alg = new MoveToWestDoor(subject);
-        subject.emitSass(":(")
-        return `${subject.name} flips you off. "ASSHOLE! THERE IS NO DOOR TO THE WEST (please, stop making, me try to do, the impossible...)"`;
+        subject.emitSass(this.shortSass)
+        return `${subject.name} says "${subject.rand.pickFrom(this.longSass)}"`;
     }
 
 
