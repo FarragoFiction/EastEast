@@ -2,7 +2,7 @@ import { Room } from "../../RoomEngine/Room";
 import { Quotidian } from "../Quotidian";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 
-export  class MeleeRangeOfPhysicalObject{
+export  class MeleeRangeOfAnyPhysicalObject{
     invert = false;
     //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
 
