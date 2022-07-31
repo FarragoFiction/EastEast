@@ -244,7 +244,7 @@ export class Room {
     initialRoomWithBlorbos = () => {
         const stress_test = 3;
         for (let i = 0; i < stress_test; i++) {
-            this.addBlorbo(new Quotidian(this, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [testBeat2]));
+            this.addBlorbo(new Quotidian(this, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [testBeat2,testBeat]));
         }
         this.peewee = new Peewee(this, 150, 350);
         this.addBlorbo(this.peewee);

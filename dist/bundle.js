@@ -778,6 +778,7 @@ class AiBeat {
             //doesn't clone targets, those are set per beat when resolved..
             const beat = new AiBeat(this.filters, this.actions, this.permanent);
             beat.owner = owner;
+            console.log("JR NOTE: cloning ", this);
             return beat;
         };
         this.addStorybeatToScreen = (maze, response) => {
@@ -789,7 +790,6 @@ class AiBeat {
             if (!this.owner) {
                 return console.error("ALWAYS clone beats, don't use them from list directly");
             }
-            let ret = "";
             let causes = [];
             let effects = [];
             for (let t of this.filters) {
@@ -798,6 +798,7 @@ class AiBeat {
             for (let a of this.actions) {
                 effects.push(a.applyAction(this.owner, current_room, this.targets));
             }
+            console.log("JR NOTE: about to finish applying effects", this.actions);
             const beat = this.addStorybeatToScreen(current_room.maze, `Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)}... ${(effects.join("<br>"))}`);
         };
         //ALL triggers must be true for this to be true.
@@ -833,13 +834,14 @@ exports.AiBeat = AiBeat;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.testBeat2 = exports.testBeat = void 0;
+const GoNorth_1 = __webpack_require__(7415);
 const GoSouth_1 = __webpack_require__(3535);
 const baseFilter_1 = __webpack_require__(9505);
 const targetNameIncludes_1 = __webpack_require__(6024);
 const BaseBeat_1 = __webpack_require__(1708);
 //because they could, Quotidian starts heading towards the south door.
 exports.testBeat = new BaseBeat_1.AiBeat([new baseFilter_1.TargetFilter()], [new GoSouth_1.GoSouth()]);
-exports.testBeat2 = new BaseBeat_1.AiBeat([new targetNameIncludes_1.TargetNameIncludes("Peewee")], [new GoSouth_1.GoSouth()]);
+exports.testBeat2 = new BaseBeat_1.AiBeat([new targetNameIncludes_1.TargetNameIncludes("Peewee")], [new GoNorth_1.GoNorth()]);
 
 
 /***/ }),
@@ -915,7 +917,6 @@ class TargetNameIncludes extends baseFilter_1.TargetFilter {
         };
         this.applyFilterToSingleTarget = (target) => {
             let targetLocked = false;
-            console.log("JR NOTE: checking target", target);
             if (target.name.includes(this.name)) {
                 targetLocked = true;
             }
@@ -945,6 +946,10 @@ const setup = () => {
     //JR NOTE: TODO i coupled rendering with objects too tightly
     //can't actually run tests without rendering rip
     //need to refactor
+    /*
+    or perphaps refactoring isn't worthing it. the embodiement is part of the math. can't say "am i near object" if object isn't rendered
+    //come back to this later
+    */
 };
 const runFilterTests = () => {
 };
@@ -1749,7 +1754,7 @@ class Room {
         this.initialRoomWithBlorbos = () => {
             const stress_test = 3;
             for (let i = 0; i < stress_test; i++) {
-                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.testBeat2]));
+                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.testBeat2, BeatList_1.testBeat]));
             }
             this.peewee = new Peewee_1.Peewee(this, 150, 350);
             this.addBlorbo(this.peewee);

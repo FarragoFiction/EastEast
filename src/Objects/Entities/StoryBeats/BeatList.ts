@@ -1,3 +1,4 @@
+import { GoNorth } from "../Actions/GoNorth";
 import { GoSouth } from "../Actions/GoSouth";
 import { TargetFilter } from "../TargetFilter/baseFilter";
 import { TargetNameIncludes } from "../TargetFilter/targetNameIncludes";
@@ -11,5 +12,5 @@ export const testBeat = new AiBeat(
 
 export const testBeat2 = new AiBeat(
     [new TargetNameIncludes("Peewee")],
-    [new GoSouth()]
+    [new GoNorth()]
 );

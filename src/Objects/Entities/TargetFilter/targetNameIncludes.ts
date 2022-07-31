@@ -19,7 +19,6 @@ export  class TargetNameIncludes extends TargetFilter{
 
    applyFilterToSingleTarget = (target: PhysicalObject)=>{
        let targetLocked = false;
-       console.log("JR NOTE: checking target",target)
         if(target.name.includes(this.name)){
             targetLocked= true;
         }

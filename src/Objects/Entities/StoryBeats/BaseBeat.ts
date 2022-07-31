@@ -28,6 +28,7 @@ export class AiBeat {
         //doesn't clone targets, those are set per beat when resolved..
         const beat =  new AiBeat(this.filters, this.actions, this.permanent);
         beat.owner = owner;
+        console.log("JR NOTE: cloning ",this);
         return beat;
     }
 
@@ -41,7 +42,6 @@ export class AiBeat {
         if(!this. owner){
             return console.error("ALWAYS clone beats, don't use them from list directly");
         }
-        let ret = "";
         let causes = [];
         let effects = [];
         for (let t of this.filters) {
@@ -51,6 +51,7 @@ export class AiBeat {
         for (let a of this.actions) {
             effects.push(a.applyAction(this.owner, current_room, this.targets));
         }
+        console.log("JR NOTE: about to finish applying effects", this.actions)
         const beat = this.addStorybeatToScreen(current_room.maze, `Because ${turnArrayIntoHumanSentence(causes)}... ${(effects.join("<br>"))}`);
     }
 
