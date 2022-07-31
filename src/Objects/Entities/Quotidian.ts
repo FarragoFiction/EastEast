@@ -169,6 +169,7 @@ export class Quotidian extends PhysicalObject {
                 if(!beat.permanent){
                     toRemove.push(beat);
                 }
+                break;
             }
         }
 

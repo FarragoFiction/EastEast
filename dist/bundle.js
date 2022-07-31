@@ -739,6 +739,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                     if (!beat.permanent) {
                         toRemove.push(beat);
                     }
+                    break;
                 }
             }
             for (let beat of toRemove) {
@@ -831,12 +832,14 @@ exports.AiBeat = AiBeat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.testBeat = void 0;
+exports.testBeat2 = exports.testBeat = void 0;
 const GoSouth_1 = __webpack_require__(3535);
 const baseFilter_1 = __webpack_require__(9505);
+const targetNameIncludes_1 = __webpack_require__(6024);
 const BaseBeat_1 = __webpack_require__(1708);
 //because they could, Quotidian starts heading towards the south door.
 exports.testBeat = new BaseBeat_1.AiBeat([new baseFilter_1.TargetFilter()], [new GoSouth_1.GoSouth()]);
+exports.testBeat2 = new BaseBeat_1.AiBeat([new targetNameIncludes_1.TargetNameIncludes("Peewee")], [new GoSouth_1.GoSouth()]);
 
 
 /***/ }),
@@ -849,20 +852,103 @@ exports.testBeat = new BaseBeat_1.AiBeat([new baseFilter_1.TargetFilter()], [new
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TargetFilter = void 0;
 class TargetFilter {
-    //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
-    constructor(invert = false) {
+    constructor(invert = false, kMode = false) {
+        //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
         this.invert = false;
+        this.kMode = false; //target self
         this.toString = () => {
             //format this like it might start with either because or and
             return "they could";
         };
+        this.applyFilterToSingleTarget = (target) => {
+            if (this.invert) {
+                return null;
+            }
+            return target;
+        };
         this.filter = (owner, objects) => {
-            return [...objects];
+            if (!owner.owner) {
+                console.error("INVALID TO CALL A BEAT WITHOUT AN OWNER");
+                return [];
+            }
+            if (this.kMode) {
+                const survivor = this.applyFilterToSingleTarget(owner.owner);
+                if (survivor) {
+                    return [survivor];
+                }
+            }
+            else {
+                let targets = [];
+                for (let target of objects) {
+                    const survivor = this.applyFilterToSingleTarget(target);
+                    if (survivor) {
+                        targets.push(survivor);
+                    }
+                }
+                return targets;
+            }
+            return [];
         };
         this.invert = invert;
     }
 }
 exports.TargetFilter = TargetFilter;
+
+
+/***/ }),
+
+/***/ 6024:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetNameIncludes = void 0;
+const baseFilter_1 = __webpack_require__(9505);
+class TargetNameIncludes extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(name, invert = false, kMode = false) {
+        super(invert, kMode);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            return `they see someone named ${this.name}`;
+        };
+        this.applyFilterToSingleTarget = (target) => {
+            let targetLocked = false;
+            console.log("JR NOTE: checking target", target);
+            if (target.name.includes(this.name)) {
+                targetLocked = true;
+            }
+            if (targetLocked && !this.invert) {
+                return target;
+            }
+            else {
+                return null;
+            }
+        };
+        this.name = name;
+    }
+}
+exports.TargetNameIncludes = TargetNameIncludes;
+
+
+/***/ }),
+
+/***/ 1522:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.runFilterTests = void 0;
+const setup = () => {
+    //JR NOTE: TODO i coupled rendering with objects too tightly
+    //can't actually run tests without rendering rip
+    //need to refactor
+};
+const runFilterTests = () => {
+};
+exports.runFilterTests = runFilterTests;
 
 
 /***/ }),
@@ -1663,7 +1749,7 @@ class Room {
         this.initialRoomWithBlorbos = () => {
             const stress_test = 3;
             for (let i = 0; i < stress_test; i++) {
-                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.testBeat]));
+                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.testBeat2]));
             }
             this.peewee = new Peewee_1.Peewee(this, 150, 350);
             this.addBlorbo(this.peewee);
@@ -1774,6 +1860,9 @@ const spawnWallObjects = (width, height, layer, key, folder, seededRandom, theme
                 return ret;
             }
             const y = seededRandom.getRandomNumberBetween(padding, Math.max(padding, image.height));
+            if (!item.name) {
+                item.name = `${(0, StringUtils_1.titleCase)(chosen_theme.key)} Object`;
+            }
             ret.push({ name: item.name, layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * 2, height: image.height, flavorText: item.desc });
         }
         else {
@@ -6245,6 +6334,10 @@ var map = {
 	"./Objects/Entities/StoryBeats/BeatList.ts": 2761,
 	"./Objects/Entities/TargetFilter/baseFilter": 9505,
 	"./Objects/Entities/TargetFilter/baseFilter.ts": 9505,
+	"./Objects/Entities/TargetFilter/targetNameIncludes": 6024,
+	"./Objects/Entities/TargetFilter/targetNameIncludes.ts": 6024,
+	"./Objects/Entities/TargetFilter/test": 1522,
+	"./Objects/Entities/TargetFilter/test.ts": 1522,
 	"./Objects/Memory": 7953,
 	"./Objects/Memory.ts": 7953,
 	"./Objects/MovementAlgs/BaseMovement": 9059,

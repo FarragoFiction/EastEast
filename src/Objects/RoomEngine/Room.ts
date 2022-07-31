@@ -9,7 +9,7 @@ import { Peewee } from "../Entities/Peewee";
 import { Maze } from "./Maze";
 import { removeItemOnce } from "../../Utils/ArrayUtils";
 import {titleCase} from "../../Utils/StringUtils";
-import { testBeat } from "../Entities/StoryBeats/BeatList";
+import { testBeat, testBeat2 } from "../Entities/StoryBeats/BeatList";
 
 
 export class Room {
@@ -244,7 +244,7 @@ export class Room {
     initialRoomWithBlorbos = () => {
         const stress_test = 3;
         for (let i = 0; i < stress_test; i++) {
-            this.addBlorbo(new Quotidian(this, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [testBeat]));
+            this.addBlorbo(new Quotidian(this, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [testBeat2]));
         }
         this.peewee = new Peewee(this, 150, 350);
         this.addBlorbo(this.peewee);
@@ -360,6 +360,9 @@ export const spawnWallObjects = async (width: number, height: number, layer: num
                 return ret;
             }
             const y = seededRandom.getRandomNumberBetween(padding, Math.max(padding, image.height));
+            if(!item.name){
+                item.name = `${titleCase(chosen_theme.key)} Object`;
+            }
             ret.push({ name:item.name, layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * 2, height: image.height, flavorText: item.desc })
         } else {
             current_x += 50;
