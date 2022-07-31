@@ -746,9 +746,6 @@ exports.Quotidian = exports.Direction = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const misc_1 = __webpack_require__(4079);
 const NonSeededRandUtils_1 = __webpack_require__(8258);
-const MoveToEastDoor_1 = __webpack_require__(1146);
-const MoveToNorthDoor_1 = __webpack_require__(6003);
-const MoveToSouthDoor_1 = __webpack_require__(9380);
 const NoMovement_1 = __webpack_require__(4956);
 const RandomMovement_1 = __webpack_require__(5997);
 const PhysicalObject_1 = __webpack_require__(8466);
@@ -801,7 +798,6 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText);
         this.maxSpeed = 20;
         this.minSpeed = 1;
-        this.timeOfLastBeat = new Date().getTime();
         this.currentSpeed = 10;
         this.beats = [];
         // 0 min, 5 max
@@ -810,7 +806,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.prudence = 5; //how much do you think things through, attention to detail
         this.justice = 0; //how much do you trust your own judgement, how quick are you to judge
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
-        this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this), new MoveToEastDoor_1.MoveToEastDoor(this), new MoveToNorthDoor_1.MoveToNorthDoor(this), new MoveToSouthDoor_1.MoveToSouthDoor(this)];
+        this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
         this.makeBeatsMyOwn = (beats) => {
             for (let beat of beats) {
@@ -856,14 +852,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 this.image.style.width = `${chosen.width}px`;
             }
         };
-        this.itsBeenAwhileSinceLastBeat = () => {
-            return new Date().getTime() - this.timeOfLastBeat > 1000;
-        };
         this.processAiBeat = () => {
-            if (!this.itsBeenAwhileSinceLastBeat()) {
-                return;
-            }
-            this.timeOfLastBeat = new Date().getTime();
             const toRemove = [];
             for (let beat of this.beats) {
                 if (beat.triggered(this.room)) {
@@ -907,6 +896,10 @@ class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
     constructor(triggers, actions, permanent = false) {
         this.targets = [];
+        this.timeOfLastBeat = new Date().getTime();
+        this.itsBeenAwhileSinceLastBeat = () => {
+            return new Date().getTime() - this.timeOfLastBeat > 10000;
+        };
         this.clone = (owner) => {
             //doesn't clone targets, those are set per beat when resolved..
             const beat = new AiBeat(this.filters, this.actions, this.permanent);
@@ -926,6 +919,7 @@ class AiBeat {
             if (!this.owner) {
                 return console.error("ALWAYS clone beats, don't use them from list directly");
             }
+            this.timeOfLastBeat = new Date().getTime();
             let causes = [];
             let effects = [];
             for (let t of this.filters) {
@@ -941,6 +935,9 @@ class AiBeat {
         this.triggered = (current_room) => {
             if (!this.owner) {
                 return console.error("ALWAYS clone beats, don't use them from list directly");
+            }
+            if (!this.itsBeenAwhileSinceLastBeat()) {
+                return false;
             }
             //start out targeting EVERYTHING in this room
             this.targets = [...current_room.blorbos, ...current_room.items];
@@ -1013,7 +1010,8 @@ class TargetIsWithinRadiusOfSelf extends baseFilter_1.TargetFilter {
                 console.error("INVALID TO CALL A BEAT WITHOUT AN OWNER");
                 return null;
             }
-            if ((0, misc_1.distanceWithinRadius)(this.radius, owner.owner?.x, owner.owner.y, target.x, target.y)) {
+            if ((0, misc_1.distanceWithinRadius)(this.radius, owner.owner.x, owner.owner.y, target.x, target.y)) {
+                console.log("JR NOTE: I think ", { x: owner.owner.x, y: owner.owner.y }, "is near ", { x: target.x, y: target.y });
                 targetLocked = true;
             }
             if (targetLocked && !this.invert) {
@@ -5242,6 +5240,7 @@ const distance = (x1, y1, x2, y2) => {
 };
 exports.distance = distance;
 const distanceWithinRadius = (radius, x1, y1, x2, y2) => {
+    console.log("JR NOTE: radius is ", radius, "and distance is", (0, exports.distance)(x1, y2, x2, y2));
     return (0, exports.distance)(x1, y2, x2, y2) < radius;
 };
 exports.distanceWithinRadius = distanceWithinRadius;

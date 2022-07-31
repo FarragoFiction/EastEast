@@ -13,6 +13,8 @@ export class AiBeat {
     actions: Action[];
     targets: PhysicalObject[] = [];
     owner: Quotidian  | undefined;
+    timeOfLastBeat = new Date().getTime();
+
 
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
 
@@ -22,6 +24,10 @@ export class AiBeat {
         this.actions = actions;
         this.permanent = permanent;
 
+    }
+
+    itsBeenAwhileSinceLastBeat = ()=>{
+        return new Date().getTime() - this.timeOfLastBeat > 10000;
     }
 
     clone = (owner: Quotidian) => {
@@ -46,6 +52,8 @@ export class AiBeat {
         if(!this. owner){
             return console.error("ALWAYS clone beats, don't use them from list directly");
         }
+        this.timeOfLastBeat = new Date().getTime();
+
         let causes = [];
         let effects = [];
         for (let t of this.filters) {
@@ -65,6 +73,9 @@ export class AiBeat {
     triggered = (current_room: Room) => {
         if(!this. owner){
             return console.error("ALWAYS clone beats, don't use them from list directly");
+        }
+        if(!this.itsBeenAwhileSinceLastBeat()){
+            return false;
         }
         //start out targeting EVERYTHING in this room
         this.targets = [...current_room.blorbos, ... current_room.items];

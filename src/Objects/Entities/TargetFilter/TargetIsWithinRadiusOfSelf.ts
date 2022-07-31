@@ -24,7 +24,8 @@ export  class TargetIsWithinRadiusOfSelf extends TargetFilter{
            console.error("INVALID TO CALL A BEAT WITHOUT AN OWNER");
            return null;
        }
-        if(distanceWithinRadius(this.radius,owner.owner?.x, owner.owner.y, target.x, target.y)){
+        if(distanceWithinRadius(this.radius,owner.owner.x, owner.owner.y, target.x, target.y)){
+            console.log("JR NOTE: I think ",{x: owner.owner.x, y: owner.owner.y}, "is near ", {x:target.x, y:target.y})
             targetLocked= true;
         }
 

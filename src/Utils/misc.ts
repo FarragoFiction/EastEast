@@ -31,6 +31,7 @@ export const distance = (x1: number, y1: number, x2: number, y2: number) => {
 }
 
 export const distanceWithinRadius = (radius: number, x1: number, y1: number, x2: number, y2: number) => {
+    console.log("JR NOTE: radius is ", radius, "and distance is", distance(x1, y2, x2, y2))
     return distance(x1, y2, x2, y2) < radius;
 }
 

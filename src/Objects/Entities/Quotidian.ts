@@ -69,7 +69,6 @@ const baseImageLocation = "images/Walkabout/Sprites/";
 export class Quotidian extends PhysicalObject {
     maxSpeed = 20;
     minSpeed = 1;
-    timeOfLastBeat = new Date().getTime();
     currentSpeed = 10;
     beats: AiBeat[] = [];
     // 0 min, 5 max
@@ -85,7 +84,7 @@ export class Quotidian extends PhysicalObject {
     directionalSprite: DirectionalSprite;
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
-    possible_random_move_algs = [new RandomMovement(this), new MoveToEastDoor(this), new MoveToNorthDoor(this), new MoveToSouthDoor(this)]
+    possible_random_move_algs = [new RandomMovement(this)]
     movement_alg = pickFrom(this.possible_random_move_algs)
     //TODO have a movement algorithm (effects can shift this)
     /*
@@ -162,15 +161,9 @@ export class Quotidian extends PhysicalObject {
 
     }
 
-    itsBeenAwhileSinceLastBeat = ()=>{
-        return new Date().getTime() - this.timeOfLastBeat > 1000;
-    }
+
 
     processAiBeat = ()=>{
-        if(!this.itsBeenAwhileSinceLastBeat()){
-            return;
-        }
-        this.timeOfLastBeat = new Date().getTime();
         const toRemove:AiBeat[] = [];
         for(let beat of this.beats){
             if(beat.triggered(this.room)){
