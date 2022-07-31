@@ -5,11 +5,11 @@ import { Room } from "../../RoomEngine/Room";
 import { StoryBeat } from "../../RoomEngine/StoryBeat";
 import { Action } from "../Actions/BaseAction";
 import { Quotidian } from "../Quotidian";
-import { Trigger } from "../Triggers/BaseTrigger";
+import { TargetFilter } from "../TargetFilter/baseFilter";
 
 export class AiBeat {
     permanent: boolean; //is this a one and done or should it be forever. 
-    triggers: Trigger[];
+    filters: TargetFilter[];
     actions: Action[];
     targets: PhysicalObject[] = [];
     owner: Quotidian  | undefined;
@@ -17,8 +17,8 @@ export class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
 
 
-    constructor(triggers: Trigger[], actions: Action[], permanent = false) {
-        this.triggers = triggers;
+    constructor(triggers: TargetFilter[], actions: Action[], permanent = false) {
+        this.filters = triggers;
         this.actions = actions;
         this.permanent = permanent;
 
@@ -26,7 +26,7 @@ export class AiBeat {
 
     clone = (owner: Quotidian) => {
         //doesn't clone targets, those are set per beat when resolved..
-        const beat =  new AiBeat(this.triggers, this.actions, this.permanent);
+        const beat =  new AiBeat(this.filters, this.actions, this.permanent);
         beat.owner = owner;
         return beat;
     }
@@ -44,7 +44,7 @@ export class AiBeat {
         let ret = "";
         let causes = [];
         let effects = [];
-        for (let t of this.triggers) {
+        for (let t of this.filters) {
             causes.push(t.toString());
         }
 
@@ -61,11 +61,15 @@ export class AiBeat {
         if(!this. owner){
             return console.error("ALWAYS clone beats, don't use them from list directly");
         }
-        for (let t of this.triggers) {
-            if (!t.triggered(this,current_room)) {
+        //start out targeting EVERYTHING in this room
+        this.targets = [...current_room.blorbos, ... current_room.items];
+        for (let t of this.filters) {
+            this.targets = t.filter(this, this.targets)
+            if (this.targets.length === 0) {
                 return false;
             }
         }
+        console.log("JR NOTE: triggering, my targets are: ", this.targets);
         return true;
     }
 

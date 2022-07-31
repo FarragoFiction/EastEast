@@ -627,6 +627,29 @@ const MoveToSouthDoor_1 = __webpack_require__(9380);
 const NoMovement_1 = __webpack_require__(4956);
 const RandomMovement_1 = __webpack_require__(5997);
 const PhysicalObject_1 = __webpack_require__(8466);
+//https://stuff.mit.edu/people/dpolicar/writing/prose/text/titleOfTheStory.html  fun story the Theorist showed everyone
+//https://tvtropes.org/pmwiki/pmwiki.php/Literature/ThisIsTheTitleOfThisStory
+//apparently the story is from  a 1982 story by David Moser and that strange loop guy quoted it, because ofc he did
+/*
+
+Closer: Witch of Lonely Motivation
+Solemn: Watching Sylph of Lonely Faith
+Doc Slaughter: Doctor of Hopeful Eyes
+Twins:  Bards of Hunting Day and Night
+End: Lone Knight of Fated Death
+Match: Burning Witch of Threaded Rage
+Eye Killer: Killer of Stalking Time
+Reflection: Scholar of Strange Minds
+Captain: Watcher of Strange Hearts
+K: Thief of Evershifting Light  (gaslight)
+_: Witch of Unseen Corruption
+Shot: Murderous Thief of Buried Space
+Wanda: Lord of Known Space
+Flower Chick: Waste of Extinguished Blood
+Alt: Stranger of Fleshy Dreams
+Neighbor: Friend of Strange Doom
+Tyrfing: Warrior of Destroyed Hope
+NAM: Apprentice of Fated Identities*/
 var Direction;
 (function (Direction) {
     Direction[Direction["UP"] = 1] = "UP";
@@ -654,9 +677,20 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
+        this.beats = [];
+        // 0 min, 5 max
+        this.fortitude = 0; //how brave are you, how physically fit
+        this.temperance = 0; // how much can you avoid obsessing over things (especially people), how good are you at charisma type stuff without getting attached
+        this.prudence = 5; //how much do you think things through, attention to detail
+        this.justice = 0; //how much do you trust your own judgement, how quick are you to judge
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this), new MoveToEastDoor_1.MoveToEastDoor(this), new MoveToNorthDoor_1.MoveToNorthDoor(this), new MoveToSouthDoor_1.MoveToSouthDoor(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
+        this.makeBeatsMyOwn = (beats) => {
+            for (let beat of beats) {
+                this.beats.push(beat.clone(this));
+            }
+        };
         this.goStill = () => {
             this.movement_alg = new NoMovement_1.NoMovement(this);
         };
@@ -700,8 +734,8 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.processAiBeat = () => {
             const toRemove = [];
             for (let beat of this.beats) {
-                if (beat.triggered(this)) {
-                    beat.performActions(this, this.room);
+                if (beat.triggered(this.room)) {
+                    beat.performActions(this.room);
                     if (!beat.permanent) {
                         toRemove.push(beat);
                     }
@@ -718,7 +752,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             this.updateRendering();
         };
         this.directionalSprite = sprite;
-        this.beats = beats;
+        this.makeBeatsMyOwn(beats);
     }
 }
 exports.Quotidian = Quotidian;
@@ -739,38 +773,49 @@ class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
     constructor(triggers, actions, permanent = false) {
         this.targets = [];
-        this.clone = () => {
+        this.clone = (owner) => {
             //doesn't clone targets, those are set per beat when resolved..
-            return new AiBeat(this.triggers, this.actions, this.permanent);
+            const beat = new AiBeat(this.filters, this.actions, this.permanent);
+            beat.owner = owner;
+            return beat;
         };
         this.addStorybeatToScreen = (maze, response) => {
             const beat = new StoryBeat_1.StoryBeat("AI: Tick", response);
             maze.addStorybeat(beat);
             return beat;
         };
-        this.performActions = (owner, current_room) => {
+        this.performActions = (current_room) => {
+            if (!this.owner) {
+                return console.error("ALWAYS clone beats, don't use them from list directly");
+            }
             let ret = "";
             let causes = [];
             let effects = [];
-            for (let t of this.triggers) {
+            for (let t of this.filters) {
                 causes.push(t.toString());
             }
             for (let a of this.actions) {
-                effects.push(a.applyAction(owner, current_room, this.targets));
+                effects.push(a.applyAction(this.owner, current_room, this.targets));
             }
             const beat = this.addStorybeatToScreen(current_room.maze, `Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)}... ${(effects.join("<br>"))}`);
         };
         //ALL triggers must be true for this to be true.
-        this.triggered = (owner) => {
-            console.log("JR NOTE: in some way triggers need to find targets for actions to apply to");
-            for (let t of this.triggers) {
-                if (!t.triggered(owner)) {
+        this.triggered = (current_room) => {
+            if (!this.owner) {
+                return console.error("ALWAYS clone beats, don't use them from list directly");
+            }
+            //start out targeting EVERYTHING in this room
+            this.targets = [...current_room.blorbos, ...current_room.items];
+            for (let t of this.filters) {
+                this.targets = t.filter(this, this.targets);
+                if (this.targets.length === 0) {
                     return false;
                 }
             }
+            console.log("JR NOTE: triggering, my targets are: ", this.targets);
             return true;
         };
-        this.triggers = triggers;
+        this.filters = triggers;
         this.actions = actions;
         this.permanent = permanent;
     }
@@ -788,22 +833,22 @@ exports.AiBeat = AiBeat;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.testBeat = void 0;
 const GoSouth_1 = __webpack_require__(3535);
-const BaseTrigger_1 = __webpack_require__(7206);
+const baseFilter_1 = __webpack_require__(9505);
 const BaseBeat_1 = __webpack_require__(1708);
 //because they could, Quotidian starts heading towards the south door.
-exports.testBeat = new BaseBeat_1.AiBeat([new BaseTrigger_1.Trigger()], [new GoSouth_1.GoSouth()]);
+exports.testBeat = new BaseBeat_1.AiBeat([new baseFilter_1.TargetFilter()], [new GoSouth_1.GoSouth()]);
 
 
 /***/ }),
 
-/***/ 7206:
+/***/ 9505:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Trigger = void 0;
-class Trigger {
+exports.TargetFilter = void 0;
+class TargetFilter {
     //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
     constructor(invert = false) {
         this.invert = false;
@@ -811,13 +856,13 @@ class Trigger {
             //format this like it might start with either because or and
             return "they could";
         };
-        this.triggered = (owner) => {
-            return true; //JR NOTE: children will overwrite this
+        this.filter = (owner, objects) => {
+            return [...objects];
         };
         this.invert = invert;
     }
 }
-exports.Trigger = Trigger;
+exports.TargetFilter = TargetFilter;
 
 
 /***/ }),
@@ -1618,7 +1663,7 @@ class Room {
         this.initialRoomWithBlorbos = () => {
             const stress_test = 3;
             for (let i = 0; i < stress_test; i++) {
-                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.testBeat.clone()]));
+                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.testBeat]));
             }
             this.peewee = new Peewee_1.Peewee(this, 150, 350);
             this.addBlorbo(this.peewee);
@@ -6198,8 +6243,8 @@ var map = {
 	"./Objects/Entities/StoryBeats/BaseBeat.ts": 1708,
 	"./Objects/Entities/StoryBeats/BeatList": 2761,
 	"./Objects/Entities/StoryBeats/BeatList.ts": 2761,
-	"./Objects/Entities/Triggers/BaseTrigger": 7206,
-	"./Objects/Entities/Triggers/BaseTrigger.ts": 7206,
+	"./Objects/Entities/TargetFilter/baseFilter": 9505,
+	"./Objects/Entities/TargetFilter/baseFilter.ts": 9505,
 	"./Objects/Memory": 7953,
 	"./Objects/Memory.ts": 7953,
 	"./Objects/MovementAlgs/BaseMovement": 9059,

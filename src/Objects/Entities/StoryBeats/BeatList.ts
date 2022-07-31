@@ -1,9 +1,9 @@
 import { GoSouth } from "../Actions/GoSouth";
-import { Trigger } from "../Triggers/BaseTrigger";
+import { TargetFilter } from "../TargetFilter/baseFilter";
 import { AiBeat } from "./BaseBeat";
 
 //because they could, Quotidian starts heading towards the south door.
 export const testBeat = new AiBeat(
-    [new Trigger()],
+    [new TargetFilter()],
     [new GoSouth()]
 );
