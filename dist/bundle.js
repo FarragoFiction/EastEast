@@ -4407,7 +4407,8 @@ exports.albhed_map = {
     "3": "https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8",
     "4": "http://farragofiction.com/PerfectHeist/",
     "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers (The Watcher says they won't spell it out)",
-    "7": "https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane" //yellow
+    "7": "https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane",
+    "8": "https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and" //but now the guide of hunters
 };
 const translate = (word) => {
     let ret = word.toLowerCase();
@@ -4455,7 +4456,6 @@ Natalie Yemet (thinks their mom is the customer service rep. has an order for a 
 231223 (actual literal baby)
 some kind of mafia scheme (accuses eyedol of kidnapping)
 SLAUGHTERHOUSE 9
-PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH
 */
 /*
     What I love the most about the blorbos is that.  They, all of them, have trauma in their pasts.
@@ -4514,7 +4514,8 @@ exports.passwords = {
     "THE FOOL IS DEAD": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/24.js"),
     "BITS OF THE PAST LEAK INTO THE PRESENT": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/26.js"),
     "INFINITE AMOUNT OF PAIN": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/27.js"),
-    "PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH ": new Secret("Hostage's Lament", undefined, "Secrets/Content/28.js"),
+    "PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH": new Secret("Hostage's Lament", undefined, "Secrets/Content/28.js"),
+    "ELIAS SMITH": new Secret("JR Ramble", undefined, "Secrets/Content/29.js"),
     "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts")
 };
@@ -6323,6 +6324,49 @@ So yeah. Go ahead. Fuckin' envy my life. Put the shit cherry on top of the shit 
 
 /***/ }),
 
+/***/ 3702:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+
+When I was little, like, maybe middle-elementary school little? 10 or so? 
+
+My very favorite thing to do on the playground was to Organize Events. 
+
+I'd cordon off a slide, for example, and not let kids up unless they knew the "password". The password, ofc, being anything at all.  
+
+I only ever rejected people if they refused to even try.
+
+My little brother would be my minion, and something about that drew people in as well. They wanted to help. 
+
+Sometimes we'd have whole story lines, sometimes we'd go to war with each other, or put on a circus. Someitimes it'd just be the pw game but we'd be able to block off more exits.
+
+I just enjoyed creating a context for so many strangers to play together in all their own ways. 
+
+I remember one time I pulled the password trick, and some kid REFUSED to guess. Everyone would EVENTUALLY, especially with all the hints I would give to it being super easy.
+
+But this kid, no, he went and got his mom who yelled at me and it sucked. 
+
+I wasn't trying to ACTUALLY block access to the slide. I was trying to make it feel more magical when you used it. Like you were part of a conspiracy. And I wanted to learn a little bit about the participants. What sorts of things they'd guess. Its the first steps to being friends.
+
+I think about that kid a lot, when I remember making [???].  That all I want is for people to try. To engage with me.
+
+I want the world to feel mysterious and special and connected. I want YOU to feel special and connected. And mysterious too, if you want. I sure enjoy that vibe but I know its not for everyone.
+
+The internet is huge and the barrier to entry to "matter" feels impossible, like you gotta be some kind of Influencer with millions of followers. 
+
+But sometimes, in order to matter, all you need to do is be on a playground and have fun with strangers.
+
+I hope you're having fun :)
+`;
+
+/***/ }),
+
 /***/ 3052:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -6654,6 +6698,8 @@ var map = {
 	"./Secrets/Content/27.js": 1370,
 	"./Secrets/Content/28": 2664,
 	"./Secrets/Content/28.js": 2664,
+	"./Secrets/Content/29": 3702,
+	"./Secrets/Content/29.js": 3702,
 	"./Secrets/Content/3": 3052,
 	"./Secrets/Content/3.js": 3052,
 	"./Secrets/Content/4": 2892,
