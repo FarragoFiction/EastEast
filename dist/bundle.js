@@ -907,7 +907,7 @@ class Snail extends Quotidian_1.Quotidian {
         this.maxSpeed = 1;
         this.minSpeed = 1;
         this.currentSpeed = 1;
-        this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new SteadyMovement_1.SteadyMovement(this);
     }
 }

@@ -22,7 +22,7 @@ export class Snail extends Quotidian{
     minSpeed = 1;
     currentSpeed = 1;
 
-    direction = Direction.DOWN; //movement algorithm can change or use this.
+    direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new SteadyMovement(this);
 
     constructor(room: Room, x: number, y:number){
