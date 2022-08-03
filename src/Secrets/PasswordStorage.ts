@@ -110,9 +110,6 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 */
 /*
 
-TELLBRAK3700  (from customer service doc)
-Elias Smith (from customer service doc, bought the game for his daughter)
-Penny Wickner (couldn't find the game locally, got deluxe)
 Natalie Yemet (thinks their mom is the customer service rep. has an order for a game they don't remember)
 231223 (actual literal baby)
 some kind of mafia scheme (accuses eyedol of kidnapping)
@@ -178,6 +175,8 @@ export const passwords: PasswordMap = {
     , "INFINITE AMOUNT OF PAIN": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/27.js")
     , "PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH": new Secret("Hostage's Lament", undefined, "Secrets/Content/28.js")
     , "ELIAS SMITH": new Secret("JR Ramble", undefined, "Secrets/Content/29.js")
+    , "TELLBRAK3700": new Secret("Notes of Slaughter 13", undefined, "Secrets/Content/30.js")
+    , "PENNY WICKNER": new Secret("Notes of Slaughter 14", undefined, "Secrets/Content/31.js")
 
     , "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts") 
     , "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts") 
