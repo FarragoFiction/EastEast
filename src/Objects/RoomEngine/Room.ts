@@ -11,6 +11,7 @@ import { removeItemOnce } from "../../Utils/ArrayUtils";
 import {titleCase} from "../../Utils/StringUtils";
 import { FollowPeewee, SassObject, testBeat, testBeat2, testBeat3 } from "../Entities/StoryBeats/BeatList";
 import { DeploySass } from "../Entities/Actions/DeploySass";
+import { Snail } from "../Entities/SnailFriend";
 
 
 export class Room {
@@ -246,6 +247,7 @@ export class Room {
         const stress_test = 1;
         for (let i = 0; i < stress_test; i++) {
             this.addBlorbo(new Quotidian(this, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [SassObject, FollowPeewee]));
+            this.addBlorbo(new Snail(this, 150,150));
         }
         this.peewee = new Peewee(this, 150, 350);
         this.addBlorbo(this.peewee);

@@ -882,6 +882,40 @@ exports.Quotidian = Quotidian;
 
 /***/ }),
 
+/***/ 2633:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Snail = void 0;
+const SteadyMovement_1 = __webpack_require__(1148);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6647);
+class Snail extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "snailside.gif", width: 55, height: 29 },
+            left_src: { src: "snailside.gif", width: 55, height: 29 },
+            right_src: { src: "snailright.gif", width: 55, height: 29 },
+            up_src: { src: "snailup.gif", width: 36, height: 48 },
+            down_src: { src: "snaildown.gif", width: 36, height: 48 }
+        };
+        const beats = [];
+        super(room, "Snail Friend", x, y, [Theme_1.all_themes[ThemeStorage_1.BUGS]], sprite, "It's a snail friend! Like a slug, but they have little houses.", beats);
+        this.maxSpeed = 1;
+        this.minSpeed = 1;
+        this.currentSpeed = 1;
+        this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
+        this.movement_alg = new SteadyMovement_1.SteadyMovement(this);
+    }
+}
+exports.Snail = Snail;
+
+
+/***/ }),
+
 /***/ 1708:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1626,6 +1660,32 @@ exports.RandomMovement = RandomMovement;
 
 /***/ }),
 
+/***/ 1148:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//given an Entity (which will have access to location and any other pertinent information)
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SteadyMovement = void 0;
+const NonSeededRandUtils_1 = __webpack_require__(8258);
+const BaseMovement_1 = __webpack_require__(9059);
+//decides where to move next.
+class SteadyMovement extends BaseMovement_1.Movement {
+    constructor() {
+        super(...arguments);
+        this.pickNewDirection = () => {
+            if (Math.random() > 0.99) {
+                this.entity.direction = (0, NonSeededRandUtils_1.getRandomNumberBetween)(1, 4);
+            }
+        };
+    }
+}
+exports.SteadyMovement = SteadyMovement;
+
+
+/***/ }),
+
 /***/ 8466:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1800,6 +1860,7 @@ const Peewee_1 = __webpack_require__(1160);
 const ArrayUtils_1 = __webpack_require__(3907);
 const StringUtils_1 = __webpack_require__(7036);
 const BeatList_1 = __webpack_require__(2761);
+const SnailFriend_1 = __webpack_require__(2633);
 class Room {
     //objects
     //people
@@ -1997,6 +2058,7 @@ class Room {
             const stress_test = 1;
             for (let i = 0; i < stress_test; i++) {
                 this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject, BeatList_1.FollowPeewee]));
+                this.addBlorbo(new SnailFriend_1.Snail(this, 150, 150));
             }
             this.peewee = new Peewee_1.Peewee(this, 150, 350);
             this.addBlorbo(this.peewee);
@@ -6606,6 +6668,8 @@ var map = {
 	"./Objects/Entities/Peewee.ts": 1160,
 	"./Objects/Entities/Quotidian": 6647,
 	"./Objects/Entities/Quotidian.ts": 6647,
+	"./Objects/Entities/SnailFriend": 2633,
+	"./Objects/Entities/SnailFriend.ts": 2633,
 	"./Objects/Entities/StoryBeats/BaseBeat": 1708,
 	"./Objects/Entities/StoryBeats/BaseBeat.ts": 1708,
 	"./Objects/Entities/StoryBeats/BeatList": 2761,
@@ -6640,6 +6704,8 @@ var map = {
 	"./Objects/MovementAlgs/NoMovement.ts": 4956,
 	"./Objects/MovementAlgs/RandomMovement": 5997,
 	"./Objects/MovementAlgs/RandomMovement.ts": 5997,
+	"./Objects/MovementAlgs/SteadyMovement": 1148,
+	"./Objects/MovementAlgs/SteadyMovement.ts": 1148,
 	"./Objects/PhysicalObject": 8466,
 	"./Objects/PhysicalObject.ts": 8466,
 	"./Objects/RoomEngine/Maze": 7194,
