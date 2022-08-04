@@ -5,7 +5,7 @@ import { GoNorth } from "../Actions/GoNorth";
 import { GoSouth } from "../Actions/GoSouth";
 import { TargetFilter } from "../TargetFilter/baseFilter";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
-import { TargetNameIncludes } from "../TargetFilter/targetNameIncludes";
+import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/targetNameIncludesAnyOfTheseWords";
 import { AiBeat } from "./BaseBeat";
 
 //because they could, Quotidian starts heading towards the south door.
@@ -15,7 +15,7 @@ export const testBeat = new AiBeat(
 );
 
 export const testBeat2 = new AiBeat(
-    [new TargetNameIncludes("Peewee")],
+    [new TargetNameIncludesAnyOfTheseWords(["Peewee"])],
     [new GoNorth()]
 );
 
@@ -25,7 +25,7 @@ export const testBeat3 = new AiBeat(
 );
 
 export const FollowPeewee = new AiBeat(
-    [new TargetNameIncludes("Peewee")],
+    [new TargetNameIncludesAnyOfTheseWords(["Peewee"])],
     [new FollowObject()]
 );
 

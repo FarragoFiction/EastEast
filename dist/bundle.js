@@ -139,7 +139,7 @@ const MoveToSpecificPhysicalObject_1 = __webpack_require__(8455);
 class FollowObject extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
-        this.recognizedCommands = ["FOLLOW", "GO AFTER", "ACCOMPANY", "GO ALONG WITH", "STICK TO"]; //not for peewee, not yet
+        this.recognizedCommands = ["APPROACH", "CRAWL TO", "SLITHER TO", "WALK TO", "MOVE TO", "GO TO", "FOLLOW", "GO AFTER", "ACCOMPANY", "GO ALONG WITH", "STICK TO"]; //not for peewee, not yet
         this.applyAction = (beat) => {
             const subject = beat.owner;
             if (!subject) {
@@ -147,7 +147,7 @@ class FollowObject extends BaseAction_1.Action {
             }
             const target = beat.targets;
             if (target.length < 1) {
-                return "";
+                return `${subject.name} can't see anything to move towards like that...`;
             }
             subject.movement_alg = new MoveToSpecificPhysicalObject_1.MoveToSpecificPhysicalObject(target[0], subject);
             subject.emitSass("!");
@@ -659,6 +659,7 @@ const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const BaseAction_1 = __webpack_require__(7042);
 const Feel_1 = __webpack_require__(4543);
+const FollowObject_1 = __webpack_require__(744);
 const GoEast_1 = __webpack_require__(7192);
 const GoNorth_1 = __webpack_require__(7415);
 const GoSouth_1 = __webpack_require__(3535);
@@ -671,6 +672,7 @@ const StopMoving_1 = __webpack_require__(4469);
 const Taste_1 = __webpack_require__(8520);
 const Quotidian_1 = __webpack_require__(6647);
 const BaseBeat_1 = __webpack_require__(1708);
+const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 //what, did you think any real being could be so formulaic? 
 //regarding the real peewee, wanda is actually quite THRILLED there is a competing parasite in the Echidna distracting the immune system (and tbf, preventing an immune disorder in the form of the eye killer)
 //the universe is AWARE of the dangers to it and endlessly expands its immune system response
@@ -704,7 +706,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.minSpeed = 1;
         this.currentSpeed = 10;
         //only for peewee
-        this.possibleActions = [new StopMoving_1.StopMoving(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
+        this.possibleActions = [new StopMoving_1.StopMoving(), new FollowObject_1.FollowObject(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -714,13 +716,16 @@ class Peewee extends Quotidian_1.Quotidian {
             this.container.id = "PeeweePuppet";
             for (let action of this.possibleActions) {
                 const words = beat.command.split(" ");
-                for (let word of words)
+                for (let word of words) {
                     if (action.recognizedCommands.includes(word.toUpperCase())) {
-                        const aibeat = new BaseBeat_1.AiBeat([], [action]);
+                        const aibeat = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(words)], [action]).clone(this);
                         aibeat.owner = this;
+                        aibeat.timeOfLastBeat = 0; //peewee NEVER gets timelocked
+                        const trigger = aibeat.triggered(this.room); //sets targets
                         beat.response = action.applyAction(aibeat);
                         return;
                     }
+                }
             }
             if (beat.response.trim() === "") {
                 const aibeat = new BaseBeat_1.AiBeat([], []);
@@ -938,7 +943,6 @@ class AiBeat {
             //doesn't clone targets, those are set per beat when resolved..
             const beat = new AiBeat(this.filters, this.actions, this.permanent);
             beat.owner = owner;
-            console.log("JR NOTE: cloning ", this);
             return beat;
         };
         this.addStorybeatToScreen = (maze, response) => {
@@ -962,7 +966,6 @@ class AiBeat {
             for (let a of this.actions) {
                 effects.push(a.applyAction(this));
             }
-            console.log("JR NOTE: about to finish applying effects", this.actions);
             const beat = this.addStorybeatToScreen(current_room.maze, `Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)}... ${(effects.join("<br>"))}`);
         };
         //ALL triggers must be true for this to be true.
@@ -982,7 +985,6 @@ class AiBeat {
                     return false;
                 }
             }
-            console.log("JR NOTE: triggering, my targets are: ", this.targets);
             return true;
         };
         this.filters = triggers;
@@ -1009,13 +1011,13 @@ const GoNorth_1 = __webpack_require__(7415);
 const GoSouth_1 = __webpack_require__(3535);
 const baseFilter_1 = __webpack_require__(9505);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
-const targetNameIncludes_1 = __webpack_require__(6024);
+const targetNameIncludesAnyOfTheseWords_1 = __webpack_require__(1761);
 const BaseBeat_1 = __webpack_require__(1708);
 //because they could, Quotidian starts heading towards the south door.
 exports.testBeat = new BaseBeat_1.AiBeat([new baseFilter_1.TargetFilter()], [new GoSouth_1.GoSouth()]);
-exports.testBeat2 = new BaseBeat_1.AiBeat([new targetNameIncludes_1.TargetNameIncludes("Peewee")], [new GoNorth_1.GoNorth()]);
+exports.testBeat2 = new BaseBeat_1.AiBeat([new targetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Peewee"])], [new GoNorth_1.GoNorth()]);
 exports.testBeat3 = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(30, true)], [new GoEast_1.GoEast()]);
-exports.FollowPeewee = new BaseBeat_1.AiBeat([new targetNameIncludes_1.TargetNameIncludes("Peewee")], [new FollowObject_1.FollowObject()]);
+exports.FollowPeewee = new BaseBeat_1.AiBeat([new targetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Peewee"])], [new FollowObject_1.FollowObject()]);
 exports.SassObject = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass("Gross!", ["Wow you're really gross, aren't you?", "I don't like you!", "Wow! So boring!"])], true);
 
 
@@ -1059,6 +1061,48 @@ class TargetIsWithinRadiusOfSelf extends baseFilter_1.TargetFilter {
     }
 }
 exports.TargetIsWithinRadiusOfSelf = TargetIsWithinRadiusOfSelf;
+
+
+/***/ }),
+
+/***/ 4165:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetNameIncludesAnyOfTheseWords = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetNameIncludesAnyOfTheseWords extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(words, singleTarget = false, invert = false, kMode = false) {
+        super(singleTarget, invert, kMode);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            if (this.words.length === 1) {
+                return `they see something named ${this.words[0]}`;
+            }
+            return `they see something named any of these words ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.words)}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            for (let word of this.words) {
+                if (target.name.toUpperCase().includes(word.toUpperCase())) {
+                    targetLocked = true;
+                }
+            }
+            if (targetLocked && !this.invert) {
+                return target;
+            }
+            else {
+                return null;
+            }
+        };
+        this.words = words;
+    }
+}
+exports.TargetNameIncludesAnyOfTheseWords = TargetNameIncludesAnyOfTheseWords;
 
 
 /***/ }),
@@ -1123,26 +1167,32 @@ exports.TargetFilter = TargetFilter;
 
 /***/ }),
 
-/***/ 6024:
+/***/ 1761:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TargetNameIncludes = void 0;
+exports.TargetNameIncludesAnyOfTheseWords = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
 const baseFilter_1 = __webpack_require__(9505);
-class TargetNameIncludes extends baseFilter_1.TargetFilter {
+class TargetNameIncludesAnyOfTheseWords extends baseFilter_1.TargetFilter {
     //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
-    constructor(name, singleTarget = false, invert = false, kMode = false) {
+    constructor(words, singleTarget = false, invert = false, kMode = false) {
         super(singleTarget, invert, kMode);
         this.toString = () => {
             //format this like it might start with either because or and
-            return `they see something named ${this.name}`;
+            if (this.words.length === 1) {
+                return `they see something named ${this.words[0]}`;
+            }
+            return `they see something named any of these words ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.words)}`;
         };
         this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
-            if (target.name.includes(this.name)) {
-                targetLocked = true;
+            for (let word of this.words) {
+                if (target.name.toUpperCase().includes(word.toUpperCase())) {
+                    targetLocked = true;
+                }
             }
             if (targetLocked && !this.invert) {
                 return target;
@@ -1151,10 +1201,10 @@ class TargetNameIncludes extends baseFilter_1.TargetFilter {
                 return null;
             }
         };
-        this.name = name;
+        this.words = words;
     }
 }
-exports.TargetNameIncludes = TargetNameIncludes;
+exports.TargetNameIncludesAnyOfTheseWords = TargetNameIncludesAnyOfTheseWords;
 
 
 /***/ }),
@@ -1502,9 +1552,6 @@ class MoveToSpecificLocation extends BaseMovement_1.Movement {
                     return Math.abs(Math.abs(remaining_x) - Math.abs(remaining_y)) > this.entity.width * 3;
                 }
             };
-            if (this.entity.name === "Peewee") {
-                console.log("JR NOTE: i am peewee and remaining x is", remaining_x, "and remaining y is", remaining_y);
-            }
             if (shouldX()) {
                 this.moveX(remaining_x);
             }
@@ -1829,7 +1876,7 @@ class Maze {
                     input.value = "";
                     return false;
                 };
-                this.addStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: 5 minute todo is 'where are the blorbos going' and give them ai"));
+                this.addStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: handle multi word commands (such as go to snail instead of just follow snail)"));
             }
         };
         this.rand = rand;
@@ -4511,9 +4558,6 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 */
 /*
 
-TELLBRAK3700  (from customer service doc)
-Elias Smith (from customer service doc, bought the game for his daughter)
-Penny Wickner (couldn't find the game locally, got deluxe)
 Natalie Yemet (thinks their mom is the customer service rep. has an order for a game they don't remember)
 231223 (actual literal baby)
 some kind of mafia scheme (accuses eyedol of kidnapping)
@@ -4578,6 +4622,8 @@ exports.passwords = {
     "INFINITE AMOUNT OF PAIN": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/27.js"),
     "PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH": new Secret("Hostage's Lament", undefined, "Secrets/Content/28.js"),
     "ELIAS SMITH": new Secret("JR Ramble", undefined, "Secrets/Content/29.js"),
+    "TELLBRAK3700": new Secret("Notes of Slaughter 13", undefined, "Secrets/Content/30.js"),
+    "PENNY WICKNER": new Secret("Notes of Slaughter 14", undefined, "Secrets/Content/31.js"),
     "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts")
 };
@@ -5303,7 +5349,6 @@ const distance = (x1, y1, x2, y2) => {
 };
 exports.distance = distance;
 const distanceWithinRadius = (radius, x1, y1, x2, y2) => {
-    console.log("JR NOTE: radius is ", radius, "and distance is", (0, exports.distance)(x1, y2, x2, y2));
     return (0, exports.distance)(x1, y2, x2, y2) < radius;
 };
 exports.distanceWithinRadius = distanceWithinRadius;
@@ -6452,6 +6497,72 @@ He can't even forgive him, let alone process it, as the man flees out the door m
 
 /***/ }),
 
+/***/ 4453:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+
+Name: Yongki(updated)
+Aliases:  The Reflection, L-0-I1-alpha
+Coping Strategy: Avoidance
+Attachment Style: Secure
+
+Quick Summary:
+
+I am happy to report that the Heresy has been resolved and Yongki has stabilized. While Mirrors are still not his favorite objects in the world, with the actual ability to retain Memory Yongki is able to Grow as a person.
+
+He proves himself to be an admirably Curious young man, with a desire to Learn Everything he can.  However, he has little tolerance for challenge or strife, preferring to learn the lesson that, for example, "Hammocks are evil" rather than trying to overcome them.
+
+His relationship with his Peers has proven somewhat more difficult. While he is friendly and upbeat, those around him have long grown into the habit of avoiding getting too attached to someone who may Vanish with little to no notice.  Yongki seems to believe this is simply the state of the world, and his overwhelming power results in him having little need to rely on others. As a result, he seems perfectly secure and content with his relatively solitary nature.
+
+This is not to say that there are no social challenges. In particular, I am working with him to better navigate his ..."roommate", while also helping him take initiative in instructing his Peers on the damage they can do to him while feuding with the Captain.
+
+
+`;
+
+/***/ }),
+
+/***/ 7253:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+Name: Captain
+Aliases:  The Reflected, L-0-I1-beta
+Coping Strategy: Wounded and Defensive (Control)
+Attachment Style: Pending
+
+Quick Summary:
+
+
+The Captain is a study in contrasts. A man who revels in his physical prowess (especially for his age), he equally seems to feel helpless in the face of Societal Expectations. Observing Yongki's unique lack of response to those Expectations has proven Illuminating for him.
+
+The Captain remains tight-lipped about certain aspects of his upbringing, but it seems clear he comes from a strict background. He expects rules to be clearly defined, and for everyone to follow them.  Deviations from rules (real or imagined) causes him great distress and results in attempts to control those around him in the same manner he would control himself.
+
+As a result, his return to his former co-workers has resulted in distress and a retreat to rules. He is bewildered at the various changes in those who should be familiar to him. He is further caught off guard that when he finally returned to his body, it was in an entirely new, strange universe. The phrase "you can't go home again" seems especially relevant.
+
+I have been working with the Captain to allow more leeway in "roommate" agreements with Yongki, as well as hinting that perhaps group therapy would be appropriate for the Information team more broadly. His return has certainly destabilized certain dynamics in ways that could be leveraged to obtain real Growth for all.
+
+However, Significant Challenges remain blocking this option, namely Captain's inability to control Yongki's severe physical response to danger or aggression.  He has taken to the challenge with aplomb, providing the Hypothesis that Yongki's more lackadaisical nature may result in superior control of one's body.  I am working with him to find ways to evaluate this Hypothesis and provide regimens for increasing control.
+
+
+`;
+
+/***/ }),
+
 /***/ 2892:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -6676,10 +6787,10 @@ var map = {
 	"./Objects/Entities/StoryBeats/BeatList.ts": 2761,
 	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf": 5535,
 	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf.ts": 5535,
+	"./Objects/Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords": 4165,
+	"./Objects/Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords.ts": 4165,
 	"./Objects/Entities/TargetFilter/baseFilter": 9505,
 	"./Objects/Entities/TargetFilter/baseFilter.ts": 9505,
-	"./Objects/Entities/TargetFilter/targetNameIncludes": 6024,
-	"./Objects/Entities/TargetFilter/targetNameIncludes.ts": 6024,
 	"./Objects/Entities/TargetFilter/test": 1522,
 	"./Objects/Entities/TargetFilter/test.ts": 1522,
 	"./Objects/Memory": 7953,
@@ -6768,6 +6879,10 @@ var map = {
 	"./Secrets/Content/29.js": 3702,
 	"./Secrets/Content/3": 3052,
 	"./Secrets/Content/3.js": 3052,
+	"./Secrets/Content/30": 4453,
+	"./Secrets/Content/30.js": 4453,
+	"./Secrets/Content/31": 7253,
+	"./Secrets/Content/31.js": 7253,
 	"./Secrets/Content/4": 2892,
 	"./Secrets/Content/4.js": 2892,
 	"./Secrets/Content/5": 1952,

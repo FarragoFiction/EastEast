@@ -90,7 +90,7 @@ export class Maze {
                 input.value="";
                 return false;
             }
-            this.addStorybeat(new StoryBeat("Peewee: Await Commands","Peewee is awaiting the Observers commands. Also: JR NOTE: 5 minute todo is: give peewee a target (such as go to snail)"));
+            this.addStorybeat(new StoryBeat("Peewee: Await Commands","Peewee is awaiting the Observers commands. Also: JR NOTE: handle multi word commands (such as go to snail instead of just follow snail)"));
         }
     }
 

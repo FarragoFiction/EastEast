@@ -34,7 +34,6 @@ export class AiBeat {
         //doesn't clone targets, those are set per beat when resolved..
         const beat =  new AiBeat(this.filters, this.actions, this.permanent);
         beat.owner = owner;
-        console.log("JR NOTE: cloning ",this);
         return beat;
     }
 
@@ -63,7 +62,6 @@ export class AiBeat {
         for (let a of this.actions) {
             effects.push(a.applyAction(this));
         }
-        console.log("JR NOTE: about to finish applying effects", this.actions)
         const beat = this.addStorybeatToScreen(current_room.maze, `Because ${turnArrayIntoHumanSentence(causes)}... ${(effects.join("<br>"))}`);
     }
 
@@ -86,7 +84,6 @@ export class AiBeat {
                 return false;
             }
         }
-        console.log("JR NOTE: triggering, my targets are: ", this.targets);
         return true;
     }
 
