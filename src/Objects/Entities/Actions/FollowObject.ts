@@ -1,17 +1,13 @@
-import { MoveToNorthDoor } from "../../MovementAlgs/MoveToNorthDoor";
-import { MoveToWestDoor } from "../../MovementAlgs/MoveToWestDoor";
-import { Room } from "../../RoomEngine/Room";
-import { Quotidian } from "../Quotidian";
+
 import { Action } from "./BaseAction";
-import { PhysicalObject } from "../../PhysicalObject";
-import { MoveToSpecificElement } from "../../MovementAlgs/MoveToSpecificElement";
+
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { MoveToSpecificPhysicalObject } from "../../MovementAlgs/MoveToSpecificPhysicalObject";
 
 export class FollowObject extends Action{ //lawsuit
 
     
-    recognizedCommands:string[] = ["FOLLOW","APPROACH","CRAWL TO","SLITHER TO","WALK TO","MOVE TO","GO TO","GO AFTER","ACCOMPANY", "GO ALONG WITH","STICK TO"]; //not for peewee, not yet
+    recognizedCommands:string[] = ["FOLLOW","APPROACH","CRAWL TO","SLITHER TO","WALK TO","MOVE TO","GO TO"w,"GO AFTER","ACCOMPANY", "GO ALONG WITH","STICK TO"]; //not for peewee, not yet
 
     applyAction = (beat: AiBeat)=>{
         const subject = beat.owner;

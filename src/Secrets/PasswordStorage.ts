@@ -52,7 +52,7 @@ export const albhed_map = {
     "4":"http://farragofiction.com/PerfectHeist/",
     "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers (The Watcher says they won't spell it out)",
     "7":"https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane",//yellow,
-    "8":"https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and"//but now the guide of hunters
+    "8":"https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",//but now the guide of hunters
     "9":"https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers"
 
 }
