@@ -48,11 +48,12 @@ export const albhed_map = {
     "0":"https://www.tumblr.com/blog/view/figuringoutnothing/688028145704665088?source=share",//when they were the guide of observers
     "1":"http://farragofiction.com/DevonaFears",
     "2":"http://farragofiction.com/NotesOnStealingPeoplesShit/",
-    "3":"https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8", //by the watcher of threads
+    "3":"https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8 by the Watcher of Threads", //by the watcher of threads
     "4":"http://farragofiction.com/PerfectHeist/",
     "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers (The Watcher says they won't spell it out)",
     "7":"https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane",//yellow,
     "8":"https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and"//but now the guide of hunters
+    "9":"https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers"
 
 }
 

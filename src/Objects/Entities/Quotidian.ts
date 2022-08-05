@@ -21,7 +21,7 @@ import { AiBeat } from "./StoryBeats/BaseBeat";
 
 /*
 
-Closer: Witch of Lonely Motivation
+Closer: Lonesome Witch of Threaded Motivation
 Solemn: Watching Sylph of Lonely Faith
 Doc Slaughter: Doctor of Hopeful Eyes
 Twins:  Bards of Hunting Day and Night
@@ -38,7 +38,7 @@ Flower Chick: Waste of Extinguished Blood
 Alt: Stranger of Fleshy Dreams
 Neighbor: Friend of Strange Doom
 Tyrfing: Warrior of Destroyed Hope
-NAM: Apprentice of Fated Identities*/
+NAM: Child of Fated Identities*/
 
 
 
@@ -101,13 +101,13 @@ export class Quotidian extends PhysicalObject {
 
     constructor(room: Room, name: string, x: number, y: number, themes: Theme[], sprite: DirectionalSprite, flavorText: string, beats: AiBeat[]) {
         super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText);
-        
+
         this.directionalSprite = sprite;
         this.makeBeatsMyOwn(beats);
     }
 
-    makeBeatsMyOwn = (beats: AiBeat[])=>{
-        for(let beat of beats){
+    makeBeatsMyOwn = (beats: AiBeat[]) => {
+        for (let beat of beats) {
             this.beats.push(beat.clone(this));
         }
     }
@@ -163,19 +163,19 @@ export class Quotidian extends PhysicalObject {
 
 
 
-    processAiBeat = ()=>{
-        const toRemove:AiBeat[] = [];
-        for(let beat of this.beats){
-            if(beat.triggered(this.room)){
+    processAiBeat = () => {
+        const toRemove: AiBeat[] = [];
+        for (let beat of this.beats) {
+            if (beat.triggered(this.room)) {
                 beat.performActions(this.room);
-                if(!beat.permanent){
+                if (!beat.permanent) {
                     toRemove.push(beat);
                 }
                 break;
             }
         }
 
-        for(let beat of toRemove){
+        for (let beat of toRemove) {
             removeItemOnce(this.beats, beat);
         }
 
