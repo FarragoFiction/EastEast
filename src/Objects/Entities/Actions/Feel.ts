@@ -31,7 +31,7 @@ export class Feel extends Action {
     */
 
 
-    recognizedCommands: string[] = ["FEEL", "CARESS", "TOUCH","FONDLE"];
+    recognizedCommands: string[] = ["FEEL", "CARESS", "TOUCH","FONDLE","PET"];
 
     
     sense = FEELING;
