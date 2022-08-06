@@ -33,33 +33,57 @@ export class Feel extends Action {
 
     recognizedCommands: string[] = ["FEEL", "CARESS", "TOUCH","FONDLE"];
 
+    
+    sense = FEELING;
+
+    noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian)=>{
+        const north = current_room.getNorth();
+        const south = current_room.getSouth();
+        const east = current_room.getEast();
+        let thingsHeard = `the feel of ${current_room.getRandomThemeConcept(this.sense)}.`;
+        if (north) {
+            thingsHeard = `${thingsHeard} <p>When he touches the frame of the NORTH DOOR he can't help but notice the distinct texture of ${north.getRandomThemeConcept(this.sense)}.</p>`;
+        }
+
+        if (south) {
+            thingsHeard = `${thingsHeard} <p>When he touches the frame of the SOUTH DOOR he can't help but notice the distinct texture of ${south.getRandomThemeConcept(this.sense)}.</p>`;
+        }
+
+        if (east) {
+            thingsHeard = `${thingsHeard} <p>When he touches the frame of the EAST DOOR he can't help but notice the distinct texture of ${east.getRandomThemeConcept(this.sense)}.</p>`;
+        }
+
+        return `Underneath Peewee's tail, the floor feels weirdly of ${thingsHeard}`;
+    }
+
+    withTargets = (beat: AiBeat,current_room: Room, subject: Quotidian, targets: PhysicalObject[])=>{
+        let thingsHeard:string[] = [];
+        for(let target of targets){
+            thingsHeard.push(target.getRandomThemeConcept(this.sense));
+        }
+
+        return `${subject.name} hesitantly caresses ${turnArrayIntoHumanSentence(targets.map((e)=>e.name))}. He feels ${turnArrayIntoHumanSentence(thingsHeard)}. It's weird for everybody.`;
+
+    }
+
 
     applyAction = (beat: AiBeat)=>{
         const current_room = beat.owner?.room;
         if(!current_room){
             return "";
         }
-        let thingsHeard = `${current_room.getRandomThemeConcept(FEELING)}.`;
-
-
-        const north = current_room.getNorth();
-        const south = current_room.getSouth();
-        const east = current_room.getEast();
-        if (north) {
-            thingsHeard = `${thingsHeard} <p>When he touches the frame of the NORTH DOOR he can't help but notice the distinct texture of ${north.getRandomThemeConcept(FEELING)}.</p>`;
+        const subject = beat.owner;
+        if(!subject){
+            return "";
         }
 
-        if (south) {
-            thingsHeard = `${thingsHeard} <p>When he touches the frame of the SOUTH DOOR he can't help but notice the distinct texture of ${south.getRandomThemeConcept(FEELING)}.</p>`;
+    
+        const targets = beat.targets;
+        if(targets.length ===0){
+            return this.noTarget(beat, current_room, subject);
+        }else{
+            return this.withTargets(beat, current_room, subject, targets);
         }
-
-        if (east) {
-            thingsHeard = `${thingsHeard} <p>When he touches the frame of the EAST DOOR he can't help but notice the distinct texture of ${east.getRandomThemeConcept(FEELING)}.</p>`;
-        }
-
-        return `Underneath Peewee's tail, the floor feels weirdly of ${thingsHeard}`;
     }
-
-
 
 }

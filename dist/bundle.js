@@ -73,6 +73,7 @@ exports.DeploySass = DeploySass;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Feel = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
 const ThemeStorage_1 = __webpack_require__(1288);
 const BaseAction_1 = __webpack_require__(7042);
 //assume only peewee can look
@@ -100,25 +101,46 @@ class Feel extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["FEEL", "CARESS", "TOUCH", "FONDLE"];
+        this.sense = ThemeStorage_1.FEELING;
+        this.noTarget = (beat, current_room, subject) => {
+            const north = current_room.getNorth();
+            const south = current_room.getSouth();
+            const east = current_room.getEast();
+            let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(this.sense)}.`;
+            if (north) {
+                thingsHeard = `${thingsHeard} <p>When he touches the frame of the NORTH DOOR he can't help but notice the distinct texture of ${north.getRandomThemeConcept(this.sense)}.</p>`;
+            }
+            if (south) {
+                thingsHeard = `${thingsHeard} <p>When he touches the frame of the SOUTH DOOR he can't help but notice the distinct texture of ${south.getRandomThemeConcept(this.sense)}.</p>`;
+            }
+            if (east) {
+                thingsHeard = `${thingsHeard} <p>When he touches the frame of the EAST DOOR he can't help but notice the distinct texture of ${east.getRandomThemeConcept(this.sense)}.</p>`;
+            }
+            return `Underneath Peewee's tail, the floor feels weirdly of ${thingsHeard}`;
+        };
+        this.withTargets = (beat, current_room, subject, targets) => {
+            let thingsHeard = [];
+            for (let target of targets) {
+                thingsHeard.push(target.getRandomThemeConcept(this.sense));
+            }
+            return `${subject.name} hesitantly caresses ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}. He feels ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. It's weird for everybody.`;
+        };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
             if (!current_room) {
                 return "";
             }
-            let thingsHeard = `${current_room.getRandomThemeConcept(ThemeStorage_1.FEELING)}.`;
-            const north = current_room.getNorth();
-            const south = current_room.getSouth();
-            const east = current_room.getEast();
-            if (north) {
-                thingsHeard = `${thingsHeard} <p>When he touches the frame of the NORTH DOOR he can't help but notice the distinct texture of ${north.getRandomThemeConcept(ThemeStorage_1.FEELING)}.</p>`;
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
             }
-            if (south) {
-                thingsHeard = `${thingsHeard} <p>When he touches the frame of the SOUTH DOOR he can't help but notice the distinct texture of ${south.getRandomThemeConcept(ThemeStorage_1.FEELING)}.</p>`;
+            const targets = beat.targets;
+            if (targets.length === 0) {
+                return this.noTarget(beat, current_room, subject);
             }
-            if (east) {
-                thingsHeard = `${thingsHeard} <p>When he touches the frame of the EAST DOOR he can't help but notice the distinct texture of ${east.getRandomThemeConcept(ThemeStorage_1.FEELING)}.</p>`;
+            else {
+                return this.withTargets(beat, current_room, subject, targets);
             }
-            return `Underneath Peewee's tail, the floor feels weirdly of ${thingsHeard}`;
         };
     }
 }
