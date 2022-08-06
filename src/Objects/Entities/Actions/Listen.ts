@@ -32,23 +32,24 @@ export class Listen extends Action {
 
 
     recognizedCommands: string[] = ["LISTEN", "HEAR"];
+    sense = SOUND;
 
     noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian)=>{
         const north = current_room.getNorth();
         const south = current_room.getSouth();
         const east = current_room.getEast();
-        let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(SOUND)}.`;
+        let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(this.sense)}.`;
 
         if (north) {
-            thingsHeard = `${thingsHeard} <p>Towards the NORTH, he hears ${north.getRandomThemeConcept(SOUND)}.</p>`;
+            thingsHeard = `${thingsHeard} <p>Towards the NORTH, he hears ${north.getRandomThemeConcept(this.sense)}.</p>`;
         }
 
         if (south) {
-            thingsHeard = `${thingsHeard} <p>Towards the SOUTH, he hears ${south.getRandomThemeConcept(SOUND)}.</p>`;
+            thingsHeard = `${thingsHeard} <p>Towards the SOUTH, he hears ${south.getRandomThemeConcept(this.sense)}.</p>`;
         }
 
         if (east) {
-            thingsHeard = `${thingsHeard} <p>Towards the EAST, he hears ${east.getRandomThemeConcept(SOUND)}.</p>`;
+            thingsHeard = `${thingsHeard} <p>Towards the EAST, he hears ${east.getRandomThemeConcept(this.sense)}.</p>`;
         }
 
         return `${subject.name} listens  carefully. He hears ${thingsHeard}`;
@@ -57,7 +58,7 @@ export class Listen extends Action {
     withTargets = (beat: AiBeat,current_room: Room, subject: Quotidian, targets: PhysicalObject[])=>{
         let thingsHeard:string[] = [];
         for(let target of targets){
-            thingsHeard.push(target.getRandomThemeConcept(SOUND));
+            thingsHeard.push(target.getRandomThemeConcept(this.sense));
         }
 
         return `${subject.name} listens carefully to ${turnArrayIntoHumanSentence(targets.map((e)=>e.name))}. He hears ${turnArrayIntoHumanSentence(thingsHeard)}.`;

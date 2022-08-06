@@ -5,6 +5,7 @@ import { Quotidian } from "../Quotidian";
 import { Action } from "./BaseAction";
 import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
+import { ADJ, PERSON } from "../../ThemeStorage";
 
 //assume only peewee can look
 export class Look extends Action {
@@ -30,18 +31,13 @@ export class Look extends Action {
     */
 
 
-    recognizedCommands: string[] = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE","OGLE"];
+    recognizedCommands: string[] = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE", "OGLE"];
 
 
-    applyAction = (beat: AiBeat)=>{
-        const current_room = beat.owner?.room;
-        if(!current_room){
-            return "";
-        }
-        const subject = beat.owner;
-        if(!subject){
-            return "";
-        }
+
+
+
+    noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian) => {
         let thingsSeen = "";
         if (current_room.children.length === 1) {
             thingsSeen = `${thingsSeen} a door.`;
@@ -72,9 +68,37 @@ export class Look extends Action {
         if (current_room.blorbos.length > 0) {
             thingsSeen = `${thingsSeen} <p>He also sees ${current_room.blorbos.length} blorbos(s). Looking closer, they are ${turnArrayIntoHumanSentence(current_room.blorbos.map((e) => e.name))}.</p>`;
         }
+        return thingsSeen;
+    }
+
+    withTargets = (beat: AiBeat, current_room: Room, subject: Quotidian, targets: PhysicalObject[]) => {
+        let thingsHeard: string[] = [];
+        for (let target of targets) {
+            thingsHeard.push(`${target.getRandomThemeConcept(ADJ)} ${target.getRandomThemeConcept(PERSON)}`);
+        }
+
+        return `${subject.name} looks at ${turnArrayIntoHumanSentence(targets.map((e) => e.name))}. He sees an aura of ${turnArrayIntoHumanSentence(thingsHeard)}.`;
+
+    }
 
 
-        return `${subject.name} looks around. He sees ${thingsSeen}`;
+    applyAction = (beat: AiBeat) => {
+        const current_room = beat.owner?.room;
+        if (!current_room) {
+            return "";
+        }
+        const subject = beat.owner;
+        if (!subject) {
+            return "";
+        }
+
+
+        const targets = beat.targets;
+        if (targets.length === 0) {
+            return this.noTarget(beat, current_room, subject);
+        } else {
+            return this.withTargets(beat, current_room, subject, targets);
+        }
     }
 
 
