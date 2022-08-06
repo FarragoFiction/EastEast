@@ -139,7 +139,7 @@ const MoveToSpecificPhysicalObject_1 = __webpack_require__(8455);
 class FollowObject extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
-        this.recognizedCommands = ["APPROACH", "CRAWL TO", "SLITHER TO", "WALK TO", "MOVE TO", "GO TO", "FOLLOW", "GO AFTER", "ACCOMPANY", "GO ALONG WITH", "STICK TO"]; //not for peewee, not yet
+        this.recognizedCommands = ["FOLLOW", "APPROACH", "CRAWL TO", "SLITHER TO", "WALK TO", "MOVE TO", "GO TO", "GO AFTER", "ACCOMPANY", "GO ALONG WITH", "STICK TO"]; //not for peewee, not yet
         this.applyAction = (beat) => {
             const subject = beat.owner;
             if (!subject) {
@@ -353,6 +353,7 @@ exports.Help = Help;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Listen = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
 const ThemeStorage_1 = __webpack_require__(1288);
 const BaseAction_1 = __webpack_require__(7042);
 //assume only peewee can look
@@ -380,19 +381,11 @@ class Listen extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["LISTEN", "HEAR"];
-        this.applyAction = (beat) => {
-            const current_room = beat.owner?.room;
-            if (!current_room) {
-                return "";
-            }
-            const subject = beat.owner;
-            if (!subject) {
-                return "";
-            }
-            let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(ThemeStorage_1.SOUND)}.`;
+        this.noTarget = (beat, current_room, subject) => {
             const north = current_room.getNorth();
             const south = current_room.getSouth();
             const east = current_room.getEast();
+            let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(ThemeStorage_1.SOUND)}.`;
             if (north) {
                 thingsHeard = `${thingsHeard} <p>Towards the NORTH, he hears ${north.getRandomThemeConcept(ThemeStorage_1.SOUND)}.</p>`;
             }
@@ -403,6 +396,30 @@ class Listen extends BaseAction_1.Action {
                 thingsHeard = `${thingsHeard} <p>Towards the EAST, he hears ${east.getRandomThemeConcept(ThemeStorage_1.SOUND)}.</p>`;
             }
             return `${subject.name} listens  carefully. He hears ${thingsHeard}`;
+        };
+        this.withTargets = (beat, current_room, subject, targets) => {
+            let thingsHeard = [];
+            for (let target of targets) {
+                thingsHeard.push(target.getRandomThemeConcept(ThemeStorage_1.SOUND));
+            }
+            return `${subject.name} listens carefully to ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}. He hears ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}`;
+        };
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const targets = beat.targets;
+            if (targets.length === 0) {
+                return this.noTarget(beat, current_room, subject);
+            }
+            else {
+                return this.withTargets(beat, current_room, subject, targets);
+            }
         };
     }
 }
@@ -759,7 +776,7 @@ const PhysicalObject_1 = __webpack_require__(8466);
 //apparently the story is from  a 1982 story by David Moser and that strange loop guy quoted it, because ofc he did
 /*
 
-Closer: Witch of Lonely Motivation
+Closer: Lonesome Witch of Threaded Motivation
 Solemn: Watching Sylph of Lonely Faith
 Doc Slaughter: Doctor of Hopeful Eyes
 Twins:  Bards of Hunting Day and Night
@@ -776,7 +793,7 @@ Flower Chick: Waste of Extinguished Blood
 Alt: Stranger of Fleshy Dreams
 Neighbor: Friend of Strange Doom
 Tyrfing: Warrior of Destroyed Hope
-NAM: Apprentice of Fated Identities*/
+NAM: Child of Fated Identities*/
 var Direction;
 (function (Direction) {
     Direction[Direction["UP"] = 1] = "UP";
@@ -1011,13 +1028,13 @@ const GoNorth_1 = __webpack_require__(7415);
 const GoSouth_1 = __webpack_require__(3535);
 const baseFilter_1 = __webpack_require__(9505);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
-const targetNameIncludesAnyOfTheseWords_1 = __webpack_require__(1761);
+const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const BaseBeat_1 = __webpack_require__(1708);
 //because they could, Quotidian starts heading towards the south door.
 exports.testBeat = new BaseBeat_1.AiBeat([new baseFilter_1.TargetFilter()], [new GoSouth_1.GoSouth()]);
-exports.testBeat2 = new BaseBeat_1.AiBeat([new targetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Peewee"])], [new GoNorth_1.GoNorth()]);
+exports.testBeat2 = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Peewee"])], [new GoNorth_1.GoNorth()]);
 exports.testBeat3 = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(30, true)], [new GoEast_1.GoEast()]);
-exports.FollowPeewee = new BaseBeat_1.AiBeat([new targetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Peewee"])], [new FollowObject_1.FollowObject()]);
+exports.FollowPeewee = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Peewee"])], [new FollowObject_1.FollowObject()]);
 exports.SassObject = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass("Gross!", ["Wow you're really gross, aren't you?", "I don't like you!", "Wow! So boring!"])], true);
 
 
@@ -1163,48 +1180,6 @@ class TargetFilter {
     }
 }
 exports.TargetFilter = TargetFilter;
-
-
-/***/ }),
-
-/***/ 1761:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TargetNameIncludesAnyOfTheseWords = void 0;
-const ArrayUtils_1 = __webpack_require__(3907);
-const baseFilter_1 = __webpack_require__(9505);
-class TargetNameIncludesAnyOfTheseWords extends baseFilter_1.TargetFilter {
-    //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
-    constructor(words, singleTarget = false, invert = false, kMode = false) {
-        super(singleTarget, invert, kMode);
-        this.toString = () => {
-            //format this like it might start with either because or and
-            if (this.words.length === 1) {
-                return `they see something named ${this.words[0]}`;
-            }
-            return `they see something named any of these words ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.words)}`;
-        };
-        this.applyFilterToSingleTarget = (owner, target) => {
-            let targetLocked = false;
-            for (let word of this.words) {
-                if (target.name.toUpperCase().includes(word.toUpperCase())) {
-                    targetLocked = true;
-                }
-            }
-            if (targetLocked && !this.invert) {
-                return target;
-            }
-            else {
-                return null;
-            }
-        };
-        this.words = words;
-    }
-}
-exports.TargetNameIncludesAnyOfTheseWords = TargetNameIncludesAnyOfTheseWords;
 
 
 /***/ }),
@@ -1746,6 +1721,10 @@ class PhysicalObject {
     constructor(room, name, x, y, width, height, themes, layer, src, flavorText) {
         this.container = document.createElement("div");
         this.image = document.createElement("img");
+        this.getRandomThemeConcept = (concept) => {
+            const theme = this.rand.pickFrom(this.themes);
+            return theme.pickPossibilityFor(this.rand, concept);
+        };
         this.customShit = () => {
             //for example, living creatures might say things
         };
@@ -4513,11 +4492,12 @@ exports.albhed_map = {
     "0": "https://www.tumblr.com/blog/view/figuringoutnothing/688028145704665088?source=share",
     "1": "http://farragofiction.com/DevonaFears",
     "2": "http://farragofiction.com/NotesOnStealingPeoplesShit/",
-    "3": "https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8",
+    "3": "https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8 by the Watcher of Threads",
     "4": "http://farragofiction.com/PerfectHeist/",
     "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers (The Watcher says they won't spell it out)",
     "7": "https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane",
-    "8": "https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and" //but now the guide of hunters
+    "8": "https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",
+    "9": "https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers"
 };
 const translate = (word) => {
     let ret = word.toLowerCase();
@@ -4557,9 +4537,9 @@ exports.Secret = Secret;
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
 /*
-
+Paradise and parasite
+earworm humming in a dream
 Natalie Yemet (thinks their mom is the customer service rep. has an order for a game they don't remember)
-231223 (actual literal baby)
 some kind of mafia scheme (accuses eyedol of kidnapping)
 SLAUGHTERHOUSE 9
 */
@@ -4624,6 +4604,7 @@ exports.passwords = {
     "ELIAS SMITH": new Secret("JR Ramble", undefined, "Secrets/Content/29.js"),
     "TELLBRAK3700": new Secret("Notes of Slaughter 13", undefined, "Secrets/Content/30.js"),
     "PENNY WICKNER": new Secret("Notes of Slaughter 14", undefined, "Secrets/Content/31.js"),
+    "ONCE YOU OPEN THE CURTAINS ALL THAT'S LEFT TO DO IS GO TO THE OTHER SIDE AND CLOSE THEM AGAIN": new Secret("Notes of Slaughter 15", undefined, "Secrets/Content/35.js"),
     "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts")
 };
@@ -5524,7 +5505,7 @@ That kindness leads her to hide her pain and her worries, even from those she tr
 
 Her strong friendship with Neville, is a source of strength for her, as he sees through even her most clever of facades. However she worries about over relying on him, hence her desire for my services.
 
-It is fortunate that anxiety caused by Knowledge is something of a speciality of me from my time in Morgan's Hill.  
+It is fortunate that anxiety caused by Knowledge is something of a speciality of mine from my time in Morgan's Hill.  
 
 Together we focus on practicing the 5-4-3-2-1 method for coping with anxiety, where she identifies 5 things to see, 4 things to touch, 3 things to hear, 2 things to smell and 1 thing to taste.   In doing this, we are trying to help her form the habit to use her impressive observation talent to break panic spirals, rather than fall into the trap of being Blind to the Outer World while lost in Unhelpful Thoughts.
 
@@ -6563,6 +6544,229 @@ However, Significant Challenges remain blocking this option, namely Captain's in
 
 /***/ }),
 
+/***/ 280:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+//http://knucklessux.com/InfoTokenReader/?mode=loop
+const text = `
+ 
+“I've wandered as far west as I can go. Sitting now on Where lies the strangling fruit that came from the hand of the sand, I watch the sun blur into an aftermath. Reds finally marrying blues. Soon night will  The phrase means that no matter who you are with or where enfold us all. But the light is still not gone, not yet, and by it I the sinner I shall bring forth the seeds of the dead to share with the worms that gather in the can dimly see here my own dark hallway, or maybe it was just a foyer and maybe not dark darkness and surround the world with the power of their lives while from the dimlit halls of other places forms that at all, not in fact brightly lit, an afternoon sun blazing through the lead panes, now detected amidst what amounts to never were and never could be writhe for the impatience of the few who you are in the world, your family and Where lies the a long column of my yesterdays, towards the end, though not the very end of course, strangling fruit that came from the hand of the sinner I shall bring forth the home always have never saw what could have been. In the black water with the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I seeds of the dead to share with the worms that gather in the darkness the sun shining at midnight, those fruit shall come ripe and in the darkness of that which is golden shall split and I've wandered as far west as I can go. Sitting now on the sand, I watch the could to keep her from going.”
+
+This is why classical thought concerning structure could say that the center is, paradoxically, within the open to reveal the revelation of the fatal softness in the earth. The shadows of the abyss are like the petals happy memories. It might not always be the building itself, but being near your loved ones.
+
+Home is surround the structure and outside it. The center is at the center of of a monstrous flower that shall blossom within the skull and expand the mind beyond what world with the power of their lives while from the dimlit halls of other places forms that sun blur into the totality, and yet, since the center does not belong to the totality (is not part of the totality), an aftermath. Reds finally marrying blues. Soon night will where the heart was, where is it any man can bear, but whether it decays under the earth or above on green now?
+
+Where could it ever be. 
+
+How could never were and never could be writhe for the impatience of the totality has its center elsewhere. The center is not the center.”
+
+
+“If one invests some interest the few who never saw what could enfold us all. But the light is still not fields, or out to sea or in the very air, all shall come gone, not yet, and by it it have been your home, if you to revelation, and to revel, in the knowledge of the strangling fruit—and the hand of the sinner so callously abandoned it. One more thing upon the Pyre of have been. In the black water with the sun shining at midnight, those fruit shall shall rejoice, for there is no sin in shadow or in light that the seeds of the dead cannot forgive. And come ripe and I can dimly see here my own dark there shall be in the planting in the shadows a grace and a mercy from which shall blossom dark hallway, or maybe it was just a foyer and in the darkness of that which is golden shall flowers, and their teeth shall devour and sustain and herald the in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, split open to your former life. One more thing sacrificed to the unrelenting desire to KNOW.
+
+And what has maybe not passing of an age. That which dies shall still know life in death for all that decays is dark at all, not in fact brightly lit, an afternoon sun blazing through the further examining the meanings that surface, allowing for unconscious associations to take place, writing all this down as lead panes, now detected amidst what reveal the revelation of the well, until the subject of the tree branches off into the subject of the shelf, that person will fatal softness in the earth. The shadows of the abyss are like the knowing bought you? What satisfaction has it not forgotten and reanimated it shall walk the world in the wrought? 
+
+Is anyone saved, anyone at all, through your obsession?
+
+When you finally reach the petals of a monstrous flower that bliss of not-knowing. And then there shall be a fire that knows the naming of shall blossom within the skull and expand the mind beyond what any man can bear, but whether it decays under the you, and in the presence of the strangling fruit, its dark flame shall acquire every spiraling the center, the end which is not, COULD not, ever be an earth or above on green fields, or out to sea or in the very air, all shall come to end, will you part of you that remains.
+  enjoy immense psychological benefits.”
+  finally be happy? 
+
+Will those who loved you once?
+
+Wasted, Wasted, Following the revelation, and to revel, in the knowledge of the strangling fruit—and the hand of the sinner shall rejoice, for there Tree:
+You had to Know just to Know it, no ending will there be.
+
+Wasted, Wasted, Digging at the Roots:
+If you know how to amounts to a long column of my yesterdays, towards the end, though not the is no sin in shadow or in light that the seeds of the dead cannot forgive. And there shall be make it, your ending will be Truth.
+  in the planting in the shadows a grace and a mercy from which shall blossom dark flowers, and very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going.”
+
+This is their teeth shall devour and sustain and herald the passing of why classical thought concerning structure could say that the center is, paradoxically, within the structure and an age. That which dies shall still know life in death for all that decays is not forgotten and outside it. The center is at the center of the totality, and yet, since the center does not belong to the reanimated it shall walk the world in the bliss of not-knowing. And then there shall be a totality (is not part of the totality), the totality has its fire that knows the naming of you, and in the presence of the strangling fruit, its dark flame shall acquire every part of center elsewhere. The center is not the center.”
+
+
+“If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that you that remains.
+  surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits.”
+ 
+
+`;
+
+const sources = [
+    //https://www.theidioms.com/home-is-where-the-heart-is/
+`
+Similar variations of this saying have been in use since ancient times.  The modern wording that we are familiar with today, first appeared in the J. T. Bickford novel, ‘Scandal’ in 1857. The proverb has been in this present form in the USA since the 1820s.
+
+The phrase means that no matter who you are with or where you are in the world, your family and home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and happy memories. It might not always be the building itself, but being near your loved ones.
+
+`,
+//House of Leaves
+`“I've wandered as far west as I can go. Sitting now on the sand, I watch the sun blur into an aftermath. Reds finally marrying blues. Soon night will enfold us all. But the light is still not gone, not yet, and by it I can dimly see here my own dark hallway, or maybe it was just a foyer and maybe not dark at all, not in fact brightly lit, an afternoon sun blazing through the lead panes, now detected amidst what amounts to a long column of my yesterdays, towards the end, though not the very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going.”
+
+This is why classical thought concerning structure could say that the center is, paradoxically, within the structure and outside it. The center is at the center of the totality, and yet, since the center does not belong to the totality (is not part of the totality), the totality has its center elsewhere. The center is not the center.”
+
+
+“If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits.”
+`
+//JR, both past and present
+
+`he phrase means that no matter who you are with or where you are in the world, your family and home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and happy memories. It might not always be the building itself, but being near your loved ones.
+
+Home is where the heart was, where is it now?
+
+Where could it ever be. 
+
+How could it have been your home, if you so callously abandoned it. One more thing upon the Pyre of your former life. One more thing sacrificed to the unrelenting desire to KNOW.
+
+And what has knowing bought you? What satisfaction has it wrought? 
+
+Is anyone saved, anyone at all, through your obsession?
+
+When you finally reach the spiraling the center, the end which is not, COULD not, ever be an end, will you finally be happy? 
+
+Will those who loved you once?
+
+Wasted, Wasted, Following the Tree:
+You had to Know just to Know it, no ending will there be.
+
+Wasted, Wasted, Digging at the Roots:
+If you know how to make it, your ending will be Truth.`
+
+//― Jeff VanderMeer, Annihilation
+,
+`Where lies the strangling fruit that came from the hand of the sinner I shall bring forth the seeds of the dead to share with the worms that gather in the darkness and surround the world with the power of their lives while from the dimlit halls of other places forms that never were and never could be writhe for the impatience of the few who never saw what could have been. In the black water with the sun shining at midnight, those fruit shall come ripe and in the darkness of that which is golden shall split open to reveal the revelation of the fatal softness in the earth. The shadows of the abyss are like the petals of a monstrous flower that shall blossom within the skull and expand the mind beyond what any man can bear, but whether it decays under the earth or above on green fields, or out to sea or in the very air, all shall come to revelation, and to revel, in the knowledge of the strangling fruit—and the hand of the sinner shall rejoice, for there is no sin in shadow or in light that the seeds of the dead cannot forgive. And there shall be in the planting in the shadows a grace and a mercy from which shall blossom dark flowers, and their teeth shall devour and sustain and herald the passing of an age. That which dies shall still know life in death for all that decays is not forgotten and reanimated it shall walk the world in the bliss of not-knowing. And then there shall be a fire that knows the naming of you, and in the presence of the strangling fruit, its dark flame shall acquire every part of you that remains.`
+
+]
+
+/***/ }),
+
+/***/ 9558:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+//http://knucklessux.com/InfoTokenReader/?mode=loop
+const text = `
+ 
+“ The phrase means that no matter who you are with or where you are in the world, your family and Where lies the strangling fruit that came from the hand of the sinner I shall bring forth the home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and seeds of the dead to share with the worms that gather in the darkness and I've wandered as far west as I can go. Sitting now on the sand, I watch the happy memories. It might not always be the building itself, but being near your loved ones.
+
+Home is surround the world with the power of their lives while from the dimlit halls of other places forms that sun blur into an aftermath. Reds finally marrying blues. Soon night will where the heart was, where is it now?
+
+Where could it ever be. 
+
+How could never were and never could be writhe for the impatience of the few who never saw what could enfold us all. But the light is still not gone, not yet, and by it it have been your home, if you so callously abandoned it. One more thing upon the Pyre of have been. In the black water with the sun shining at midnight, those fruit shall come ripe and I can dimly see here my own dark hallway, or maybe it was just a foyer and in the darkness of that which is golden shall split open to your former life. One more thing sacrificed to the unrelenting desire to KNOW.
+
+And what has maybe not dark at all, not in fact brightly lit, an afternoon sun blazing through the lead panes, now detected amidst what reveal the revelation of the fatal softness in the earth. The shadows of the abyss are like the knowing bought you? What satisfaction has it wrought? 
+
+Is anyone saved, anyone at all, through your obsession?
+
+When you finally reach the petals of a monstrous flower that shall blossom within the skull and expand the mind beyond what any man can bear, but whether it decays under the spiraling the center, the end which is not, COULD not, ever be an earth or above on green fields, or out to sea or in the very air, all shall come to end, will you finally be happy? 
+
+Will those who loved you once?
+
+Wasted, Wasted, Following the revelation, and to revel, in the knowledge of the strangling fruit—and the hand of the sinner shall rejoice, for there Tree:
+You had to Know just to Know it, no ending will there be.
+
+Wasted, Wasted, Digging at the Roots:
+If you know how to amounts to a long column of my yesterdays, towards the end, though not the is no sin in shadow or in light that the seeds of the dead cannot forgive. And there shall be make it, your ending will be Truth.
+  in the planting in the shadows a grace and a mercy from which shall blossom dark flowers, and very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going.”
+
+This is their teeth shall devour and sustain and herald the passing of why classical thought concerning structure could say that the center is, paradoxically, within the structure and an age. That which dies shall still know life in death for all that decays is not forgotten and outside it. The center is at the center of the totality, and yet, since the center does not belong to the reanimated it shall walk the world in the bliss of not-knowing. And then there shall be a totality (is not part of the totality), the totality has its fire that knows the naming of you, and in the presence of the strangling fruit, its dark flame shall acquire every part of center elsewhere. The center is not the center.”
+
+
+“If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that you that remains.
+  surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits.”
+
+
+`;
+
+const sources = [
+    //https://www.theidioms.com/home-is-where-the-heart-is/
+`
+Similar variations of this saying have been in use since ancient times.  The modern wording that we are familiar with today, first appeared in the J. T. Bickford novel, ‘Scandal’ in 1857. The proverb has been in this present form in the USA since the 1820s.
+
+The phrase means that no matter who you are with or where you are in the world, your family and home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and happy memories. It might not always be the building itself, but being near your loved ones.
+
+`,
+//House of Leaves
+`“I've wandered as far west as I can go. Sitting now on the sand, I watch the sun blur into an aftermath. Reds finally marrying blues. Soon night will enfold us all. But the light is still not gone, not yet, and by it I can dimly see here my own dark hallway, or maybe it was just a foyer and maybe not dark at all, not in fact brightly lit, an afternoon sun blazing through the lead panes, now detected amidst what amounts to a long column of my yesterdays, towards the end, though not the very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going.”
+
+This is why classical thought concerning structure could say that the center is, paradoxically, within the structure and outside it. The center is at the center of the totality, and yet, since the center does not belong to the totality (is not part of the totality), the totality has its center elsewhere. The center is not the center.”
+
+
+“If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits.”
+`
+//JR, both past and present
+
+`he phrase means that no matter who you are with or where you are in the world, your family and home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and happy memories. It might not always be the building itself, but being near your loved ones.
+
+Home is where the heart was, where is it now?
+
+Where could it ever be. 
+
+How could it have been your home, if you so callously abandoned it. One more thing upon the Pyre of your former life. One more thing sacrificed to the unrelenting desire to KNOW.
+
+And what has knowing bought you? What satisfaction has it wrought? 
+
+Is anyone saved, anyone at all, through your obsession?
+
+When you finally reach the spiraling the center, the end which is not, COULD not, ever be an end, will you finally be happy? 
+
+Will those who loved you once?
+
+Wasted, Wasted, Following the Tree:
+You had to Know just to Know it, no ending will there be.
+
+Wasted, Wasted, Digging at the Roots:
+If you know how to make it, your ending will be Truth.`
+
+//― Jeff VanderMeer, Annihilation
+,
+`Where lies the strangling fruit that came from the hand of the sinner I shall bring forth the seeds of the dead to share with the worms that gather in the darkness and surround the world with the power of their lives while from the dimlit halls of other places forms that never were and never could be writhe for the impatience of the few who never saw what could have been. In the black water with the sun shining at midnight, those fruit shall come ripe and in the darkness of that which is golden shall split open to reveal the revelation of the fatal softness in the earth. The shadows of the abyss are like the petals of a monstrous flower that shall blossom within the skull and expand the mind beyond what any man can bear, but whether it decays under the earth or above on green fields, or out to sea or in the very air, all shall come to revelation, and to revel, in the knowledge of the strangling fruit—and the hand of the sinner shall rejoice, for there is no sin in shadow or in light that the seeds of the dead cannot forgive. And there shall be in the planting in the shadows a grace and a mercy from which shall blossom dark flowers, and their teeth shall devour and sustain and herald the passing of an age. That which dies shall still know life in death for all that decays is not forgotten and reanimated it shall walk the world in the bliss of not-knowing. And then there shall be a fire that knows the naming of you, and in the presence of the strangling fruit, its dark flame shall acquire every part of you that remains.`
+
+]
+
+/***/ }),
+
+/***/ 9699:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+
+Name: Phil Varker
+Aliases:  None
+Coping Strategy: Wounded and Defensive (Obsession)
+Attachment Style: Unclear
+
+Quick Summary:
+
+Phil was introduced to me through my contacts at the Westerville Police Force. He's on medical leave pending a clear bill of mental health. He has bright, searching eyes and a firm grasp on reality. A forensics specialist, he dreamed of becoming a biologist as a child and finds the idea of alien life extremely plausible. 
+
+This, unfortunately is Necessary Context for understanding the shape of his Maze-Based Obsession.  Phil discovered Impossible Biological Material at the scenes of various crimes (feathers not corresponding to any known bird, human cells impossibly adapted to extremes of temperature, necrotized tissue that nonetheless remains alive, etc etc). 
+
+He became increasingly Obsessed with Getting To The Bottom of the mystery that seemed to be completely Unseen by his Peers, eventually ending with his medical leave.
+
+I'm working with him to separate Relevant Facts from Irrelevant Facts, to develop mindfulness habits intended to steer him away from the grisly fate that remains should he continue along this path.
+
+
+Note: The Whispers Within me call for him. I continue to develop my own mindfulness techniques to reduce their strength.
+
+`;
+
+/***/ }),
+
 /***/ 2892:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -6883,6 +7087,12 @@ var map = {
 	"./Secrets/Content/30.js": 4453,
 	"./Secrets/Content/31": 7253,
 	"./Secrets/Content/31.js": 7253,
+	"./Secrets/Content/33": 280,
+	"./Secrets/Content/33.js": 280,
+	"./Secrets/Content/34": 9558,
+	"./Secrets/Content/34.js": 9558,
+	"./Secrets/Content/35": 9699,
+	"./Secrets/Content/35.js": 9699,
 	"./Secrets/Content/4": 2892,
 	"./Secrets/Content/4.js": 2892,
 	"./Secrets/Content/5": 1952,

@@ -33,22 +33,12 @@ export class Listen extends Action {
 
     recognizedCommands: string[] = ["LISTEN", "HEAR"];
 
-
-    applyAction = (beat: AiBeat)=>{
-        const current_room = beat.owner?.room;
-        if(!current_room){
-            return "";
-        }
-        const subject = beat.owner;
-        if(!subject){
-            return "";
-        }
-        let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(SOUND)}.`;
-
-
+    noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian)=>{
         const north = current_room.getNorth();
         const south = current_room.getSouth();
         const east = current_room.getEast();
+        let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(SOUND)}.`;
+
         if (north) {
             thingsHeard = `${thingsHeard} <p>Towards the NORTH, he hears ${north.getRandomThemeConcept(SOUND)}.</p>`;
         }
@@ -62,6 +52,36 @@ export class Listen extends Action {
         }
 
         return `${subject.name} listens  carefully. He hears ${thingsHeard}`;
+    }
+
+    withTargets = (beat: AiBeat,current_room: Room, subject: Quotidian, targets: PhysicalObject[])=>{
+        let thingsHeard:string[] = [];
+        for(let target of targets){
+            thingsHeard.push(target.getRandomThemeConcept(SOUND));
+        }
+
+        return `${subject.name} listens carefully to ${turnArrayIntoHumanSentence(targets.map((e)=>e.name))}. He hears ${turnArrayIntoHumanSentence(thingsHeard)}.`;
+
+    }
+
+
+    applyAction = (beat: AiBeat)=>{
+        const current_room = beat.owner?.room;
+        if(!current_room){
+            return "";
+        }
+        const subject = beat.owner;
+        if(!subject){
+            return "";
+        }
+
+    
+        const targets = beat.targets;
+        if(targets.length ===0){
+            return this.noTarget(beat, current_room, subject);
+        }else{
+            return this.withTargets(beat, current_room, subject, targets);
+        }
     }
 
 

@@ -5,7 +5,7 @@ import { GoNorth } from "../Actions/GoNorth";
 import { GoSouth } from "../Actions/GoSouth";
 import { TargetFilter } from "../TargetFilter/baseFilter";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
-import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/targetNameIncludesAnyOfTheseWords";
+import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { AiBeat } from "./BaseBeat";
 
 //because they could, Quotidian starts heading towards the south door.

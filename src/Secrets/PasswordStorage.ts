@@ -110,9 +110,9 @@ export interface PasswordMap {
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
 /*
-
+Paradise and parasite
+earworm humming in a dream
 Natalie Yemet (thinks their mom is the customer service rep. has an order for a game they don't remember)
-231223 (actual literal baby)
 some kind of mafia scheme (accuses eyedol of kidnapping)
 SLAUGHTERHOUSE 9
 */
@@ -178,6 +178,7 @@ export const passwords: PasswordMap = {
     , "ELIAS SMITH": new Secret("JR Ramble", undefined, "Secrets/Content/29.js")
     , "TELLBRAK3700": new Secret("Notes of Slaughter 13", undefined, "Secrets/Content/30.js")
     , "PENNY WICKNER": new Secret("Notes of Slaughter 14", undefined, "Secrets/Content/31.js")
+    , "ONCE YOU OPEN THE CURTAINS ALL THAT'S LEFT TO DO IS GO TO THE OTHER SIDE AND CLOSE THEM AGAIN": new Secret("Notes of Slaughter 15", undefined, "Secrets/Content/35.js")
 
     , "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts") 
     , "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts") 

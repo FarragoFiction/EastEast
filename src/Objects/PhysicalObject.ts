@@ -57,6 +57,12 @@ export class PhysicalObject{
         this.src = src;
     }
 
+    getRandomThemeConcept = (concept: string) => {
+        const theme = this.rand.pickFrom(this.themes);
+        return theme.pickPossibilityFor(this.rand, concept);
+    }
+
+
     customShit = ()=>{
         //for example, living creatures might say things
     }
