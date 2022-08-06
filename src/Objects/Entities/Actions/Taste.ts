@@ -33,6 +33,38 @@ export class Taste extends Action {
 
     recognizedCommands: string[] = ["TASTE", "LICK", "EAT", 'FLAVOR', "MUNCH", "BITE", "TONGUE", "SLURP", "NOM"];
 
+    sense = TASTE;
+
+    noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian)=>{
+        const north = current_room.getNorth();
+        const south = current_room.getSouth();
+        const east = current_room.getEast();
+        let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(this.sense)}.`;
+        if (north) {
+            thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the NORTH DOOR he tastes ${north.getRandomThemeConcept(this.sense)}.</p>`;
+        }
+
+        if (south) {
+            thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the SOUTH DOOR he tastes ${south.getRandomThemeConcept(this.sense)}.</p>`;
+        }
+
+        if (east) {
+            thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the EAST DOOR he tastes ${east.getRandomThemeConcept(this.sense)}.</p>`;
+        }
+
+        return `${subject.name} starts licking things at random. He has so many regrets. He will never forget the flavor of ${thingsHeard}`;
+    }
+
+    withTargets = (beat: AiBeat,current_room: Room, subject: Quotidian, targets: PhysicalObject[])=>{
+        let thingsHeard:string[] = [];
+        for(let target of targets){
+            thingsHeard.push(target.getRandomThemeConcept(this.sense));
+        }
+
+        return `${subject.name} slowly licks ${turnArrayIntoHumanSentence(targets.map((e)=>e.name))}. He tastes ${turnArrayIntoHumanSentence(thingsHeard)}. Why would you have him do that!?`;
+
+    }
+
 
     applyAction = (beat: AiBeat)=>{
         const current_room = beat.owner?.room;
@@ -43,27 +75,14 @@ export class Taste extends Action {
         if(!subject){
             return "";
         }
-        let thingsHeard = `${current_room.getRandomThemeConcept(TASTE)}.`;
 
-
-        const north = current_room.getNorth();
-        const south = current_room.getSouth();
-        const east = current_room.getEast();
-        if (north) {
-            thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the NORTH DOOR he tastes ${north.getRandomThemeConcept(TASTE)}.</p>`;
+    
+        const targets = beat.targets;
+        if(targets.length ===0){
+            return this.noTarget(beat, current_room, subject);
+        }else{
+            return this.withTargets(beat, current_room, subject, targets);
         }
-
-        if (south) {
-            thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the SOUTH DOOR he tastes ${south.getRandomThemeConcept(TASTE)}.</p>`;
-        }
-
-        if (east) {
-            thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the EAST DOOR he tastes ${east.getRandomThemeConcept(TASTE)}.</p>`;
-        }
-
-        return `${subject.name} starts licking things at random. He has so many regrets. He will never forget the flavor of ${thingsHeard} Wow, he's really being thorough.`;
     }
-
-
 
 }

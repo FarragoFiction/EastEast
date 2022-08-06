@@ -641,6 +641,7 @@ exports.StopMoving = StopMoving;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Taste = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
 const ThemeStorage_1 = __webpack_require__(1288);
 const BaseAction_1 = __webpack_require__(7042);
 //assume only peewee can look
@@ -668,6 +669,30 @@ class Taste extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["TASTE", "LICK", "EAT", 'FLAVOR', "MUNCH", "BITE", "TONGUE", "SLURP", "NOM"];
+        this.sense = ThemeStorage_1.TASTE;
+        this.noTarget = (beat, current_room, subject) => {
+            const north = current_room.getNorth();
+            const south = current_room.getSouth();
+            const east = current_room.getEast();
+            let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(this.sense)}.`;
+            if (north) {
+                thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the NORTH DOOR he tastes ${north.getRandomThemeConcept(this.sense)}.</p>`;
+            }
+            if (south) {
+                thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the SOUTH DOOR he tastes ${south.getRandomThemeConcept(this.sense)}.</p>`;
+            }
+            if (east) {
+                thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the EAST DOOR he tastes ${east.getRandomThemeConcept(this.sense)}.</p>`;
+            }
+            return `${subject.name} starts licking things at random. He has so many regrets. He will never forget the flavor of ${thingsHeard}`;
+        };
+        this.withTargets = (beat, current_room, subject, targets) => {
+            let thingsHeard = [];
+            for (let target of targets) {
+                thingsHeard.push(target.getRandomThemeConcept(this.sense));
+            }
+            return `${subject.name} slowly licks ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}. He tastes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. Why would you have him do that!?`;
+        };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
             if (!current_room) {
@@ -677,20 +702,13 @@ class Taste extends BaseAction_1.Action {
             if (!subject) {
                 return "";
             }
-            let thingsHeard = `${current_room.getRandomThemeConcept(ThemeStorage_1.TASTE)}.`;
-            const north = current_room.getNorth();
-            const south = current_room.getSouth();
-            const east = current_room.getEast();
-            if (north) {
-                thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the NORTH DOOR he tastes ${north.getRandomThemeConcept(ThemeStorage_1.TASTE)}.</p>`;
+            const targets = beat.targets;
+            if (targets.length === 0) {
+                return this.noTarget(beat, current_room, subject);
             }
-            if (south) {
-                thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the SOUTH DOOR he tastes ${south.getRandomThemeConcept(ThemeStorage_1.TASTE)}.</p>`;
+            else {
+                return this.withTargets(beat, current_room, subject, targets);
             }
-            if (east) {
-                thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the EAST DOOR he tastes ${east.getRandomThemeConcept(ThemeStorage_1.TASTE)}.</p>`;
-            }
-            return `${subject.name} starts licking things at random. He has so many regrets. He will never forget the flavor of ${thingsHeard} Wow, he's really being thorough.`;
         };
     }
 }
