@@ -530,6 +530,7 @@ exports.Look = Look;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Smell = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
 const ThemeStorage_1 = __webpack_require__(1288);
 const BaseAction_1 = __webpack_require__(7042);
 //assume only peewee can look
@@ -557,6 +558,30 @@ class Smell extends BaseAction_1.Action {
         */
         super(...arguments);
         this.recognizedCommands = ["SNIFF", "SMELL", "SNORT", "INHALE", "WHIFF"];
+        this.sense = ThemeStorage_1.SMELL;
+        this.noTarget = (beat, current_room, subject) => {
+            const north = current_room.getNorth();
+            const south = current_room.getSouth();
+            const east = current_room.getEast();
+            let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(this.sense)}.`;
+            if (north) {
+                thingsHeard = `${thingsHeard} <p>Towards the NORTH, he detects a whiff of ${north.getRandomThemeConcept(this.sense)}.</p>`;
+            }
+            if (south) {
+                thingsHeard = `${thingsHeard} <p>Towards the SOUTH, he  detects a whiff of ${south.getRandomThemeConcept(this.sense)}.</p>`;
+            }
+            if (east) {
+                thingsHeard = `${thingsHeard} <p>Towards the EAST, he  detects a whiff of ${east.getRandomThemeConcept(this.sense)}.</p>`;
+            }
+            return `${subject.name} takes in a lungful of air. His cybernetic nose detects traces of ${thingsHeard}`;
+        };
+        this.withTargets = (beat, current_room, subject, targets) => {
+            let thingsHeard = [];
+            for (let target of targets) {
+                thingsHeard.push(target.getRandomThemeConcept(this.sense));
+            }
+            return `${subject.name} slowly sniffs at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}. He smells ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. Kinda gross.`;
+        };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
             if (!current_room) {
@@ -566,20 +591,13 @@ class Smell extends BaseAction_1.Action {
             if (!subject) {
                 return "";
             }
-            let thingsHeard = `${current_room.getRandomThemeConcept(ThemeStorage_1.SMELL)}.`;
-            const north = current_room.getNorth();
-            const south = current_room.getSouth();
-            const east = current_room.getEast();
-            if (north) {
-                thingsHeard = `${thingsHeard} <p>Towards the NORTH, he can detect a whiff of ${north.getRandomThemeConcept(ThemeStorage_1.SMELL)}.</p>`;
+            const targets = beat.targets;
+            if (targets.length === 0) {
+                return this.noTarget(beat, current_room, subject);
             }
-            if (south) {
-                thingsHeard = `${thingsHeard} <p>Towards the SOUTH, he can detect a whiff of ${south.getRandomThemeConcept(ThemeStorage_1.SMELL)}.</p>`;
+            else {
+                return this.withTargets(beat, current_room, subject, targets);
             }
-            if (east) {
-                thingsHeard = `${thingsHeard} <p>Towards the EAST, he can detect a whiff of ${east.getRandomThemeConcept(ThemeStorage_1.SMELL)}.</p>`;
-            }
-            return `${subject.name} takes in a lungful of air. His cybernetic nose detects traces of ${thingsHeard}`;
         };
     }
 }
