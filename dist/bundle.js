@@ -161,7 +161,7 @@ const MoveToSpecificPhysicalObject_1 = __webpack_require__(8455);
 class FollowObject extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
-        this.recognizedCommands = ["FOLLOW", "APPROACH", "CRAWL TO", "SLITHER TO", "WALK TO", "MOVE TO", "GO TO", "GO AFTER", "ACCOMPANY", "GO ALONG WITH", "STICK TO"]; //not for peewee, not yet
+        this.recognizedCommands = ["FOLLOW", "APPROACH", "CRAWL", "SLITHER", "WALK", "MOVE", "GO", "ACCOMPANY", "STICK"]; //not for peewee, not yet
         this.applyAction = (beat) => {
             const subject = beat.owner;
             if (!subject) {
@@ -519,7 +519,8 @@ class Look extends BaseAction_1.Action {
             for (let target of targets) {
                 thingsHeard.push(`${target.getRandomThemeConcept(ThemeStorage_1.ADJ)} ${target.getRandomThemeConcept(ThemeStorage_1.PERSON)}`);
             }
-            return `${subject.name} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${targets[0].name}. ${targets[0].flavorText}`;
+            const lookcloser = current_room.rand.pickFrom(targets);
+            return `${subject.name} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.name}. ${lookcloser.flavorText}`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -776,7 +777,7 @@ class Think extends BaseAction_1.Action {
             for (let target of targets) {
                 thingsHeard.push(target.getRandomThemeConcept(this.concept));
             }
-            return `${subject.name} looks to ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))} for inspiration. He thinks: ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}.`;
+            return `${subject.name} looks to ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))} for inspiration. He thinks: ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
