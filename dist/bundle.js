@@ -739,6 +739,69 @@ exports.Taste = Taste;
 
 /***/ }),
 
+/***/ 5639:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Think = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const BaseAction_1 = __webpack_require__(7042);
+const ThemeStorage_1 = __webpack_require__(1288);
+//assume only peewee can look
+class Think extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["THINK", "PONDER", "CONTEMPLATE", "PHILOSOPHIZE", "BULLSHIT"];
+        this.concept = ThemeStorage_1.PHILOSOPHY;
+        this.noTarget = (beat, current_room, subject) => {
+            let thingsSeen = `Peewee thinks: ${current_room.getRandomThemeConcept(this.concept)}. `;
+            const north = current_room.getNorth();
+            const south = current_room.getSouth();
+            const east = current_room.getEast();
+            if (north) {
+                thingsSeen = `${thingsSeen} <p>Looking at the NORTH door, he thinks: ${north.getRandomThemeConcept(this.concept)}.</p>`;
+            }
+            if (south) {
+                thingsSeen = `${thingsSeen} <p>Looking at the SOUTH door, he thinks:  ${south.getRandomThemeConcept(this.concept)}.</p>`;
+            }
+            if (east) {
+                thingsSeen = `${thingsSeen} <p>Looking at the EAST door, he thinks: ${east.getRandomThemeConcept(this.concept)}.</p>`;
+            }
+            return thingsSeen;
+        };
+        this.withTargets = (beat, current_room, subject, targets) => {
+            let thingsHeard = [];
+            for (let target of targets) {
+                thingsHeard.push(target.getRandomThemeConcept(this.concept));
+            }
+            return `${subject.name} looks to ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))} for inspiration. He thinks: ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}.`;
+        };
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const targets = beat.targets;
+            if (targets.length === 0) {
+                return this.noTarget(beat, current_room, subject);
+            }
+            else {
+                return this.withTargets(beat, current_room, subject, targets);
+            }
+        };
+    }
+}
+exports.Think = Think;
+
+
+/***/ }),
+
 /***/ 1160:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -763,6 +826,7 @@ const Look_1 = __webpack_require__(2741);
 const Smell_1 = __webpack_require__(3834);
 const StopMoving_1 = __webpack_require__(4469);
 const Taste_1 = __webpack_require__(8520);
+const Think_1 = __webpack_require__(5639);
 const Quotidian_1 = __webpack_require__(6647);
 const BaseBeat_1 = __webpack_require__(1708);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
@@ -794,12 +858,12 @@ class Peewee extends Quotidian_1.Quotidian {
         };
         console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe");
         const beats = [];
-        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
+        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
         //only for peewee
-        this.possibleActions = [new StopMoving_1.StopMoving(), new FollowObject_1.FollowObject(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
+        this.possibleActions = [new StopMoving_1.StopMoving(), new FollowObject_1.FollowObject(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -851,7 +915,7 @@ const PhysicalObject_1 = __webpack_require__(8466);
 //https://tvtropes.org/pmwiki/pmwiki.php/Literature/ThisIsTheTitleOfThisStory
 //apparently the story is from  a 1982 story by David Moser and that strange loop guy quoted it, because ofc he did
 /*
-
+Peewee Puppet of Twisted Fate
 Closer: Lonesome Witch of Threaded Motivation
 Solemn: Watching Sylph of Lonely Faith
 Doc Slaughter: Doctor of Hopeful Eyes
@@ -3234,7 +3298,7 @@ const initFloorForegrounds = () => {
     exports.floor_foregrounds[exports.BURIED] = [{ src: "Buried_Object.png", desc: "X Marks the Spot." }, { src: "grave.png", desc: "You hear faint scratching from underneath." }, { src: "grave.png", desc: "You could sleep under here forever buried." }, { src: "pickax.png", desc: "With this you could dig and dig and dig deep into the earth until no one could ever save you." }, { src: "pit.png", desc: "The warm embrace of the earth awaits. Why must you cling so to the cold, unforgiving sky?" }, { src: "pit2.png", desc: "Down and down it goes. You want to jump in." }, { src: "well.png", desc: "It goes so deep into the earth. You cannot see the bottom. The concept of a bottom is anathema to this well." }, { src: "shovel.png", desc: "DIG" }];
     exports.floor_foregrounds[exports.ANGELS] = [{ src: "Angel_Object.png", desc: "Do you hear the tintinnabulation?" }, { src: "writingtablet.png", desc: "The words of your gods are written here." }, { src: "obelisk.png", desc: "It lists out the praises of the gods." }, { src: "jars.png", desc: "Jars of holy water." }, { src: "iceglacier.png", desc: "It feels holy." }, { src: "angelstatue.png", desc: "The angels bless you." }];
     exports.floor_foregrounds[exports.PLANTS] = [{ src: "Plants_Object2.png", desc: "What a terrible place to try and grow..." }, { src: "Plants_Object1.png", desc: "What a terrible place to try and grow..." }, { src: "yellowflowers.png", desc: "Weeds, but pretty ones." }, { src: "wildflowers.png", desc: "These flowers grow with no human hand." }, { src: "tallpottedplant.png", desc: "It seems healthy, though confined." }, { src: "shovel.png", desc: "Did someone leave it here after planting something?" }, { src: "pinetree.png", desc: "You wonder how trees manage to grow inside this labyrinth." }, { src: "grass.png", desc: "Surprisingly fertile soil produces this clump of grass." }, { src: "flowers.png", desc: "Beautiful flowers. Pointless flowers." }, { src: "fern.png", desc: "For an instant, you think this might be some sort of...creature. But no. Just a fern." }, { src: "cactus2.png", desc: "The most tsundere of plants." }, { src: "cactus.png", desc: "You don't think it can talk. You aren't sure why this disappoints you." }, { src: "cabbages.png", desc: "These cabbages are well grown." }];
-    exports.floor_foregrounds[exports.WEB] = [{ src: "webzampiano.png", desc: "Your body positions itself in front of it and begins playing a jaunty tune on it." }, { src: "webwine2.png", desc: "Will you choose to give up control of your body?" }, { src: "webwine.png", desc: "Spiders desperately scrabble for purchase at the surface of the liquid. Some have already drowned and sunk to the bottom of the bottle." }, { src: "webvanity.png", desc: "Your hands jerkily go through the motions of putting makeup on." }, { src: "webthrone.png", desc: "Are even Ruler's immune from the pressures of society?" }, { src: "webtable3.png", desc: "Small bugs are trapped here." }, { src: "webtable2.png", desc: "You see shadows moving inside." }, { src: "webtable.png", desc: "What could this trap?" }, { src: "websword2.png", desc: "Long abandoned." }, { src: "websword1.png", desc: "Bad things will happen if you touch it." }, { src: "webswords.png", desc: "Who laid them here so carefully together?" }, { src: "webshield.png", desc: "You are frozen in the certainty that if you were to pick this up, threads would bind it forever to your body." }, { src: "webshelves.png", desc: "Society puppets you into keeping things maintained." }, { src: "webscrolls.png", desc: "What is knowlege but a means to manipulate others?" }, { src: "webpot.png", desc: "It's filled with spiders." }, { src: "weborgan.png", desc: "It plays a haunting melody all on its own, as gossamer threads tug on the keys." }, { src: "webbooks.png", desc: "If you read all these books you will be dancing to the collector tune." }, { src: "webmoney.png", desc: "What is money but chains?" }, { src: "webjars.png", desc: "Small spiders scuttle inside, endlessly trying to climb up the smooth glass then falling down." }, { src: "webjam.png", desc: "Evolution has programmed you to prefer dense caloric options." }, { src: "webfortune.png", desc: "We are all bound by fate." }, { src: "webflower.png", desc: "Gifts are classic ways to manipulate others." }, { src: "webeggs.png", desc: "You can see shadows moving inside the eggs. Occasionally they twitch." }, { src: "webdragon.png", desc: "Even the most powerful among us are powerless in the face of traps and manipulation." }, { src: "webbooks.png", desc: "What are words but a way to control others?" }, { src: "webbing4.png", desc: "What could possibly make such a huge web?" }, { src: "webbing3.png", desc: "It looks like Mr. Spider is not home." }, { src: "webbing.png", desc: "Tiny spiders work tirelessly to spin more of this web." }, { src: "webbarrell.png", desc: "More laughs than a barrel of spiders." }, { src: "scarecrow2.png", desc: "Almost invisible threads jerk and tug it in a variety of directions. It seems to be in pain." }, { src: "scarecrow.png", desc: "Nearly invisible threads connect to each of its joints. It isn't moving, but you aren't sure it will stay that way." }];
+    exports.floor_foregrounds[exports.WEB] = [{ name: "Piano", src: "webzampiano.png", desc: "Your body positions itself in front of it and begins playing a jaunty tune on it." }, { name: "Wine", src: "webwine2.png", desc: "Will you choose to give up control of your body?" }, { name: "Wine", src: "webwine.png", desc: "Spiders desperately scrabble for purchase at the surface of the liquid. Some have already drowned and sunk to the bottom of the bottle." }, { name: "Vanity", src: "webvanity.png", desc: "Your hands jerkily go through the motions of putting makeup on." }, { name: "Throne", src: "webthrone.png", desc: "Are even Ruler's immune from the pressures of society?" }, { name: "Table", src: "webtable3.png", desc: "Small bugs are trapped here." }, { name: "Table", src: "webtable2.png", desc: "You see shadows moving inside." }, { name: "Table", src: "webtable.png", desc: "What could this trap?" }, { name: "Sword", src: "websword2.png", desc: "You know for a fact if you picked this up it would control you." }, { name: "Sword", src: "websword1.png", desc: "Bad things will happen if you touch it." }, { name: "Sword", src: "webswords.png", desc: "Who laid them here so carefully together?" }, { name: "Shield", src: "webshield.png", desc: "You are frozen in the certainty that if you were to pick this up, threads would bind it forever to your body." }, { name: "Shelves", src: "webshelves.png", desc: "Society puppets you into keeping things maintained." }, { name: "Scrolls", src: "webscrolls.png", desc: "What is knowlege but a means to manipulate others?" }, { name: "Pot", src: "webpot.png", desc: "It's filled with spiders." }, { name: "Organ", src: "weborgan.png", desc: "It plays a haunting melody all on its own, as gossamer threads tug on the keys." }, { name: "Books", src: "webbooks.png", desc: "If you read all these books you will be dancing to the collector tune." }, { name: "Money", src: "webmoney.png", desc: "What is money but chains?" }, { name: "Jars", src: "webjars.png", desc: "Small spiders scuttle inside, endlessly trying to climb up the smooth glass then falling down." }, { name: "Jam", src: "webjam.png", desc: "Evolution has programmed you to prefer dense caloric options." }, { name: "Fortune", src: "webfortune.png", desc: "We are all bound by fate." }, { name: "Flower", src: "webflower.png", desc: "Gifts are classic ways to manipulate others." }, { name: "Eggs", src: "webeggs.png", desc: "You can see shadows moving inside the eggs. Occasionally they twitch." }, { name: "Dragon", src: "webdragon.png", desc: "Even the most powerful among us are powerless in the face of traps and manipulation." }, { name: "Books", src: "webbooks.png", desc: "What are words but a way to control others?" }, { name: "Huge Web", src: "webbing4.png", desc: "What could possibly make such a huge web?" }, { name: "Web", src: "webbing3.png", desc: "It looks like Mr. Spider is not home." }, { name: "Web", src: "webbing.png", desc: "Tiny spiders work tirelessly to spin more of this web." }, { name: "Barrel", src: "webbarrell.png", desc: "More laughs than a barrel of spiders." }, { name: "Scarecrow", src: "scarecrow2.png", desc: "Almost invisible threads jerk and tug it in a variety of directions. It seems to be in pain." }, { name: "Scarecrow", src: "scarecrow.png", desc: "Nearly invisible threads connect to each of its joints. It isn't moving, but you aren't sure it will stay that way." }];
     exports.floor_foregrounds[exports.KILLING] = [{ src: "knife.png", desc: "Knife goes in. Blood comes out. It's that simple." }, { src: "violentbed.png", desc: "A fight happened here." }, { src: "webswords.png", desc: "There is clarity in killing. The why doesn't matter, only the how." }, { src: "swords.png", desc: "You could kill a lot of people with these." }, { src: "swordanvil.png", desc: "A weapon has only one purpose: killing." }, { src: "stumpwithax.png", desc: "You feel the inexplicable urge to write 'All Work And No Play Makes Johnny A Dull Boy' over and over again." }, { src: "pickax.png", desc: "You could really do some damage to someone's skull with this." }, { src: "choppingblock.png", desc: "You almost wish you weren't alone in this maze, just so you could test this knife out." }, { src: "boxoknives.png", desc: "You could really do some damage to someone with all these knives." }, { src: "bloodfountain.png", desc: "You feel the inexplicable urge to bathe in this." }];
     exports.floor_foregrounds[exports.FLESH] = [{ src: "Flesh_Object2.png", desc: "It pulsates gently." }, { src: "Flesh_Object.png", desc: "The beefy arm is waving at you in between flexing." }, { src: "skeleton1.png", desc: "You think you could make a pretty decent bone broth from this." }, { src: "skeleton2.png", desc: "In the end we are all just meat hanging off bones." }, { src: "ham.png", desc: "Meat is meat." }, { src: "turkey.png", desc: "It smells delicious. It was alive once, as you are now. You'll smell delicious, too, one day." }, { src: "meatslabs.png", desc: "Meat is me." }, { src: "meatgrinder.png", desc: "You slowly feed your right arm into it and watch the ribbons of flesh pour out the other end." }, { src: "meatchops.png", desc: "They are grown from your own cells, you can feel this in your bones." }, { src: "meatchops.png", desc: "This doesn't look quite like pork.  Somehow, that unsettles you." }, { src: "fishcrate.png", desc: "Your flesh isn't fundamentally different than the flesh of these fish." }, { src: "cookingpot.png", desc: "Something savory and meaty wafts out." }, { src: "choppingblock.png", desc: "It's incredible what a good quality butcher's knife can do to meat." }, { src: "butcheredmeat.png", desc: "In the end we are nothing more than meat." }];
     exports.floor_foregrounds[exports.APOCALYPSE] = [{ src: "Apocalypse_Object.png", desc: "This doll house scale ruined building would be cute if it weren't for the smell emanating from it..." }, { src: "fossil1.png", desc: "As death is a natural and inevitable part of life, extinction is the natural fate of all worlds." }, { src: "fossil2.png", desc: "There are entire species consisting solely of the dead." }, { src: "fossil3.png", desc: "For ever species we know have vanished, how many thousands extinguished without a sound? " }, { src: "fossil4.png", desc: "As Death comes to all beings, Extinction comes to all species." }, { src: "fossil5.png", desc: "How impossibly lucky is this creature, for their bones to survive epochs?" }, { src: "fossil6.png", desc: "To fear Extinction is to fear inevitability." }, { src: "fossil7.png", desc: "What entire ecosystems lived and died before you took your first breath?" }, { src: "science.png", desc: "Just enough knowledge to destroy it all." }, { src: "webooks.png", desc: "How long will the works of man outlast us?" }];
@@ -7115,6 +7179,8 @@ var map = {
 	"./Objects/Entities/Actions/StopMoving.ts": 4469,
 	"./Objects/Entities/Actions/Taste": 8520,
 	"./Objects/Entities/Actions/Taste.ts": 8520,
+	"./Objects/Entities/Actions/Think": 5639,
+	"./Objects/Entities/Actions/Think.ts": 5639,
 	"./Objects/Entities/Peewee": 1160,
 	"./Objects/Entities/Peewee.ts": 1160,
 	"./Objects/Entities/Quotidian": 6647,
