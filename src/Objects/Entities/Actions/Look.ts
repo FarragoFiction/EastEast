@@ -77,7 +77,7 @@ export class Look extends Action {
             thingsHeard.push(`${target.getRandomThemeConcept(ADJ)} ${target.getRandomThemeConcept(PERSON)}`);
         }
 
-        return `${subject.name} looks at ${turnArrayIntoHumanSentence(targets.map((e) => e.name))}. He sees an aura of ${turnArrayIntoHumanSentence(thingsHeard)}.`;
+        return `${subject.name} looks at ${turnArrayIntoHumanSentence(targets.map((e) => e.name))}. He sees an aura of ${turnArrayIntoHumanSentence(thingsHeard)}. He looks closer at the ${targets[0].name}. ${targets[0].flavorText}`;
 
     }
 

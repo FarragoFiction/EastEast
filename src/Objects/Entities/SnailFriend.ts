@@ -35,6 +35,6 @@ export class Snail extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"Snail Friend", x,y,[all_themes[BUGS]],sprite,"It's a snail friend! Like a slug, but they have little houses.", beats);
+        super(room,"Snail Friend", x,y,[all_themes[BUGS]],sprite,"It's like a slime creature. But small. You love those. Snails have the houses on them, that's the premium shit.", beats);
     }
 }

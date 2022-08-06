@@ -20,7 +20,7 @@ import { AiBeat } from "./StoryBeats/BaseBeat";
 
 
 /*
-
+Peewee Puppet of Tangled Fate
 Closer: Lonesome Witch of Threaded Motivation
 Solemn: Watching Sylph of Lonely Faith
 Doc Slaughter: Doctor of Hopeful Eyes

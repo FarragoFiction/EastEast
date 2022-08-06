@@ -65,7 +65,7 @@ export class Peewee extends Quotidian {
         };
         console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe")
         const beats: AiBeat[] = [];
-        super(room, "Peewee", x, y, [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY], all_themes[CLOWNS]], sprite, "It's you. After all this time.", beats);
+        super(room, "Peewee",x, y, [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY], all_themes[CLOWNS]], sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
     }
 
 
@@ -81,7 +81,7 @@ export class Peewee extends Quotidian {
                     const aibeat = new AiBeat([new TargetNameIncludesAnyOfTheseWords(words)], [action]).clone(this);
                     aibeat.owner = this;
                     aibeat.timeOfLastBeat = 0; //peewee NEVER gets timelocked
-                    const trigger = aibeat.triggered(this.room);//sets targets
+                    const trigger = aibeat.triggered(this.room,true);//sets targets
                     beat.response = action.applyAction(aibeat);
                     return;
                 }

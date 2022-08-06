@@ -519,7 +519,7 @@ class Look extends BaseAction_1.Action {
             for (let target of targets) {
                 thingsHeard.push(`${target.getRandomThemeConcept(ThemeStorage_1.ADJ)} ${target.getRandomThemeConcept(ThemeStorage_1.PERSON)}`);
             }
-            return `${subject.name} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}.`;
+            return `${subject.name} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${targets[0].name}. ${targets[0].flavorText}`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -794,7 +794,7 @@ class Peewee extends Quotidian_1.Quotidian {
         };
         console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe");
         const beats = [];
-        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], sprite, "It's you. After all this time.", beats);
+        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
@@ -814,7 +814,7 @@ class Peewee extends Quotidian_1.Quotidian {
                         const aibeat = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(words)], [action]).clone(this);
                         aibeat.owner = this;
                         aibeat.timeOfLastBeat = 0; //peewee NEVER gets timelocked
-                        const trigger = aibeat.triggered(this.room); //sets targets
+                        const trigger = aibeat.triggered(this.room, true); //sets targets
                         beat.response = action.applyAction(aibeat);
                         return;
                     }
@@ -1001,7 +1001,7 @@ class Snail extends Quotidian_1.Quotidian {
             down_src: { src: "snaildown.gif", width: 36, height: 48 }
         };
         const beats = [];
-        super(room, "Snail Friend", x, y, [Theme_1.all_themes[ThemeStorage_1.BUGS]], sprite, "It's a snail friend! Like a slug, but they have little houses.", beats);
+        super(room, "Snail Friend", x, y, [Theme_1.all_themes[ThemeStorage_1.BUGS]], sprite, "It's like a slime creature. But small. You love those. Snails have the houses on them, that's the premium shit.", beats);
         this.maxSpeed = 1;
         this.minSpeed = 1;
         this.currentSpeed = 1;
@@ -1062,7 +1062,7 @@ class AiBeat {
             const beat = this.addStorybeatToScreen(current_room.maze, `Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)}... ${(effects.join("<br>"))}`);
         };
         //ALL triggers must be true for this to be true.
-        this.triggered = (current_room) => {
+        this.triggered = (current_room, allow_self = false) => {
             if (!this.owner) {
                 return console.error("ALWAYS clone beats, don't use them from list directly");
             }
@@ -1071,7 +1071,9 @@ class AiBeat {
             }
             //start out targeting EVERYTHING in this room
             this.targets = [...current_room.blorbos, ...current_room.items];
-            (0, ArrayUtils_1.removeItemOnce)(this.targets, this.owner); //unless you're specifically
+            if (!allow_self) { //only for peewee commands
+                (0, ArrayUtils_1.removeItemOnce)(this.targets, this.owner); //unless you're specifically
+            }
             for (let t of this.filters) {
                 this.targets = t.filter(this, this.targets);
                 if (this.targets.length === 0) {
@@ -3220,7 +3222,7 @@ const initWallBackgrounds = () => {
     wall_backgrounds[QUESTING] = ["Satisfaction"] ;*/
 };
 const initFloorForegrounds = () => {
-    exports.floor_foregrounds[exports.DECAY] = [{ src: "hydration_station.png", desc: "You go to take a sip of the water before realizing it's filled with maggots." }, { src: "Decay_Object.png", desc: "I wonder if they're poisonous?" }, { src: "corpse_blossom.png", desc: "It stinks of death and decay." }, { src: "webshelves.png", desc: "These shelves haven't been able to hold anything for a long time." }, { src: "webtable.png", desc: "What could be trapped in here, you wonder?" }, { src: "webtable2.png", desc: "You peer into its cracks but see nothing inside." }, { src: "deadbush.png", desc: "The bush is rotting." }, { src: "deadtree.png", desc: "What did this look like when it was alive, you wonder." }, { src: "decay_is_an_extant_form_of_life.png", desc: "In your heart you know decay is an extant form of life." }, { src: "decayedwebbox.png", desc: "This rotten box can't be used to hold anything anymore." }, { src: "decayingbarrel.png", desc: "The barrel stinks of fermentation and rot." }, { src: "grave.png", desc: "You wonder who is buried and rotting here." }, { src: "shittycot.png", desc: "The cot stinks of rot." }];
+    exports.floor_foregrounds[exports.DECAY] = [{ name: "Hydration Station", src: "hydration_station.png", desc: "You go to take a sip of the water before realizing it's filled with maggots." }, { src: "Decay_Object.png", desc: "I wonder if they're poisonous?" }, { name: "Corpse Blossom", src: "corpse_blossom.png", desc: "It stinks of death and decay." }, { name: "Rotten Shelves", src: "webshelves.png", desc: "These shelves haven't been able to hold anything for a long time." }, { name: "Rotten Table", src: "webtable.png", desc: "What could be trapped in here, you wonder?" }, { name: "Rotten Table", src: "webtable2.png", desc: "You peer into its cracks but see nothing inside." }, { name: "Dead Bush", src: "deadbush.png", desc: "The bush is rotting." }, { name: "Dead Tree", src: "deadtree.png", desc: "What did this look like when it was alive, you wonder." }, { name: "Mushrooms", src: "decay_is_an_extant_form_of_life.png", desc: "In your heart you know decay is an extant form of life." }, { name: "Rotten Box", src: "decayedwebbox.png", desc: "This rotten box can't be used to hold anything anymore." }, { name: "Rotten Barrel", src: "decayingbarrel.png", desc: "The barrel stinks of fermentation and rot." }, { name: "Grave", src: "grave.png", desc: "You wonder who is buried and rotting here." }, { name: "Stinking Cot", src: "shittycot.png", desc: "The cot stinks of rot." }];
     exports.floor_foregrounds[exports.BUGS] = [{ src: "waspnest2.png", desc: "There is a wasp nest here." }, { src: "bees4.png", desc: "The bees are buzzing and crawling and flying everwhere." }, { src: "bees.png", desc: "The Swarm is judging you." }, { src: "bees3.png", desc: "Incessent buzzing." }, { src: "bees2.png", desc: "You skin crawls just looking at these buzzing insects." }, { src: "waspnest1.png", desc: "There is a wasp nest here. It is filled with holes." }, { src: "waspnest3.png", desc: "If you let the inhabitants of this waspnest love you, you could be a nest, too." }, { src: "ruined_honey.png", desc: "Someone has already raided this bee hive." }, { src: "ruined_wasp_nest.png", desc: "Who destroyed this wasp nest?" }, { src: "wasp.png", desc: "It seems to be a large statue of a wasp." }];
     exports.floor_foregrounds[exports.LOVE] = [{ src: "Love_Object.png", desc: "Fragile Concept." }, { src: "wine2.png", desc: "If only there was someone to share this with." }, { src: "wine.png", desc: "Oh to be on a picnic with someone you love." }, { src: "necklace.png", desc: "Someone beautiful could wear this." }, { src: "jwelerybox.png", desc: "A cherished gift." }, { src: "flowers.png", desc: "A gift for a significant other." }, { src: "dress.png", desc: "Just looking at this pretty dress makes you wish you could remember going to dances." }, { src: "angelstatue.png", desc: "Love is war." }, { src: "bear.png", desc: "It feels soft and cuddly." },];
     exports.floor_foregrounds[exports.STEALING] = [{ src: "Stealing_Object.png", desc: "[Right Click, Save Image]" }, { src: "cookingpot.png", desc: "Reminds you of being on the run from the law." }, { src: "fancychest.png", desc: "You wonder what kind of loot is in here." }, { src: "goldingots.png", desc: "There is NO way you're going to be able to carry these out of here." }, { src: "jwelerybox.png", desc: "A tidy fortune in jewels." }, { src: "necklace.png", desc: "You wonder how much this would be worth on the blackmarket." }, { src: "pileofgold1.png", desc: "You are practically drooling seeing so much gold." }, { src: "pileofgold2.png", desc: "You want to bathe in this like Scrooge McDuck." }, { src: "pileofgoldsmaller.png", desc: "What could you buy with this?" }, { src: "smallgoldpile.png", desc: "A modest fortune yours for the taking." }];
@@ -4574,6 +4576,7 @@ exports.albhed_map = {
     "7": "https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane",
     "8": "https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",
     "9": "https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers"
+    //0: http://farragofiction.com/ParkerLotLost/ <-- maybe this will be EastEastEast one day, that or ElevatorSim
 };
 const translate = (word) => {
     let ret = word.toLowerCase();
@@ -6817,29 +6820,86 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "text": () => (/* binding */ text)
 /* harmony export */ });
+//http://knucklessux.com/InfoTokenReader/?mode=loop
 const text = `
-* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+ 
+“ The phrase means that no matter who you are with or where you are in the world, your family and Where lies the strangling fruit that came from the hand of the sinner I shall bring forth the home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and seeds of the dead to share with the worms that gather in the darkness and I've wandered as far west as I can go. Sitting now on the sand, I watch the happy memories. It might not always be the building itself, but being near your loved ones.
+
+Home is surround the world with the power of their lives while from the dimlit halls of other places forms that sun blur into an aftermath. Reds finally marrying blues. Soon night will where the heart was, where is it now?
+
+Where could it ever be. 
+
+How could never were and never could be writhe for the impatience of the few who never saw what could enfold us all. But the light is still not gone, not yet, and by it it have been your home, if you so callously abandoned it. One more thing upon the Pyre of have been. In the black water with the sun shining at midnight, those fruit shall come ripe and I can dimly see here my own dark hallway, or maybe it was just a foyer and in the darkness of that which is golden shall split open to your former life. One more thing sacrificed to the unrelenting desire to KNOW.
+
+And what has maybe not dark at all, not in fact brightly lit, an afternoon sun blazing through the lead panes, now detected amidst what reveal the revelation of the fatal softness in the earth. The shadows of the abyss are like the knowing bought you? What satisfaction has it wrought? 
+
+Is anyone saved, anyone at all, through your obsession?
+
+When you finally reach the petals of a monstrous flower that shall blossom within the skull and expand the mind beyond what any man can bear, but whether it decays under the spiraling the center, the end which is not, COULD not, ever be an earth or above on green fields, or out to sea or in the very air, all shall come to end, will you finally be happy? 
+
+Will those who loved you once?
+
+Wasted, Wasted, Following the revelation, and to revel, in the knowledge of the strangling fruit—and the hand of the sinner shall rejoice, for there Tree:
+You had to Know just to Know it, no ending will there be.
+
+Wasted, Wasted, Digging at the Roots:
+If you know how to amounts to a long column of my yesterdays, towards the end, though not the is no sin in shadow or in light that the seeds of the dead cannot forgive. And there shall be make it, your ending will be Truth.
+  in the planting in the shadows a grace and a mercy from which shall blossom dark flowers, and very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going.”
+
+This is their teeth shall devour and sustain and herald the passing of why classical thought concerning structure could say that the center is, paradoxically, within the structure and an age. That which dies shall still know life in death for all that decays is not forgotten and outside it. The center is at the center of the totality, and yet, since the center does not belong to the reanimated it shall walk the world in the bliss of not-knowing. And then there shall be a totality (is not part of the totality), the totality has its fire that knows the naming of you, and in the presence of the strangling fruit, its dark flame shall acquire every part of center elsewhere. The center is not the center.”
 
 
-Name: Phil Varker
-Aliases:  None
-Coping Strategy: Wounded and Defensive (Obsession)
-Attachment Style: Unclear
+“If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that you that remains.
+  surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits.”
 
-Quick Summary:
-
-Phil was introduced to me through my contacts at the Westerville Police Force. He's on medical leave pending a clear bill of mental health. He has bright, searching eyes and a firm grasp on reality. A forensics specialist, he dreamed of becoming a biologist as a child and finds the idea of alien life extremely plausible. 
-
-This, unfortunately is Necessary Context for understanding the shape of his Maze-Based Obsession.  Phil discovered Impossible Biological Material at the scenes of various crimes (feathers not corresponding to any known bird, human cells impossibly adapted to extremes of temperature, necrotized tissue that nonetheless remains alive, etc etc). 
-
-He became increasingly Obsessed with Getting To The Bottom of the mystery that seemed to be completely Unseen by his Peers, eventually ending with his medical leave.
-
-I'm working with him to separate Relevant Facts from Irrelevant Facts, to develop mindfulness habits intended to steer him away from the grisly fate that remains should he continue along this path.
-
-
-Note: The Whispers Within me call for him. I continue to develop my own mindfulness techniques to reduce their strength.
 
 `;
+
+const sources = [
+    //https://www.theidioms.com/home-is-where-the-heart-is/
+`
+Similar variations of this saying have been in use since ancient times.  The modern wording that we are familiar with today, first appeared in the J. T. Bickford novel, ‘Scandal’ in 1857. The proverb has been in this present form in the USA since the 1820s.
+
+The phrase means that no matter who you are with or where you are in the world, your family and home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and happy memories. It might not always be the building itself, but being near your loved ones.
+
+`,
+//House of Leaves
+`“I've wandered as far west as I can go. Sitting now on the sand, I watch the sun blur into an aftermath. Reds finally marrying blues. Soon night will enfold us all. But the light is still not gone, not yet, and by it I can dimly see here my own dark hallway, or maybe it was just a foyer and maybe not dark at all, not in fact brightly lit, an afternoon sun blazing through the lead panes, now detected amidst what amounts to a long column of my yesterdays, towards the end, though not the very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going.”
+
+This is why classical thought concerning structure could say that the center is, paradoxically, within the structure and outside it. The center is at the center of the totality, and yet, since the center does not belong to the totality (is not part of the totality), the totality has its center elsewhere. The center is not the center.”
+
+
+“If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits.”
+`
+//JR, both past and present
+
+`he phrase means that no matter who you are with or where you are in the world, your family and home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and happy memories. It might not always be the building itself, but being near your loved ones.
+
+Home is where the heart was, where is it now?
+
+Where could it ever be. 
+
+How could it have been your home, if you so callously abandoned it. One more thing upon the Pyre of your former life. One more thing sacrificed to the unrelenting desire to KNOW.
+
+And what has knowing bought you? What satisfaction has it wrought? 
+
+Is anyone saved, anyone at all, through your obsession?
+
+When you finally reach the spiraling the center, the end which is not, COULD not, ever be an end, will you finally be happy? 
+
+Will those who loved you once?
+
+Wasted, Wasted, Following the Tree:
+You had to Know just to Know it, no ending will there be.
+
+Wasted, Wasted, Digging at the Roots:
+If you know how to make it, your ending will be Truth.`
+
+//― Jeff VanderMeer, Annihilation
+,
+`Where lies the strangling fruit that came from the hand of the sinner I shall bring forth the seeds of the dead to share with the worms that gather in the darkness and surround the world with the power of their lives while from the dimlit halls of other places forms that never were and never could be writhe for the impatience of the few who never saw what could have been. In the black water with the sun shining at midnight, those fruit shall come ripe and in the darkness of that which is golden shall split open to reveal the revelation of the fatal softness in the earth. The shadows of the abyss are like the petals of a monstrous flower that shall blossom within the skull and expand the mind beyond what any man can bear, but whether it decays under the earth or above on green fields, or out to sea or in the very air, all shall come to revelation, and to revel, in the knowledge of the strangling fruit—and the hand of the sinner shall rejoice, for there is no sin in shadow or in light that the seeds of the dead cannot forgive. And there shall be in the planting in the shadows a grace and a mercy from which shall blossom dark flowers, and their teeth shall devour and sustain and herald the passing of an age. That which dies shall still know life in death for all that decays is not forgotten and reanimated it shall walk the world in the bliss of not-knowing. And then there shall be a fire that knows the naming of you, and in the presence of the strangling fruit, its dark flame shall acquire every part of you that remains.`
+
+]
 
 /***/ }),
 

@@ -68,7 +68,7 @@ export class AiBeat {
 
 
     //ALL triggers must be true for this to be true.
-    triggered = (current_room: Room) => {
+    triggered = (current_room: Room, allow_self = false) => {
         if(!this. owner){
             return console.error("ALWAYS clone beats, don't use them from list directly");
         }
@@ -77,7 +77,9 @@ export class AiBeat {
         }
         //start out targeting EVERYTHING in this room
         this.targets = [...current_room.blorbos, ... current_room.items];
-        removeItemOnce(this.targets, this.owner); //unless you're specifically
+        if(!allow_self){//only for peewee commands
+            removeItemOnce(this.targets, this.owner); //unless you're specifically
+        }
         for (let t of this.filters) {
             this.targets = t.filter(this, this.targets)
             if (this.targets.length === 0) {
