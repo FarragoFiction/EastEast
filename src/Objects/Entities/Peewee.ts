@@ -5,7 +5,7 @@ import { NoMovement } from "../MovementAlgs/NoMovement";
 import { Room } from "../RoomEngine/Room";
 import { StoryBeat } from "../RoomEngine/StoryBeat";
 import { all_themes } from "../Theme";
-import { ENDINGS, WEB, TWISTING, CLOWNS } from "../ThemeStorage";
+import { ENDINGS, WEB, TWISTING, CLOWNS, TECHNOLOGY } from "../ThemeStorage";
 import { Action } from "./Actions/BaseAction";
 import { Feel } from "./Actions/Feel";
 import { FollowObject } from "./Actions/FollowObject";
@@ -65,7 +65,7 @@ export class Peewee extends Quotidian {
         };
         console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe")
         const beats: AiBeat[] = [];
-        super(room, "Peewee", x, y, [all_themes[ENDINGS], all_themes[WEB], all_themes[TWISTING], all_themes[CLOWNS]], sprite, "It's you. After all this time.", beats);
+        super(room, "Peewee", x, y, [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY], all_themes[CLOWNS]], sprite, "It's you. After all this time.", beats);
     }
 
 

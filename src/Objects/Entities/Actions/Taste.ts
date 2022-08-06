@@ -39,7 +39,7 @@ export class Taste extends Action {
         const north = current_room.getNorth();
         const south = current_room.getSouth();
         const east = current_room.getEast();
-        let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(this.sense)}.`;
+        let thingsHeard = `the taste of ${current_room.getRandomThemeConcept(this.sense)}.`;
         if (north) {
             thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the NORTH DOOR he tastes ${north.getRandomThemeConcept(this.sense)}.</p>`;
         }

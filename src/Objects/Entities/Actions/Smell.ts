@@ -39,7 +39,7 @@ export class Smell extends Action {
         const north = current_room.getNorth();
         const south = current_room.getSouth();
         const east = current_room.getEast();
-        let thingsHeard = `the sound of ${current_room.getRandomThemeConcept(this.sense)}.`;
+        let thingsHeard = `the smell of ${current_room.getRandomThemeConcept(this.sense)}.`;
 
         if (north) {
             thingsHeard = `${thingsHeard} <p>Towards the NORTH, he detects a whiff of ${north.getRandomThemeConcept(this.sense)}.</p>`;
