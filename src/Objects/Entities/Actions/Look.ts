@@ -38,7 +38,7 @@ export class Look extends Action {
 
 
     noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian) => {
-        let thingsSeen = "";
+        let thingsSeen = "Peewee glances around and sees";
         if (current_room.children.length === 1) {
             thingsSeen = `${thingsSeen} a door.`;
 
@@ -95,6 +95,7 @@ export class Look extends Action {
 
 
         const targets = beat.targets;
+        console.log("JR NOTE: trying to look at targets", targets)
         if (targets.length === 0) {
             return this.noTarget(beat, current_room, subject);
         } else {

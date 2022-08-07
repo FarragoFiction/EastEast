@@ -7,7 +7,7 @@ import { Movement } from "../MovementAlgs/BaseMovement";
 import { RandomMovement } from "../MovementAlgs/RandomMovement";
 import { Room } from "../RoomEngine/Room";
 import { all_themes } from "../Theme";
-import {FAMILY, HUNTING, KILLING } from "../ThemeStorage";
+import {DARKNESS, FAMILY, HUNTING, KILLING } from "../ThemeStorage";
 
 import { Direction, Quotidian } from "./Quotidian";
 import { AiBeat } from "./StoryBeats/BaseBeat";
@@ -34,6 +34,6 @@ export class EyeKiller extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"The Eye Killer", x,y,[all_themes[HUNTING],all_themes[KILLING],all_themes[FAMILY]],sprite,"It's the Eye Killer! I'd leave her alone!", beats);
+        super(room,"The Eye Killer", x,y,[all_themes[HUNTING],all_themes[KILLING],all_themes[FAMILY],all_themes[DARKNESS]],sprite,"It's the Eye Killer! I'd leave her alone!", beats);
     }
 }

@@ -58,6 +58,9 @@ export class PhysicalObject{
     }
 
     getRandomThemeConcept = (concept: string) => {
+        if(this.themes.length ===0){
+            return `[ERROR: NO THEME FOUND FOR ${this.name.toUpperCase()}]`;
+        }
         const theme = this.rand.pickFrom(this.themes);
         return theme.pickPossibilityFor(this.rand, concept);
     }

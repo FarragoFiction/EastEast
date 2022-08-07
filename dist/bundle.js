@@ -487,7 +487,7 @@ class Look extends BaseAction_1.Action {
         super(...arguments);
         this.recognizedCommands = ["LOOK", "SEE", "OBSERVE", "GLANCE", "GAZE", "GAPE", "STARE", "WATCH", "INSPECT", "EXAMINE", "STUDY", "SCAN", "VIEW", "JUDGE", "EYE", "OGLE"];
         this.noTarget = (beat, current_room, subject) => {
-            let thingsSeen = "";
+            let thingsSeen = "Peewee glances around and sees";
             if (current_room.children.length === 1) {
                 thingsSeen = `${thingsSeen} a door.`;
             }
@@ -532,6 +532,7 @@ class Look extends BaseAction_1.Action {
                 return "";
             }
             const targets = beat.targets;
+            console.log("JR NOTE: trying to look at targets", targets);
             if (targets.length === 0) {
                 return this.noTarget(beat, current_room, subject);
             }
@@ -879,7 +880,7 @@ class EyeKiller extends Quotidian_1.Quotidian {
             down_src: { src: "KillerDown.gif", width: 50, height: 50 }
         };
         const beats = [];
-        super(room, "The Eye Killer", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.FAMILY]], sprite, "It's the Eye Killer! I'd leave her alone!", beats);
+        super(room, "The Eye Killer", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.DARKNESS]], sprite, "It's the Eye Killer! I'd leave her alone!", beats);
         this.maxSpeed = 50;
         this.minSpeed = 5;
         this.currentSpeed = 5;
@@ -1955,6 +1956,9 @@ class PhysicalObject {
         this.container = document.createElement("div");
         this.image = document.createElement("img");
         this.getRandomThemeConcept = (concept) => {
+            if (this.themes.length === 0) {
+                return `[ERROR: NO THEME FOUND FOR ${this.name.toUpperCase()}]`;
+            }
             const theme = this.rand.pickFrom(this.themes);
             return theme.pickPossibilityFor(this.rand, concept);
         };
@@ -2052,7 +2056,8 @@ class ChantingEngine {
                 console.log("JR NOTE: mutating chant", this.audio.playbackRate);
             }
             else if (chance > 0.25) {
-                const proposedVolume = this.audio.volume + ((this.volumeDirection === Quotidian_1.Direction.UP ? 1 : -1) * (.001 + this.audio.volume / 10));
+                const proposedVolume = this.audio.volume + ((this.volumeDirection === Quotidian_1.Direction.UP ? 1 : -1) * (.001 + (this.audio.volume / 10)));
+                console.log("JR NOTE: propoposed volume is", proposedVolume);
                 if (proposedVolume >= 1) {
                     this.volumeDirection = Quotidian_1.Direction.DOWN;
                 }
@@ -2061,16 +2066,17 @@ class ChantingEngine {
                 }
                 else {
                     this.audio.volume = proposedVolume;
+                    if (proposedVolume <= 0.001) {
+                        this.volumeDirection = Quotidian_1.Direction.UP;
+                    }
                 }
                 console.log("JR NOTE: mutating chant volume", this.audio.volume);
             }
             else if (chance > 0.20) { //5% chance of changing direction on its own
                 console.log("JR NOTE: mutating chant volume direction", this.audio.volume);
-                if (this.volumeDirection === Quotidian_1.Direction.UP) {
+                //prefer going down if you have an option
+                if (this.volumeDirection > 0.5) {
                     this.volumeDirection = Quotidian_1.Direction.DOWN;
-                }
-                else {
-                    this.volumeDirection = Quotidian_1.Direction.UP;
                 }
             }
             setTimeout(this.tick, 1000);
@@ -2219,6 +2225,9 @@ class Room {
         this.children = [];
         this.name = "???";
         this.getRandomThemeConcept = (concept) => {
+            if (this.themes.length === 0) {
+                return `[ERROR: NO THEME FOUND FOR ${this.name.toUpperCase()}]`;
+            }
             const theme = this.rand.pickFrom(this.themes);
             return theme.pickPossibilityFor(this.rand, concept);
         };
@@ -2543,15 +2552,15 @@ const spawnFloorObjects = async (width, height, layer, key, folder, seededRandom
     const baseLocation = "images/Walkabout/Objects/";
     const clutter_rate = seededRandom.nextDouble(0.75, 0.99); //smaller is more cluttered
     const artifacts = [
-        { name: "Unos Artifact Book", layer: layer, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." },
-        { name: "Duo Mask", layer: layer, src: `Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A faceless theater mask with a 2 on the inside of the forehead." },
-        { name: "Tres Bottle", layer: layer, src: `Artifacts/Zampanio_Artifact_03_Bottle.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A simple glass milk bottle with a 3 emblazoned on it." },
-        { name: "Quatro Blade", layer: layer, src: `Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade." },
-        { name: "Quinque Cloak", layer: layer, src: `Artifacts/Zampanio_Artifact_05_Cloak.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: " A simple matte blue cloak with a 5 embroidered on the back in shiny red thread. " },
-        { name: "Sextant", layer: layer, src: `Artifacts/Zampanio_Artifact_06_Sextant.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A highly polished brass sextant. There is a 6 carved onto the main knob." },
-        { name: "Septum Coin", layer: layer, src: `Artifacts/Zampanio_Artifact_07_Coin_Bronze.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "An old bronze coin. There is a theater mask on one side, and a 7 on the other." },
-        { name: "Octome", layer: layer, src: `Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back." },
-        { name: "Novum Mirror", layer: layer, src: `Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [ThemeStorage_1.OBFUSCATION], flavorText: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces." }
+        { name: "Unos Artifact Book", layer: layer, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [Theme_1.all_themes[ThemeStorage_1.SOUL], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." },
+        { name: "Duo Mask", layer: layer, src: `Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [Theme_1.all_themes[ThemeStorage_1.CLOWNS], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A faceless theater mask with a 2 on the inside of the forehead." },
+        { name: "Tres Bottle", layer: layer, src: `Artifacts/Zampanio_Artifact_03_Bottle.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A simple glass milk bottle with a 3 emblazoned on it." },
+        { name: "Quatro Blade", layer: layer, src: `Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade." },
+        { name: "Quinque Cloak", layer: layer, src: `Artifacts/Zampanio_Artifact_05_Cloak.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: " A simple matte blue cloak with a 5 embroidered on the back in shiny red thread. " },
+        { name: "Sextant", layer: layer, src: `Artifacts/Zampanio_Artifact_06_Sextant.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A highly polished brass sextant. There is a 6 carved onto the main knob." },
+        { name: "Septum Coin", layer: layer, src: `Artifacts/Zampanio_Artifact_07_Coin_Bronze.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "An old bronze coin. There is a theater mask on one side, and a 7 on the other." },
+        { name: "Octome", layer: layer, src: `Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [Theme_1.all_themes[ThemeStorage_1.KNOWING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back." },
+        { name: "Novum Mirror", layer: layer, src: `Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces." }
     ];
     while (current_y + padding < height) {
         current_x = padding;

@@ -1,5 +1,5 @@
 import { all_themes, Theme } from "../Theme";
-import { ADJ, DARKNESS, FEELING, FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, LOCATION, OBFUSCATION, SMELL, SOUND, SPYING, TASTE, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
+import { ADJ, CLOWNS, DARKNESS, FEELING, FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, KILLING, KNOWING, LOCATION, OBFUSCATION, SMELL, SOUL, SOUND, SPYING, TASTE, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
 import { boundingBoxesIntersect, createElementWithIdAndParent, pointWithinBoundingBox } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 import { Quotidian } from "../Entities/Quotidian";
@@ -47,6 +47,9 @@ export class Room {
     }
 
     getRandomThemeConcept = (concept: string) => {
+        if(this.themes.length ===0){
+            return `[ERROR: NO THEME FOUND FOR ${this.name.toUpperCase()}]`;
+        }
         const theme = this.rand.pickFrom(this.themes);
         return theme.pickPossibilityFor(this.rand, concept);
     }
@@ -401,15 +404,15 @@ const spawnFloorObjects = async (width: number, height: number, layer: number, k
     const baseLocation = "images/Walkabout/Objects/";
     const clutter_rate = seededRandom.nextDouble(0.75, 0.99); //smaller is more cluttered
     const artifacts = [
-        { name: "Unos Artifact Book", layer: layer, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [OBFUSCATION], flavorText: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." }
-        , { name: "Duo Mask", layer: layer, src: `Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [OBFUSCATION], flavorText: "A faceless theater mask with a 2 on the inside of the forehead." }
-        , { name: "Tres Bottle", layer: layer, src: `Artifacts/Zampanio_Artifact_03_Bottle.png`, themes: [OBFUSCATION], flavorText: "A simple glass milk bottle with a 3 emblazoned on it." }
-        , { name: "Quatro Blade", layer: layer, src: `Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [OBFUSCATION], flavorText: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade." }
-        , { name: "Quinque Cloak", layer: layer, src: `Artifacts/Zampanio_Artifact_05_Cloak.png`, themes: [OBFUSCATION], flavorText: " A simple matte blue cloak with a 5 embroidered on the back in shiny red thread. " }
-        , { name: "Sextant", layer: layer, src: `Artifacts/Zampanio_Artifact_06_Sextant.png`, themes: [OBFUSCATION], flavorText: "A highly polished brass sextant. There is a 6 carved onto the main knob." }
-        , { name: "Septum Coin", layer: layer, src: `Artifacts/Zampanio_Artifact_07_Coin_Bronze.png`, themes: [OBFUSCATION], flavorText: "An old bronze coin. There is a theater mask on one side, and a 7 on the other." }
-        , { name: "Octome", layer: layer, src: `Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [OBFUSCATION], flavorText: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back." }
-        , { name: "Novum Mirror", layer: layer, src: `Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [OBFUSCATION], flavorText: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces." }
+        { name: "Unos Artifact Book", layer: layer, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [all_themes[SOUL],all_themes[OBFUSCATION]], desc: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." }
+        , { name: "Duo Mask", layer: layer, src: `Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [all_themes[CLOWNS],all_themes[OBFUSCATION]], desc: "A faceless theater mask with a 2 on the inside of the forehead." }
+        , { name: "Tres Bottle", layer: layer, src: `Artifacts/Zampanio_Artifact_03_Bottle.png`, themes: [all_themes[OBFUSCATION]], desc: "A simple glass milk bottle with a 3 emblazoned on it." }
+        , { name: "Quatro Blade", layer: layer, src: `Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [all_themes[KILLING],all_themes[OBFUSCATION]], desc: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade." }
+        , { name: "Quinque Cloak", layer: layer, src: `Artifacts/Zampanio_Artifact_05_Cloak.png`, themes: [all_themes[OBFUSCATION]], desc: " A simple matte blue cloak with a 5 embroidered on the back in shiny red thread. " }
+        , { name: "Sextant", layer: layer, src: `Artifacts/Zampanio_Artifact_06_Sextant.png`, themes: [all_themes[OBFUSCATION]], desc: "A highly polished brass sextant. There is a 6 carved onto the main knob." }
+        , { name: "Septum Coin", layer: layer, src: `Artifacts/Zampanio_Artifact_07_Coin_Bronze.png`, themes: [all_themes[OBFUSCATION]], desc: "An old bronze coin. There is a theater mask on one side, and a 7 on the other." }
+        , { name: "Octome", layer: layer, src: `Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [all_themes[KNOWING],all_themes[OBFUSCATION]], desc: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back." }
+        , { name: "Novum Mirror", layer: layer, src: `Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [all_themes[OBFUSCATION]], desc: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces." }
     ];
     while (current_y + padding < height) {
         current_x = padding;

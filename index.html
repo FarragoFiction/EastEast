@@ -30,6 +30,10 @@
       const err = createElementWithIdAndParent("p", storySoFar, undefined, "error");
       err.title = "ERROR";
       err.innerHTML = e.toString();
+      if(!window.errorCount){
+        window.errorCount = 0;
+      }
+      window.errorCount ++;
     }
   </script>
 
@@ -67,6 +71,8 @@
     * add name to every single object, please.
     * spawn the eye killer who flees AWAY (follow but negative?) from anyone and kills if anything touches her
     * if anything get too close she switches to chasing them
+
+    *use window.errorCount to increase glitches and fractals
 
 
 
