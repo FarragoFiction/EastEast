@@ -2443,16 +2443,18 @@ class Room {
             const theme = this.rand.pickFrom(this.themes);
             this.floor = theme.pickPossibilityFor(this.rand, ThemeStorage_1.FLOOR);
             const floor_default_choices = ["woodfloor.png", "chevronfloor.png", "metalfloor.png"];
+            console.log("JR NOTE: floor is", this.floor);
             if (this.floor.includes("ERROR")) {
-                this.rand.pickFrom(floor_default_choices);
+                this.floor = this.rand.pickFrom(floor_default_choices);
             }
         };
         this.initWall = () => {
             const theme = this.rand.pickFrom(this.themes);
             const wall_default_choices = ["thatchwalls.png", "brickwalls.png", "woodwall.png", "stonewalls2.png"];
             this.wall = theme.pickPossibilityFor(this.rand, ThemeStorage_1.WALL);
+            console.log("JR NOTE: wall is", this.wall);
             if (this.wall.includes("ERROR")) {
-                this.rand.pickFrom(wall_default_choices);
+                this.wall = this.rand.pickFrom(wall_default_choices);
             }
         };
         //imported from East
