@@ -96,6 +96,7 @@ export class Room {
         name.innerText = `${this.name}: ${this.timesVisited}`;
 
         wall.style.backgroundImage = `url(images/Walkabout/wall/${this.wall})`;
+        console.log("JR NOTE: wall is", wall, "and bg image should be, ",`url(images/Walkabout/wall/${this.wall})`)
 
         for (let item of this.items) {
             item.attachToParent(this.element);
@@ -292,11 +293,20 @@ export class Room {
     initFloor = () => {
         const theme: Theme = this.rand.pickFrom(this.themes);
         this.floor = theme.pickPossibilityFor(this.rand, FLOOR);
+        const floor_default_choices = ["woodfloor.png", "chevronfloor.png", "metalfloor.png"];
+        if(this.floor.includes ("ERROR")){
+            this.rand.pickFrom(floor_default_choices)
+        }
+
     }
 
     initWall = () => {
         const theme: Theme = this.rand.pickFrom(this.themes);
+        const wall_default_choices = ["thatchwalls.png", "brickwalls.png", "woodwall.png", "stonewalls2.png"];
         this.wall = theme.pickPossibilityFor(this.rand, WALL);
+        if(this.wall.includes ("ERROR")){
+            this.rand.pickFrom(wall_default_choices)
+        }
     }
 
     //imported from East
@@ -382,9 +392,7 @@ export const spawnWallObjects = async (width: number, height: number, layer: num
             if(!item.name){
                 item.name = `${titleCase(chosen_theme.key)} Object`;
             }
-            console.log("JR NOTE: spawning wall item", image.width)
             ret.push({ name:item.name, layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width, height: image.height, flavorText: item.desc })
-            console.log("JR NOTE: ret is",ret)
         } else {
             current_x += 50;
         }

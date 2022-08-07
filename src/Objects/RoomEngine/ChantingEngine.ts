@@ -35,10 +35,10 @@ export class ChantingEngine{
             if(chance>0.75){
                 const range = 40;
                 this.audio.playbackRate = ((100+range)-getRandomNumberBetween(0,range))/100;
-                console.log("JR NOTE: mutating chant",this.audio.playbackRate)
+                //console.log("JR NOTE: mutating chant",this.audio.playbackRate)
             }else if (chance > 0.25){
                 const proposedVolume = this.audio.volume + ((this.volumeDirection === Direction.UP? 1:-1) * (.001+(this.audio.volume/10)));
-                console.log("JR NOTE: propoposed volume is", proposedVolume)
+                //console.log("JR NOTE: propoposed volume is", proposedVolume)
                 if(proposedVolume >= 1){
                     this.volumeDirection = Direction.DOWN;
                 }else if (proposedVolume<= 0){
@@ -49,9 +49,9 @@ export class ChantingEngine{
                         this.volumeDirection = Direction.UP;
                     }
                 }
-                console.log("JR NOTE: mutating chant volume",this.audio.volume)  
+               // console.log("JR NOTE: mutating chant volume",this.audio.volume)  
             }else if(chance > 0.20){ //5% chance of changing direction on its own
-                console.log("JR NOTE: mutating chant volume direction",this.audio.volume)  
+                //console.log("JR NOTE: mutating chant volume direction",this.audio.volume)  
                 //prefer going down if you have an option
                 if(this.volumeDirection> 0.5){
                     this.volumeDirection = Direction.DOWN;

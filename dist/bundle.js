@@ -2054,11 +2054,11 @@ class ChantingEngine {
             if (chance > 0.75) {
                 const range = 40;
                 this.audio.playbackRate = ((100 + range) - (0, NonSeededRandUtils_1.getRandomNumberBetween)(0, range)) / 100;
-                console.log("JR NOTE: mutating chant", this.audio.playbackRate);
+                //console.log("JR NOTE: mutating chant",this.audio.playbackRate)
             }
             else if (chance > 0.25) {
                 const proposedVolume = this.audio.volume + ((this.volumeDirection === Quotidian_1.Direction.UP ? 1 : -1) * (.001 + (this.audio.volume / 10)));
-                console.log("JR NOTE: propoposed volume is", proposedVolume);
+                //console.log("JR NOTE: propoposed volume is", proposedVolume)
                 if (proposedVolume >= 1) {
                     this.volumeDirection = Quotidian_1.Direction.DOWN;
                 }
@@ -2071,10 +2071,10 @@ class ChantingEngine {
                         this.volumeDirection = Quotidian_1.Direction.UP;
                     }
                 }
-                console.log("JR NOTE: mutating chant volume", this.audio.volume);
+                // console.log("JR NOTE: mutating chant volume",this.audio.volume)  
             }
             else if (chance > 0.20) { //5% chance of changing direction on its own
-                console.log("JR NOTE: mutating chant volume direction", this.audio.volume);
+                //console.log("JR NOTE: mutating chant volume direction",this.audio.volume)  
                 //prefer going down if you have an option
                 if (this.volumeDirection > 0.5) {
                     this.volumeDirection = Quotidian_1.Direction.DOWN;
@@ -2270,6 +2270,7 @@ class Room {
             const name = (0, misc_1.createElementWithIdAndParent)("div", this.element, undefined, "roomName");
             name.innerText = `${this.name}: ${this.timesVisited}`;
             wall.style.backgroundImage = `url(images/Walkabout/wall/${this.wall})`;
+            console.log("JR NOTE: wall is", wall, "and bg image should be, ", `url(images/Walkabout/wall/${this.wall})`);
             for (let item of this.items) {
                 item.attachToParent(this.element);
             }
@@ -2441,10 +2442,18 @@ class Room {
         this.initFloor = () => {
             const theme = this.rand.pickFrom(this.themes);
             this.floor = theme.pickPossibilityFor(this.rand, ThemeStorage_1.FLOOR);
+            const floor_default_choices = ["woodfloor.png", "chevronfloor.png", "metalfloor.png"];
+            if (this.floor.includes("ERROR")) {
+                this.rand.pickFrom(floor_default_choices);
+            }
         };
         this.initWall = () => {
             const theme = this.rand.pickFrom(this.themes);
+            const wall_default_choices = ["thatchwalls.png", "brickwalls.png", "woodwall.png", "stonewalls2.png"];
             this.wall = theme.pickPossibilityFor(this.rand, ThemeStorage_1.WALL);
+            if (this.wall.includes("ERROR")) {
+                this.rand.pickFrom(wall_default_choices);
+            }
         };
         //imported from East
         this.childRoomThemes = () => {
@@ -2531,9 +2540,7 @@ const spawnWallObjects = async (width, height, layer, key, folder, seededRandom,
             if (!item.name) {
                 item.name = `${(0, StringUtils_1.titleCase)(chosen_theme.key)} Object`;
             }
-            console.log("JR NOTE: spawning wall item", image.width);
             ret.push({ name: item.name, layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width, height: image.height, flavorText: item.desc });
-            console.log("JR NOTE: ret is", ret);
         }
         else {
             current_x += 50;
