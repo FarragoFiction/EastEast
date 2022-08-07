@@ -8,7 +8,7 @@ import { addImageProcess } from "../../Utils/URLUtils";
 import { Peewee } from "../Entities/Peewee";
 import { Maze } from "./Maze";
 import { removeItemOnce } from "../../Utils/ArrayUtils";
-import {titleCase} from "../../Utils/StringUtils";
+import { titleCase } from "../../Utils/StringUtils";
 import { FollowPeewee, SassObject, testBeat, testBeat2, testBeat3 } from "../Entities/StoryBeats/BeatList";
 import { DeploySass } from "../Entities/Actions/DeploySass";
 import { Snail } from "../Entities/SnailFriend";
@@ -48,7 +48,7 @@ export class Room {
     }
 
     getRandomThemeConcept = (concept: string) => {
-        if(this.themes.length ===0){
+        if (this.themes.length === 0) {
             return `[ERROR: NO THEME FOUND FOR ${this.name.toUpperCase()}]`;
         }
         const theme = this.rand.pickFrom(this.themes);
@@ -74,19 +74,19 @@ export class Room {
         }
     }
 
-    pause= ()=>{
+    pause = () => {
         this.ticking = false;
         this.maze.chantingEngine.pause();
     }
 
-    resume= ()=>{
+    resume = () => {
         this.ticking = true;
         this.maze.chantingEngine.start();
         this.tick();
     }
 
     render = async () => {
-        this.timesVisited ++;
+        this.timesVisited++;
         await this.spawnChildrenIfNeeded();
         this.element.innerHTML = "";
         this.width = this.element.getBoundingClientRect().width;
@@ -97,7 +97,7 @@ export class Room {
         name.innerText = `${this.name}: ${this.timesVisited}`;
 
         wall.style.backgroundImage = `url(images/Walkabout/wall/${this.wall})`;
-        console.log("JR NOTE: wall is", wall, "and bg image should be, ",`url(images/Walkabout/wall/${this.wall})`)
+        console.log("JR NOTE: wall is", wall, "and bg image should be, ", `url(images/Walkabout/wall/${this.wall})`)
 
         for (let item of this.items) {
             item.attachToParent(this.element);
@@ -161,7 +161,7 @@ export class Room {
     }
 
     addBlorbo = (blorbo: Quotidian) => {
-        console.log("JR NOTE: ",this.name,"is adding blorbo", blorbo.name);
+        console.log("JR NOTE: ", this.name, "is adding blorbo", blorbo.name);
         //so they don't spawn on a door
         blorbo.x = 150;
         blorbo.y = 350;
@@ -264,9 +264,9 @@ export class Room {
         const stress_test = 1;
         for (let i = 0; i < stress_test; i++) {
             this.addBlorbo(new Quotidian(this, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [SassObject, FollowPeewee]));
-            this.addBlorbo(new Snail(this, 150,150));
-            this.addBlorbo(new EyeKiller(this, 150,150));
-            this.addBlorbo(new End(this, 100,100));
+            this.addBlorbo(new Snail(this, 150, 150));
+            this.addBlorbo(new EyeKiller(this, 150, 150));
+            this.addBlorbo(new End(this, 100, 100));
 
 
         }
@@ -276,11 +276,13 @@ export class Room {
 
 
     tick = () => {
-        if(!this.ticking){
+        if (!this.ticking) {
             return;
         }
         for (let blorbo of this.blorbos) {
-            blorbo.tick();
+            if (!blorbo.dead) {
+                blorbo.tick();
+            }
             this.checkForDoors(blorbo);
         }
 
@@ -298,7 +300,7 @@ export class Room {
         this.floor = theme.pickPossibilityFor(this.rand, FLOOR);
         const floor_default_choices = ["woodfloor.png", "chevronfloor.png", "metalfloor.png"];
         console.log("JR NOTE: floor is", this.floor)
-        if(this.floor.includes ("ERROR")){
+        if (this.floor.includes("ERROR")) {
             this.floor = this.rand.pickFrom(floor_default_choices)
         }
 
@@ -310,7 +312,7 @@ export class Room {
         this.wall = theme.pickPossibilityFor(this.rand, WALL);
         console.log("JR NOTE: wall is", this.wall)
 
-        if(this.wall.includes ("ERROR")){
+        if (this.wall.includes("ERROR")) {
             this.wall = this.rand.pickFrom(wall_default_choices)
         }
     }
@@ -395,10 +397,10 @@ export const spawnWallObjects = async (width: number, height: number, layer: num
                 return ret;
             }
             const y = seededRandom.getRandomNumberBetween(padding, Math.max(padding, image.height));
-            if(!item.name){
+            if (!item.name) {
                 item.name = `${titleCase(chosen_theme.key)} Object`;
             }
-            ret.push({ name:item.name, layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width, height: image.height, flavorText: item.desc })
+            ret.push({ name: item.name, layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width, height: image.height, flavorText: item.desc })
         } else {
             current_x += 50;
         }
@@ -419,14 +421,14 @@ const spawnFloorObjects = async (width: number, height: number, layer: number, k
     const baseLocation = "images/Walkabout/Objects/";
     const clutter_rate = seededRandom.nextDouble(0.75, 0.99); //smaller is more cluttered
     const artifacts = [
-        { name: "Unos Artifact Book", layer: layer, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [all_themes[SOUL],all_themes[OBFUSCATION]], desc: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." }
-        , { name: "Duo Mask", layer: layer, src: `Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [all_themes[CLOWNS],all_themes[OBFUSCATION]], desc: "A faceless theater mask with a 2 on the inside of the forehead." }
+        { name: "Unos Artifact Book", layer: layer, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [all_themes[SOUL], all_themes[OBFUSCATION]], desc: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." }
+        , { name: "Duo Mask", layer: layer, src: `Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [all_themes[CLOWNS], all_themes[OBFUSCATION]], desc: "A faceless theater mask with a 2 on the inside of the forehead." }
         , { name: "Tres Bottle", layer: layer, src: `Artifacts/Zampanio_Artifact_03_Bottle.png`, themes: [all_themes[OBFUSCATION]], desc: "A simple glass milk bottle with a 3 emblazoned on it." }
-        , { name: "Quatro Blade", layer: layer, src: `Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [all_themes[KILLING],all_themes[OBFUSCATION]], desc: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade." }
+        , { name: "Quatro Blade", layer: layer, src: `Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [all_themes[KILLING], all_themes[OBFUSCATION]], desc: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade." }
         , { name: "Quinque Cloak", layer: layer, src: `Artifacts/Zampanio_Artifact_05_Cloak.png`, themes: [all_themes[OBFUSCATION]], desc: " A simple matte blue cloak with a 5 embroidered on the back in shiny red thread. " }
         , { name: "Sextant", layer: layer, src: `Artifacts/Zampanio_Artifact_06_Sextant.png`, themes: [all_themes[OBFUSCATION]], desc: "A highly polished brass sextant. There is a 6 carved onto the main knob." }
         , { name: "Septum Coin", layer: layer, src: `Artifacts/Zampanio_Artifact_07_Coin_Bronze.png`, themes: [all_themes[OBFUSCATION]], desc: "An old bronze coin. There is a theater mask on one side, and a 7 on the other." }
-        , { name: "Octome", layer: layer, src: `Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [all_themes[KNOWING],all_themes[OBFUSCATION]], desc: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back." }
+        , { name: "Octome", layer: layer, src: `Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [all_themes[KNOWING], all_themes[OBFUSCATION]], desc: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back." }
         , { name: "Novum Mirror", layer: layer, src: `Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [all_themes[OBFUSCATION]], desc: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces." }
     ];
     while (current_y + padding < height) {
@@ -437,11 +439,11 @@ const spawnFloorObjects = async (width: number, height: number, layer: number, k
             let item = chosen_theme[0].pickPossibilityFor(seededRandom, key);
             if (layer === 1 && seededRandom.nextDouble() > 0.95) {
                 item = seededRandom.pickFrom(artifacts);
-                chosen_theme =item.themes;
+                chosen_theme = item.themes;
                 scale = 1.0;
             }
             if (item && item.src && seededRandom.nextDouble() > clutter_rate) {
-                if(!item.name){
+                if (!item.name) {
                     item.name = `${titleCase(chosen_theme[0].key)} Object`;
                 }
                 const image: any = await addImageProcess(`${baseLocation}${folder}/${item.src}`) as HTMLImageElement;

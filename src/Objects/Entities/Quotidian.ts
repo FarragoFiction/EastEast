@@ -76,6 +76,8 @@ export class Quotidian extends PhysicalObject {
     temperance = 0; // how much can you avoid obsessing over things (especially people), how good are you at charisma type stuff without getting attached
     prudence = 5; //how much do you think things through, attention to detail
     justice = 0; //how much do you trust your own judgement, how quick are you to judge
+    originalFlavor = "";
+    dead = false;
 
 
 
@@ -103,7 +105,21 @@ export class Quotidian extends PhysicalObject {
         super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText);
 
         this.directionalSprite = sprite;
+        this.originalFlavor = this.flavorText;
         this.makeBeatsMyOwn(beats);
+    }
+
+    die = (causeOfDeath: string)=>{
+        console.log("JR NOTE: trying to kill", this.name, causeOfDeath)
+        this.dead = true;
+        this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
+        this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
+    }
+
+    live = ()=>{
+        this.dead = false;
+        this.flavorText = this.originalFlavor;
+        this.syncSpriteToDirection();
     }
 
     makeBeatsMyOwn = (beats: AiBeat[]) => {
@@ -182,6 +198,9 @@ export class Quotidian extends PhysicalObject {
     }
 
     tick = () => {
+        if(this.dead){
+            return;
+        }
         this.processAiBeat();
         this.movement_alg.tick();
         this.syncSpriteToDirection();

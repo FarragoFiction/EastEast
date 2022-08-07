@@ -182,6 +182,120 @@ exports.FollowObject = FollowObject;
 
 /***/ }),
 
+/***/ 6315:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GlitchDeath = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const Quotidian_1 = __webpack_require__(6647);
+const BaseAction_1 = __webpack_require__(7042);
+//assume only peewee can do this
+//hi!!! Did you know peewee is wasted? And a doom player?
+class GlitchDeath extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["DEATHFLAG", "KILL", "MURDER", "SLAUGHTER"];
+        this.noTarget = (beat, current_room, subject) => {
+            return `${subject.name} doesn't see anything to make un-alive.`;
+        };
+        this.withTargets = (beat, current_room, subject, targets) => {
+            let killed = false;
+            for (let target of targets) {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    target.die("a glitch");
+                    killed = true;
+                }
+            }
+            if (!killed) {
+                return this.noTarget(beat, current_room, subject);
+            }
+            return `A glitch shudders over the ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}, twisting their status from alive to dead, if it can.`;
+        };
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            let targets = beat.targets;
+            if (targets.length === 0) {
+                targets = current_room.blorbos;
+                (0, ArrayUtils_1.removeItemOnce)(targets, subject); //unless you're specifically
+                return this.withTargets(beat, current_room, subject, targets); //boy sure hope you don't accidentally type kill as part of another word with no targets :) :) :)
+            }
+            else {
+                return this.withTargets(beat, current_room, subject, targets);
+            }
+        };
+    }
+}
+exports.GlitchDeath = GlitchDeath;
+
+
+/***/ }),
+
+/***/ 6357:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GlitchLife = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const Quotidian_1 = __webpack_require__(6647);
+const BaseAction_1 = __webpack_require__(7042);
+//assume only peewee can do this
+//hi!!! Did you know peewee is wasted? And a doom player?
+class GlitchLife extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["HEAL", "REVIVE", "RESURRECT", "CORPSESMOOCH"];
+        this.noTarget = (beat, current_room, subject) => {
+            return `${subject.name} doesn't see anything to make un-alive.`;
+        };
+        this.withTargets = (beat, current_room, subject, targets) => {
+            let killed = false;
+            for (let target of targets) {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    target.live();
+                    killed = true;
+                }
+            }
+            if (!killed) {
+                return this.noTarget(beat, current_room, subject);
+            }
+            return `A glitch shudders over the ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}, twisting their status from dead to alive, if it can.`;
+        };
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const targets = beat.targets;
+            if (targets.length === 0) {
+                return this.withTargets(beat, current_room, subject, current_room.blorbos); //boy sure hope you don't accidentally type kill as part of another word with no targets :) :) :)
+            }
+            else {
+                return this.withTargets(beat, current_room, subject, targets);
+            }
+        };
+    }
+}
+exports.GlitchLife = GlitchLife;
+
+
+/***/ }),
+
 /***/ 7192:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -544,6 +658,62 @@ class Look extends BaseAction_1.Action {
     }
 }
 exports.Look = Look;
+
+
+/***/ }),
+
+/***/ 2900:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GlitchDeath = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const Quotidian_1 = __webpack_require__(6647);
+const BaseAction_1 = __webpack_require__(7042);
+//assume only peewee can do this
+//hi!!! Did you know peewee is wasted? And a doom player?
+class GlitchDeath extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["KILL", "MURDER", "SLAUGHTER"];
+        this.noTarget = (beat, current_room, subject) => {
+            return `${subject.name} doesn't see anything to make un-alive.`;
+        };
+        this.withTargets = (beat, current_room, subject, targets) => {
+            let killed = false;
+            for (let target of targets) {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    target.live();
+                    killed = true;
+                }
+            }
+            if (!killed) {
+                return this.noTarget(beat, current_room, subject);
+            }
+            return `${subject.name} brutally melees attacks the  ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}.`;
+        };
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const targets = beat.targets;
+            if (targets.length === 0) {
+                return this.noTarget(beat, current_room, subject);
+            }
+            else {
+                return this.withTargets(beat, current_room, subject, targets);
+            }
+        };
+    }
+}
+exports.GlitchDeath = GlitchDeath;
 
 
 /***/ }),
@@ -938,6 +1108,8 @@ const ThemeStorage_1 = __webpack_require__(1288);
 const BaseAction_1 = __webpack_require__(7042);
 const Feel_1 = __webpack_require__(4543);
 const FollowObject_1 = __webpack_require__(744);
+const GlitchDeath_1 = __webpack_require__(6315);
+const GlitchLife_1 = __webpack_require__(6357);
 const GoEast_1 = __webpack_require__(7192);
 const GoNorth_1 = __webpack_require__(7415);
 const GoSouth_1 = __webpack_require__(3535);
@@ -987,7 +1159,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.minSpeed = 1;
         this.currentSpeed = 10;
         //only for peewee
-        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new FollowObject_1.FollowObject(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
+        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new FollowObject_1.FollowObject(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -1091,9 +1263,22 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.temperance = 0; // how much can you avoid obsessing over things (especially people), how good are you at charisma type stuff without getting attached
         this.prudence = 5; //how much do you think things through, attention to detail
         this.justice = 0; //how much do you trust your own judgement, how quick are you to judge
+        this.originalFlavor = "";
+        this.dead = false;
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
+        this.die = (causeOfDeath) => {
+            console.log("JR NOTE: trying to kill", this.name, causeOfDeath);
+            this.dead = true;
+            this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
+            this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
+        };
+        this.live = () => {
+            this.dead = false;
+            this.flavorText = this.originalFlavor;
+            this.syncSpriteToDirection();
+        };
         this.makeBeatsMyOwn = (beats) => {
             for (let beat of beats) {
                 this.beats.push(beat.clone(this));
@@ -1154,12 +1339,16 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             }
         };
         this.tick = () => {
+            if (this.dead) {
+                return;
+            }
             this.processAiBeat();
             this.movement_alg.tick();
             this.syncSpriteToDirection();
             this.updateRendering();
         };
         this.directionalSprite = sprite;
+        this.originalFlavor = this.flavorText;
         this.makeBeatsMyOwn(beats);
     }
 }
@@ -2469,7 +2658,9 @@ class Room {
                 return;
             }
             for (let blorbo of this.blorbos) {
-                blorbo.tick();
+                if (!blorbo.dead) {
+                    blorbo.tick();
+                }
                 this.checkForDoors(blorbo);
             }
             setTimeout(this.tick, this.tickRate);
@@ -7417,6 +7608,10 @@ var map = {
 	"./Objects/Entities/Actions/Feel.ts": 4543,
 	"./Objects/Entities/Actions/FollowObject": 744,
 	"./Objects/Entities/Actions/FollowObject.ts": 744,
+	"./Objects/Entities/Actions/GlitchDeath": 6315,
+	"./Objects/Entities/Actions/GlitchDeath.ts": 6315,
+	"./Objects/Entities/Actions/GlitchLife": 6357,
+	"./Objects/Entities/Actions/GlitchLife.ts": 6357,
 	"./Objects/Entities/Actions/GoEast": 7192,
 	"./Objects/Entities/Actions/GoEast.ts": 7192,
 	"./Objects/Entities/Actions/GoNorth": 7415,
@@ -7431,6 +7626,8 @@ var map = {
 	"./Objects/Entities/Actions/Listen.ts": 7576,
 	"./Objects/Entities/Actions/Look": 2741,
 	"./Objects/Entities/Actions/Look.ts": 2741,
+	"./Objects/Entities/Actions/MeleeKill": 2900,
+	"./Objects/Entities/Actions/MeleeKill.ts": 2900,
 	"./Objects/Entities/Actions/PauseSimulation": 4359,
 	"./Objects/Entities/Actions/PauseSimulation.ts": 4359,
 	"./Objects/Entities/Actions/ResumeSimulation": 2042,
