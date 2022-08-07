@@ -2028,12 +2028,14 @@ has array of audio files it can switch between in a playlist
 makes audio go in and out in terms of volume
 subtly messes with speed and pitch, too, if i can manage it
 */
+//
 class ChantingEngine {
     constructor() {
         this.baseLocation = "audio/Chant/";
         //JR NOTE: todo , still raw audio, needs cleanup
-        this.sources = ["Take1.mp3", "Take2WhoopsItsAFractal.mp3"];
-        this.audio = new Audio(this.baseLocation + this.sources[0]);
+        //the loops is not a loop
+        this.sources = ["Take1.mp3", "Take2WhoopsItsAFractal.mp3", "Take3.mp3"];
+        this.audio = new Audio(this.baseLocation + this.sources[2]);
         this.tickNum = 0;
         this.volumeDirection = Quotidian_1.Direction.UP;
         this.start = () => {
@@ -2079,6 +2081,12 @@ class ChantingEngine {
                 if (this.volumeDirection > 0.5) {
                     this.volumeDirection = Quotidian_1.Direction.DOWN;
                 }
+            }
+            else if (chance < 0.01) {
+                this.audio.src = this.baseLocation + (0, NonSeededRandUtils_1.pickFrom)(this.sources);
+                this.audio.volume = 0.001;
+                this.audio.play();
+                console.log("JR NOTE: twisting the chant", this.audio.src);
             }
             setTimeout(this.tick, 1000);
         };
@@ -2175,7 +2183,7 @@ class Maze {
                     input.value = "";
                     return false;
                 };
-                this.addStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: eye killer kills if she's close enough, fading in and out audio"));
+                this.addStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: eye killer kills if she's close enough, take object"));
             }
         };
         this.rand = rand;
@@ -4882,7 +4890,10 @@ exports.Secret = Secret;
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
 /*
+ExperimentalMusic
 Paradise and parasite
+The Corporation still serves as the main trading partner of the Great Powers, and fares well enough with JR at their head. -https://www.royalroad.com/fiction/40920/the-path-of-ascension/chapter/964367/the-path-of-ascension-chapter-153
+
 earworm humming in a dream
 Natalie Yemet (thinks their mom is the customer service rep. has an order for a game they don't remember)
 some kind of mafia scheme (accuses eyedol of kidnapping)

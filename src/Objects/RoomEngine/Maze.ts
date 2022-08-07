@@ -95,7 +95,7 @@ export class Maze {
                 input.value="";
                 return false;
             }
-            this.addStorybeat(new StoryBeat("Peewee: Await Commands","Peewee is awaiting the Observers commands. Also: JR NOTE: eye killer kills if she's close enough, fading in and out audio"));
+            this.addStorybeat(new StoryBeat("Peewee: Await Commands","Peewee is awaiting the Observers commands. Also: JR NOTE: eye killer kills if she's close enough, take object"));
         }
     }
 
