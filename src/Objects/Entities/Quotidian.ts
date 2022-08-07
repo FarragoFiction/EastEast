@@ -78,6 +78,7 @@ export class Quotidian extends PhysicalObject {
     justice = 0; //how much do you trust your own judgement, how quick are you to judge
     originalFlavor = "";
     dead = false;
+    breached = false;
 
 
 
@@ -110,7 +111,7 @@ export class Quotidian extends PhysicalObject {
     }
 
     processedName = ()=>{
-        return `${this.name}${this.dead?"'s Grave":''}`;
+        return `${this.breached? "Breached":""} ${this.name}${this.dead?"'s Grave":''}`;
     }
 
     die = (causeOfDeath: string)=>{

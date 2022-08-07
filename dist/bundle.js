@@ -1087,6 +1087,7 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.currentSpeed = 5;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
+        this.breached = true;
     }
 }
 exports.EyeKiller = EyeKiller;
@@ -1265,11 +1266,12 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.justice = 0; //how much do you trust your own judgement, how quick are you to judge
         this.originalFlavor = "";
         this.dead = false;
+        this.breached = false;
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
         this.processedName = () => {
-            return `${this.name}${this.dead ? "'s Grave" : ''}`;
+            return `${this.breached ? "Breached" : ""} ${this.name}${this.dead ? "'s Grave" : ''}`;
         };
         this.die = (causeOfDeath) => {
             console.log("JR NOTE: trying to kill", this.name, causeOfDeath);
