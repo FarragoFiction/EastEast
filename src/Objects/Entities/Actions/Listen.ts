@@ -35,6 +35,7 @@ export class Listen extends Action {
     sense = SOUND;
 
     noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian)=>{
+        current_room.maze.chantingEngine.listen();
         const north = current_room.getNorth();
         const south = current_room.getSouth();
         const east = current_room.getEast();

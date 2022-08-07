@@ -405,6 +405,7 @@ class Listen extends BaseAction_1.Action {
         this.recognizedCommands = ["LISTEN", "HEAR"];
         this.sense = ThemeStorage_1.SOUND;
         this.noTarget = (beat, current_room, subject) => {
+            current_room.maze.chantingEngine.listen();
             const north = current_room.getNorth();
             const south = current_room.getSouth();
             const east = current_room.getEast();
