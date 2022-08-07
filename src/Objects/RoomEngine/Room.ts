@@ -272,16 +272,12 @@ export class Room {
         if(!this.ticking){
             return;
         }
-        console.log("JR NOTE: doing a tick")
-        //TODO blorbos all tick
         for (let blorbo of this.blorbos) {
             blorbo.tick();
             this.checkForDoors(blorbo);
         }
 
-        if (this.ticking) {
-            setTimeout(this.tick, this.tickRate);
-        }
+        setTimeout(this.tick, this.tickRate);
     }
 
     init = () => {

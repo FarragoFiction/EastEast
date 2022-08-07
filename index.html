@@ -7,19 +7,38 @@
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/transcript.css">
   <script>
-        window.onerror = (e)=>{
-        const err = createElementWithIdAndParent("p", storySoFar, undefined, "error");
-        err.title = "ERROR";
-        err.innerHTML = e.toString();
+ const createElementWithIdAndParent = (eleName, parent, id, className) => {
+    const ele = createElementWithId(eleName, id, className);
+    parent.append(ele);
+    return ele;
+}
+
+ const createElementWithId = (eleName, id, className) => {
+    const ele = document.createElement(eleName);
+    if (id) {
+        ele.id = id;
     }
-    </script>
+    if (className) {
+        ele.className = className;
+    }
+    return ele;
+
+}
+
+    window.onerror = (e) => {
+      const storySoFar = document.querySelector(".story-so-far");
+      const err = createElementWithIdAndParent("p", storySoFar, undefined, "error");
+      err.title = "ERROR";
+      err.innerHTML = e.toString();
+    }
+  </script>
 
 </head>
 
 <body>
   <div id="container">
     <div id="current-room">
-      
+
     </div>
     <div class="player-container" id="story-container">
       <div class="story-so-far">
@@ -41,38 +60,45 @@
   <ul>
 
 
-    * let peewee follow target (target is anything containing name) (vital, we need to follow the snail) (if no valid target, peewee paces)
-* peewee comment on a sensory observation if he's near an object (upgrade look etc to only do everything if no passed in target)
-* add name to every single object, please.
-*  spawn the eye killer who flees AWAY (follow but negative?) from anyone and kills if anything touches her
-* if anything get too close she switches to chasing them 
+    * let peewee follow target (target is anything containing name) (vital, we need to follow the snail) (if no valid
+    target, peewee paces)
+    * peewee comment on a sensory observation if he's near an object (upgrade look etc to only do everything if no
+    passed in target)
+    * add name to every single object, please.
+    * spawn the eye killer who flees AWAY (follow but negative?) from anyone and kills if anything touches her
+    * if anything get too close she switches to chasing them
 
 
 
-* if a room gets replaced (incl north) set the blorbos in it free
-* once processed, audio plays constantly, going in and out of volume, usually muted, sometimes almost unhearable, sometimes going up to full volume
-* and importantly, sometimes switching which of the files its looping
+    * if a room gets replaced (incl north) set the blorbos in it free
+    * once processed, audio plays constantly, going in and out of volume, usually muted, sometimes almost unhearable,
+    sometimes going up to full volume
+    * and importantly, sometimes switching which of the files its looping
 
-* when enter a new room, chance any free blorbos will be there
-    *peewee has a reaction storybeat where if he's close to an object he'll comment on it in some way. (looks X, smells X, tastes X, etc.)
-* mary king with her trecherous permit
+    * when enter a new room, chance any free blorbos will be there
+    *peewee has a reaction storybeat where if he's close to an object he'll comment on it in some way. (looks X, smells
+    X, tastes X, etc.)
+    * mary king with her trecherous permit
 
-fractal rooms and fractal ai
-*find room for truth
-* find someway to link to     //0: http://farragofiction.com/ParkerLotLost/ 
+    fractal rooms and fractal ai
+    *find room for truth
+    * find someway to link to //0: http://farragofiction.com/ParkerLotLost/
 
-* the longer you play, the more fractal things get, the more chaotic, till eventually the Merciful Nightingale spawns.
+    * the longer you play, the more fractal things get, the more chaotic, till eventually the Merciful Nightingale
+    spawns.
 
     * LONG TERM TODO spawn the eye killer who flees AWAY from peewee and kills if anything touches her
-    * allow rooms nearby to tick, even if they aren't rendered. any tick originated from a neighbor room should mark itself as such on screen.
-    (yes this means that blorbos may move through doors that don't exist in their rooms just because they DO exist in peewees, or interact with peewee's room in a weird ghost way. this is fine)
+    * allow rooms nearby to tick, even if they aren't rendered. any tick originated from a neighbor room should mark
+    itself as such on screen.
+    (yes this means that blorbos may move through doors that don't exist in their rooms just because they DO exist in
+    peewees, or interact with peewee's room in a weird ghost way. this is fine)
 
 
 
-* attic has protojrs
+    * attic has protojrs
     *narratr is truth, obvs
     * why do some rooms lead to themselves?
-    * 
+    *
     * add a weird non-puppet peewee that doens't listen (bug i found) (arm2 peewee)
 
     * begin writing basic trigger/effect ai system so quotidians can randomly cycle between moving randomly, approaching
@@ -108,14 +134,15 @@ fractal rooms and fractal ai
 
   <p>
   <h1>Credits</h1>
-  <p>(note, check <a href = 'http://www.farragofiction.com/ZampanioSimEast/'>East</a>'s Credits as well, since this builds off it)</p>
+  <p>(note, check <a href='http://www.farragofiction.com/ZampanioSimEast/'>East</a>'s Credits as well, since this builds
+    off it)</p>
   <ul>
     <li>Writing and Coding: JR</li>
     <li>Writing and Music and Art: IC</li>
     <li>Peewee Sprite: KR</li>
     <li>9 Artifacts: Xexus</li>
-    <li>Snail:  https://forums.rpgmakerweb.com/index.php?threads/avys-mv-stuff.53317/page-74#post-1028957</li>
-    <li>Literature Quotes:  Jeff VanderMeer, Annihilation and Mark Z. Danielewski, House of Leaves </li>
+    <li>Snail: https://forums.rpgmakerweb.com/index.php?threads/avys-mv-stuff.53317/page-74#post-1028957</li>
+    <li>Literature Quotes: Jeff VanderMeer, Annihilation and Mark Z. Danielewski, House of Leaves </li>
   </ul>
   </p>
 

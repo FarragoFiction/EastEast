@@ -955,7 +955,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.minSpeed = 1;
         this.currentSpeed = 10;
         //only for peewee
-        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new FollowObject_1.FollowObject(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
+        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new FollowObject_1.FollowObject(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -1298,7 +1298,6 @@ class TargetIsWithinRadiusOfSelf extends baseFilter_1.TargetFilter {
                 return null;
             }
             if ((0, misc_1.distanceWithinRadius)(this.radius, owner.owner.x, owner.owner.y, target.x, target.y)) {
-                console.log("JR NOTE: I think ", { x: owner.owner.x, y: owner.owner.y }, "is near ", { x: target.x, y: target.y });
                 targetLocked = true;
             }
             if (targetLocked && !this.invert) {
@@ -2011,12 +2010,13 @@ exports.PhysicalObject = PhysicalObject;
 /***/ }),
 
 /***/ 7936:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ChantingEngine = void 0;
+const NonSeededRandUtils_1 = __webpack_require__(8258);
 /*
 has array of audio files it can switch between in a playlist
 makes audio go in and out in terms of volume
@@ -2028,8 +2028,31 @@ class ChantingEngine {
         //JR NOTE: todo , still raw audio, needs cleanup
         this.sources = ["Take1.mp3", "Take2WhoopsItsAFractal.mp3"];
         this.audio = new Audio(this.baseLocation + this.sources[0]);
+        this.tickNum = 0;
         this.start = () => {
+            this.audio.loop = true;
             this.audio.play();
+            this.tick();
+        };
+        this.tick = () => {
+            if (this.audio.paused) {
+                return;
+            }
+            this.tickNum++;
+            if (this.tickNum % 100 === 0) {
+                const chance = Math.random();
+                if (chance > 0.95) {
+                    const range = 25;
+                    this.audio.playbackRate = ((100 + range) - (0, NonSeededRandUtils_1.getRandomNumberBetween)(0, range)) / 100;
+                    console.log("JR NOTE: mutating chant", this.audio.playbackRate);
+                }
+                else if (chance > 0.05) {
+                    const range = 25;
+                    this.audio.playbackRate = -1 * ((100 + range) - (0, NonSeededRandUtils_1.getRandomNumberBetween)(0, range)) / 100;
+                    console.log("JR NOTE: mutating chant backwards", this.audio.playbackRate);
+                }
+            }
+            setTimeout(this.tick, 50);
         };
         this.pause = () => {
             this.audio.pause();
@@ -2373,15 +2396,11 @@ class Room {
             if (!this.ticking) {
                 return;
             }
-            console.log("JR NOTE: doing a tick");
-            //TODO blorbos all tick
             for (let blorbo of this.blorbos) {
                 blorbo.tick();
                 this.checkForDoors(blorbo);
             }
-            if (this.ticking) {
-                setTimeout(this.tick, this.tickRate);
-            }
+            setTimeout(this.tick, this.tickRate);
         };
         this.init = () => {
             this.name = `${(0, StringUtils_1.titleCase)(this.getRandomThemeConcept(ThemeStorage_1.ADJ))} ${(0, StringUtils_1.titleCase)(this.getRandomThemeConcept(ThemeStorage_1.LOCATION))}`;
