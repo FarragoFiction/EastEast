@@ -19,7 +19,7 @@ export class GoWest extends Action{ //lawsuit
         }      
         subject.movement_alg = new MoveToWestDoor(subject);
         subject.emitSass(":(")
-        return `${subject.name} flips you off. "ASSHOLE! THERE IS NO DOOR TO THE WEST (please, stop making, me try to do, the impossible...)"`;
+        return `${subject.processedName()} flips you off. "ASSHOLE! THERE IS NO DOOR TO THE WEST (please, stop making, me try to do, the impossible...)"`;
     }
 
 

@@ -17,11 +17,11 @@ export class FollowObject extends Action{ //lawsuit
 
         const target = beat.targets;
         if(target.length < 1){
-            return `${subject.name} can't see anything to move towards like that...`;
+            return `${subject.processedName()} can't see anything to move towards like that...`;
         }
         subject.movement_alg = new MoveToSpecificPhysicalObject(target[0], subject);
         subject.emitSass("!")
-        return `${subject.name} starts moving towards the ${target[0].name}.`;
+        return `${subject.processedName()} starts moving towards the ${target[0].processedName()}.`;
     }
 
 

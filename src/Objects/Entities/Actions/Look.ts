@@ -62,11 +62,11 @@ export class Look extends Action {
         }
 
         if (current_room.items.length > 0) {
-            thingsSeen = `${thingsSeen} <p>He also sees ${current_room.items.length} item(s). Looking closer, they are ${turnArrayIntoHumanSentence(current_room.items.map((e) => e.name))}.</p>`;
+            thingsSeen = `${thingsSeen} <p>He also sees ${current_room.items.length} item(s). Looking closer, they are ${turnArrayIntoHumanSentence(current_room.items.map((e) => e.processedName()))}.</p>`;
         }
 
         if (current_room.blorbos.length > 0) {
-            thingsSeen = `${thingsSeen} <p>He also sees ${current_room.blorbos.length} blorbos(s). Looking closer, they are ${turnArrayIntoHumanSentence(current_room.blorbos.map((e) => e.name))}.</p>`;
+            thingsSeen = `${thingsSeen} <p>He also sees ${current_room.blorbos.length} blorbos(s). Looking closer, they are ${turnArrayIntoHumanSentence(current_room.blorbos.map((e) => e.processedName()))}.</p>`;
         }
         return thingsSeen;
     }
@@ -78,7 +78,7 @@ export class Look extends Action {
         }
 
         const lookcloser = current_room.rand.pickFrom(targets);
-        return `${subject.name} looks at ${turnArrayIntoHumanSentence(targets.map((e) => e.name))}. He sees an aura of ${turnArrayIntoHumanSentence(thingsHeard)}. He looks closer at the ${lookcloser.name}. ${lookcloser.flavorText}`;
+        return `${subject.processedName()} looks at ${turnArrayIntoHumanSentence(targets.map((e) => e.processedName()))}. He sees an aura of ${turnArrayIntoHumanSentence(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText}`;
 
     }
 

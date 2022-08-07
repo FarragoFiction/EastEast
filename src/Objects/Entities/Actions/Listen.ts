@@ -53,7 +53,7 @@ export class Listen extends Action {
             thingsHeard = `${thingsHeard} <p>Towards the EAST, he hears ${east.getRandomThemeConcept(this.sense)}.</p>`;
         }
 
-        return `${subject.name} listens  carefully. He hears ${thingsHeard}`;
+        return `${subject.processedName()} listens  carefully. He hears ${thingsHeard}`;
     }
 
     withTargets = (beat: AiBeat,current_room: Room, subject: Quotidian, targets: PhysicalObject[])=>{
@@ -62,7 +62,7 @@ export class Listen extends Action {
             thingsHeard.push(target.getRandomThemeConcept(this.sense));
         }
 
-        return `${subject.name} listens carefully to ${turnArrayIntoHumanSentence(targets.map((e)=>e.name))}. He hears ${turnArrayIntoHumanSentence(thingsHeard)}.`;
+        return `${subject.processedName()} listens carefully to ${turnArrayIntoHumanSentence(targets.map((e)=>e.processedName()))}. He hears ${turnArrayIntoHumanSentence(thingsHeard)}.`;
 
     }
 

@@ -28,7 +28,7 @@ class Action {
         };
         this.applyAction = (beat) => {
             //JR NOTE: todo flesh this out. should be able to access the whole maze really.
-            return `${beat.owner?.name} stands around doing sweet FA. ${this.sensePhrase(beat.owner?.room)}`;
+            return `${beat.owner?.processedName()} stands around doing sweet FA. ${this.sensePhrase(beat.owner?.room)}`;
         };
     }
 }
@@ -55,7 +55,7 @@ class DeploySass extends BaseAction_1.Action {
                 return "";
             }
             subject.emitSass(this.shortSass);
-            return `${subject.name} says "${subject.rand.pickFrom(this.longSass)}"`;
+            return `${subject.processedName()} says "${subject.rand.pickFrom(this.longSass)}"`;
         };
         this.shortSass = shortSass;
         this.longSass = longSass;
@@ -123,7 +123,7 @@ class Feel extends BaseAction_1.Action {
             for (let target of targets) {
                 thingsHeard.push(target.getRandomThemeConcept(this.sense));
             }
-            return `${subject.name} hesitantly caresses ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}. He feels ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. It's weird for everybody.`;
+            return `${subject.processedName()} hesitantly caresses ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He feels ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. It's weird for everybody.`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -169,11 +169,11 @@ class FollowObject extends BaseAction_1.Action {
             }
             const target = beat.targets;
             if (target.length < 1) {
-                return `${subject.name} can't see anything to move towards like that...`;
+                return `${subject.processedName()} can't see anything to move towards like that...`;
             }
             subject.movement_alg = new MoveToSpecificPhysicalObject_1.MoveToSpecificPhysicalObject(target[0], subject);
             subject.emitSass("!");
-            return `${subject.name} starts moving towards the ${target[0].name}.`;
+            return `${subject.processedName()} starts moving towards the ${target[0].processedName()}.`;
         };
     }
 }
@@ -199,7 +199,7 @@ class GlitchDeath extends BaseAction_1.Action {
         super(...arguments);
         this.recognizedCommands = ["DEATHFLAG", "KILL", "MURDER", "SLAUGHTER"];
         this.noTarget = (beat, current_room, subject) => {
-            return `${subject.name} doesn't see anything to make un-alive.`;
+            return `${subject.processedName()} doesn't see anything to make un-alive.`;
         };
         this.withTargets = (beat, current_room, subject, targets) => {
             let killed = false;
@@ -212,7 +212,7 @@ class GlitchDeath extends BaseAction_1.Action {
             if (!killed) {
                 return this.noTarget(beat, current_room, subject);
             }
-            return `A glitch shudders over the ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}, twisting their status from alive to dead, if it can.`;
+            return `A glitch shudders over the ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}, twisting their status from alive to dead, if it can.`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -225,7 +225,7 @@ class GlitchDeath extends BaseAction_1.Action {
             }
             let targets = beat.targets;
             if (targets.length === 0) {
-                targets = current_room.blorbos;
+                targets = [...current_room.blorbos];
                 (0, ArrayUtils_1.removeItemOnce)(targets, subject); //unless you're specifically
                 return this.withTargets(beat, current_room, subject, targets); //boy sure hope you don't accidentally type kill as part of another word with no targets :) :) :)
             }
@@ -257,7 +257,7 @@ class GlitchLife extends BaseAction_1.Action {
         super(...arguments);
         this.recognizedCommands = ["REVIVE", "HEAL", "RESURRECT", "CORPSESMOOCH"];
         this.noTarget = (beat, current_room, subject) => {
-            return `${subject.name} doesn't see anything to make un-alive.`;
+            return `${subject.processedName()} doesn't see anything to make un-alive.`;
         };
         this.withTargets = (beat, current_room, subject, targets) => {
             let killed = false;
@@ -270,7 +270,7 @@ class GlitchLife extends BaseAction_1.Action {
             if (!killed) {
                 return this.noTarget(beat, current_room, subject);
             }
-            return `A glitch shudders over the ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}, twisting their status from dead to alive, if it can.`;
+            return `A glitch shudders over the ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}, twisting their status from dead to alive, if it can.`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -318,11 +318,11 @@ class GoEast extends BaseAction_1.Action {
             subject.movement_alg.detectEle();
             if (subject.movement_alg.ele) {
                 subject.emitSass("OK");
-                return `${subject.name} starts heading to the EAST DOOR.`;
+                return `${subject.processedName()} starts heading to the EAST DOOR.`;
             }
             else {
                 subject.emitSass("???");
-                return `${subject.name} can't find the EAST DOOR. They start pacing anxiously.`;
+                return `${subject.processedName()} can't find the EAST DOOR. They start pacing anxiously.`;
             }
         };
     }
@@ -354,11 +354,11 @@ class GoNorth extends BaseAction_1.Action {
             subject.movement_alg.detectEle();
             if (subject.movement_alg.ele) {
                 subject.emitSass("OK");
-                return `${subject.name} starts heading to the NORTH DOOR.`;
+                return `${subject.processedName()} starts heading to the NORTH DOOR.`;
             }
             else {
                 subject.emitSass("???");
-                return `${subject.name} can't find the NORTH DOOR. They start pacing anxiously.`;
+                return `${subject.processedName()} can't find the NORTH DOOR. They start pacing anxiously.`;
             }
         };
     }
@@ -390,11 +390,11 @@ class GoSouth extends BaseAction_1.Action {
             subject.movement_alg.detectEle();
             if (subject.movement_alg.ele) {
                 subject.emitSass("OK");
-                return `${subject.name} starts heading to the SOUTH DOOR.`;
+                return `${subject.processedName()} starts heading to the SOUTH DOOR.`;
             }
             else {
                 subject.emitSass("???");
-                return `${subject.name} can't find the SOUTH DOOR. They start pacing anxiously.`;
+                return `${subject.processedName()} can't find the SOUTH DOOR. They start pacing anxiously.`;
             }
         };
     }
@@ -424,7 +424,7 @@ class GoWest extends BaseAction_1.Action {
             }
             subject.movement_alg = new MoveToWestDoor_1.MoveToWestDoor(subject);
             subject.emitSass(":(");
-            return `${subject.name} flips you off. "ASSHOLE! THERE IS NO DOOR TO THE WEST (please, stop making, me try to do, the impossible...)"`;
+            return `${subject.processedName()} flips you off. "ASSHOLE! THERE IS NO DOOR TO THE WEST (please, stop making, me try to do, the impossible...)"`;
         };
     }
 }
@@ -533,14 +533,14 @@ class Listen extends BaseAction_1.Action {
             if (east) {
                 thingsHeard = `${thingsHeard} <p>Towards the EAST, he hears ${east.getRandomThemeConcept(this.sense)}.</p>`;
             }
-            return `${subject.name} listens  carefully. He hears ${thingsHeard}`;
+            return `${subject.processedName()} listens  carefully. He hears ${thingsHeard}`;
         };
         this.withTargets = (beat, current_room, subject, targets) => {
             let thingsHeard = [];
             for (let target of targets) {
                 thingsHeard.push(target.getRandomThemeConcept(this.sense));
             }
-            return `${subject.name} listens carefully to ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}. He hears ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}.`;
+            return `${subject.processedName()} listens carefully to ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He hears ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}.`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -622,10 +622,10 @@ class Look extends BaseAction_1.Action {
                 thingsSeen = `${thingsSeen} <p>On the EAST door, he sees a sign labeled ${east.name}.</p>`;
             }
             if (current_room.items.length > 0) {
-                thingsSeen = `${thingsSeen} <p>He also sees ${current_room.items.length} item(s). Looking closer, they are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(current_room.items.map((e) => e.name))}.</p>`;
+                thingsSeen = `${thingsSeen} <p>He also sees ${current_room.items.length} item(s). Looking closer, they are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(current_room.items.map((e) => e.processedName()))}.</p>`;
             }
             if (current_room.blorbos.length > 0) {
-                thingsSeen = `${thingsSeen} <p>He also sees ${current_room.blorbos.length} blorbos(s). Looking closer, they are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(current_room.blorbos.map((e) => e.name))}.</p>`;
+                thingsSeen = `${thingsSeen} <p>He also sees ${current_room.blorbos.length} blorbos(s). Looking closer, they are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(current_room.blorbos.map((e) => e.processedName()))}.</p>`;
             }
             return thingsSeen;
         };
@@ -635,7 +635,7 @@ class Look extends BaseAction_1.Action {
                 thingsHeard.push(`${target.getRandomThemeConcept(ThemeStorage_1.ADJ)} ${target.getRandomThemeConcept(ThemeStorage_1.PERSON)}`);
             }
             const lookcloser = current_room.rand.pickFrom(targets);
-            return `${subject.name} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.name}. ${lookcloser.flavorText}`;
+            return `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText}`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -679,7 +679,7 @@ class GlitchDeath extends BaseAction_1.Action {
         super(...arguments);
         this.recognizedCommands = ["KILL", "MURDER", "SLAUGHTER"];
         this.noTarget = (beat, current_room, subject) => {
-            return `${subject.name} doesn't see anything to make un-alive.`;
+            return `${subject.processedName()} doesn't see anything to make un-alive.`;
         };
         this.withTargets = (beat, current_room, subject, targets) => {
             let killed = false;
@@ -692,7 +692,7 @@ class GlitchDeath extends BaseAction_1.Action {
             if (!killed) {
                 return this.noTarget(beat, current_room, subject);
             }
-            return `${subject.name} brutally melees attacks the  ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}.`;
+            return `${subject.processedName()} brutally melees attacks the  ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}.`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -823,14 +823,14 @@ class Smell extends BaseAction_1.Action {
             if (east) {
                 thingsHeard = `${thingsHeard} <p>Towards the EAST, he  detects a whiff of ${east.getRandomThemeConcept(this.sense)}.</p>`;
             }
-            return `${subject.name} takes in a lungful of air. His cybernetic nose detects traces of ${thingsHeard}`;
+            return `${subject.processedName()} takes in a lungful of air. His cybernetic nose detects traces of ${thingsHeard}`;
         };
         this.withTargets = (beat, current_room, subject, targets) => {
             let thingsHeard = [];
             for (let target of targets) {
                 thingsHeard.push(target.getRandomThemeConcept(this.sense));
             }
-            return `${subject.name} slowly sniffs at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}. He smells ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. Kinda gross.`;
+            return `${subject.processedName()} slowly sniffs at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He smells ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. Kinda gross.`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -875,7 +875,7 @@ class StopMoving extends BaseAction_1.Action {
                 return "";
             }
             subject.movement_alg = new NoMovement_1.NoMovement(subject);
-            return `${subject.name} comes to a halt.`;
+            return `${subject.processedName()} comes to a halt.`;
         };
     }
 }
@@ -934,14 +934,14 @@ class Taste extends BaseAction_1.Action {
             if (east) {
                 thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the EAST DOOR he tastes ${east.getRandomThemeConcept(this.sense)}.</p>`;
             }
-            return `${subject.name} starts licking things at random. He has so many regrets. He will never forget the flavor of ${thingsHeard}`;
+            return `${subject.processedName()} starts licking things at random. He has so many regrets. He will never forget the flavor of ${thingsHeard}`;
         };
         this.withTargets = (beat, current_room, subject, targets) => {
             let thingsHeard = [];
             for (let target of targets) {
                 thingsHeard.push(target.getRandomThemeConcept(this.sense));
             }
-            return `${subject.name} slowly licks ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))}. He tastes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. Why would you have him do that!?`;
+            return `${subject.processedName()} slowly licks ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He tastes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. Why would you have him do that!?`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -1004,7 +1004,7 @@ class Think extends BaseAction_1.Action {
             for (let target of targets) {
                 thingsHeard.push(target.getRandomThemeConcept(this.concept));
             }
-            return `${subject.name} looks to ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.name))} for inspiration. He thinks: ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}`;
+            return `${subject.processedName()} looks to ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))} for inspiration. He thinks: ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -1081,7 +1081,7 @@ class EyeKiller extends Quotidian_1.Quotidian {
             down_src: { src: "KillerDown.gif", width: 50, height: 50 }
         };
         const beats = [];
-        super(room, "The Eye Killer", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.DARKNESS]], sprite, "It's the Eye Killer! I'd leave her alone!", beats);
+        super(room, "Eye Killer", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.DARKNESS]], sprite, "It's the Eye Killer! I'd leave her alone!", beats);
         this.maxSpeed = 50;
         this.minSpeed = 5;
         this.currentSpeed = 5;
@@ -1268,6 +1268,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
+        this.processedName = () => {
+            return `${this.name}${this.dead ? "'s Grave" : ''}`;
+        };
         this.die = (causeOfDeath) => {
             console.log("JR NOTE: trying to kill", this.name, causeOfDeath);
             this.dead = true;
@@ -1560,7 +1563,7 @@ class TargetNameIncludesAnyOfTheseWords extends baseFilter_1.TargetFilter {
         this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
             for (let word of this.words) {
-                if (target.name.toUpperCase().includes(word.toUpperCase())) {
+                if (target.processedName().toUpperCase().includes(word.toUpperCase())) {
                     targetLocked = true;
                 }
             }
@@ -2176,6 +2179,9 @@ class PhysicalObject {
     constructor(room, name, x, y, width, height, themes, layer, src, flavorText) {
         this.container = document.createElement("div");
         this.image = document.createElement("img");
+        this.processedName = () => {
+            return this.name;
+        };
         this.getRandomThemeConcept = (concept) => {
             if (this.themes.length === 0) {
                 return `[ERROR: NO THEME FOUND FOR ${this.name.toUpperCase()}]`;
@@ -2378,10 +2384,13 @@ class Maze {
             }
             this.room.render();
         };
-        this.addStorybeat = (beat) => {
+        this.addCommandStorybeat = (beat) => {
             if (this.peewee) {
                 this.peewee.processStorybeat(beat);
             }
+            this.addStorybeat(beat);
+        };
+        this.addStorybeat = (beat) => {
             this.boopAudio.play();
             this.storybeats.push(beat);
             const beatele = (0, misc_1.createElementWithIdAndParent)("div", this.storySoFar, undefined, "storybeat");
@@ -2399,11 +2408,11 @@ class Maze {
                 console.log("JR NOTE: setting up both");
                 form.onsubmit = (event) => {
                     event.preventDefault();
-                    this.addStorybeat(new StoryBeat_1.StoryBeat(input.value, ""));
+                    this.addCommandStorybeat(new StoryBeat_1.StoryBeat(input.value, ""));
                     input.value = "";
                     return false;
                 };
-                this.addStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: eye killer kills if she's close enough, take object"));
+                this.addCommandStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: eye killer kills if she's close enough, take object"));
             }
         };
         this.rand = rand;
@@ -2455,6 +2464,7 @@ class Room {
         this.tickRate = 100;
         this.children = [];
         this.name = "???";
+        this.pendingStoryBeats = [];
         this.getRandomThemeConcept = (concept) => {
             if (this.themes.length === 0) {
                 return `[ERROR: NO THEME FOUND FOR ${this.name.toUpperCase()}]`;
@@ -2646,13 +2656,20 @@ class Room {
         };
         this.processDeath = (blorbo) => {
             let deathMessage = `${blorbo.name} has died.`;
-            if (this.hasEnd()) {
-                deathMessage = `Drawn by their fated end, The End has come for ${blorbo.name}.`;
-                this.addBlorbo(new End_1.End(this, blorbo.x, blorbo.y));
+            if (!this.hasEnd()) {
+                deathMessage = `Drawn by their fated end, The End has come for the ${blorbo.name}.`;
+                const end = new End_1.End(this, blorbo.x, blorbo.y);
+                this.addBlorbo(end);
+                end.attachToParent(this.element);
             }
-            this.maze.addStorybeat(new StoryBeat_1.StoryBeat(`${blorbo.name}: die`, deathMessage));
+            this.pendingStoryBeats.push(new StoryBeat_1.StoryBeat(`${blorbo.name}: die`, deathMessage));
         };
         this.hasEnd = () => {
+            for (let blorbo of this.blorbos) {
+                if (blorbo instanceof End_1.End) {
+                    return true;
+                }
+            }
             return false;
         };
         this.initialRoomWithBlorbos = () => {
@@ -2669,6 +2686,11 @@ class Room {
             if (!this.ticking) {
                 return;
             }
+            //everything that needed to happen AFTER this tick finishes
+            for (let beat of this.pendingStoryBeats) {
+                this.maze.addStorybeat(beat);
+            }
+            this.pendingStoryBeats = [];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.dead) {
                     blorbo.tick();

@@ -53,7 +53,7 @@ export class Smell extends Action {
             thingsHeard = `${thingsHeard} <p>Towards the EAST, he  detects a whiff of ${east.getRandomThemeConcept(this.sense)}.</p>`;
         }
 
-        return `${subject.name} takes in a lungful of air. His cybernetic nose detects traces of ${thingsHeard}`;
+        return `${subject.processedName()} takes in a lungful of air. His cybernetic nose detects traces of ${thingsHeard}`;
     }
 
     withTargets = (beat: AiBeat,current_room: Room, subject: Quotidian, targets: PhysicalObject[])=>{
@@ -62,7 +62,7 @@ export class Smell extends Action {
             thingsHeard.push(target.getRandomThemeConcept(this.sense));
         }
 
-        return `${subject.name} slowly sniffs at ${turnArrayIntoHumanSentence(targets.map((e)=>e.name))}. He smells ${turnArrayIntoHumanSentence(thingsHeard)}. Kinda gross.`;
+        return `${subject.processedName()} slowly sniffs at ${turnArrayIntoHumanSentence(targets.map((e)=>e.processedName()))}. He smells ${turnArrayIntoHumanSentence(thingsHeard)}. Kinda gross.`;
 
     }
 

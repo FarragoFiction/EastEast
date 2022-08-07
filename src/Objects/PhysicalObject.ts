@@ -57,6 +57,10 @@ export class PhysicalObject{
         this.src = src;
     }
 
+    processedName = ()=>{
+        return this.name;
+    }
+
     getRandomThemeConcept = (concept: string) => {
         if(this.themes.length ===0){
             return `[ERROR: NO THEME FOUND FOR ${this.name.toUpperCase()}]`;

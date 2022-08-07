@@ -109,6 +109,10 @@ export class Quotidian extends PhysicalObject {
         this.makeBeatsMyOwn(beats);
     }
 
+    processedName = ()=>{
+        return `${this.name}${this.dead?"'s Grave":''}`;
+    }
+
     die = (causeOfDeath: string)=>{
         console.log("JR NOTE: trying to kill", this.name, causeOfDeath)
         this.dead = true;

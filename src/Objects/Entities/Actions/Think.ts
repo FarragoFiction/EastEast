@@ -46,7 +46,7 @@ export class Think extends Action {
             thingsHeard.push( target.getRandomThemeConcept(this.concept));
         }
 
-        return `${subject.name} looks to ${turnArrayIntoHumanSentence(targets.map((e) => e.name))} for inspiration. He thinks: ${turnArrayIntoHumanSentence(thingsHeard)}`;
+        return `${subject.processedName()} looks to ${turnArrayIntoHumanSentence(targets.map((e) => e.processedName()))} for inspiration. He thinks: ${turnArrayIntoHumanSentence(thingsHeard)}`;
 
     }
 

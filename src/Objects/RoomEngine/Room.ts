@@ -35,7 +35,7 @@ export class Room {
     tickRate = 100;
     children: Room[] = [];
     name = "???";
-    pendingStoryBeats:StoryBeat[] = [];
+    pendingStoryBeats: StoryBeat[] = [];
 
 
     //objects
@@ -262,16 +262,23 @@ export class Room {
         }
     }
 
-    processDeath  = (blorbo: Quotidian)=>{
+    processDeath = (blorbo: Quotidian) => {
         let deathMessage = `${blorbo.name} has died.`;
-        if(this.hasEnd()){
-            deathMessage = `Drawn by their fated end, The End has come for ${blorbo.name}.`;
-            this.addBlorbo(new End(this, blorbo.x, blorbo.y));
+        if (!this.hasEnd()) {
+            deathMessage = `Drawn by their fated end, The End has come for the ${blorbo.name}.`;
+            const end = new End(this, blorbo.x, blorbo.y)
+            this.addBlorbo(end);
+            end.attachToParent(this.element);
         }
-        this.pendingStoryBeats.push(new StoryBeat(`${blorbo.name}: die`,deathMessage));
+        this.pendingStoryBeats.push(new StoryBeat(`${blorbo.name}: die`, deathMessage));
     }
 
-    hasEnd = ()=>{
+    hasEnd = () => {
+        for(let blorbo of this.blorbos){
+            if(blorbo instanceof End){
+                return true;
+            }
+        }
         return false;
     }
 
@@ -291,12 +298,15 @@ export class Room {
         if (!this.ticking) {
             return;
         }
+
         //everything that needed to happen AFTER this tick finishes
-        for(let beat of this.pendingStoryBeats){
+        for (let beat of this.pendingStoryBeats) {
             this.maze.addStorybeat(beat);
         }
         this.pendingStoryBeats = [];
+
         for (let blorbo of this.blorbos) {
+
             if (!blorbo.dead) {
                 blorbo.tick();
             }

@@ -26,7 +26,7 @@ export class DeploySass extends Action{ //lawsuit
             return "";
         }      
         subject.emitSass(this.shortSass)
-        return `${subject.name} says "${subject.rand.pickFrom(this.longSass)}"`;
+        return `${subject.processedName()} says "${subject.rand.pickFrom(this.longSass)}"`;
     }
 
 

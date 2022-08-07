@@ -17,7 +17,7 @@ export class GlitchDeath extends Action {
 
 
     noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian) => {
-        return `${subject.name} doesn't see anything to make un-alive.`;
+        return `${subject.processedName()} doesn't see anything to make un-alive.`;
     }
 
     withTargets = (beat: AiBeat, current_room: Room, subject: Quotidian, targets: PhysicalObject[]) => {
@@ -31,7 +31,7 @@ export class GlitchDeath extends Action {
         if (!killed) {
             return this.noTarget(beat, current_room, subject);
         }
-        return `A glitch shudders over the ${turnArrayIntoHumanSentence(targets.map((e) => e.name))}, twisting their status from alive to dead, if it can.`;
+        return `A glitch shudders over the ${turnArrayIntoHumanSentence(targets.map((e) => e.processedName()))}, twisting their status from alive to dead, if it can.`;
 
     }
 
@@ -49,7 +49,7 @@ export class GlitchDeath extends Action {
 
         let targets = beat.targets;
         if (targets.length === 0) {
-            targets = current_room.blorbos;
+            targets = [...current_room.blorbos];
             removeItemOnce(targets, subject); //unless you're specifically
             return this.withTargets(beat, current_room, subject, targets); //boy sure hope you don't accidentally type kill as part of another word with no targets :) :) :)
         } else {

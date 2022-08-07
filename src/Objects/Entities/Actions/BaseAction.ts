@@ -25,7 +25,7 @@ export class Action{ //lawsuit
     }
     applyAction = (beat: AiBeat)=>{
         //JR NOTE: todo flesh this out. should be able to access the whole maze really.
-        return `${beat.owner?.name} stands around doing sweet FA. ${this.sensePhrase(beat.owner?.room)}`;
+        return `${beat.owner?.processedName()} stands around doing sweet FA. ${this.sensePhrase(beat.owner?.room)}`;
     }
 
 

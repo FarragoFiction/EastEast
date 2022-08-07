@@ -18,7 +18,7 @@ export class StopMoving extends Action{ //lawsuit
             return "";
         }
         subject.movement_alg = new NoMovement(subject);
-        return `${subject.name} comes to a halt.`;
+        return `${subject.processedName()} comes to a halt.`;
     }
 
 

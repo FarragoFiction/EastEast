@@ -95,7 +95,7 @@ export class Maze {
             console.log("JR NOTE: setting up both")
             form.onsubmit = (event: SubmitEvent) => {
                 event.preventDefault();
-                this.addStorybeat(new StoryBeat(input.value, ""));
+                this.addCommandStorybeat(new StoryBeat(input.value, ""));
                 input.value="";
                 return false;
             }

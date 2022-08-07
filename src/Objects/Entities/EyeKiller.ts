@@ -30,6 +30,6 @@ export class EyeKiller extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"The Eye Killer", x,y,[all_themes[HUNTING],all_themes[KILLING],all_themes[FAMILY],all_themes[DARKNESS]],sprite,"It's the Eye Killer! I'd leave her alone!", beats);
+        super(room,"Eye Killer", x,y,[all_themes[HUNTING],all_themes[KILLING],all_themes[FAMILY],all_themes[DARKNESS]],sprite,"It's the Eye Killer! I'd leave her alone!", beats);
     }
 }

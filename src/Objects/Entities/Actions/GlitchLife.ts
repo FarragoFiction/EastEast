@@ -17,7 +17,7 @@ export class GlitchLife extends Action {
 
 
     noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian)=>{
-        return `${subject.name} doesn't see anything to make un-alive.`;
+        return `${subject.processedName()} doesn't see anything to make un-alive.`;
     }
 
     withTargets = (beat: AiBeat,current_room: Room, subject: Quotidian, targets: PhysicalObject[])=>{
@@ -31,7 +31,7 @@ export class GlitchLife extends Action {
         if(!killed){
             return this.noTarget(beat, current_room, subject);
         }
-        return `A glitch shudders over the ${turnArrayIntoHumanSentence(targets.map((e)=>e.name))}, twisting their status from dead to alive, if it can.`;
+        return `A glitch shudders over the ${turnArrayIntoHumanSentence(targets.map((e)=>e.processedName()))}, twisting their status from dead to alive, if it can.`;
 
     }
 

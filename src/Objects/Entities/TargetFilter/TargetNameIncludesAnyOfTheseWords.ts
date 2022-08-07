@@ -24,7 +24,7 @@ export class TargetNameIncludesAnyOfTheseWords extends TargetFilter {
     applyFilterToSingleTarget = (owner: AiBeat, target: PhysicalObject) => {
         let targetLocked = false;
         for (let word of this.words) {
-            if (target.name.toUpperCase().includes(word.toUpperCase())) {
+            if (target.processedName().toUpperCase().includes(word.toUpperCase())) {
                 targetLocked = true;
             }
         }

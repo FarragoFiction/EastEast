@@ -52,7 +52,7 @@ export class Taste extends Action {
             thingsHeard = `${thingsHeard} <p>When he licks the doorknob of the EAST DOOR he tastes ${east.getRandomThemeConcept(this.sense)}.</p>`;
         }
 
-        return `${subject.name} starts licking things at random. He has so many regrets. He will never forget the flavor of ${thingsHeard}`;
+        return `${subject.processedName()} starts licking things at random. He has so many regrets. He will never forget the flavor of ${thingsHeard}`;
     }
 
     withTargets = (beat: AiBeat,current_room: Room, subject: Quotidian, targets: PhysicalObject[])=>{
@@ -61,7 +61,7 @@ export class Taste extends Action {
             thingsHeard.push(target.getRandomThemeConcept(this.sense));
         }
 
-        return `${subject.name} slowly licks ${turnArrayIntoHumanSentence(targets.map((e)=>e.name))}. He tastes ${turnArrayIntoHumanSentence(thingsHeard)}. Why would you have him do that!?`;
+        return `${subject.processedName()} slowly licks ${turnArrayIntoHumanSentence(targets.map((e)=>e.processedName()))}. He tastes ${turnArrayIntoHumanSentence(thingsHeard)}. Why would you have him do that!?`;
 
     }
 

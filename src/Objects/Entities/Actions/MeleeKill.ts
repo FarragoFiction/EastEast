@@ -17,7 +17,7 @@ export class GlitchDeath extends Action {
 
 
     noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian)=>{
-        return `${subject.name} doesn't see anything to make un-alive.`;
+        return `${subject.processedName()} doesn't see anything to make un-alive.`;
     }
 
     withTargets = (beat: AiBeat,current_room: Room, subject: Quotidian, targets: PhysicalObject[])=>{
@@ -31,7 +31,7 @@ export class GlitchDeath extends Action {
         if(!killed){
             return this.noTarget(beat, current_room, subject);
         }
-        return `${subject.name} brutally melees attacks the  ${turnArrayIntoHumanSentence(targets.map((e)=>e.name))}.`;
+        return `${subject.processedName()} brutally melees attacks the  ${turnArrayIntoHumanSentence(targets.map((e)=>e.processedName()))}.`;
 
     }
 

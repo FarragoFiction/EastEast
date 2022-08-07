@@ -20,10 +20,10 @@ export class GoEast extends Action{ //lawsuit
         subject.movement_alg.detectEle();
         if (subject.movement_alg.ele) {
             subject.emitSass("OK")
-            return `${subject.name} starts heading to the EAST DOOR.`;
+            return `${subject.processedName()} starts heading to the EAST DOOR.`;
         }else{
             subject.emitSass("???")
-            return `${subject.name} can't find the EAST DOOR. They start pacing anxiously.`;  
+            return `${subject.processedName()} can't find the EAST DOOR. They start pacing anxiously.`;  
         }
     }
 

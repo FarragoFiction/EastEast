@@ -62,7 +62,7 @@ export class Feel extends Action {
             thingsHeard.push(target.getRandomThemeConcept(this.sense));
         }
 
-        return `${subject.name} hesitantly caresses ${turnArrayIntoHumanSentence(targets.map((e)=>e.name))}. He feels ${turnArrayIntoHumanSentence(thingsHeard)}. It's weird for everybody.`;
+        return `${subject.processedName()} hesitantly caresses ${turnArrayIntoHumanSentence(targets.map((e)=>e.processedName()))}. He feels ${turnArrayIntoHumanSentence(thingsHeard)}. It's weird for everybody.`;
 
     }
 
