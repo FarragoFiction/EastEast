@@ -2017,6 +2017,7 @@ exports.PhysicalObject = PhysicalObject;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ChantingEngine = void 0;
 const NonSeededRandUtils_1 = __webpack_require__(8258);
+const Quotidian_1 = __webpack_require__(6647);
 /*
 has array of audio files it can switch between in a playlist
 makes audio go in and out in terms of volume
@@ -2029,30 +2030,50 @@ class ChantingEngine {
         this.sources = ["Take1.mp3", "Take2WhoopsItsAFractal.mp3"];
         this.audio = new Audio(this.baseLocation + this.sources[0]);
         this.tickNum = 0;
+        this.volumeDirection = Quotidian_1.Direction.UP;
         this.start = () => {
+            this.audio.volume = 0;
             this.audio.loop = true;
             this.audio.play();
             this.tick();
+        };
+        this.listen = () => {
+            this.volumeDirection = Quotidian_1.Direction.DOWN;
+            this.audio.volume = 1.0;
         };
         this.tick = () => {
             if (this.audio.paused) {
                 return;
             }
-            this.tickNum++;
-            if (this.tickNum % 100 === 0) {
-                const chance = Math.random();
-                if (chance > 0.95) {
-                    const range = 25;
-                    this.audio.playbackRate = ((100 + range) - (0, NonSeededRandUtils_1.getRandomNumberBetween)(0, range)) / 100;
-                    console.log("JR NOTE: mutating chant", this.audio.playbackRate);
+            const chance = Math.random();
+            if (chance > 0.75) {
+                const range = 25;
+                this.audio.playbackRate = ((100 + range) - (0, NonSeededRandUtils_1.getRandomNumberBetween)(0, range)) / 100;
+                console.log("JR NOTE: mutating chant", this.audio.playbackRate);
+            }
+            else if (chance > 0.25) {
+                const proposedVolume = this.audio.volume + ((this.volumeDirection === Quotidian_1.Direction.UP ? 1 : -1) * (.001 + this.audio.volume / 10));
+                if (proposedVolume >= 1) {
+                    this.volumeDirection = Quotidian_1.Direction.DOWN;
                 }
-                else if (chance > 0.05) {
-                    const range = 25;
-                    this.audio.playbackRate = -1 * ((100 + range) - (0, NonSeededRandUtils_1.getRandomNumberBetween)(0, range)) / 100;
-                    console.log("JR NOTE: mutating chant backwards", this.audio.playbackRate);
+                else if (proposedVolume <= 0) {
+                    this.volumeDirection = Quotidian_1.Direction.UP;
+                }
+                else {
+                    this.audio.volume = proposedVolume;
+                }
+                console.log("JR NOTE: mutating chant volume", this.audio.volume);
+            }
+            else if (chance > 0.20) { //5% chance of changing direction on its own
+                console.log("JR NOTE: mutating chant volume direction", this.audio.volume);
+                if (this.volumeDirection === Quotidian_1.Direction.UP) {
+                    this.volumeDirection = Quotidian_1.Direction.DOWN;
+                }
+                else {
+                    this.volumeDirection = Quotidian_1.Direction.UP;
                 }
             }
-            setTimeout(this.tick, 50);
+            setTimeout(this.tick, 1000);
         };
         this.pause = () => {
             this.audio.pause();

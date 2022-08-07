@@ -1,4 +1,5 @@
 import { getRandomNumberBetween } from "../../Utils/NonSeededRandUtils";
+import { Direction } from "../Entities/Quotidian";
 
 /*
 has array of audio files it can switch between in a playlist
@@ -11,31 +12,51 @@ export class ChantingEngine{
     sources = ["Take1.mp3","Take2WhoopsItsAFractal.mp3"];
     audio = new Audio(this.baseLocation + this.sources[0]);
     tickNum = 0;
+    volumeDirection = Direction.UP;
 
     start=()=>{
+        this.audio.volume = 0;
         this.audio.loop = true;
         this.audio.play();
         this.tick();
     }
 
+    listen = ()=>{
+        this.volumeDirection = Direction.DOWN;
+        this.audio.volume = 1.0;
+    }
+
+
     tick = () => {
         if(this.audio.paused){
             return;
         }
-        this.tickNum ++;
-        if(this.tickNum %100 === 0){
             const chance = Math.random();
-            if(chance>0.95){
+            if(chance>0.75){
                 const range = 25;
                 this.audio.playbackRate = ((100+range)-getRandomNumberBetween(0,range))/100;
                 console.log("JR NOTE: mutating chant",this.audio.playbackRate)
-            }else if (chance > 0.05){
-                const range = 25;
-                this.audio.playbackRate = -1* ((100+range)-getRandomNumberBetween(0,range))/100;
-                console.log("JR NOTE: mutating chant backwards",this.audio.playbackRate)  
-            }
+            }else if (chance > 0.25){
+                const proposedVolume = this.audio.volume + ((this.volumeDirection === Direction.UP? 1:-1) * (.001+this.audio.volume/10));
+                if(proposedVolume >= 1){
+                    this.volumeDirection = Direction.DOWN;
+                }else if (proposedVolume<= 0){
+                    this.volumeDirection = Direction.UP;
+                }else{
+                    this.audio.volume = proposedVolume;
+                }
+                console.log("JR NOTE: mutating chant volume",this.audio.volume)  
+            }else if(chance > 0.20){ //5% chance of changing direction on its own
+                console.log("JR NOTE: mutating chant volume direction",this.audio.volume)  
+
+                if(this.volumeDirection === Direction.UP){
+                    this.volumeDirection = Direction.DOWN;
+                }else{
+                    this.volumeDirection = Direction.UP;
+                }
+
         }
-        setTimeout(this.tick, 50);
+        setTimeout(this.tick, 1000);
 
     }
 
