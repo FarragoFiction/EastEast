@@ -14,6 +14,7 @@ import { DeploySass } from "../Entities/Actions/DeploySass";
 import { Snail } from "../Entities/SnailFriend";
 import { EyeKiller } from "../Entities/EyeKiller";
 import { End } from "../Entities/End";
+import { StoryBeat } from "./StoryBeat";
 
 
 export class Room {
@@ -260,15 +261,25 @@ export class Room {
         }
     }
 
+    processDeath  = (blorbo: Quotidian)=>{
+        let deathMessage = `${blorbo.name} has died.`;
+        if(this.hasEnd()){
+            deathMessage = `Drawn by their fated end, The End has come for ${blorbo.name}.`;
+            this.addBlorbo(new End(this, blorbo.x, blorbo.y));
+        }
+        this.maze.addStorybeat(new StoryBeat(`${blorbo.name}: die`,deathMessage));
+    }
+
+    hasEnd = ()=>{
+        return false;
+    }
+
     initialRoomWithBlorbos = () => {
         const stress_test = 1;
         for (let i = 0; i < stress_test; i++) {
             this.addBlorbo(new Quotidian(this, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [SassObject, FollowPeewee]));
             this.addBlorbo(new Snail(this, 150, 150));
             this.addBlorbo(new EyeKiller(this, 150, 150));
-            this.addBlorbo(new End(this, 100, 100));
-
-
         }
         this.peewee = new Peewee(this, 150, 350);
         this.addBlorbo(this.peewee);

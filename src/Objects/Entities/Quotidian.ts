@@ -114,6 +114,7 @@ export class Quotidian extends PhysicalObject {
         this.dead = true;
         this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
         this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
+        this.room.processDeath(this);
     }
 
     live = ()=>{

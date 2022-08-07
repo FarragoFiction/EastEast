@@ -255,7 +255,7 @@ const BaseAction_1 = __webpack_require__(7042);
 class GlitchLife extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
-        this.recognizedCommands = ["HEAL", "REVIVE", "RESURRECT", "CORPSESMOOCH"];
+        this.recognizedCommands = ["REVIVE", "HEAL", "RESURRECT", "CORPSESMOOCH"];
         this.noTarget = (beat, current_room, subject) => {
             return `${subject.name} doesn't see anything to make un-alive.`;
         };
@@ -1273,6 +1273,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             this.dead = true;
             this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
             this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
+            this.room.processDeath(this);
         };
         this.live = () => {
             this.dead = false;
@@ -2436,6 +2437,7 @@ const BeatList_1 = __webpack_require__(2761);
 const SnailFriend_1 = __webpack_require__(2633);
 const EyeKiller_1 = __webpack_require__(9280);
 const End_1 = __webpack_require__(4338);
+const StoryBeat_1 = __webpack_require__(5504);
 class Room {
     //objects
     //people
@@ -2642,13 +2644,23 @@ class Room {
                 }
             }
         };
+        this.processDeath = (blorbo) => {
+            let deathMessage = `${blorbo.name} has died.`;
+            if (this.hasEnd()) {
+                deathMessage = `Drawn by their fated end, The End has come for ${blorbo.name}.`;
+                this.addBlorbo(new End_1.End(this, blorbo.x, blorbo.y));
+            }
+            this.maze.addStorybeat(new StoryBeat_1.StoryBeat(`${blorbo.name}: die`, deathMessage));
+        };
+        this.hasEnd = () => {
+            return false;
+        };
         this.initialRoomWithBlorbos = () => {
             const stress_test = 1;
             for (let i = 0; i < stress_test; i++) {
                 this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject, BeatList_1.FollowPeewee]));
                 this.addBlorbo(new SnailFriend_1.Snail(this, 150, 150));
                 this.addBlorbo(new EyeKiller_1.EyeKiller(this, 150, 150));
-                this.addBlorbo(new End_1.End(this, 100, 100));
             }
             this.peewee = new Peewee_1.Peewee(this, 150, 350);
             this.addBlorbo(this.peewee);

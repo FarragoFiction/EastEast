@@ -69,10 +69,14 @@ export class Maze {
         this.room.render();
     }
 
-    addStorybeat = (beat: StoryBeat)=>{
+    addCommandStorybeat = (beat: StoryBeat)=>{
         if(this.peewee){
             this.peewee.processStorybeat(beat);
         }
+        this.addStorybeat(beat);
+    }
+
+    addStorybeat = (beat: StoryBeat)=>{
         this.boopAudio.play();
         this.storybeats.push(beat);
         const beatele = createElementWithIdAndParent("div",this.storySoFar,undefined,"storybeat")
@@ -95,7 +99,7 @@ export class Maze {
                 input.value="";
                 return false;
             }
-            this.addStorybeat(new StoryBeat("Peewee: Await Commands","Peewee is awaiting the Observers commands. Also: JR NOTE: eye killer kills if she's close enough, take object"));
+            this.addCommandStorybeat(new StoryBeat("Peewee: Await Commands","Peewee is awaiting the Observers commands. Also: JR NOTE: eye killer kills if she's close enough, take object"));
         }
     }
 

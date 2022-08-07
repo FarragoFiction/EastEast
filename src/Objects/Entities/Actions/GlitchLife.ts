@@ -13,7 +13,7 @@ export class GlitchLife extends Action {
 
 
 
-    recognizedCommands: string[] = ["HEAL", "REVIVE", "RESURRECT","CORPSESMOOCH"];
+    recognizedCommands: string[] = ["REVIVE", "HEAL", "RESURRECT","CORPSESMOOCH"];
 
 
     noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian)=>{
