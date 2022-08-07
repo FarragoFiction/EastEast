@@ -13,6 +13,7 @@ import { FollowPeewee, SassObject, testBeat, testBeat2, testBeat3 } from "../Ent
 import { DeploySass } from "../Entities/Actions/DeploySass";
 import { Snail } from "../Entities/SnailFriend";
 import { EyeKiller } from "../Entities/EyeKiller";
+import { End } from "../Entities/End";
 
 
 export class Room {
@@ -265,6 +266,8 @@ export class Room {
             this.addBlorbo(new Quotidian(this, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [SassObject, FollowPeewee]));
             this.addBlorbo(new Snail(this, 150,150));
             this.addBlorbo(new EyeKiller(this, 150,150));
+            this.addBlorbo(new End(this, 100,100));
+
 
         }
         this.peewee = new Peewee(this, 150, 350);

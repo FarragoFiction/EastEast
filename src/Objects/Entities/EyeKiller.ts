@@ -1,8 +1,4 @@
-
-///they have a lil house on their back
-//yongki likes them, so i decided to add one
-//also, and i didn't realize this till last night
-//their houses are spirals
+//just leave her alone with her egg
 import { Movement } from "../MovementAlgs/BaseMovement";
 import { RandomMovement } from "../MovementAlgs/RandomMovement";
 import { Room } from "../RoomEngine/Room";

@@ -74,6 +74,17 @@
 
     *use window.errorCount to increase glitches and fractals
 
+    stretch goal: keikaku sim.  For each action, create a simulation of what the world would look like after that action is taken.
+    instead of picking a beat at random, or in order of priority, prefer beats that increase the amount of beats that can happen next turn
+    (aka, the ones whose actions trigger actions next tick. )
+
+    example:  eye killer wishes to kill The Cultist.  To do this, she must first pick the "follow cultist" story beat, 
+    to get close enough to then pick the "stab in melee range" beat
+
+    this would also mean that blorbos have simulations of the world that represent their goal states.
+
+    i'd need to make mini simulation objects so that the world and the blorbos don't need to have graphics (good for testing, too)
+
 
 
     * if a room gets replaced (incl north) set the blorbos in it free

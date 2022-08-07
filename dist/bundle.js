@@ -860,6 +860,36 @@ exports.Think = Think;
 
 /***/ }),
 
+/***/ 4338:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.End = void 0;
+const NoMovement_1 = __webpack_require__(4956);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6647);
+class End extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "the_end2.png", width: 56, height: 100 },
+        };
+        const beats = [];
+        super(room, "The End", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, "The End Comes For Us All", beats);
+        this.maxSpeed = 50;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new NoMovement_1.NoMovement(this);
+    }
+}
+exports.End = End;
+
+
+/***/ }),
+
 /***/ 9280:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2216,6 +2246,7 @@ const StringUtils_1 = __webpack_require__(7036);
 const BeatList_1 = __webpack_require__(2761);
 const SnailFriend_1 = __webpack_require__(2633);
 const EyeKiller_1 = __webpack_require__(9280);
+const End_1 = __webpack_require__(4338);
 class Room {
     //objects
     //people
@@ -2428,6 +2459,7 @@ class Room {
                 this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject, BeatList_1.FollowPeewee]));
                 this.addBlorbo(new SnailFriend_1.Snail(this, 150, 150));
                 this.addBlorbo(new EyeKiller_1.EyeKiller(this, 150, 150));
+                this.addBlorbo(new End_1.End(this, 100, 100));
             }
             this.peewee = new Peewee_1.Peewee(this, 150, 350);
             this.addBlorbo(this.peewee);
@@ -7411,6 +7443,8 @@ var map = {
 	"./Objects/Entities/Actions/Taste.ts": 8520,
 	"./Objects/Entities/Actions/Think": 5639,
 	"./Objects/Entities/Actions/Think.ts": 5639,
+	"./Objects/Entities/End": 4338,
+	"./Objects/Entities/End.ts": 4338,
 	"./Objects/Entities/EyeKiller": 9280,
 	"./Objects/Entities/EyeKiller.ts": 9280,
 	"./Objects/Entities/Peewee": 1160,
