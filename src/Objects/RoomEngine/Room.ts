@@ -373,7 +373,6 @@ export const spawnWallObjects = async (width: number, height: number, layer: num
         const item = chosen_theme.pickPossibilityFor(seededRandom, key);
         if (item && item.src && seededRandom.nextDouble() > 0.3) {
             const image: any = await addImageProcess((`images/Walkabout/Objects/${folder}/${item.src}`)) as HTMLImageElement;
-            image.width = `${parseInt(image.width)/2}px`;
             current_x += image.width * 2;
             //don't clip the wall border, don't go past the floor
             if (current_x + padding + image.width > width) {
@@ -383,7 +382,9 @@ export const spawnWallObjects = async (width: number, height: number, layer: num
             if(!item.name){
                 item.name = `${titleCase(chosen_theme.key)} Object`;
             }
-            ret.push({ name:item.name, layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * 2, height: image.height, flavorText: item.desc })
+            console.log("JR NOTE: spawning wall item", image.width)
+            ret.push({ name:item.name, layer: layer, src: `images/Walkabout/Objects/${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width, height: image.height, flavorText: item.desc })
+            console.log("JR NOTE: ret is",ret)
         } else {
             current_x += 50;
         }
