@@ -161,7 +161,7 @@ const MoveToSpecificPhysicalObject_1 = __webpack_require__(8455);
 class FollowObject extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
-        this.recognizedCommands = ["FOLLOW", "APPROACH", "CRAWL", "SLITHER", "WALK", "MOVE", "GO", "ACCOMPANY", "STICK"]; //not for peewee, not yet
+        this.recognizedCommands = ["FOLLOW", "APPROACH", "CRAWL", "SLITHER", "WALK", "MOVE", "GO", "ACCOMPANY", "STICK"];
         this.applyAction = (beat) => {
             const subject = beat.owner;
             if (!subject) {
@@ -546,6 +546,61 @@ exports.Look = Look;
 
 /***/ }),
 
+/***/ 4359:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PauseSimulation = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+class PauseSimulation extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["PAUSE"]; //nothing, so its default
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            subject.room.pause();
+            return `Everything comes to a halt.`;
+        };
+    }
+}
+exports.PauseSimulation = PauseSimulation;
+
+
+/***/ }),
+
+/***/ 2042:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ResumeSimulation = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+//why yes you can just spam this for hilarious effect, you're welcome
+class ResumeSimulation extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["RESUME"];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            subject.room.resume();
+            return `Everything begings moving again.`;
+        };
+    }
+}
+exports.ResumeSimulation = ResumeSimulation;
+
+
+/***/ }),
+
 /***/ 3834:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -803,6 +858,40 @@ exports.Think = Think;
 
 /***/ }),
 
+/***/ 9280:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EyeKiller = void 0;
+const RandomMovement_1 = __webpack_require__(5997);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6647);
+class EyeKiller extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "KillerLeft.gif", width: 50, height: 50 },
+            left_src: { src: "KillerLeft.gif", width: 50, height: 50 },
+            right_src: { src: "KillerRight.gif", width: 50, height: 50 },
+            up_src: { src: "KillerUp.gif", width: 50, height: 50 },
+            down_src: { src: "KillerDown.gif", width: 50, height: 50 }
+        };
+        const beats = [];
+        super(room, "The Eye Killer", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.FAMILY]], sprite, "It's the Eye Killer! I'd leave her alone!", beats);
+        this.maxSpeed = 50;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+    }
+}
+exports.EyeKiller = EyeKiller;
+
+
+/***/ }),
+
 /***/ 1160:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -824,6 +913,8 @@ const GoWest_1 = __webpack_require__(4834);
 const Help_1 = __webpack_require__(3256);
 const Listen_1 = __webpack_require__(7576);
 const Look_1 = __webpack_require__(2741);
+const PauseSimulation_1 = __webpack_require__(4359);
+const ResumeSimulation_1 = __webpack_require__(2042);
 const Smell_1 = __webpack_require__(3834);
 const StopMoving_1 = __webpack_require__(4469);
 const Taste_1 = __webpack_require__(8520);
@@ -864,7 +955,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.minSpeed = 1;
         this.currentSpeed = 10;
         //only for peewee
-        this.possibleActions = [new StopMoving_1.StopMoving(), new FollowObject_1.FollowObject(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
+        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new FollowObject_1.FollowObject(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -1919,6 +2010,37 @@ exports.PhysicalObject = PhysicalObject;
 
 /***/ }),
 
+/***/ 7936:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ChantingEngine = void 0;
+/*
+has array of audio files it can switch between in a playlist
+makes audio go in and out in terms of volume
+subtly messes with speed and pitch, too, if i can manage it
+*/
+class ChantingEngine {
+    constructor() {
+        this.baseLocation = "audio/Chant/";
+        //JR NOTE: todo , still raw audio, needs cleanup
+        this.sources = ["Take1.mp3", "Take2WhoopsItsAFractal.mp3"];
+        this.audio = new Audio(this.baseLocation + this.sources[0]);
+        this.start = () => {
+            this.audio.play();
+        };
+        this.pause = () => {
+            this.audio.pause();
+        };
+    }
+}
+exports.ChantingEngine = ChantingEngine;
+
+
+/***/ }),
+
 /***/ 7194:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1930,6 +2052,7 @@ const PasswordStorage_1 = __webpack_require__(9867);
 const misc_1 = __webpack_require__(4079);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
+const ChantingEngine_1 = __webpack_require__(7936);
 const Room_1 = __webpack_require__(6202);
 const StoryBeat_1 = __webpack_require__(5504);
 class Maze {
@@ -1937,16 +2060,19 @@ class Maze {
         this.storybeats = []; //can be added to by peewee and by the ai
         this.boopAudio = new Audio("audio/264828__cmdrobot__text-message-or-videogame-jump.mp3");
         this.doorAudio = new Audio("audio/close_door_1.mp3");
+        this.chantingEngine = new ChantingEngine_1.ChantingEngine();
         this.initialize = async () => {
             const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ZAP]];
             this.room = await (0, Room_1.randomRoomWithThemes)(this, this.ele, themes, this.rand);
             this.room.initialRoomWithBlorbos();
             await this.room.propagateMaze(3);
-            console.log("JR NOTE: room now has these children: ", this.room.children.map((e) => e.name).join(","), this.room.children);
-            this.room.render();
             this.peewee = this.room.peewee;
             (0, PasswordStorage_1.initRabbitHole)(this.room);
+        };
+        this.begin = () => {
             this.handleCommands();
+            this.room?.render();
+            this.chantingEngine.start();
         };
         this.playDoorSound = () => {
             try {
@@ -1998,7 +2124,7 @@ class Maze {
                     input.value = "";
                     return false;
                 };
-                this.addStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: handle multi word commands (such as go to snail instead of just follow snail)"));
+                this.addStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: eye killer kills if she's close enough, fading in and out audio"));
             }
         };
         this.rand = rand;
@@ -2030,6 +2156,7 @@ const ArrayUtils_1 = __webpack_require__(3907);
 const StringUtils_1 = __webpack_require__(7036);
 const BeatList_1 = __webpack_require__(2761);
 const SnailFriend_1 = __webpack_require__(2633);
+const EyeKiller_1 = __webpack_require__(9280);
 class Room {
     //objects
     //people
@@ -2068,6 +2195,15 @@ class Room {
                 const child = await this.spawnChildRoom();
                 this.addChild(child);
             }
+        };
+        this.pause = () => {
+            this.ticking = false;
+            this.maze.chantingEngine.pause();
+        };
+        this.resume = () => {
+            this.ticking = true;
+            this.maze.chantingEngine.start();
+            this.tick();
         };
         this.render = async () => {
             this.timesVisited++;
@@ -2228,11 +2364,16 @@ class Room {
             for (let i = 0; i < stress_test; i++) {
                 this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject, BeatList_1.FollowPeewee]));
                 this.addBlorbo(new SnailFriend_1.Snail(this, 150, 150));
+                this.addBlorbo(new EyeKiller_1.EyeKiller(this, 150, 150));
             }
             this.peewee = new Peewee_1.Peewee(this, 150, 350);
             this.addBlorbo(this.peewee);
         };
         this.tick = () => {
+            if (!this.ticking) {
+                return;
+            }
+            console.log("JR NOTE: doing a tick");
             //TODO blorbos all tick
             for (let blorbo of this.blorbos) {
                 blorbo.tick();
@@ -3288,32 +3429,32 @@ const initWallBackgrounds = () => {
 };
 const initFloorForegrounds = () => {
     exports.floor_foregrounds[exports.DECAY] = [{ name: "Hydration Station", src: "hydration_station.png", desc: "You go to take a sip of the water before realizing it's filled with maggots." }, { src: "Decay_Object.png", desc: "I wonder if they're poisonous?" }, { name: "Corpse Blossom", src: "corpse_blossom.png", desc: "It stinks of death and decay." }, { name: "Rotten Shelves", src: "webshelves.png", desc: "These shelves haven't been able to hold anything for a long time." }, { name: "Rotten Table", src: "webtable.png", desc: "What could be trapped in here, you wonder?" }, { name: "Rotten Table", src: "webtable2.png", desc: "You peer into its cracks but see nothing inside." }, { name: "Dead Bush", src: "deadbush.png", desc: "The bush is rotting." }, { name: "Dead Tree", src: "deadtree.png", desc: "What did this look like when it was alive, you wonder." }, { name: "Mushrooms", src: "decay_is_an_extant_form_of_life.png", desc: "In your heart you know decay is an extant form of life." }, { name: "Rotten Box", src: "decayedwebbox.png", desc: "This rotten box can't be used to hold anything anymore." }, { name: "Rotten Barrel", src: "decayingbarrel.png", desc: "The barrel stinks of fermentation and rot." }, { name: "Grave", src: "grave.png", desc: "You wonder who is buried and rotting here." }, { name: "Stinking Cot", src: "shittycot.png", desc: "The cot stinks of rot." }];
-    exports.floor_foregrounds[exports.BUGS] = [{ src: "waspnest2.png", desc: "There is a wasp nest here." }, { src: "bees4.png", desc: "The bees are buzzing and crawling and flying everwhere." }, { src: "bees.png", desc: "The Swarm is judging you." }, { src: "bees3.png", desc: "Incessent buzzing." }, { src: "bees2.png", desc: "You skin crawls just looking at these buzzing insects." }, { src: "waspnest1.png", desc: "There is a wasp nest here. It is filled with holes." }, { src: "waspnest3.png", desc: "If you let the inhabitants of this waspnest love you, you could be a nest, too." }, { src: "ruined_honey.png", desc: "Someone has already raided this bee hive." }, { src: "ruined_wasp_nest.png", desc: "Who destroyed this wasp nest?" }, { src: "wasp.png", desc: "It seems to be a large statue of a wasp." }];
-    exports.floor_foregrounds[exports.LOVE] = [{ src: "Love_Object.png", desc: "Fragile Concept." }, { src: "wine2.png", desc: "If only there was someone to share this with." }, { src: "wine.png", desc: "Oh to be on a picnic with someone you love." }, { src: "necklace.png", desc: "Someone beautiful could wear this." }, { src: "jwelerybox.png", desc: "A cherished gift." }, { src: "flowers.png", desc: "A gift for a significant other." }, { src: "dress.png", desc: "Just looking at this pretty dress makes you wish you could remember going to dances." }, { src: "angelstatue.png", desc: "Love is war." }, { src: "bear.png", desc: "It feels soft and cuddly." },];
-    exports.floor_foregrounds[exports.STEALING] = [{ src: "Stealing_Object.png", desc: "[Right Click, Save Image]" }, { src: "cookingpot.png", desc: "Reminds you of being on the run from the law." }, { src: "fancychest.png", desc: "You wonder what kind of loot is in here." }, { src: "goldingots.png", desc: "There is NO way you're going to be able to carry these out of here." }, { src: "jwelerybox.png", desc: "A tidy fortune in jewels." }, { src: "necklace.png", desc: "You wonder how much this would be worth on the blackmarket." }, { src: "pileofgold1.png", desc: "You are practically drooling seeing so much gold." }, { src: "pileofgold2.png", desc: "You want to bathe in this like Scrooge McDuck." }, { src: "pileofgoldsmaller.png", desc: "What could you buy with this?" }, { src: "smallgoldpile.png", desc: "A modest fortune yours for the taking." }];
-    exports.floor_foregrounds[exports.LANGUAGE] = [{ src: "writingtablet.png", desc: "A forgotten language is perfectly translated here for you." }, { src: "smallbookshelf.png", desc: "It's all your favorite childhood books." }, { src: "obelisk.png", desc: "It's a rosetta stone for every language reading out 'Zampanio is a really good game. You should play it.'" }, { src: "books.png", desc: "Language is used masterfully in these volumes of poetry." }, { src: "books.png", desc: "Somehow each book claims you are the author." }, { src: "bigbookshelf.png", desc: "All of the literary classics." }, { src: "bigbookshelf.png", desc: "Dozens upon dozens of books in every language." }];
-    exports.floor_foregrounds[exports.KNOWING] = [{ src: "Knowing_Object.png", desc: "I know something you don't." }, { src: "writingtablet.png", desc: "You need to know more." }, { src: "writingtablet.png", desc: "The thoughts currently in your head are perfectly etched here." }, { src: "smallbookshelf.png", desc: "The tomes list out the forgotten secrets of every civilization." }, { src: "scrolls.png", desc: "Forbidden knowledge floods your mind and you can't Unknow it." }, { src: "books.png", desc: "Spoilers for all of fiction is somehow contained in these few volumes." }, { src: "books.png", desc: "The thoughts of everyone you've ever known are detailed here." }, { src: "bigbookshelf.png", desc: "Everything you would need to perfectly navigate this maze is listed here, if only you could remember it." }, { src: "bigbookshelf.png", desc: "The identity of the Eye Killer is here, long past the point where you could use it." }];
-    exports.floor_foregrounds[exports.ROYALTY] = [{ src: "Royal_Object.png", desc: "Long Live The... The... Is dead." }, { src: "jwelerybox.png", desc: "Crown jewels." }, { src: "pileofgold2.png", desc: "The wealth of an Empire." }, { src: "pileofgold1.png", desc: "The wealth of a kingdom." }, { src: "princessbed.png", desc: "A bed fit for royalty." }, { src: "smallgoldpile.png", desc: "The taxes you are due." }, { src: "throne.png", desc: "Your rightful place." }];
-    exports.floor_foregrounds[exports.SCIENCE] = [{ src: "Science_Object.png", desc: "A beaker of perfectly generic fluid." }, { src: "smallbookshelf.png", desc: "Textbooks organized by scientific discipline line these shelves." }, { src: "science.png", desc: "Oh, the discoveries you could make with enough patience and equipment." }, { src: "morewine.png", desc: "You get the distinct urge to do science seeing this well stocked lab." }, { src: "jars.png", desc: "Specimen jars." }];
-    exports.floor_foregrounds[exports.CRAFTING] = [{ src: "Crafting_Object.png", desc: "Just a little bit of tape..." }, { src: "armor3.png", desc: "A master made this armor, you can tell." }, { src: "armor2.png", desc: "You frown as you study the flaws of this piece of armor." }, { src: "armor.png", desc: "You appreciate the craftsmanship here." }, { src: "hammer.png", desc: "The heft of this hammer is just perfect for forging." }, { src: "metalingots.png", desc: "Fresh ingots ripe for being turned into more useful materials." }, { src: "pickax.png", desc: "You feel the strange urge to craft some mines." }, { src: "shovel.png", desc: "You just want to turn the soil with your hands and MAKE something with it." }, { src: "stumpwithax.png", desc: "You feel a distinct urge to go chop some trees." }, { src: "well.png", desc: "Enough water to cool a thousand forges." }];
-    exports.floor_foregrounds[exports.BURIED] = [{ src: "Buried_Object.png", desc: "X Marks the Spot." }, { src: "grave.png", desc: "You hear faint scratching from underneath." }, { src: "grave.png", desc: "You could sleep under here forever buried." }, { src: "pickax.png", desc: "With this you could dig and dig and dig deep into the earth until no one could ever save you." }, { src: "pit.png", desc: "The warm embrace of the earth awaits. Why must you cling so to the cold, unforgiving sky?" }, { src: "pit2.png", desc: "Down and down it goes. You want to jump in." }, { src: "well.png", desc: "It goes so deep into the earth. You cannot see the bottom. The concept of a bottom is anathema to this well." }, { src: "shovel.png", desc: "DIG" }];
-    exports.floor_foregrounds[exports.ANGELS] = [{ src: "Angel_Object.png", desc: "Do you hear the tintinnabulation?" }, { src: "writingtablet.png", desc: "The words of your gods are written here." }, { src: "obelisk.png", desc: "It lists out the praises of the gods." }, { src: "jars.png", desc: "Jars of holy water." }, { src: "iceglacier.png", desc: "It feels holy." }, { src: "angelstatue.png", desc: "The angels bless you." }];
-    exports.floor_foregrounds[exports.PLANTS] = [{ src: "Plants_Object2.png", desc: "What a terrible place to try and grow..." }, { src: "Plants_Object1.png", desc: "What a terrible place to try and grow..." }, { src: "yellowflowers.png", desc: "Weeds, but pretty ones." }, { src: "wildflowers.png", desc: "These flowers grow with no human hand." }, { src: "tallpottedplant.png", desc: "It seems healthy, though confined." }, { src: "shovel.png", desc: "Did someone leave it here after planting something?" }, { src: "pinetree.png", desc: "You wonder how trees manage to grow inside this labyrinth." }, { src: "grass.png", desc: "Surprisingly fertile soil produces this clump of grass." }, { src: "flowers.png", desc: "Beautiful flowers. Pointless flowers." }, { src: "fern.png", desc: "For an instant, you think this might be some sort of...creature. But no. Just a fern." }, { src: "cactus2.png", desc: "The most tsundere of plants." }, { src: "cactus.png", desc: "You don't think it can talk. You aren't sure why this disappoints you." }, { src: "cabbages.png", desc: "These cabbages are well grown." }];
+    exports.floor_foregrounds[exports.BUGS] = [{ name: "Wasp Nest", src: "waspnest2.png", desc: "There is a wasp nest here." }, { name: "Bees", src: "bees4.png", desc: "The bees are buzzing and crawling and flying everwhere." }, { name: "Swarm", src: "bees.png", desc: "The Swarm is judging you." }, { name: "Swarm", src: "bees3.png", desc: "Incessent buzzing." }, { name: "Swarm", src: "bees2.png", desc: "You skin crawls just looking at these buzzing insects." }, { name: "Wasp Nest", src: "waspnest1.png", desc: "There is a wasp nest here. It is filled with holes." }, { name: "Wasp Nest", src: "waspnest3.png", desc: "If you let the inhabitants of this waspnest love you, you could be a nest, too." }, { name: "Honey", src: "ruined_honey.png", desc: "Someone has already raided this bee hive." }, { name: "Nest", src: "ruined_wasp_nest.png", desc: "Who destroyed this wasp nest?" }, { name: "Wasp Statue", src: "wasp.png", desc: "It seems to be a large statue of a wasp." }];
+    exports.floor_foregrounds[exports.LOVE] = [{ src: "Love_Object.png", desc: "Fragile Concept." }, { name: "Wine", src: "wine2.png", desc: "If only there was someone to share this with." }, { name: "Wine", src: "wine.png", desc: "Oh to be on a picnic with someone you love." }, { name: "Necklace", src: "necklace.png", desc: "Someone beautiful could wear this." }, { name: "Gift Box", src: "jwelerybox.png", desc: "A cherished gift." }, { name: "Flowers", src: "flowers.png", desc: "A gift for a significant other." }, { name: "Dress", src: "dress.png", desc: "Just looking at this pretty dress makes you wish you could remember going to dances." }, { name: "Angel Statue", src: "angelstatue.png", desc: "Love is war." }, { name: "Stuffed Bear", src: "bear.png", desc: "It feels soft and cuddly." },];
+    exports.floor_foregrounds[exports.STEALING] = [{ src: "Stealing_Object.png", desc: "[Right Click, Save Image]" }, { name: "Cooking Pot", src: "cookingpot.png", desc: "Reminds you of being on the run from the law." }, { name: "Treasure Chest", src: "fancychest.png", desc: "You wonder what kind of loot is in here." }, { name: "Gold Ingots", src: "goldingots.png", desc: "There is NO way you're going to be able to carry these out of here." }, { name: "Jewel Box", src: "jwelerybox.png", desc: "A tidy fortune in jewels." }, { name: "Necklace", src: "necklace.png", desc: "You wonder how much this would be worth on the blackmarket." }, { name: "Huge Gold Pile", src: "pileofgold1.png", desc: "You are practically drooling seeing so much gold." }, { name: "Pile of Gold", src: "pileofgold2.png", desc: "You want to bathe in this like Scrooge McDuck." }, { name: "Pile of Gold", src: "pileofgoldsmaller.png", desc: "What could you buy with this?" }, { name: "Small Gold Pile", src: "smallgoldpile.png", desc: "A modest fortune yours for the taking." }];
+    exports.floor_foregrounds[exports.LANGUAGE] = [{ name: "Tablet", src: "writingtablet.png", desc: "A forgotten language is perfectly translated here for you." }, { name: "Bookshelf", src: "smallbookshelf.png", desc: "It's all your favorite childhood books." }, { name: "Obelisk", src: "obelisk.png", desc: "It's a rosetta stone for every language reading out 'Zampanio is a really good game. You should play it.'" }, { name: "Books", src: "books.png", desc: "Language is used masterfully in these volumes of poetry." }, { name: "Books", src: "books.png", desc: "Somehow each book claims you are the author." }, { name: "Bookshelf", src: "bigbookshelf.png", desc: "All of the literary classics." }, { name: "Bookshelf", src: "bigbookshelf.png", desc: "Dozens upon dozens of books in every language." }];
+    exports.floor_foregrounds[exports.KNOWING] = [{ src: "Knowing_Object.png", desc: "I know something you don't." }, { src: "writingtablet.png", desc: "You need to know more." }, { src: "writingtablet.png", desc: "The thoughts currently in your head are perfectly etched here." }, { name: "Bookshelf", src: "smallbookshelf.png", desc: "The tomes list out the forgotten secrets of every civilization." }, { name: "Scrolls", src: "scrolls.png", desc: "Forbidden knowledge floods your mind and you can't Unknow it." }, { name: "Books", src: "books.png", desc: "Spoilers for all of fiction is somehow contained in these few volumes." }, { name: "Bookshelf", src: "books.png", desc: "The thoughts of everyone you've ever known are detailed here." }, { name: "Bookshelf", src: "bigbookshelf.png", desc: "Everything you would need to perfectly navigate this maze is listed here, if only you could remember it." }, { name: "Bookshelf", src: "bigbookshelf.png", desc: "The identity of the Eye Killer is here, long past the point where you could use it." }];
+    exports.floor_foregrounds[exports.ROYALTY] = [{ src: "Royal_Object.png", desc: "Long Live The... The... Is dead." }, { name: "Crown Jewels", src: "jwelerybox.png", desc: "Crown jewels." }, { name: "Huge Pile of Gold", src: "pileofgold2.png", desc: "The wealth of an Empire." }, { name: "Pile of Gold", src: "pileofgold1.png", desc: "The wealth of a kingdom." }, { name: "Fancy Bed", src: "princessbed.png", desc: "A bed fit for royalty." }, { name: "Gold Pile", src: "smallgoldpile.png", desc: "The taxes you are due." }, { name: "Throne", src: "throne.png", desc: "Your rightful place." }];
+    exports.floor_foregrounds[exports.SCIENCE] = [{ src: "Science_Object.png", name: "Huge Beaker", desc: "A beaker of perfectly generic fluid." }, { name: "Science Textbooks", src: "smallbookshelf.png", desc: "Textbooks organized by scientific discipline line these shelves." }, { name: "Science Equipment", src: "science.png", desc: "Oh, the discoveries you could make with enough patience and equipment." }, { name: "Lab", src: "morewine.png", desc: "You get the distinct urge to do science seeing this well stocked lab." }, { name: "Jars", src: "jars.png", desc: "Specimen jars." }];
+    exports.floor_foregrounds[exports.CRAFTING] = [{ src: "Crafting_Object.png", desc: "Just a little bit of tape..." }, { name: "Armor", src: "armor3.png", desc: "A master made this armor, you can tell." }, { name: "Armor", src: "armor2.png", desc: "You frown as you study the flaws of this piece of armor." }, { name: "Armor", src: "armor.png", desc: "You appreciate the craftsmanship here." }, { name: "hammer", src: "hammer.png", desc: "The heft of this hammer is just perfect for forging." }, { name: "Ingots", src: "metalingots.png", desc: "Fresh ingots ripe for being turned into more useful materials." }, { name: "Pickax", src: "pickax.png", desc: "You feel the strange urge to craft some mines." }, { name: "Shovel", src: "shovel.png", desc: "You just want to turn the soil with your hands and MAKE something with it." }, { name: "Ax", src: "stumpwithax.png", desc: "You feel a distinct urge to go chop some trees." }, { name: "Well", src: "well.png", desc: "Enough water to cool a thousand forges." }];
+    exports.floor_foregrounds[exports.BURIED] = [{ src: "Buried_Object.png", desc: "X Marks the Spot." }, { name: "Grave", src: "grave.png", desc: "You hear faint scratching from underneath." }, { name: "Grave", src: "grave.png", desc: "You could sleep under here forever buried." }, { name: "Pickax", src: "pickax.png", desc: "With this you could dig and dig and dig deep into the earth until no one could ever save you." }, { name: "Pit", src: "pit.png", desc: "The warm embrace of the earth awaits. Why must you cling so to the cold, unforgiving sky?" }, { name: "Hole", src: "pit2.png", desc: "Down and down it goes. You want to jump in." }, { name: "Inviting Well", src: "well.png", desc: "It goes so deep into the earth. You cannot see the bottom. The concept of a bottom is anathema to this well." }, { name: "Shovel", src: "shovel.png", desc: "DIG" }];
+    exports.floor_foregrounds[exports.ANGELS] = [{ src: "Angel_Object.png", desc: "Do you hear the tintinnabulation?" }, { name: "Holy Tablet", src: "writingtablet.png", desc: "The words of your gods are written here." }, { name: "Holy Obelisk", src: "obelisk.png", desc: "It lists out the praises of the gods." }, { name: "Jars of Holy Water", src: "jars.png", desc: "Jars of holy water." }, { name: "Holy Crystal", src: "iceglacier.png", desc: "It feels holy." }, { name: "Angel Statue", src: "angelstatue.png", desc: "The angels bless you." }];
+    exports.floor_foregrounds[exports.PLANTS] = [{ src: "Plants_Object2.png", desc: "What a terrible place to try and grow..." }, { src: "Plants_Object1.png", desc: "What a terrible place to try and grow..." }, { name: "Yellow Flowers", src: "yellowflowers.png", desc: "Weeds, but pretty ones." }, { name: "Wild Flowers", src: "wildflowers.png", desc: "These flowers grow with no human hand." }, { name: "Tall Potted Plant", src: "tallpottedplant.png", desc: "It seems healthy, though confined." }, { name: "Garden Shovel", src: "shovel.png", desc: "Did someone leave it here after planting something?" }, { name: "Pine Tree", src: "pinetree.png", desc: "You wonder how trees manage to grow inside this labyrinth." }, { name: "Gass", src: "grass.png", desc: "Surprisingly fertile soil produces this clump of grass." }, { name: "Flowers", src: "flowers.png", desc: "Beautiful flowers. Pointless flowers." }, { name: "Fern Creature", src: "fern.png", desc: "For an instant, you think this might be some sort of...creature. But no. Just a fern." }, { name: "Cactus", src: "cactus2.png", desc: "The most tsundere of plants." }, { name: "Cactus", src: "cactus.png", desc: "You don't think it can talk. You aren't sure why this disappoints you." }, { name: "Cabbages", src: "cabbages.png", desc: "These cabbages are well grown." }];
     exports.floor_foregrounds[exports.WEB] = [{ name: "Piano", src: "webzampiano.png", desc: "Your body positions itself in front of it and begins playing a jaunty tune on it." }, { name: "Wine", src: "webwine2.png", desc: "Will you choose to give up control of your body?" }, { name: "Wine", src: "webwine.png", desc: "Spiders desperately scrabble for purchase at the surface of the liquid. Some have already drowned and sunk to the bottom of the bottle." }, { name: "Vanity", src: "webvanity.png", desc: "Your hands jerkily go through the motions of putting makeup on." }, { name: "Throne", src: "webthrone.png", desc: "Are even Ruler's immune from the pressures of society?" }, { name: "Table", src: "webtable3.png", desc: "Small bugs are trapped here." }, { name: "Table", src: "webtable2.png", desc: "You see shadows moving inside." }, { name: "Table", src: "webtable.png", desc: "What could this trap?" }, { name: "Sword", src: "websword2.png", desc: "You know for a fact if you picked this up it would control you." }, { name: "Sword", src: "websword1.png", desc: "Bad things will happen if you touch it." }, { name: "Sword", src: "webswords.png", desc: "Who laid them here so carefully together?" }, { name: "Shield", src: "webshield.png", desc: "You are frozen in the certainty that if you were to pick this up, threads would bind it forever to your body." }, { name: "Shelves", src: "webshelves.png", desc: "Society puppets you into keeping things maintained." }, { name: "Scrolls", src: "webscrolls.png", desc: "What is knowlege but a means to manipulate others?" }, { name: "Pot", src: "webpot.png", desc: "It's filled with spiders." }, { name: "Organ", src: "weborgan.png", desc: "It plays a haunting melody all on its own, as gossamer threads tug on the keys." }, { name: "Books", src: "webbooks.png", desc: "If you read all these books you will be dancing to the collector tune." }, { name: "Money", src: "webmoney.png", desc: "What is money but chains?" }, { name: "Jars", src: "webjars.png", desc: "Small spiders scuttle inside, endlessly trying to climb up the smooth glass then falling down." }, { name: "Jam", src: "webjam.png", desc: "Evolution has programmed you to prefer dense caloric options." }, { name: "Fortune", src: "webfortune.png", desc: "We are all bound by fate." }, { name: "Flower", src: "webflower.png", desc: "Gifts are classic ways to manipulate others." }, { name: "Eggs", src: "webeggs.png", desc: "You can see shadows moving inside the eggs. Occasionally they twitch." }, { name: "Dragon", src: "webdragon.png", desc: "Even the most powerful among us are powerless in the face of traps and manipulation." }, { name: "Books", src: "webbooks.png", desc: "What are words but a way to control others?" }, { name: "Huge Web", src: "webbing4.png", desc: "What could possibly make such a huge web?" }, { name: "Web", src: "webbing3.png", desc: "It looks like Mr. Spider is not home." }, { name: "Web", src: "webbing.png", desc: "Tiny spiders work tirelessly to spin more of this web." }, { name: "Barrel", src: "webbarrell.png", desc: "More laughs than a barrel of spiders." }, { name: "Scarecrow", src: "scarecrow2.png", desc: "Almost invisible threads jerk and tug it in a variety of directions. It seems to be in pain." }, { name: "Scarecrow", src: "scarecrow.png", desc: "Nearly invisible threads connect to each of its joints. It isn't moving, but you aren't sure it will stay that way." }];
-    exports.floor_foregrounds[exports.KILLING] = [{ src: "knife.png", desc: "Knife goes in. Blood comes out. It's that simple." }, { src: "violentbed.png", desc: "A fight happened here." }, { src: "webswords.png", desc: "There is clarity in killing. The why doesn't matter, only the how." }, { src: "swords.png", desc: "You could kill a lot of people with these." }, { src: "swordanvil.png", desc: "A weapon has only one purpose: killing." }, { src: "stumpwithax.png", desc: "You feel the inexplicable urge to write 'All Work And No Play Makes Johnny A Dull Boy' over and over again." }, { src: "pickax.png", desc: "You could really do some damage to someone's skull with this." }, { src: "choppingblock.png", desc: "You almost wish you weren't alone in this maze, just so you could test this knife out." }, { src: "boxoknives.png", desc: "You could really do some damage to someone with all these knives." }, { src: "bloodfountain.png", desc: "You feel the inexplicable urge to bathe in this." }];
-    exports.floor_foregrounds[exports.FLESH] = [{ src: "Flesh_Object2.png", desc: "It pulsates gently." }, { src: "Flesh_Object.png", desc: "The beefy arm is waving at you in between flexing." }, { src: "skeleton1.png", desc: "You think you could make a pretty decent bone broth from this." }, { src: "skeleton2.png", desc: "In the end we are all just meat hanging off bones." }, { src: "ham.png", desc: "Meat is meat." }, { src: "turkey.png", desc: "It smells delicious. It was alive once, as you are now. You'll smell delicious, too, one day." }, { src: "meatslabs.png", desc: "Meat is me." }, { src: "meatgrinder.png", desc: "You slowly feed your right arm into it and watch the ribbons of flesh pour out the other end." }, { src: "meatchops.png", desc: "They are grown from your own cells, you can feel this in your bones." }, { src: "meatchops.png", desc: "This doesn't look quite like pork.  Somehow, that unsettles you." }, { src: "fishcrate.png", desc: "Your flesh isn't fundamentally different than the flesh of these fish." }, { src: "cookingpot.png", desc: "Something savory and meaty wafts out." }, { src: "choppingblock.png", desc: "It's incredible what a good quality butcher's knife can do to meat." }, { src: "butcheredmeat.png", desc: "In the end we are nothing more than meat." }];
-    exports.floor_foregrounds[exports.APOCALYPSE] = [{ src: "Apocalypse_Object.png", desc: "This doll house scale ruined building would be cute if it weren't for the smell emanating from it..." }, { src: "fossil1.png", desc: "As death is a natural and inevitable part of life, extinction is the natural fate of all worlds." }, { src: "fossil2.png", desc: "There are entire species consisting solely of the dead." }, { src: "fossil3.png", desc: "For ever species we know have vanished, how many thousands extinguished without a sound? " }, { src: "fossil4.png", desc: "As Death comes to all beings, Extinction comes to all species." }, { src: "fossil5.png", desc: "How impossibly lucky is this creature, for their bones to survive epochs?" }, { src: "fossil6.png", desc: "To fear Extinction is to fear inevitability." }, { src: "fossil7.png", desc: "What entire ecosystems lived and died before you took your first breath?" }, { src: "science.png", desc: "Just enough knowledge to destroy it all." }, { src: "webooks.png", desc: "How long will the works of man outlast us?" }];
+    exports.floor_foregrounds[exports.KILLING] = [{ name: "Knife", src: "knife.png", desc: "Knife goes in. Blood comes out. It's that simple." }, { name: "Violent Bed", src: "violentbed.png", desc: "A fight happened here." }, { name: "Swords", src: "webswords.png", desc: "There is clarity in killing. The why doesn't matter, only the how." }, { name: "Swords", src: "swords.png", desc: "You could kill a lot of people with these." }, { name: "Sword", src: "swordanvil.png", desc: "A weapon has only one purpose: killing." }, { name: "Ax", src: "stumpwithax.png", desc: "You feel the inexplicable urge to write 'All Work And No Play Makes Johnny A Dull Boy' over and over again." }, { name: "Pickax", src: "pickax.png", desc: "You could really do some damage to someone's skull with this." }, { name: "Chopping Block", src: "choppingblock.png", desc: "You almost wish you weren't alone in this maze, just so you could test this knife out." }, { name: "Knives", src: "boxoknives.png", desc: "You could really do some damage to someone with all these knives." }, { name: "Blood Fountain", src: "bloodfountain.png", desc: "You feel the inexplicable urge to bathe in this." }];
+    exports.floor_foregrounds[exports.FLESH] = [{ src: "Flesh_Object2.png", desc: "It pulsates gently." }, { src: "Flesh_Object.png", desc: "The beefy arm is waving at you in between flexing." }, { name: "Skeleton", src: "skeleton1.png", desc: "You think you could make a pretty decent bone broth from this." }, { name: "Skeleton", src: "skeleton2.png", desc: "In the end we are all just meat hanging off bones." }, { name: "Ham", src: "ham.png", desc: "Meat is meat." }, { name: "Cooked Turkey", src: "turkey.png", desc: "It smells delicious. It was alive once, as you are now. You'll smell delicious, too, one day." }, { name: "Meat Slabs", src: "meatslabs.png", desc: "Meat is me." }, { name: "Meat Grinder", src: "meatgrinder.png", desc: "You slowly feed your right arm into it and watch the ribbons of flesh pour out the other end." }, { name: "meat Chops", src: "meatchops.png", desc: "They are grown from your own cells, you can feel this in your bones." }, { name: "Meat Chops", src: "meatchops.png", desc: "This doesn't look quite like pork.  Somehow, that unsettles you." }, { name: "Fsh Crate", src: "fishcrate.png", desc: "Your flesh isn't fundamentally different than the flesh of these fish." }, { name: "Cooking Pot", src: "cookingpot.png", desc: "Something savory and meaty wafts out." }, { name: "Chopping Block", src: "choppingblock.png", desc: "It's incredible what a good quality butcher's knife can do to meat." }, { name: "Butchered Meat", src: "butcheredmeat.png", desc: "In the end we are nothing more than meat." }];
+    exports.floor_foregrounds[exports.APOCALYPSE] = [{ name: "Ruined House", src: "Apocalypse_Object.png", desc: "This doll house scale ruined building would be cute if it weren't for the smell emanating from it..." }, { name: "Fossil", src: "fossil1.png", desc: "As death is a natural and inevitable part of life, extinction is the natural fate of all worlds." }, { name: "Fossil", src: "fossil2.png", desc: "There are entire species consisting solely of the dead." }, { name: "Fossil", src: "fossil3.png", desc: "For ever species we know have vanished, how many thousands extinguished without a sound? " }, { name: "Fossil", src: "fossil4.png", desc: "As Death comes to all beings, Extinction comes to all species." }, { name: "Fossil", src: "fossil5.png", desc: "How impossibly lucky is this creature, for their bones to survive epochs?" }, { name: "Fossil", src: "fossil6.png", desc: "To fear Extinction is to fear inevitability." }, { name: "Fossil", src: "fossil7.png", desc: "What entire ecosystems lived and died before you took your first breath?" }, { name: "Dangerous Knowledge", src: "science.png", desc: "Just enough knowledge to destroy it all." }, { name: "Prideful Books", src: "webooks.png", desc: "How long will the works of man outlast us?" }];
     exports.floor_foregrounds[exports.ENDINGS] = [{ name: "Stop Sign", src: "Endings_Object_2.png", desc: "Stop. Please." }, { src: "Ending_Object.png", desc: "The End" }, { name: "Grave", src: "grave.png", desc: "The End." }, { name: "Guide Post", src: "guidepost.png", desc: "All ways lead to dead ends." }, { name: "Lamp Post", src: "lamppost.png", desc: "Why are lampopsts so often signifiers of endings?" }, { name: "Skeleton", src: "skeleton1.png", desc: "There is a serenity in knowing how the story ends." }, { name: "Skeleton", src: "skeletons.png", desc: "Did they know their ends would be so similar?" }, { name: "Skull", src: "skull.png", desc: "The path differes, but the end is always the same." }, { name: "Skull", src: "skull3.png", desc: "We all end the same." }, { name: "Books", src: "webbooks.png", desc: "All the pages are torn out save the last." }, { name: "Books", src: "webooks.png", desc: "Every book within is blank, save the last page." }, { name: "Tablet", src: "writingtablet.png", desc: "It lists out the last thought you and everyone you ever met will ever have." }];
-    exports.floor_foregrounds[exports.DEATH] = [{ src: "Death_Object.png", desc: "This status of Death seems uninterested in your plight." }, { src: "chessset.png", desc: "Do you dare cheat death?" }, { src: "bonepile.png", desc: "Death is the great equalizer." }, { src: "grave.png", desc: "This is not your fate. But no one is beyond Death." }, { src: "skeleton1.png", desc: "Meat is meat." }, { src: "skeleton2.png", desc: "Memento mori." }, { src: "skeletons.png", desc: "At least they died together." }, { src: "skull.png", desc: "It was inevitable they would die." }, { src: "skull3.png", desc: "Meat is meat." }, { src: "violentbed.png", desc: "Most people die in beds." }, { src: "hospitalbed.png", desc: "Someone died here." }, { src: "grave.png", desc: "It simply says 'everyone' on it." }, { src: "grave.png", desc: "It is yours." }, { src: "grave.png", desc: "It's inscription is too worn with age to read." }, { src: "grave.png", desc: "Somehow you know it has the name of your best friend." }, { src: "grave.png", desc: "If you had a family, they would be listed here, you're sure of it." }, { src: "grave.png", desc: "It has your name on it." }, { src: "decayingbarrel.png", desc: "Even the works of man eventually die." }, { src: "deadtree.png", desc: "You wonder what killed it before you remember it doesn't matter." }, { src: "deadbush.png", desc: "A reminder that death comes to us all." }, { src: "corpse_blossom.png", desc: "It reeks of death." }, { src: "angelstatue.png", desc: "In your bones you know no beautific afterlife awaits." }];
+    exports.floor_foregrounds[exports.DEATH] = [{ name: "Statue of Death", src: "Death_Object.png", desc: "This status of Death seems uninterested in your plight." }, { name: "Chess Set", src: "chessset.png", desc: "Do you dare cheat death?" }, { name: "Bone Pile", src: "bonepile.png", desc: "Death is the great equalizer." }, { name: "Grave", src: "grave.png", desc: "This is not your fate. But no one is beyond Death." }, { name: "Skeleton", src: "skeleton1.png", desc: "Meat is meat." }, { name: "Skeleton", src: "skeleton2.png", desc: "Memento mori." }, { name: "Skeletons", src: "skeletons.png", desc: "At least they died together." }, { name: "Skull", src: "skull.png", desc: "It was inevitable they would die." }, { name: "Skull", src: "skull3.png", desc: "Meat is meat." }, { name: "Deathbed", src: "violentbed.png", desc: "Most people die in beds." }, { name: "Hospital Bed", src: "hospitalbed.png", desc: "Someone died here." }, { name: "Grave", src: "grave.png", desc: "It simply says 'everyone' on it." }, { name: "Grave", src: "grave.png", desc: "It is yours." }, { name: "Grave", src: "grave.png", desc: "It's inscription is too worn with age to read." }, { name: "Grave", src: "grave.png", desc: "Somehow you know it has the name of your best friend." }, { name: "Grave", src: "grave.png", desc: "If you had a family, they would be listed here, you're sure of it." }, { name: "Grave", src: "grave.png", desc: "It has your name on it." }, { name: "Barrel", src: "decayingbarrel.png", desc: "Even the works of man eventually die." }, { name: "Dead Tree", src: "deadtree.png", desc: "You wonder what killed it before you remember it doesn't matter." }, { name: "Dead Bush", src: "deadbush.png", desc: "A reminder that death comes to us all." }, { name: "Corpse Blossom", src: "corpse_blossom.png", desc: "It reeks of death." }, { name: "Angel Statue", src: "angelstatue.png", desc: "In your bones you know no beautific afterlife awaits." }];
     exports.floor_foregrounds[exports.CLOWNS] = [{ src: "jwelerybox.png", desc: "Clown jewels." }, { src: "Clown_Object.png", desc: "Honk honk! +u+" }, { src: "toybox.png", desc: "Laughter rings out anytime you touch this box." }, { src: "jackinaboxopen.png", desc: "Sourceless laughter peels out across the room as you jump in surprise when the jack springs out." }, { src: "jackinaboxclosed.png", desc: "It's hilarious how much anxiety the anticipation of a closed jack in the box causes." }, { src: "gift.png", desc: "When you go to open it it explodes into confetti." }, { src: "balloon5.png", desc: "A sign of life." }, { src: "balloon4.png", desc: "Surely someone must have filled these within the past day or two if they're still floating, right?" }, { src: "balloon3.png", desc: "You wonder how they float." }, { src: "balloon2.png", desc: "It feels like it might pop at any moment." }, { src: "balloon1.png", desc: "How whimsical." }];
-    exports.floor_foregrounds[exports.DOLLS] = [{ src: "Dolls_Object.png", desc: "This Doll Recites:" }, { src: "jr_doll.png", desc: "There's something cathartic in having power over old JR." }, { src: "toytrain.png", desc: "Choo choo! Jaimie would be proud." }, { src: "toysoldiersmall.png", desc: "It's okay. You'll be his friend." }, { src: "toysoldierlarge.png", desc: "He seems to be made of wax. His eyes are wrong, though." }, { src: "toyshelves.png", desc: "So many toys, it almost makes you wish you could be nostalgic." }, { src: "toyregiment.png", desc: "Each time you look away they are a single step closer." }, { src: "toydummerboy.png", desc: "Any time you look away you hear a single beat of his drum." }, { src: "toybox.png", desc: "All sorts of fun to be had in here." }, { src: "toyarmy.png", desc: "Oh." }, { src: "teapot.png", desc: "If only you had some toys, you could host a little teaparty." }, { src: "teachustheinsides.png", desc: "Screams are coming from inside." }, { src: "snowman.png", desc: "You know its heart yearns to look more human. What would it have to steal to get there." }, { src: "scarecrow2.png", desc: "It waits." }, { src: "scarecrow.png", desc: "You're suddenly certain it is just choosing not to move." }, { src: "princessbed.png", desc: "And adorable bed you just want to cover with stuffed animals and dolls." }, { src: "jackinaboxopen.png", desc: "You feel something touching your leg, but when you look down i's just this Jack In a Box." }, { src: "jackinaboxclosed.png", desc: "You hear something moving inside." }, { src: "hobbyhorse.png", desc: "Its eyes seem alive, and in pain." }, { src: "gumballmachine.png", desc: "Delicious sweets." }, { src: "dress.png", desc: "A dress in need of a doll." }, { src: "dollhouse.png", desc: "The dolls inside are all missing." }, { src: "doll.png", desc: "Someone must miss her terribly." }, { src: "doll.png", desc: "Scrawled on her face is 'will you be my mother?'" }, { src: "doll.png", desc: "She is watching you." }, { src: "chessset.png", desc: "It looks like a fun game." }, { src: "bear.png", desc: "Every time you look away it seems to be in a different pose." }, { src: "balloon1.png", desc: "There's little people inside, waving at you." }, { src: "armor.png", desc: "Did it just move when you weren't looking?" }, { src: "angelstatue.png", desc: "Her eyes seem to watch you." }];
-    exports.floor_foregrounds[exports.TWISTING] = [{ src: "zampanio_flowerkid_by_hex2.png", desc: "How do sprite sheets work???" }, { src: "Twisting_Object.png", desc: "Hee Hee Hee Hee Hee" }, { src: "jr_lobstersona.png", desc: "This is not JR." }, { src: "jr_slug.png", desc: "This is not JR." }, { src: "aluminum.png", desc: "This is not JR." }, { src: "JadedResearcher.png", desc: "This is not JR." }, { src: "jr_doll.png", desc: "This is not JR." }];
-    exports.floor_foregrounds[exports.TECHNOLOGY] = [{ src: "laundry.png", desc: "Modern technology sure is convinient!" }, { src: "laptop.png", desc: "The battery seems to be completely dead." }, { src: "printer.png", desc: "You feel the irrational urge to destroy this flawless piece of technology." }];
-    exports.floor_foregrounds[exports.SERVICE] = [{ src: "hydration_station.png", desc: "You wonder if anyone around here is thirsty..." }, { src: "cookingpot.png", desc: "Is it time for you to cook dinner?" }, { src: "plates.png", desc: "Are you supposed to clean these dishes?" }, { src: "laundry.png", desc: "You can't remember the last time you've done laundry." }, { src: "Service_Object.png", desc: "Ring Bell For Service." }];
-    exports.floor_foregrounds[exports.ADDICTION] = [{ src: "webwine2.png", desc: "you really don't want to touch it." }, { src: "webwine.png", desc: "Its a good thing this wine looks so gross." }, { src: "wineshelves.png", desc: "You're not tempted by these." }, { src: "beer.png", desc: "Probably shouldn't." }, { src: "morewine.png", desc: "Best not to." }, { src: "teapot.png", desc: "Caffeine is bad for you." }, { src: "Addiction_Object.png", desc: "A difficult subject." }];
-    exports.floor_foregrounds[exports.LIGHT] = [{ src: "lamppost.png", desc: "It spreads its light over a vast area. It makes you feel safe." }, { src: "lamp.png", desc: "It's soothing and bright." }, { src: "Light_Object.png", desc: "How enlightening..." }];
-    exports.floor_foregrounds[exports.OCEAN] = [{ src: "hydrationstation3.png", desc: "Such a tiny bucket of water compared to the vast ocean..." }, { src: "hydrationstation2.png", desc: "The water looks so cool and refreshing..." }, { src: "hydration_station.png", desc: "The water looks refreshing, you almost didn't realize how thirsty you were." }, { src: "fishcrate.png", desc: "Fish freshly caught from the ocean." }, { src: "barrel.png", desc: "Filled with salt pork for a long sea journey." }, { src: "Ocean_Object_2.png", desc: "Why is the Baltic Sea Anomaly an Ocean Object? Don't ask me..." }, { src: "Ocean_Object_1.png", desc: "The fish gasps for breath." }];
-    exports.floor_foregrounds[exports.LONELY] = [{ src: "lonely_figure.png", desc: "Alone..." }];
+    exports.floor_foregrounds[exports.DOLLS] = [{ name: "Doll", src: "Dolls_Object.png", desc: "This Doll Recites:" }, { name: "JR Doll", src: "jr_doll.png", desc: "There's something cathartic in having power over old JR." }, { name: "Train", src: "toytrain.png", desc: "Choo choo! Jaimie would be proud." }, { name: "Toy Soldier", src: "toysoldiersmall.png", desc: "It's okay. You'll be his friend." }, { name: "Wax Soldier", src: "toysoldierlarge.png", desc: "He seems to be made of wax. His eyes are wrong, though." }, { name: "Toys", src: "toyshelves.png", desc: "So many toys, it almost makes you wish you could be nostalgic." }, { name: "Toy Regiment", src: "toyregiment.png", desc: "Each time you look away they are a single step closer." }, { name: "Drummer Boy", src: "toydummerboy.png", desc: "Any time you look away you hear a single beat of his drum." }, { name: "Toy Box", src: "toybox.png", desc: "All sorts of fun to be had in here." }, { name: "Toy Army", src: "toyarmy.png", desc: "Oh." }, { name: "Teapot", src: "teapot.png", desc: "If only you had some toys, you could host a little teaparty." }, { name: "Dollhouse", src: "teachustheinsides.png", desc: "Screams are coming from inside." }, { name: "Snowman", src: "snowman.png", desc: "You know its heart yearns to look more human. What would it have to steal to get there." }, { name: "Scarecrow", src: "scarecrow2.png", desc: "It waits." }, { name: "Scarecrow", src: "scarecrow.png", desc: "You're suddenly certain it is just choosing not to move." }, { name: "Pretty Bed", src: "princessbed.png", desc: "And adorable bed you just want to cover with stuffed animals and dolls." }, { name: "Jack In A Box", src: "jackinaboxopen.png", desc: "You feel something touching your leg, but when you look down i's just this Jack In a Box." }, { name: "Jack In A Box", src: "jackinaboxclosed.png", desc: "You hear something moving inside." }, { name: "Hobby Horse", src: "hobbyhorse.png", desc: "Its eyes seem alive, and in pain." }, { name: "Gumball Machine", src: "gumballmachine.png", desc: "Delicious sweets." }, { name: "Dress", src: "dress.png", desc: "A dress in need of a doll." }, { name: "Dollhouse", src: "dollhouse.png", desc: "The dolls inside are all missing." }, { name: "Doll", src: "doll.png", desc: "Someone must miss her terribly." }, { name: "Doll", src: "doll.png", desc: "Scrawled on her face is 'will you be my mother?'" }, { name: "Doll", src: "doll.png", desc: "She is watching you." }, { name: "Chess", src: "chessset.png", desc: "It looks like a fun game." }, { name: "Stuffed Bear", src: "bear.png", desc: "Every time you look away it seems to be in a different pose." }, { name: "Balloon", src: "balloon1.png", desc: "There's little people inside, waving at you." }, { name: "Balloon", src: "armor.png", desc: "Did it just move when you weren't looking?" }, { name: "Balloon", src: "angelstatue.png", desc: "Her eyes seem to watch you." }];
+    exports.floor_foregrounds[exports.TWISTING] = [{ src: "zampanio_flowerkid_by_hex2.png", desc: "How do sprite sheets work???" }, { src: "Twisting_Object.png", desc: "Hee Hee Hee Hee Hee" }, { name: "JR's Lobstersona", src: "jr_lobstersona.png", desc: "This is not JR." }, { name: "JR's Slugcatsona", src: "jr_slug.png", desc: "This is not JR." }, { name: "Not Reynolds Wrap", src: "aluminum.png", desc: "This is not JR." }, { name: "Not jadedResearcher", src: "JadedResearcher.png", desc: "This is not JR." }, { name: "Not JR Doll", src: "jr_doll.png", desc: "This is not JR." }];
+    exports.floor_foregrounds[exports.TECHNOLOGY] = [{ name: "Laundry Machine", src: "laundry.png", desc: "Modern technology sure is convinient!" }, { name: "Laptop", src: "laptop.png", desc: "The battery seems to be completely dead." }, { name: "Printer", src: "printer.png", desc: "You feel the irrational urge to destroy this flawless piece of technology." }];
+    exports.floor_foregrounds[exports.SERVICE] = [{ name: "Hydration Station", src: "hydration_station.png", desc: "You wonder if anyone around here is thirsty..." }, { name: "Cooking Pot", src: "cookingpot.png", desc: "Is it time for you to cook dinner?" }, { name: "Plates", src: "plates.png", desc: "Are you supposed to clean these dishes?" }, { name: "Laundry Machine", src: "laundry.png", desc: "You can't remember the last time you've done laundry." }, { src: "Service_Object.png", desc: "Ring Bell For Service." }];
+    exports.floor_foregrounds[exports.ADDICTION] = [{ name: "Old Wine", src: "webwine2.png", desc: "you really don't want to touch it." }, { name: "Old Wine", src: "webwine.png", desc: "Its a good thing this wine looks so gross." }, { name: "Wine", src: "wineshelves.png", desc: "You're not tempted by these." }, { name: "Beer", src: "beer.png", desc: "Probably shouldn't." }, { name: "Wine", src: "morewine.png", desc: "Best not to." }, { name: "Teapot", src: "teapot.png", desc: "Caffeine is bad for you." }, { src: "Addiction_Object.png", desc: "A difficult subject." }];
+    exports.floor_foregrounds[exports.LIGHT] = [{ name: "Lamppost", src: "lamppost.png", desc: "It spreads its light over a vast area. It makes you feel safe." }, { name: "Lamp", src: "lamp.png", desc: "It's soothing and bright." }, { src: "Light_Object.png", desc: "How enlightening..." }];
+    exports.floor_foregrounds[exports.OCEAN] = [{ name: "Hydration Station", src: "hydrationstation3.png", desc: "Such a tiny bucket of water compared to the vast ocean..." }, { name: "Hydration Station", src: "hydrationstation2.png", desc: "The water looks so cool and refreshing..." }, { name: "Hydration Station", src: "hydration_station.png", desc: "The water looks refreshing, you almost didn't realize how thirsty you were." }, { name: "Crate of Fish", src: "fishcrate.png", desc: "Fish freshly caught from the ocean." }, { name: "Salt Pork Barrel", src: "barrel.png", desc: "Filled with salt pork for a long sea journey." }, { src: "Ocean_Object_2.png", desc: "Why is the Baltic Sea Anomaly an Ocean Object? Don't ask me..." }, { name: "Fish", src: "Ocean_Object_1.png", desc: "The fish gasps for breath." }];
+    exports.floor_foregrounds[exports.LONELY] = [{ name: "Lonely figure", src: "lonely_figure.png", desc: "Alone..." }];
     //JR NOTE: from here down are just ghoul objects, need to go back and add things from sprite sheets as well
     exports.floor_foregrounds[exports.FREEDOM] = [{ src: "Freedom_Object.png", desc: "Have you seen the freedom object? It seems to have gotten out..." }];
     exports.floor_foregrounds[exports.FIRE] = [{ src: "Fire_Object.png", desc: "Hmm Interesting..." }];
@@ -5514,16 +5655,29 @@ const Stat_1 = __webpack_require__(9137);
 const Theme_1 = __webpack_require__(9702);
 const SeededRandom_1 = __importDefault(__webpack_require__(3450));
 const Maze_1 = __webpack_require__(7194);
+const misc_1 = __webpack_require__(4079);
+let maze;
+const handleClick = () => {
+    if (maze) {
+        const button = document.querySelector("#startbutton");
+        button.remove();
+        maze.begin();
+        window.removeEventListener("click", handleClick);
+    }
+};
 window.onload = async () => {
     const ele = document.querySelector("#current-room");
     const storySoFar = document.querySelector(".story-so-far");
     storySoFar.innerHTML = "";
+    const button = (0, misc_1.createElementWithIdAndParent)("button", storySoFar, "startbutton");
+    button.innerText = "Click To Begin!";
     (0, Stat_1.initStats)();
     (0, Theme_1.initThemes)();
     const seed = 85;
     if (ele && storySoFar) {
-        new Maze_1.Maze(ele, storySoFar, new SeededRandom_1.default(seed));
+        maze = new Maze_1.Maze(ele, storySoFar, new SeededRandom_1.default(seed));
     }
+    window.addEventListener("click", handleClick);
 };
 //the text should be a javascript file exporting const text.
 function loadSecretText(location) {
@@ -7174,6 +7328,10 @@ var map = {
 	"./Objects/Entities/Actions/Listen.ts": 7576,
 	"./Objects/Entities/Actions/Look": 2741,
 	"./Objects/Entities/Actions/Look.ts": 2741,
+	"./Objects/Entities/Actions/PauseSimulation": 4359,
+	"./Objects/Entities/Actions/PauseSimulation.ts": 4359,
+	"./Objects/Entities/Actions/ResumeSimulation": 2042,
+	"./Objects/Entities/Actions/ResumeSimulation.ts": 2042,
 	"./Objects/Entities/Actions/Smell": 3834,
 	"./Objects/Entities/Actions/Smell.ts": 3834,
 	"./Objects/Entities/Actions/StopMoving": 4469,
@@ -7182,6 +7340,8 @@ var map = {
 	"./Objects/Entities/Actions/Taste.ts": 8520,
 	"./Objects/Entities/Actions/Think": 5639,
 	"./Objects/Entities/Actions/Think.ts": 5639,
+	"./Objects/Entities/EyeKiller": 9280,
+	"./Objects/Entities/EyeKiller.ts": 9280,
 	"./Objects/Entities/Peewee": 1160,
 	"./Objects/Entities/Peewee.ts": 1160,
 	"./Objects/Entities/Quotidian": 6647,
@@ -7226,6 +7386,8 @@ var map = {
 	"./Objects/MovementAlgs/SteadyMovement.ts": 1148,
 	"./Objects/PhysicalObject": 8466,
 	"./Objects/PhysicalObject.ts": 8466,
+	"./Objects/RoomEngine/ChantingEngine": 7936,
+	"./Objects/RoomEngine/ChantingEngine.ts": 7936,
 	"./Objects/RoomEngine/Maze": 7194,
 	"./Objects/RoomEngine/Maze.ts": 7194,
 	"./Objects/RoomEngine/Room": 6202,

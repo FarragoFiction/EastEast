@@ -7,7 +7,7 @@ import { MoveToSpecificPhysicalObject } from "../../MovementAlgs/MoveToSpecificP
 export class FollowObject extends Action{ //lawsuit
 
     
-    recognizedCommands:string[] = ["FOLLOW","APPROACH","CRAWL","SLITHER","WALK","MOVE","GO","ACCOMPANY","STICK"]; //not for peewee, not yet
+    recognizedCommands:string[] = ["FOLLOW","APPROACH","CRAWL","SLITHER","WALK","MOVE","GO","ACCOMPANY","STICK"]; 
 
     applyAction = (beat: AiBeat)=>{
         const subject = beat.owner;

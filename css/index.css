@@ -197,6 +197,10 @@ textarea{
   opacity: 0;
 }
 
+#startbutton{
+  margin-top: 200px;
+  padding: 50px;
+}
 .roomName{
   position: absolute; 
   top: 15px;

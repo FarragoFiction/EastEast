@@ -4,6 +4,7 @@ import SeededRandom from "../../Utils/SeededRandom";
 import { Peewee } from "../Entities/Peewee";
 import { all_themes } from "../Theme";
 import { ENDINGS, WEB, TWISTING, CLOWNS, SPYING, ZAP } from "../ThemeStorage";
+import { ChantingEngine } from "./ChantingEngine";
 import { randomRoomWithThemes, Room } from "./Room";
 import { StoryBeat } from "./StoryBeat";
 
@@ -17,6 +18,7 @@ export class Maze {
     storySoFar: HTMLElement;
     boopAudio = new Audio("audio/264828__cmdrobot__text-message-or-videogame-jump.mp3")
     doorAudio = new Audio("audio/close_door_1.mp3")
+    chantingEngine = new ChantingEngine();
 
     constructor(ele: HTMLElement, storySoFar: HTMLElement, rand: SeededRandom,) {
         this.rand = rand;
@@ -31,11 +33,14 @@ export class Maze {
         this.room.initialRoomWithBlorbos();
 
         await this.room.propagateMaze(3);
-        console.log("JR NOTE: room now has these children: ",this.room.children.map((e)=>e.name).join(","), this.room.children)
-        this.room.render();
         this.peewee = this.room.peewee;
         initRabbitHole(this.room);
+    }
+
+    begin= ()=>{
         this.handleCommands();
+        this.room?.render();
+        this.chantingEngine.start();
     }
 
     playDoorSound = ()=>{
@@ -90,7 +95,7 @@ export class Maze {
                 input.value="";
                 return false;
             }
-            this.addStorybeat(new StoryBeat("Peewee: Await Commands","Peewee is awaiting the Observers commands. Also: JR NOTE: handle multi word commands (such as go to snail instead of just follow snail)"));
+            this.addStorybeat(new StoryBeat("Peewee: Await Commands","Peewee is awaiting the Observers commands. Also: JR NOTE: eye killer kills if she's close enough, fading in and out audio"));
         }
     }
 
