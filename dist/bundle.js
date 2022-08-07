@@ -2051,7 +2051,7 @@ class ChantingEngine {
             }
             const chance = Math.random();
             if (chance > 0.75) {
-                const range = 25;
+                const range = 40;
                 this.audio.playbackRate = ((100 + range) - (0, NonSeededRandUtils_1.getRandomNumberBetween)(0, range)) / 100;
                 console.log("JR NOTE: mutating chant", this.audio.playbackRate);
             }
@@ -2565,17 +2565,17 @@ const spawnFloorObjects = async (width, height, layer, key, folder, seededRandom
     while (current_y + padding < height) {
         current_x = padding;
         while (current_x < width) {
-            let chosen_theme = seededRandom.pickFrom(themes);
+            let chosen_theme = [seededRandom.pickFrom(themes)];
             let scale = 1.5;
-            let item = chosen_theme.pickPossibilityFor(seededRandom, key);
+            let item = chosen_theme[0].pickPossibilityFor(seededRandom, key);
             if (layer === 1 && seededRandom.nextDouble() > 0.95) {
                 item = seededRandom.pickFrom(artifacts);
-                chosen_theme = seededRandom.pickFrom(item.themes);
+                chosen_theme = item.themes;
                 scale = 1.0;
             }
             if (item && item.src && seededRandom.nextDouble() > clutter_rate) {
                 if (!item.name) {
-                    item.name = `${(0, StringUtils_1.titleCase)(chosen_theme.key)} Object`;
+                    item.name = `${(0, StringUtils_1.titleCase)(chosen_theme[0].key)} Object`;
                 }
                 const image = await (0, URLUtils_1.addImageProcess)(`${baseLocation}${folder}/${item.src}`);
                 current_x += image.width * scale;
@@ -2587,7 +2587,7 @@ const spawnFloorObjects = async (width, height, layer, key, folder, seededRandom
                 if (y + padding + image.height * scale > height) {
                     break;
                 }
-                ret.push({ name: item.name, layer: layer, src: `${baseLocation}${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * scale, height: image.height * scale, flavorText: item.desc });
+                ret.push({ name: item.name, layer: layer, src: `${baseLocation}${folder}/${item.src}`, themes: chosen_theme, x: current_x, y: y, width: image.width * scale, height: image.height * scale, flavorText: item.desc });
             }
             else {
                 current_x += 100;

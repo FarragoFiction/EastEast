@@ -417,17 +417,17 @@ const spawnFloorObjects = async (width: number, height: number, layer: number, k
     while (current_y + padding < height) {
         current_x = padding;
         while (current_x < width) {
-            let chosen_theme: Theme = seededRandom.pickFrom(themes);
+            let chosen_theme: Theme[] = [seededRandom.pickFrom(themes)];
             let scale = 1.5;
-            let item = chosen_theme.pickPossibilityFor(seededRandom, key);
+            let item = chosen_theme[0].pickPossibilityFor(seededRandom, key);
             if (layer === 1 && seededRandom.nextDouble() > 0.95) {
                 item = seededRandom.pickFrom(artifacts);
-                chosen_theme = seededRandom.pickFrom(item.themes);
+                chosen_theme =item.themes;
                 scale = 1.0;
             }
             if (item && item.src && seededRandom.nextDouble() > clutter_rate) {
                 if(!item.name){
-                    item.name = `${titleCase(chosen_theme.key)} Object`;
+                    item.name = `${titleCase(chosen_theme[0].key)} Object`;
                 }
                 const image: any = await addImageProcess(`${baseLocation}${folder}/${item.src}`) as HTMLImageElement;
                 current_x += image.width * scale;
@@ -439,7 +439,7 @@ const spawnFloorObjects = async (width: number, height: number, layer: number, k
                 if (y + padding + image.height * scale > height) {
                     break;
                 }
-                ret.push({ name: item.name, layer: layer, src: `${baseLocation}${folder}/${item.src}`, themes: [chosen_theme], x: current_x, y: y, width: image.width * scale, height: image.height * scale, flavorText: item.desc })
+                ret.push({ name: item.name, layer: layer, src: `${baseLocation}${folder}/${item.src}`, themes: chosen_theme, x: current_x, y: y, width: image.width * scale, height: image.height * scale, flavorText: item.desc })
             } else {
                 current_x += 100;
             }

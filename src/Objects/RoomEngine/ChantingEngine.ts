@@ -33,7 +33,7 @@ export class ChantingEngine{
         }
             const chance = Math.random();
             if(chance>0.75){
-                const range = 25;
+                const range = 40;
                 this.audio.playbackRate = ((100+range)-getRandomNumberBetween(0,range))/100;
                 console.log("JR NOTE: mutating chant",this.audio.playbackRate)
             }else if (chance > 0.25){
