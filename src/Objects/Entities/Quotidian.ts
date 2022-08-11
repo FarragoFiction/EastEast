@@ -20,6 +20,7 @@ import { AiBeat } from "./StoryBeats/BaseBeat";
 
 
 /*
+JR: Waste of Spiralling Blood  (I connect us all through lies and misdirection) (new aspect after the Taxonomist and Theorist unjustly called me Light)
 Peewee Puppet of Twisted Fate
 Closer: Lonesome Witch of Threaded Motivation
 Solemn: Watching Sylph of Lonely Faith

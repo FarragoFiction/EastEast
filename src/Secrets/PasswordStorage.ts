@@ -107,6 +107,8 @@ export class Secret {
 export interface PasswordMap {
     [details: string]: Secret;
 }
+
+
 /*
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
@@ -114,7 +116,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 
 Paradise and parasite
 The Corporation still serves as the main trading partner of the Great Powers, and fares well enough with JR at their head. -https://www.royalroad.com/fiction/40920/the-path-of-ascension/chapter/964367/the-path-of-ascension-chapter-153
-
+ASecondPersonalTranscript/
 earworm humming in a dream
 Natalie Yemet (thinks their mom is the customer service rep. has an order for a game they don't remember)
 some kind of mafia scheme (accuses eyedol of kidnapping)
