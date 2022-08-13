@@ -1,7 +1,10 @@
 import { initRabbitHole } from "../../Secrets/PasswordStorage";
 import { createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
+import { EyeKiller } from "../Entities/EyeKiller";
 import { Peewee } from "../Entities/Peewee";
+import { Quotidian } from "../Entities/Quotidian";
+import { Snail } from "../Entities/SnailFriend";
 import { all_themes } from "../Theme";
 import { ENDINGS, WEB, TWISTING, CLOWNS, SPYING, ZAP } from "../ThemeStorage";
 import { ChantingEngine } from "./ChantingEngine";
@@ -19,6 +22,7 @@ export class Maze {
     boopAudio = new Audio("audio/264828__cmdrobot__text-message-or-videogame-jump.mp3")
     doorAudio = new Audio("audio/close_door_1.mp3")
     chantingEngine = new ChantingEngine();
+    blorbos:Quotidian[] = [];//list of all possible blorbos that can spawn.
 
     constructor(ele: HTMLElement, storySoFar: HTMLElement, rand: SeededRandom,) {
         this.rand = rand;
@@ -30,11 +34,19 @@ export class Maze {
     initialize = async () => {
         const themes = [all_themes[ENDINGS], all_themes[WEB], all_themes[ZAP]]
         this.room = await randomRoomWithThemes(this,this.ele, themes, this.rand);
-        this.room.initialRoomWithBlorbos();
-
+        this.initializeBlorbos();
         await this.room.propagateMaze(3);
-        this.peewee = this.room.peewee;
+        this.peewee = new Peewee(this.room, 150, 350);
+        this.changeRoom(this.room);
         initRabbitHole(this.room);
+    }
+
+    initializeBlorbos = ()=>{
+        if(this.room){
+        this.blorbos.push(new Quotidian(this.room, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [SassObject, FollowPeewee]));
+        this.blorbos.push(new Snail(this.room, 150, 150));
+        this.blorbos.push(new EyeKiller(this.room, 150, 150));
+        }
     }
 
     begin= ()=>{
@@ -51,8 +63,20 @@ export class Maze {
         }
     }
 
+    spawnBlorbos = ()=>{
+        if(!this.room){
+            return;
+        }
+        for(let blorbo of this.blorbos){
+            for(let theme of blorbo.themes){
+                if(this.room.themes.includes(theme)){
+                    this.room.addBlorbo(blorbo);
+                }
+            }
+        }
+    }
+
     changeRoom = (room: Room)=>{
-        console.log("JR NOTE: changing room to ", room.name, " it has blorbos", room.blorbos)
         if(this.room){
             this.room.teardown();
         }
@@ -66,6 +90,7 @@ export class Maze {
             room.addBlorbo(this.peewee);
             this.peewee.goStill();
         }
+        this.spawnBlorbos();
         this.room.render();
     }
 

@@ -168,7 +168,7 @@ export class Room {
         blorbo.x = 150;
         blorbo.y = 350;
         this.blorbos.push(blorbo);
-        blorbo.room = this;
+        blorbo.room = this; //if they were spawning in a different room before, too bad
     }
 
     removeBlorbo = (blorbo: Quotidian) => {
@@ -281,18 +281,6 @@ export class Room {
         }
         return false;
     }
-
-    initialRoomWithBlorbos = () => {
-        const stress_test = 1;
-        for (let i = 0; i < stress_test; i++) {
-            this.addBlorbo(new Quotidian(this, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [SassObject, FollowPeewee]));
-            this.addBlorbo(new Snail(this, 150, 150));
-            this.addBlorbo(new EyeKiller(this, 150, 150));
-        }
-        this.peewee = new Peewee(this, 150, 350);
-        this.addBlorbo(this.peewee);
-    }
-
 
     tick = () => {
         if (!this.ticking) {

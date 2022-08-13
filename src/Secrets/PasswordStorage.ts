@@ -47,7 +47,7 @@ export const albhed_map = {
     "z": "W",
     "0":"https://www.tumblr.com/blog/view/figuringoutnothing/688028145704665088?source=share",//when they were the guide of observers
     "1":"http://farragofiction.com/DevonaFears",
-    "2":"http://farragofiction.com/NotesOnStealingPeoplesShit/",
+    "2":"https://verbosebabbler.tumblr.com/post/692334755682877440/the-faq-who-is-writing-this-thing",
     "3":"https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8 by the Watcher of Threads", //by the watcher of threads
     "4":"http://farragofiction.com/PerfectHeist/",
     "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers (The Watcher says they won't spell it out)",
@@ -55,7 +55,8 @@ export const albhed_map = {
     "8":"https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",//but now the guide of hunters
     "9":"https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers"
     //0: http://farragofiction.com/ParkerLotLost/ <-- maybe this will be EastEastEast one day, that or ElevatorSim
-
+//https://jadedresearcher.tumblr.com/post/692341174641606656
+//https://jadedresearcher.tumblr.com/post/692340754690015232/but-like-italians-are-real-and-arent-all
 }
 
 export const translate = (word: string) => {
@@ -107,13 +108,14 @@ export class Secret {
 export interface PasswordMap {
     [details: string]: Secret;
 }
-
+//https://archiveofourown.org/works/40961847
 
 /*
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
 /*
-
+99 Rooms
+Spatial Horror
 Paradise and parasite
 The Corporation still serves as the main trading partner of the Great Powers, and fares well enough with JR at their head. -https://www.royalroad.com/fiction/40920/the-path-of-ascension/chapter/964367/the-path-of-ascension-chapter-153
 ASecondPersonalTranscript/
