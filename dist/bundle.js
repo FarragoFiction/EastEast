@@ -1155,7 +1155,7 @@ class Peewee extends Quotidian_1.Quotidian {
         };
         console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe");
         const beats = [];
-        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY], Theme_1.all_themes[ThemeStorage_1.CLOWNS]], sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
+        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY]], sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
@@ -1212,6 +1212,7 @@ const PhysicalObject_1 = __webpack_require__(8466);
 //https://tvtropes.org/pmwiki/pmwiki.php/Literature/ThisIsTheTitleOfThisStory
 //apparently the story is from  a 1982 story by David Moser and that strange loop guy quoted it, because ofc he did
 /*
+JR: Waste of Spiralling Blood  (I connect us all through lies and misdirection) (new aspect after the Taxonomist and Theorist unjustly called me Light)
 Peewee Puppet of Twisted Fate
 Closer: Lonesome Witch of Threaded Motivation
 Solemn: Watching Sylph of Lonely Faith
@@ -2209,7 +2210,6 @@ class PhysicalObject {
             return (0, misc_1.getElementCenterPoint)(this.container);
         };
         this.attachToParent = (parent) => {
-            console.log("JR NOTE: attaching to parent, i'm", this.name);
             this.parent = parent;
             this.image.src = this.src;
             this.image.style.width = `${this.width}px`;
@@ -2337,24 +2337,39 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Maze = void 0;
 const PasswordStorage_1 = __webpack_require__(9867);
 const misc_1 = __webpack_require__(4079);
+const BeatList_1 = __webpack_require__(2761);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const ChantingEngine_1 = __webpack_require__(7936);
 const Room_1 = __webpack_require__(6202);
 const StoryBeat_1 = __webpack_require__(5504);
+//reminder that order of imports is going to matter, if wrong order 'class extends value undefined'
+const EyeKiller_1 = __webpack_require__(9280);
+const Peewee_1 = __webpack_require__(1160);
+const Quotidian_1 = __webpack_require__(6647);
+const SnailFriend_1 = __webpack_require__(2633);
 class Maze {
     constructor(ele, storySoFar, rand) {
         this.storybeats = []; //can be added to by peewee and by the ai
         this.boopAudio = new Audio("audio/264828__cmdrobot__text-message-or-videogame-jump.mp3");
         this.doorAudio = new Audio("audio/close_door_1.mp3");
         this.chantingEngine = new ChantingEngine_1.ChantingEngine();
+        this.blorbos = []; //list of all possible blorbos that can spawn.
         this.initialize = async () => {
-            const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ZAP]];
+            const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY]];
             this.room = await (0, Room_1.randomRoomWithThemes)(this, this.ele, themes, this.rand);
-            this.room.initialRoomWithBlorbos();
+            this.initializeBlorbos();
             await this.room.propagateMaze(3);
-            this.peewee = this.room.peewee;
+            this.peewee = new Peewee_1.Peewee(this.room, 150, 350);
+            this.changeRoom(this.room, false);
             (0, PasswordStorage_1.initRabbitHole)(this.room);
+        };
+        this.initializeBlorbos = () => {
+            if (this.room) {
+                this.blorbos.push(new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject, BeatList_1.FollowPeewee]));
+                this.blorbos.push(new SnailFriend_1.Snail(this.room, 150, 150));
+                this.blorbos.push(new EyeKiller_1.EyeKiller(this.room, 150, 150));
+            }
         };
         this.begin = () => {
             this.handleCommands();
@@ -2369,8 +2384,26 @@ class Maze {
                 console.warn("JR NOTE: remember to require a click before starting");
             }
         };
-        this.changeRoom = (room) => {
-            console.log("JR NOTE: changing room to ", room.name, " it has blorbos", room.blorbos);
+        this.spawnBlorbos = () => {
+            if (!this.room) {
+                return;
+            }
+            const blorbosToTest = ["Killer"];
+            for (let blorbo of this.blorbos) {
+                console.log("JR NOTE: can i spawn ", blorbo);
+                for (let theme of blorbo.themes) {
+                    if (this.room.themes.includes(theme)) {
+                        this.room.addBlorbo(blorbo);
+                    }
+                }
+                for (let name of blorbosToTest) {
+                    if (blorbo.name.includes(name)) {
+                        this.room.addBlorbo(blorbo);
+                    }
+                }
+            }
+        };
+        this.changeRoom = (room, render = true) => {
             if (this.room) {
                 this.room.teardown();
             }
@@ -2384,7 +2417,10 @@ class Maze {
                 room.addBlorbo(this.peewee);
                 this.peewee.goStill();
             }
-            this.room.render();
+            this.spawnBlorbos();
+            if (render) {
+                this.room.render();
+            }
         };
         this.addCommandStorybeat = (beat) => {
             if (this.peewee) {
@@ -2438,15 +2474,10 @@ exports.spawnWallObjects = exports.randomRoomWithThemes = exports.Room = void 0;
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const misc_1 = __webpack_require__(4079);
-const Quotidian_1 = __webpack_require__(6647);
 const PhysicalObject_1 = __webpack_require__(8466);
 const URLUtils_1 = __webpack_require__(389);
-const Peewee_1 = __webpack_require__(1160);
 const ArrayUtils_1 = __webpack_require__(3907);
 const StringUtils_1 = __webpack_require__(7036);
-const BeatList_1 = __webpack_require__(2761);
-const SnailFriend_1 = __webpack_require__(2633);
-const EyeKiller_1 = __webpack_require__(9280);
 const End_1 = __webpack_require__(4338);
 const StoryBeat_1 = __webpack_require__(5504);
 class Room {
@@ -2569,7 +2600,7 @@ class Room {
             blorbo.x = 150;
             blorbo.y = 350;
             this.blorbos.push(blorbo);
-            blorbo.room = this;
+            blorbo.room = this; //if they were spawning in a different room before, too bad
         };
         this.removeBlorbo = (blorbo) => {
             (0, ArrayUtils_1.removeItemOnce)(this.blorbos, blorbo);
@@ -2673,16 +2704,6 @@ class Room {
                 }
             }
             return false;
-        };
-        this.initialRoomWithBlorbos = () => {
-            const stress_test = 1;
-            for (let i = 0; i < stress_test; i++) {
-                this.addBlorbo(new Quotidian_1.Quotidian(this, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject, BeatList_1.FollowPeewee]));
-                this.addBlorbo(new SnailFriend_1.Snail(this, 150, 150));
-                this.addBlorbo(new EyeKiller_1.EyeKiller(this, 150, 150));
-            }
-            this.peewee = new Peewee_1.Peewee(this, 150, 350);
-            this.addBlorbo(this.peewee);
         };
         this.tick = () => {
             if (!this.ticking) {
@@ -5102,7 +5123,7 @@ exports.albhed_map = {
     "z": "W",
     "0": "https://www.tumblr.com/blog/view/figuringoutnothing/688028145704665088?source=share",
     "1": "http://farragofiction.com/DevonaFears",
-    "2": "http://farragofiction.com/NotesOnStealingPeoplesShit/",
+    "2": "https://verbosebabbler.tumblr.com/post/692334755682877440/the-faq-who-is-writing-this-thing",
     "3": "https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8 by the Watcher of Threads",
     "4": "http://farragofiction.com/PerfectHeist/",
     "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers (The Watcher says they won't spell it out)",
@@ -5110,6 +5131,8 @@ exports.albhed_map = {
     "8": "https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",
     "9": "https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers"
     //0: http://farragofiction.com/ParkerLotLost/ <-- maybe this will be EastEastEast one day, that or ElevatorSim
+    //https://jadedresearcher.tumblr.com/post/692341174641606656
+    //https://jadedresearcher.tumblr.com/post/692340754690015232/but-like-italians-are-real-and-arent-all
 };
 const translate = (word) => {
     let ret = word.toLowerCase();
@@ -5145,14 +5168,16 @@ class Secret {
     }
 }
 exports.Secret = Secret;
+//https://archiveofourown.org/works/40961847
 /*
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
 /*
-ExperimentalMusic
+99 Rooms
+Spatial Horror
 Paradise and parasite
 The Corporation still serves as the main trading partner of the Great Powers, and fares well enough with JR at their head. -https://www.royalroad.com/fiction/40920/the-path-of-ascension/chapter/964367/the-path-of-ascension-chapter-153
-
+ASecondPersonalTranscript/
 earworm humming in a dream
 Natalie Yemet (thinks their mom is the customer service rep. has an order for a game they don't remember)
 some kind of mafia scheme (accuses eyedol of kidnapping)
@@ -5220,6 +5245,7 @@ exports.passwords = {
     "TELLBRAK3700": new Secret("Notes of Slaughter 13", undefined, "Secrets/Content/30.js"),
     "PENNY WICKNER": new Secret("Notes of Slaughter 14", undefined, "Secrets/Content/31.js"),
     "ONCE YOU OPEN THE CURTAINS ALL THAT'S LEFT TO DO IS GO TO THE OTHER SIDE AND CLOSE THEM AGAIN": new Secret("Notes of Slaughter 15", undefined, "Secrets/Content/35.js"),
+    "EXPERIMENTALMUSIC": new Secret("Notes of Slaughter 16: ExperimentalMusic", undefined, "Secrets/Content/36.js"),
     "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts")
 };
@@ -7452,6 +7478,105 @@ If you know how to make it, your ending will be Truth.`
 
 /***/ }),
 
+/***/ 1578:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+Additional Notes: 
+
+It must be noted that certain of my patients are in various stages of recovery from Shared Generational Trauma stemming from their home universe. Camille, Devona, Ria, Neville, and Witherby self identify as having been direct coworkers in a Training Team, Vik, K, Yongki, and Captain identify as direct workers in an Information Team, and Parker is the sole surviving member of Control.
+
+These teams were assembled in the service of a Nightmarish Corporation which by All Accounts sought to benefit from Employee Trauma associated with Containing Horrors. 
+
+It is Important to Keep This In Mind while directing Treatment, especially given the prevalence of formerly useful Defensive Mechanisms no longer being Helpful in their New Environment.
+
+~~~~
+
+ Integration and Reconnection: Recovery
+
+Broadly speaking, Training spent the least amount of time at the Corporation, and by far the longest time inside this Universe. They are well on their Path of Recovery, being generally at the stage where they have already built up their New Lives. When they were fresh to this Universe they had various Challenges with which I could have helped, but as this was centuries before my time here, I Must Acknowledge That I Was Not Needed. 
+
+Of the group, Ria was the least ready to move on from her Trauma, but with my Help (and the Revelation that she clung to a False Hope) she has made significant progress.  Her desire for a Secret Meaning to the Trauma, something to Make It All Worth It kept her alive and motivated at the Corporation. This was no longer useful in her current context, and she has placed it aside, mourned for it, and made tangible steps towards reconnecting with her desires outside of the context of Trauma. 
+
+
+~~~~~
+
+Mourning and Remembrance: Resting
+
+
+
+Contrastingly, Information was still relatively new when I joined this Universe. In general, their challenges remain Rest and Recovery. Progress can not be expected when one is still tired from the Ordeal, after all! While I have, of course, promised my Bestie (Hi, Ronin!)  not to dig too deeply into Vik, while he Monitors me I will record the following information:
+
+Vik has been struggling with self sacrifice, and the mindset that they have no worth unless Serving Others.  Their friendship with Parker has been helpful, in that Parker needs no one and nothing. He is a bundle of wants, but not needs. Vik is learning to do self care.
+
+With Khana, I am under no such restrictions. Even without him being a direct patient of mine, his proud sharing of information has painted quite a clear picture.  In the face of Trauma that could not be bargained with, could not be reasoned with, Khana concluded that the only Power and Safety that could be obtained must be Taken.  That Status is a shortcut to what little Safety there was, as those most likely to be killed or injured were those with the least of it.  In their Home Universe, murder was a quite efficient way to keep oneself safe, while in this Universe it is a quick way to get oneself killed or imprisoned.  Khana is navigating the challenge of learning the New Rules and learning to leverage them. Of learning to Relax now that Being Seen is no longer a Matter of Life And Death.
+
+Yongki has been struggling with far more Physical Trauma than any of the others. The nearest mundane Analogue I can conceive of is Traumatic Brain Injury.  Prior to the Captain joining, Yongki was focused on learning to manage this injury and avoiding making it worse. With the Captain here, Yongki is able to begin taking the first steps of recovery, focusing on learning who he is and what he prefers. 
+
+
+Meanwhile, Parker's fundamental fear that his Presence Can Only Make Things Worse appears to be eroding with time. Interacting with other refugees from the Corporation appears to be steadily driving home the concept that while he was, in fact, the common thread through all of the Trauma he experienced, he was NOT the cause of it. That the Trauma was fundamentally Out Of His Control and Impersona.  Rather than avoiding the world and abdicating all responsibility for his actions, Parker is learning that even with his Unique Challenges there are ways to Safely Interact.
+
+~~~~
+
+Stabilization and Safety: Realization 
+
+Captain is the most mysterious of them, in my Eyes. As the newest of my patients to this Universe, he seems actively operating under the assumption that the Traumatic Circumstances he has recently escaped was Correct in some fundamental way. That the Rules he Lived By must have had some Higher Virtue. That he seems willing to Watch and Learn from those who are further along in the Recovery Process bodes well.
+
+Finally, and most intriguing, Camille, in her role as Captain of the Training Team, has informed me that additional refugees have been discovered. Or, perhaps, "refugees" is not quite the right word. There is evidence they are actively still within their Traumatic Environment. This is a Unique Opportunity, both for myself, and for the survivors of their Universe, to participate in Helping Those Ready To Accept It.  And for Acceptance If They Are Not.
+
+
+`;
+
+/***/ }),
+
+/***/ 9241:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+//http://knucklessux.com/InfoTokenReader/?mode=loop
+const text = `
+ 
+To this day I still don't know if "Zampanio" exists. Maybe the rabbit hole that first fAQ lead me into was just an arg a particularly obessive sburbsim fan lead me into?
+
+and i barely even care! 
+
+i love the vibes!
+
+i love how open it feels?
+
+(and if it WAS an arg, holy fuck, what a cool concept. an arg designed to target a niche fandom? or even just a single person?)
+
+so thats the direction i'm trying to take the zampanio fandom. 
+
+what fandoms can we sink our tendrils into
+
+will a lobotomy corp fan one day make the exact right google search and fall into this rabbit hole?
+
+what about magnus archives?
+
+and the Herald is trying to get rain world in!
+
+each of us has a wholly unique world inside of us. a different subset of reality we interact with.
+
+each of us can make a personalized branch designed to catch...well...US of all people.
+
+and the fun is seeing who else gets caught by the same bait that would catch you.
+`;
+
+
+/***/ }),
+
 /***/ 2892:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -7796,6 +7921,10 @@ var map = {
 	"./Secrets/Content/34.js": 9558,
 	"./Secrets/Content/35": 9699,
 	"./Secrets/Content/35.js": 9699,
+	"./Secrets/Content/36": 1578,
+	"./Secrets/Content/36.js": 1578,
+	"./Secrets/Content/37": 9241,
+	"./Secrets/Content/37.js": 9241,
 	"./Secrets/Content/4": 2892,
 	"./Secrets/Content/4.js": 2892,
 	"./Secrets/Content/5": 1952,

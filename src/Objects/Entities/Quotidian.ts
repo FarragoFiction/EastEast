@@ -1,18 +1,13 @@
 //base level Entity object. quotidians can turn into anything
 
-import { isThisTypeNode } from "typescript";
 import { removeItemOnce } from "../../Utils/ArrayUtils";
 import { createElementWithIdAndParent, getElementCenterPoint } from "../../Utils/misc";
 import { pickFrom } from "../../Utils/NonSeededRandUtils";
-import { MoveToEastDoor } from "../MovementAlgs/MoveToEastDoor";
-import { MoveToNorthDoor } from "../MovementAlgs/MoveToNorthDoor";
-import { MoveToSouthDoor } from "../MovementAlgs/MoveToSouthDoor";
 import { NoMovement } from "../MovementAlgs/NoMovement";
 import { RandomMovement } from "../MovementAlgs/RandomMovement";
 import { PhysicalObject } from "../PhysicalObject";
 import { Room } from "../RoomEngine/Room";
 import { Theme } from "../Theme";
-import { Action } from "./Actions/BaseAction";
 import { AiBeat } from "./StoryBeats/BaseBeat";
 //https://stuff.mit.edu/people/dpolicar/writing/prose/text/titleOfTheStory.html  fun story the Theorist showed everyone
 //https://tvtropes.org/pmwiki/pmwiki.php/Literature/ThisIsTheTitleOfThisStory

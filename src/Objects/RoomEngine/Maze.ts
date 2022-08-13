@@ -1,16 +1,18 @@
 import { initRabbitHole } from "../../Secrets/PasswordStorage";
 import { createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
+
+import { FollowPeewee, SassObject } from "../Entities/StoryBeats/BeatList";
+import { all_themes } from "../Theme";
+import { ENDINGS, WEB,SPYING, ZAP, BUGS, TECHNOLOGY } from "../ThemeStorage";
+import { ChantingEngine } from "./ChantingEngine";
+import { randomRoomWithThemes, Room } from "./Room";
+import { StoryBeat } from "./StoryBeat";
+//reminder that order of imports is going to matter, if wrong order 'class extends value undefined'
 import { EyeKiller } from "../Entities/EyeKiller";
 import { Peewee } from "../Entities/Peewee";
 import { Quotidian } from "../Entities/Quotidian";
 import { Snail } from "../Entities/SnailFriend";
-import { all_themes } from "../Theme";
-import { ENDINGS, WEB, TWISTING, CLOWNS, SPYING, ZAP } from "../ThemeStorage";
-import { ChantingEngine } from "./ChantingEngine";
-import { randomRoomWithThemes, Room } from "./Room";
-import { StoryBeat } from "./StoryBeat";
-
 export class Maze {
 
     rand: SeededRandom;
@@ -32,12 +34,12 @@ export class Maze {
     }
 
     initialize = async () => {
-        const themes = [all_themes[ENDINGS], all_themes[WEB], all_themes[ZAP]]
+        const themes = [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY]]
         this.room = await randomRoomWithThemes(this,this.ele, themes, this.rand);
         this.initializeBlorbos();
         await this.room.propagateMaze(3);
         this.peewee = new Peewee(this.room, 150, 350);
-        this.changeRoom(this.room);
+        this.changeRoom(this.room,false);
         initRabbitHole(this.room);
     }
 
@@ -67,16 +69,24 @@ export class Maze {
         if(!this.room){
             return;
         }
+        const blorbosToTest = ["Killer"];
         for(let blorbo of this.blorbos){
+            console.log("JR NOTE: can i spawn ", blorbo)
             for(let theme of blorbo.themes){
                 if(this.room.themes.includes(theme)){
+                    this.room.addBlorbo(blorbo);
+                }
+            }
+
+            for(let name of blorbosToTest){
+                if(blorbo.name.includes(name)){
                     this.room.addBlorbo(blorbo);
                 }
             }
         }
     }
 
-    changeRoom = (room: Room)=>{
+    changeRoom = (room: Room, render=true)=>{
         if(this.room){
             this.room.teardown();
         }
@@ -91,7 +101,9 @@ export class Maze {
             this.peewee.goStill();
         }
         this.spawnBlorbos();
-        this.room.render();
+        if(render){
+             this.room.render();
+        }
     }
 
     addCommandStorybeat = (beat: StoryBeat)=>{

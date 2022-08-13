@@ -93,7 +93,6 @@ export class PhysicalObject{
     }
 
     attachToParent = (parent: HTMLElement)=>{
-        console.log("JR NOTE: attaching to parent, i'm", this.name)
         this.parent = parent;
         this.image.src = this.src;
         this.image.style.width = `${this.width}px`;
