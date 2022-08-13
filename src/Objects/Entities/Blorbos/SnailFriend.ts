@@ -3,16 +3,14 @@
 //yongki likes them, so i decided to add one
 //also, and i didn't realize this till last night
 //their houses are spirals
-import { Movement } from "../MovementAlgs/BaseMovement";
-import { RandomMovement } from "../MovementAlgs/RandomMovement";
-import { SteadyMovement } from "../MovementAlgs/SteadyMovement";
-import { Room } from "../RoomEngine/Room";
-import { all_themes } from "../Theme";
-import { BUGS } from "../ThemeStorage";
 
-import { Direction, Quotidian } from "./Quotidian";
-import { AiBeat } from "./StoryBeats/BaseBeat";
-
+import { Movement } from "../../MovementAlgs/BaseMovement";
+import { SteadyMovement } from "../../MovementAlgs/SteadyMovement";
+import { Room } from "../../RoomEngine/Room";
+import { all_themes } from "../../Theme";
+import { BUGS } from "../../ThemeStorage";
+import { AiBeat } from "../StoryBeats/BaseBeat";
+import { Quotidian, Direction } from "./Quotidian";
 
 
 
@@ -35,6 +33,6 @@ export class Snail extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"Snail Friend", x,y,[all_themes[BUGS]],sprite,"It's like a slime creature. But small. You love those. Snails have the houses on them, that's the premium shit.", beats);
+        super(room,"Snail Friend", x,y,[all_themes[BUGS]],sprite,sprite,"It's like a slime creature. But small. You love those. Snails have the houses on them, that's the premium shit.", beats);
     }
 }

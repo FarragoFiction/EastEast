@@ -1,5 +1,5 @@
 import { Room } from "../../RoomEngine/Room"
-import { Quotidian } from "../Quotidian"
+import { Quotidian } from "../Blorbos/Quotidian"
 
 const setup = ()=>{
     //JR NOTE: TODO i coupled rendering with objects too tightly

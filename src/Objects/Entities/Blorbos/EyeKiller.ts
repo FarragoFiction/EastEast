@@ -1,13 +1,12 @@
 //just leave her alone with her egg
-import { Movement } from "../MovementAlgs/BaseMovement";
-import { RandomMovement } from "../MovementAlgs/RandomMovement";
-import { Room } from "../RoomEngine/Room";
-import { all_themes } from "../Theme";
-import {DARKNESS, FAMILY, HUNTING, KILLING } from "../ThemeStorage";
 
-import { Direction, Quotidian } from "./Quotidian";
-import { AiBeat } from "./StoryBeats/BaseBeat";
-
+import { Movement } from "../../MovementAlgs/BaseMovement";
+import { RandomMovement } from "../../MovementAlgs/RandomMovement";
+import { Room } from "../../RoomEngine/Room";
+import { all_themes } from "../../Theme";
+import { HUNTING, KILLING, FAMILY, DARKNESS } from "../../ThemeStorage";
+import { AiBeat } from "../StoryBeats/BaseBeat";
+import { Quotidian, Direction } from "./Quotidian";
 
 
 
@@ -30,7 +29,7 @@ export class EyeKiller extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"Eye Killer", x,y,[all_themes[HUNTING],all_themes[KILLING],all_themes[FAMILY],all_themes[DARKNESS]],sprite,"It's the Eye Killer! I'd leave her alone!", beats);
+        super(room,"Eye Killer", x,y,[all_themes[HUNTING],all_themes[KILLING],all_themes[FAMILY],all_themes[DARKNESS]],sprite,sprite,"It's the Eye Killer! I'd leave her alone!", beats);
         this.breached  = true;
     }
 }   

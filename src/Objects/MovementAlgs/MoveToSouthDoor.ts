@@ -1,6 +1,6 @@
 //given an Entity (which will have access to location and any other pertinent information)
 
-import { Quotidian } from "../Entities/Quotidian";
+import { Quotidian } from "../Entities/Blorbos/Quotidian";
 import { MoveToSpecificElement } from "./MoveToSpecificElement";
 
 //decides where to move next.

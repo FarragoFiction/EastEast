@@ -1,5 +1,5 @@
 import { getRandomNumberBetween, pickFrom } from "../../Utils/NonSeededRandUtils";
-import { Direction } from "../Entities/Quotidian";
+import { Direction } from "../Entities/Blorbos/Quotidian";
 
 /*
 has array of audio files it can switch between in a playlist

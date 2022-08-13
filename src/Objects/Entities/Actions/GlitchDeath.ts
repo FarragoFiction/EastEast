@@ -2,10 +2,10 @@
 import { removeItemOnce, turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
 import { Room } from "../../RoomEngine/Room";
 import { SMELL, SOUND, TASTE } from "../../ThemeStorage";
-import { Quotidian } from "../Quotidian";
 import { Action } from "./BaseAction";
 import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
+import { Quotidian } from "../Blorbos/Quotidian";
 
 //assume only peewee can do this
 //hi!!! Did you know peewee is wasted? And a doom player?

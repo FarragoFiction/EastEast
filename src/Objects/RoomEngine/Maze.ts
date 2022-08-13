@@ -9,10 +9,13 @@ import { ChantingEngine } from "./ChantingEngine";
 import { randomRoomWithThemes, Room } from "./Room";
 import { StoryBeat } from "./StoryBeat";
 //reminder that order of imports is going to matter, if wrong order 'class extends value undefined'
-import { EyeKiller } from "../Entities/EyeKiller";
-import { Peewee } from "../Entities/Peewee";
-import { Quotidian } from "../Entities/Quotidian";
-import { Snail } from "../Entities/SnailFriend";
+import { EyeKiller } from "../Entities/Blorbos/EyeKiller";
+import { Peewee } from "../Entities/Blorbos/Peewee";
+import { Quotidian } from "../Entities/Blorbos/Quotidian";
+import { Snail } from "../Entities/Blorbos/SnailFriend";
+import { JR } from "../Entities/Blorbos/JR";
+import { Innocent } from "../Entities/Blorbos/Innocent";
+import { Match } from "../Entities/Blorbos/Match";
 export class Maze {
 
     rand: SeededRandom;
@@ -45,9 +48,13 @@ export class Maze {
 
     initializeBlorbos = ()=>{
         if(this.room){
-        this.blorbos.push(new Quotidian(this.room, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [SassObject, FollowPeewee]));
+        this.blorbos.push(new Quotidian(this.room, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } },{ default_src: { src: "humanoid_crow.gif", width: 50, height: 50 }}, "testing", [SassObject, FollowPeewee]));
         this.blorbos.push(new Snail(this.room, 150, 150));
         this.blorbos.push(new EyeKiller(this.room, 150, 150));
+        this.blorbos.push(new Innocent(this.room, 150, 150));
+        this.blorbos.push(new Match(this.room, 150, 150));
+        this.blorbos.push(new JR(this.room, 150, 150));
+
         }
     }
 
@@ -69,7 +76,7 @@ export class Maze {
         if(!this.room){
             return;
         }
-        const blorbosToTest = ["Killer"];
+        const blorbosToTest = ["Killer","Match"];
         for(let blorbo of this.blorbos){
             console.log("JR NOTE: can i spawn ", blorbo)
             for(let theme of blorbo.themes){

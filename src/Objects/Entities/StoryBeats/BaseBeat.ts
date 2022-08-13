@@ -4,7 +4,7 @@ import { Maze } from "../../RoomEngine/Maze";
 import { Room } from "../../RoomEngine/Room";
 import { StoryBeat } from "../../RoomEngine/StoryBeat";
 import { Action } from "../Actions/BaseAction";
-import { Quotidian } from "../Quotidian";
+import { Quotidian } from "../Blorbos/Quotidian";
 import { TargetFilter, TARGETSTRING } from "../TargetFilter/baseFilter";
 
 export class AiBeat {

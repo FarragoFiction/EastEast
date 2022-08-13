@@ -1,7 +1,6 @@
 import { PhysicalObject } from "../../PhysicalObject";
 import { Room } from "../../RoomEngine/Room";
 import { SMELL, SOUND, TASTE } from "../../ThemeStorage";
-import { Quotidian } from "../Quotidian";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 
 export class Action{ //lawsuit

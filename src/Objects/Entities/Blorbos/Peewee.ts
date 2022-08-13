@@ -1,33 +1,34 @@
 //base level Entity object. quotidians can turn into anything
 
-import { Movement } from "../MovementAlgs/BaseMovement";
-import { NoMovement } from "../MovementAlgs/NoMovement";
-import { Room } from "../RoomEngine/Room";
-import { StoryBeat } from "../RoomEngine/StoryBeat";
-import { all_themes } from "../Theme";
-import { ENDINGS, WEB, TWISTING, CLOWNS, TECHNOLOGY } from "../ThemeStorage";
-import { Action } from "./Actions/BaseAction";
-import { Feel } from "./Actions/Feel";
-import { FollowObject } from "./Actions/FollowObject";
-import { GlitchDeath } from "./Actions/GlitchDeath";
-import { GlitchLife } from "./Actions/GlitchLife";
-import { GoEast } from "./Actions/GoEast";
-import { GoNorth } from "./Actions/GoNorth";
-import { GoSouth } from "./Actions/GoSouth";
-import { GoWest } from "./Actions/GoWest";
-import { Help } from "./Actions/Help";
-import { Listen } from "./Actions/Listen";
-import { Look } from "./Actions/Look";
-import { PauseSimulation } from "./Actions/PauseSimulation";
-import { ResumeSimulation } from "./Actions/ResumeSimulation";
-import { Smell } from "./Actions/Smell";
-import { StopMoving } from "./Actions/StopMoving";
-import { Taste } from "./Actions/Taste";
-import { Think } from "./Actions/Think";
-import { Direction, Quotidian } from "./Quotidian";
-import { AiBeat } from "./StoryBeats/BaseBeat";
-import { TargetNameIncludesAnyOfTheseWords } from "./TargetFilter/TargetNameIncludesAnyOfTheseWords";
-
+import { Movement } from "../../MovementAlgs/BaseMovement";
+import { NoMovement } from "../../MovementAlgs/NoMovement";
+import { Room } from "../../RoomEngine/Room";
+import { StoryBeat } from "../../RoomEngine/StoryBeat";
+import { all_themes } from "../../Theme";
+import { ENDINGS, WEB, TECHNOLOGY } from "../../ThemeStorage";
+import { Action } from "../Actions/BaseAction";
+import { Feel } from "../Actions/Feel";
+import { FollowObject } from "../Actions/FollowObject";
+import { GlitchBreach } from "../Actions/GlitchBreach";
+import { GlitchDeath } from "../Actions/GlitchDeath";
+import { GlitchLife } from "../Actions/GlitchLife";
+import { GlitchUnbreach } from "../Actions/GlitchunBreach";
+import { GoEast } from "../Actions/GoEast";
+import { GoNorth } from "../Actions/GoNorth";
+import { GoSouth } from "../Actions/GoSouth";
+import { GoWest } from "../Actions/GoWest";
+import { Help } from "../Actions/Help";
+import { Listen } from "../Actions/Listen";
+import { Look } from "../Actions/Look";
+import { PauseSimulation } from "../Actions/PauseSimulation";
+import { ResumeSimulation } from "../Actions/ResumeSimulation";
+import { Smell } from "../Actions/Smell";
+import { StopMoving } from "../Actions/StopMoving";
+import { Taste } from "../Actions/Taste";
+import { Think } from "../Actions/Think";
+import { AiBeat } from "../StoryBeats/BaseBeat";
+import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
+import { Quotidian, Direction } from "./Quotidian";
 
 
 //what, did you think any real being could be so formulaic? 
@@ -41,7 +42,7 @@ export class Peewee extends Quotidian {
     minSpeed = 1;
     currentSpeed = 10;
     //only for peewee
-    possibleActions: Action[] = [new PauseSimulation(), new ResumeSimulation(), new StopMoving(),new GoNorth(), new GoEast(), new GoSouth(), new GoWest(),new FollowObject(), new GlitchDeath(), new GlitchLife(),new Think(), new Look(), new Listen(), new Smell(), new Feel(), new Help(), new Taste()]; //ordered by priority
+    possibleActions: Action[] = [new PauseSimulation(), new ResumeSimulation(), new StopMoving(),new GoNorth(), new GoEast(), new GoSouth(), new GoWest(),new FollowObject(), new GlitchDeath(), new GlitchLife(),new GlitchBreach(), new GlitchUnbreach(), new Think(), new Look(), new Listen(), new Smell(), new Feel(), new Help(), new Taste()]; //ordered by priority
     //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
@@ -70,7 +71,7 @@ export class Peewee extends Quotidian {
         };
         console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe")
         const beats: AiBeat[] = [];
-        super(room, "Peewee",x, y, [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY]], sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
+        super(room, "Peewee",x, y, [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY]], sprite, sprite,"It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
     }
 
 

@@ -1,20 +1,17 @@
 import { all_themes, Theme } from "../Theme";
-import { ADJ, CLOWNS, DARKNESS, FEELING, FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, KILLING, KNOWING, LOCATION, OBFUSCATION, SMELL, SOUL, SOUND, SPYING, TASTE, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
-import { boundingBoxesIntersect, createElementWithIdAndParent, pointWithinBoundingBox } from "../../Utils/misc";
+import { ADJ, CLOWNS, FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, KILLING, KNOWING, LOCATION, OBFUSCATION, SOUL, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
+import { boundingBoxesIntersect, createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
-import { Quotidian } from "../Entities/Quotidian";
 import { PhysicalObject, RenderedItem } from "../PhysicalObject";
 import { addImageProcess } from "../../Utils/URLUtils";
-import { Peewee } from "../Entities/Peewee";
 import { Maze } from "./Maze";
 import { removeItemOnce } from "../../Utils/ArrayUtils";
 import { titleCase } from "../../Utils/StringUtils";
-import { FollowPeewee, SassObject, testBeat, testBeat2, testBeat3 } from "../Entities/StoryBeats/BeatList";
-import { DeploySass } from "../Entities/Actions/DeploySass";
-import { Snail } from "../Entities/SnailFriend";
-import { EyeKiller } from "../Entities/EyeKiller";
-import { End } from "../Entities/End";
+
 import { StoryBeat } from "./StoryBeat";
+import { End } from "../Entities/Blorbos/End";
+import { Peewee } from "../Entities/Blorbos/Peewee";
+import { Quotidian } from "../Entities/Blorbos/Quotidian";
 
 
 export class Room {

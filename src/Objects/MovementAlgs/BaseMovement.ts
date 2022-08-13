@@ -1,6 +1,6 @@
 //given an Entity (which will have access to location and any other pertinent information)
 
-import { Direction, Quotidian } from "../Entities/Quotidian";
+import { Direction, Quotidian } from "../Entities/Blorbos/Quotidian";
 
 //decides where to move next.
 //mostly useful for testing, just keeps going int he direction its going and bounces off walls

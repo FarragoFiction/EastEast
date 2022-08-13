@@ -1,11 +1,7 @@
 
 import { turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
-import { Room } from "../../RoomEngine/Room";
-import { FEELING, SMELL, SOUND, TASTE } from "../../ThemeStorage";
-import { Peewee } from "../Peewee";
-import { Quotidian } from "../Quotidian";
+import { Peewee } from "../Blorbos/Peewee";
 import { Action } from "./BaseAction";
-import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 
 //assume only peewee can look

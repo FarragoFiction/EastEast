@@ -1,6 +1,6 @@
 import { MoveToSouthDoor } from "../../MovementAlgs/MoveToSouthDoor";
 import { Room } from "../../RoomEngine/Room";
-import { Quotidian } from "../Quotidian";
+import { Quotidian } from "../Blorbos/Quotidian";
 import { Action } from "./BaseAction";
 import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";

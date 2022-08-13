@@ -182,6 +182,64 @@ exports.FollowObject = FollowObject;
 
 /***/ }),
 
+/***/ 3674:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GlitchBreach = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const BaseAction_1 = __webpack_require__(7042);
+const Quotidian_1 = __webpack_require__(6387);
+//assume only peewee can do this
+//hi!!! Did you know peewee is wasted? And a doom player?
+class GlitchBreach extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["ENRAGE", "BREACH", "DESTABILIZE"];
+        this.noTarget = (beat, current_room, subject) => {
+            return `${subject.processedName()} doesn't see anything to breach.`;
+        };
+        this.withTargets = (beat, current_room, subject, targets) => {
+            let killed = false;
+            for (let target of targets) {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    target.breached = true;
+                    killed = true;
+                }
+            }
+            if (!killed) {
+                return this.noTarget(beat, current_room, subject);
+            }
+            return `A glitch shudders over the ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}, twisting their status from unbreached to breached, if it can.`;
+        };
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            let targets = beat.targets;
+            if (targets.length === 0) {
+                targets = [...current_room.blorbos];
+                (0, ArrayUtils_1.removeItemOnce)(targets, subject); //unless you're specifically
+                return this.withTargets(beat, current_room, subject, targets); //boy sure hope you don't accidentally type kill as part of another word with no targets :) :) :)
+            }
+            else {
+                return this.withTargets(beat, current_room, subject, targets);
+            }
+        };
+    }
+}
+exports.GlitchBreach = GlitchBreach;
+
+
+/***/ }),
+
 /***/ 6315:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -190,8 +248,8 @@ exports.FollowObject = FollowObject;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.GlitchDeath = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
-const Quotidian_1 = __webpack_require__(6647);
 const BaseAction_1 = __webpack_require__(7042);
+const Quotidian_1 = __webpack_require__(6387);
 //assume only peewee can do this
 //hi!!! Did you know peewee is wasted? And a doom player?
 class GlitchDeath extends BaseAction_1.Action {
@@ -248,7 +306,7 @@ exports.GlitchDeath = GlitchDeath;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.GlitchLife = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
-const Quotidian_1 = __webpack_require__(6647);
+const Quotidian_1 = __webpack_require__(6387);
 const BaseAction_1 = __webpack_require__(7042);
 //assume only peewee can do this
 //hi!!! Did you know peewee is wasted? And a doom player?
@@ -292,6 +350,64 @@ class GlitchLife extends BaseAction_1.Action {
     }
 }
 exports.GlitchLife = GlitchLife;
+
+
+/***/ }),
+
+/***/ 6459:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GlitchUnbreach = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const BaseAction_1 = __webpack_require__(7042);
+const Quotidian_1 = __webpack_require__(6387);
+//assume only peewee can do this
+//hi!!! Did you know peewee is wasted? And a doom player?
+class GlitchUnbreach extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["CALM", "UNBREACH", "STABILIZE"];
+        this.noTarget = (beat, current_room, subject) => {
+            return `${subject.processedName()} doesn't see anything to unbreach.`;
+        };
+        this.withTargets = (beat, current_room, subject, targets) => {
+            let killed = false;
+            for (let target of targets) {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    target.breached = false;
+                    killed = true;
+                }
+            }
+            if (!killed) {
+                return this.noTarget(beat, current_room, subject);
+            }
+            return `A glitch shudders over the ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}, twisting their status from breached to unbreached, if it can.`;
+        };
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            let targets = beat.targets;
+            if (targets.length === 0) {
+                targets = [...current_room.blorbos];
+                (0, ArrayUtils_1.removeItemOnce)(targets, subject); //unless you're specifically
+                return this.withTargets(beat, current_room, subject, targets); //boy sure hope you don't accidentally type kill as part of another word with no targets :) :) :)
+            }
+            else {
+                return this.withTargets(beat, current_room, subject, targets);
+            }
+        };
+    }
+}
+exports.GlitchUnbreach = GlitchUnbreach;
 
 
 /***/ }),
@@ -670,7 +786,7 @@ exports.Look = Look;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.GlitchDeath = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
-const Quotidian_1 = __webpack_require__(6647);
+const Quotidian_1 = __webpack_require__(6387);
 const BaseAction_1 = __webpack_require__(7042);
 //assume only peewee can do this
 //hi!!! Did you know peewee is wasted? And a doom player?
@@ -1030,7 +1146,7 @@ exports.Think = Think;
 
 /***/ }),
 
-/***/ 4338:
+/***/ 8115:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -1040,14 +1156,14 @@ exports.End = void 0;
 const NoMovement_1 = __webpack_require__(4956);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
-const Quotidian_1 = __webpack_require__(6647);
+const Quotidian_1 = __webpack_require__(6387);
 class End extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
             default_src: { src: "the_end2.png", width: 56, height: 100 },
         };
         const beats = [];
-        super(room, "The End", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, "The End Comes For Us All", beats);
+        super(room, "The End", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, sprite, "The End Comes For Us All", beats);
         this.maxSpeed = 50;
         this.minSpeed = 5;
         this.currentSpeed = 5;
@@ -1060,17 +1176,18 @@ exports.End = End;
 
 /***/ }),
 
-/***/ 9280:
+/***/ 2937:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
+//just leave her alone with her egg
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EyeKiller = void 0;
 const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
-const Quotidian_1 = __webpack_require__(6647);
+const Quotidian_1 = __webpack_require__(6387);
 class EyeKiller extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
@@ -1081,7 +1198,7 @@ class EyeKiller extends Quotidian_1.Quotidian {
             down_src: { src: "KillerDown.gif", width: 50, height: 50 }
         };
         const beats = [];
-        super(room, "Eye Killer", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.DARKNESS]], sprite, "It's the Eye Killer! I'd leave her alone!", beats);
+        super(room, "Eye Killer", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.DARKNESS]], sprite, sprite, "It's the Eye Killer! I'd leave her alone!", beats);
         this.maxSpeed = 50;
         this.minSpeed = 5;
         this.currentSpeed = 5;
@@ -1095,7 +1212,120 @@ exports.EyeKiller = EyeKiller;
 
 /***/ }),
 
-/***/ 1160:
+/***/ 8004:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//just leave her alone with her egg
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Innocent = void 0;
+const RandomMovement_1 = __webpack_require__(5997);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6387);
+class Innocent extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "InnocentLeft.gif", width: 50, height: 50 },
+            left_src: { src: "InnocentLeft.gif", width: 50, height: 50 },
+            right_src: { src: "InnocentRight.gif", width: 50, height: 50 },
+            up_src: { src: "Innocent_upwards.gif", width: 50, height: 50 },
+            down_src: { src: "innocentforward.gif", width: 50, height: 50 }
+        };
+        const breachedSprite = {
+            default_src: { src: "KillerLeft.gif", width: 50, height: 50 },
+            left_src: { src: "KillerLeft.gif", width: 50, height: 50 },
+            right_src: { src: "KillerRight.gif", width: 50, height: 50 },
+            up_src: { src: "KillerUp.gif", width: 50, height: 50 },
+            down_src: { src: "KillerDown.gif", width: 50, height: 50 }
+        };
+        const beats = [];
+        super(room, "Innocent", x, y, [Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.ANGELS]], sprite, breachedSprite, "Wow, she seems totally innocent!", beats);
+        this.maxSpeed = 50;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+        this.breached = true;
+    }
+}
+exports.Innocent = Innocent;
+
+
+/***/ }),
+
+/***/ 7455:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.JR = void 0;
+const RandomMovement_1 = __webpack_require__(5997);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6387);
+//something is different about this jr, what could it be
+class JR extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "JRmoveleftblood.gif", width: 50, height: 50 },
+            left_src: { src: "JRmoveleftblood.gif", width: 50, height: 50 },
+            right_src: { src: "JRmoverightblood.gif", width: 50, height: 50 },
+            up_src: { src: "jrwalkgoupblood.gif", width: 50, height: 50 },
+            down_src: { src: "jrwalkforwardblood.gif", width: 50, height: 50 }
+        };
+        const beats = [];
+        super(room, "JR", x, y, [Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.WASTE], Theme_1.all_themes[ThemeStorage_1.LONELY], Theme_1.all_themes[ThemeStorage_1.KILLING]], sprite, sprite, "Boy this sure is an off brand JR, huh?", beats);
+        this.maxSpeed = 5;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+        this.breached = true;
+    }
+}
+exports.JR = JR;
+
+
+/***/ }),
+
+/***/ 7685:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//just leave her alone with her egg
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Match = void 0;
+const RandomMovement_1 = __webpack_require__(5997);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6387);
+class Match extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "Placeholders/thematch.png", width: 50, height: 50 },
+        };
+        const breachedSprite = {
+            default_src: { src: "Placeholders/match2.png", width: 50, height: 50 },
+        };
+        const beats = [];
+        super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.DARKNESS]], sprite, breachedSprite, "Ria sure looks like she's trying to figure something out!", beats);
+        this.maxSpeed = 8;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+    }
+}
+exports.Match = Match;
+
+
+/***/ }),
+
+/***/ 936:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -1109,8 +1339,10 @@ const ThemeStorage_1 = __webpack_require__(1288);
 const BaseAction_1 = __webpack_require__(7042);
 const Feel_1 = __webpack_require__(4543);
 const FollowObject_1 = __webpack_require__(744);
+const GlitchBreach_1 = __webpack_require__(3674);
 const GlitchDeath_1 = __webpack_require__(6315);
 const GlitchLife_1 = __webpack_require__(6357);
+const GlitchunBreach_1 = __webpack_require__(6459);
 const GoEast_1 = __webpack_require__(7192);
 const GoNorth_1 = __webpack_require__(7415);
 const GoSouth_1 = __webpack_require__(3535);
@@ -1124,9 +1356,9 @@ const Smell_1 = __webpack_require__(3834);
 const StopMoving_1 = __webpack_require__(4469);
 const Taste_1 = __webpack_require__(8520);
 const Think_1 = __webpack_require__(5639);
-const Quotidian_1 = __webpack_require__(6647);
 const BaseBeat_1 = __webpack_require__(1708);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
+const Quotidian_1 = __webpack_require__(6387);
 //what, did you think any real being could be so formulaic? 
 //regarding the real peewee, wanda is actually quite THRILLED there is a competing parasite in the Echidna distracting the immune system (and tbf, preventing an immune disorder in the form of the eye killer)
 //the universe is AWARE of the dangers to it and endlessly expands its immune system response
@@ -1155,12 +1387,12 @@ class Peewee extends Quotidian_1.Quotidian {
         };
         console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe");
         const beats = [];
-        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY]], sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
+        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY]], sprite, sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
         //only for peewee
-        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new FollowObject_1.FollowObject(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
+        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new FollowObject_1.FollowObject(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new GlitchunBreach_1.GlitchUnbreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -1194,7 +1426,7 @@ exports.Peewee = Peewee;
 
 /***/ }),
 
-/***/ 6647:
+/***/ 6387:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -1254,7 +1486,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
     * to OBJECT
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
-    constructor(room, name, x, y, themes, sprite, flavorText, beats) {
+    constructor(room, name, x, y, themes, sprite, breachedSprite, flavorText, beats) {
         super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText);
         this.maxSpeed = 20;
         this.minSpeed = 1;
@@ -1311,18 +1543,20 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             }
         };
         this.syncSpriteToDirection = () => {
+            //breached creatures look different, as a rule
+            let source = this.breached ? this.breachedDirectionalSprite : this.directionalSprite;
             let chosen = this.directionalSprite.default_src;
             if (this.direction === Direction.DOWN) {
-                chosen = this.directionalSprite.down_src || this.directionalSprite.default_src;
+                chosen = source.down_src || source.default_src;
             }
             else if (this.direction === Direction.UP) {
-                chosen = this.directionalSprite.up_src || this.directionalSprite.default_src;
+                chosen = source.up_src || source.default_src;
             }
             else if (this.direction === Direction.LEFT) {
-                chosen = this.directionalSprite.left_src || this.directionalSprite.default_src;
+                chosen = source.left_src || source.default_src;
             }
             else if (this.direction === Direction.RIGHT) {
-                chosen = this.directionalSprite.right_src || this.directionalSprite.default_src;
+                chosen = source.right_src || source.default_src;
             }
             const src = `${baseImageLocation}${chosen.src}`;
             if (!this.image.src.includes(src)) {
@@ -1355,6 +1589,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             this.updateRendering();
         };
         this.directionalSprite = sprite;
+        this.breachedDirectionalSprite = breachedSprite;
         this.originalFlavor = this.flavorText;
         this.makeBeatsMyOwn(beats);
     }
@@ -1364,17 +1599,21 @@ exports.Quotidian = Quotidian;
 
 /***/ }),
 
-/***/ 2633:
+/***/ 240:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
+///they have a lil house on their back
+//yongki likes them, so i decided to add one
+//also, and i didn't realize this till last night
+//their houses are spirals
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Snail = void 0;
 const SteadyMovement_1 = __webpack_require__(1148);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
-const Quotidian_1 = __webpack_require__(6647);
+const Quotidian_1 = __webpack_require__(6387);
 class Snail extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
@@ -1385,7 +1624,7 @@ class Snail extends Quotidian_1.Quotidian {
             down_src: { src: "snaildown.gif", width: 36, height: 48 }
         };
         const beats = [];
-        super(room, "Snail Friend", x, y, [Theme_1.all_themes[ThemeStorage_1.BUGS]], sprite, "It's like a slime creature. But small. You love those. Snails have the houses on them, that's the premium shit.", beats);
+        super(room, "Snail Friend", x, y, [Theme_1.all_themes[ThemeStorage_1.BUGS]], sprite, sprite, "It's like a slime creature. But small. You love those. Snails have the houses on them, that's the premium shit.", beats);
         this.maxSpeed = 1;
         this.minSpeed = 1;
         this.currentSpeed = 1;
@@ -1706,7 +1945,7 @@ exports.Memory = Memory;
 //given an Entity (which will have access to location and any other pertinent information)
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Movement = void 0;
-const Quotidian_1 = __webpack_require__(6647);
+const Quotidian_1 = __webpack_require__(6387);
 //decides where to move next.
 //mostly useful for testing, just keeps going int he direction its going and bounces off walls
 class Movement {
@@ -1868,7 +2107,7 @@ exports.MoveToSouthDoor = MoveToSouthDoor;
 //given an Entity (which will have access to location and any other pertinent information)
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MoveToSpecificElement = void 0;
-const Quotidian_1 = __webpack_require__(6647);
+const Quotidian_1 = __webpack_require__(6387);
 const BaseMovement_1 = __webpack_require__(9059);
 //decides where to move next.
 class MoveToSpecificElement extends BaseMovement_1.Movement {
@@ -1949,7 +2188,7 @@ exports.MoveToSpecificElement = MoveToSpecificElement;
 //given an Entity (which will have access to location and any other pertinent information)
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MoveToSpecificLocation = void 0;
-const Quotidian_1 = __webpack_require__(6647);
+const Quotidian_1 = __webpack_require__(6387);
 const BaseMovement_1 = __webpack_require__(9059);
 //decides where to move next.
 class MoveToSpecificLocation extends BaseMovement_1.Movement {
@@ -2012,7 +2251,7 @@ exports.MoveToSpecificLocation = MoveToSpecificLocation;
 //given an Entity (which will have access to location and any other pertinent information)
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MoveToSpecificPhysicalObject = void 0;
-const Quotidian_1 = __webpack_require__(6647);
+const Quotidian_1 = __webpack_require__(6387);
 const BaseMovement_1 = __webpack_require__(9059);
 //decides where to move next.
 class MoveToSpecificPhysicalObject extends BaseMovement_1.Movement {
@@ -2250,7 +2489,7 @@ exports.PhysicalObject = PhysicalObject;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ChantingEngine = void 0;
 const NonSeededRandUtils_1 = __webpack_require__(8258);
-const Quotidian_1 = __webpack_require__(6647);
+const Quotidian_1 = __webpack_require__(6387);
 /*
 has array of audio files it can switch between in a playlist
 makes audio go in and out in terms of volume
@@ -2344,10 +2583,13 @@ const ChantingEngine_1 = __webpack_require__(7936);
 const Room_1 = __webpack_require__(6202);
 const StoryBeat_1 = __webpack_require__(5504);
 //reminder that order of imports is going to matter, if wrong order 'class extends value undefined'
-const EyeKiller_1 = __webpack_require__(9280);
-const Peewee_1 = __webpack_require__(1160);
-const Quotidian_1 = __webpack_require__(6647);
-const SnailFriend_1 = __webpack_require__(2633);
+const EyeKiller_1 = __webpack_require__(2937);
+const Peewee_1 = __webpack_require__(936);
+const Quotidian_1 = __webpack_require__(6387);
+const SnailFriend_1 = __webpack_require__(240);
+const JR_1 = __webpack_require__(7455);
+const Innocent_1 = __webpack_require__(8004);
+const Match_1 = __webpack_require__(7685);
 class Maze {
     constructor(ele, storySoFar, rand) {
         this.storybeats = []; //can be added to by peewee and by the ai
@@ -2366,9 +2608,12 @@ class Maze {
         };
         this.initializeBlorbos = () => {
             if (this.room) {
-                this.blorbos.push(new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject, BeatList_1.FollowPeewee]));
+                this.blorbos.push(new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject, BeatList_1.FollowPeewee]));
                 this.blorbos.push(new SnailFriend_1.Snail(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.EyeKiller(this.room, 150, 150));
+                this.blorbos.push(new Innocent_1.Innocent(this.room, 150, 150));
+                this.blorbos.push(new Match_1.Match(this.room, 150, 150));
+                this.blorbos.push(new JR_1.JR(this.room, 150, 150));
             }
         };
         this.begin = () => {
@@ -2388,7 +2633,7 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Killer"];
+            const blorbosToTest = ["Killer", "Match"];
             for (let blorbo of this.blorbos) {
                 console.log("JR NOTE: can i spawn ", blorbo);
                 for (let theme of blorbo.themes) {
@@ -2478,8 +2723,8 @@ const PhysicalObject_1 = __webpack_require__(8466);
 const URLUtils_1 = __webpack_require__(389);
 const ArrayUtils_1 = __webpack_require__(3907);
 const StringUtils_1 = __webpack_require__(7036);
-const End_1 = __webpack_require__(4338);
 const StoryBeat_1 = __webpack_require__(5504);
+const End_1 = __webpack_require__(8115);
 class Room {
     //objects
     //people
@@ -7769,10 +8014,14 @@ var map = {
 	"./Objects/Entities/Actions/Feel.ts": 4543,
 	"./Objects/Entities/Actions/FollowObject": 744,
 	"./Objects/Entities/Actions/FollowObject.ts": 744,
+	"./Objects/Entities/Actions/GlitchBreach": 3674,
+	"./Objects/Entities/Actions/GlitchBreach.ts": 3674,
 	"./Objects/Entities/Actions/GlitchDeath": 6315,
 	"./Objects/Entities/Actions/GlitchDeath.ts": 6315,
 	"./Objects/Entities/Actions/GlitchLife": 6357,
 	"./Objects/Entities/Actions/GlitchLife.ts": 6357,
+	"./Objects/Entities/Actions/GlitchunBreach": 6459,
+	"./Objects/Entities/Actions/GlitchunBreach.ts": 6459,
 	"./Objects/Entities/Actions/GoEast": 7192,
 	"./Objects/Entities/Actions/GoEast.ts": 7192,
 	"./Objects/Entities/Actions/GoNorth": 7415,
@@ -7801,16 +8050,22 @@ var map = {
 	"./Objects/Entities/Actions/Taste.ts": 8520,
 	"./Objects/Entities/Actions/Think": 5639,
 	"./Objects/Entities/Actions/Think.ts": 5639,
-	"./Objects/Entities/End": 4338,
-	"./Objects/Entities/End.ts": 4338,
-	"./Objects/Entities/EyeKiller": 9280,
-	"./Objects/Entities/EyeKiller.ts": 9280,
-	"./Objects/Entities/Peewee": 1160,
-	"./Objects/Entities/Peewee.ts": 1160,
-	"./Objects/Entities/Quotidian": 6647,
-	"./Objects/Entities/Quotidian.ts": 6647,
-	"./Objects/Entities/SnailFriend": 2633,
-	"./Objects/Entities/SnailFriend.ts": 2633,
+	"./Objects/Entities/Blorbos/End": 8115,
+	"./Objects/Entities/Blorbos/End.ts": 8115,
+	"./Objects/Entities/Blorbos/EyeKiller": 2937,
+	"./Objects/Entities/Blorbos/EyeKiller.ts": 2937,
+	"./Objects/Entities/Blorbos/Innocent": 8004,
+	"./Objects/Entities/Blorbos/Innocent.ts": 8004,
+	"./Objects/Entities/Blorbos/JR": 7455,
+	"./Objects/Entities/Blorbos/JR.ts": 7455,
+	"./Objects/Entities/Blorbos/Match": 7685,
+	"./Objects/Entities/Blorbos/Match.ts": 7685,
+	"./Objects/Entities/Blorbos/Peewee": 936,
+	"./Objects/Entities/Blorbos/Peewee.ts": 936,
+	"./Objects/Entities/Blorbos/Quotidian": 6387,
+	"./Objects/Entities/Blorbos/Quotidian.ts": 6387,
+	"./Objects/Entities/Blorbos/SnailFriend": 240,
+	"./Objects/Entities/Blorbos/SnailFriend.ts": 240,
 	"./Objects/Entities/StoryBeats/BaseBeat": 1708,
 	"./Objects/Entities/StoryBeats/BaseBeat.ts": 1708,
 	"./Objects/Entities/StoryBeats/BeatList": 2761,
