@@ -1,7 +1,9 @@
 //knows what it looks like, knows where it is
 
+import { removeItemOnce } from "../Utils/ArrayUtils";
 import { getElementCenterPoint } from "../Utils/misc";
 import SeededRandom from "../Utils/SeededRandom";
+import { Quotidian } from "./Entities/Blorbos/Quotidian";
 import { Room } from "./RoomEngine/Room";
 import { Theme } from "./Theme";
 
@@ -39,7 +41,7 @@ export class PhysicalObject{
     image = document.createElement("img");
     rand: SeededRandom;
 
-    //TODO have a list of TRAITS
+    owner?: PhysicalObject;
     room:Room; //needed for interacting with the world. if this is inefficient can get just bits of it but don't paint the shed
 
 
@@ -88,6 +90,22 @@ export class PhysicalObject{
            this.customShit();
         })
 
+    }
+
+    dropObject = (object: PhysicalObject)=>{
+        removeItemOnce(this.inventory, object);
+        object.owner = undefined;
+        if(object instanceof Quotidian){
+            this.room.addBlorbo(object);
+        }else{
+            this.room.addItem(object);
+        }
+    }
+
+    pickupObject = (object: PhysicalObject)=>{
+        this.inventory.push(object);
+        this.room.removeItem(object);
+        object.owner = this;
     }
 
     centerPos = ()=>{

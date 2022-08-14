@@ -37,7 +37,7 @@ export class FRIEND{
     maze: Maze;
     currentQuest?: FriendlyAiBeat;
     quests: FriendlyAiBeat[] = [];
-    start = `<div style='font-size: 72px;'>☺</div><span style="font-family: Courier New">`;
+    start = `<img style="display: block; margin-left: auto; margin-right: auto; width: 300px;"src='images/Walkabout/Sprites/FRIEND.png'></img><span style="font-family: Courier New">`;
     end = "</span>";
     timeOfLastQuest = new Date().getTime();
 
@@ -49,13 +49,13 @@ export class FRIEND{
     }
 
     init = ()=>{
-        const giveKillerAnEgg = new FriendlyAiBeat(
+        const giveBookToBird = new FriendlyAiBeat(
             `
             ${this.start}
             <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
             <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
             
-            <p>To receive rewards: Bring one (1) Egg to the Eye Killer!</p>
+            <p>To receive rewards: Bring one (1) BOOK to any Quotidian!</p>
             ${this.end}
             `,
 
@@ -63,10 +63,10 @@ export class FRIEND{
             ${this.start}
             <p style="color: #a10000;font-family: zai_i_love_covid_19">All lore below is true. FRIEND never willingly seek to obfuscate the truth. </p>
             ${this.end}`,
-            [new TargetNameIncludesAnyOfTheseWords(["Killer"],true),new TargetNearObjectWithName(["Egg"],true)],
+            [new TargetNameIncludesAnyOfTheseWords(["Quotidian"],true),new TargetNearObjectWithName(["Book"],true)],
             []
         );
-        this.quests = [giveKillerAnEgg];
+        this.quests = [giveBookToBird];
     }
 
     deployQuest = (quest: FriendlyAiBeat)=>{
@@ -95,6 +95,7 @@ export class FRIEND{
         if(this.currentQuest){
             console.log("JR NOTE: have current quest from friend");
             if (this.currentQuest.triggered(this.physicalBody.room)) {
+                console.log("JR NOTE: did you actually do it?")
                 this.currentQuest.performActions(this.physicalBody.room);
                 removeItemOnce(this.quests, this.currentQuest);
                 this.timeOfLastQuest = new Date().getTime();

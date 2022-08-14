@@ -157,6 +157,13 @@ export class Room {
 
     addItem = (obj: PhysicalObject) => {
         this.items.push(obj);
+        obj.room = this;
+        obj.attachToParent(this.element);
+    }
+
+    removeItem = (obj: PhysicalObject) => {
+        removeItemOnce(this.items, obj);
+        obj.container.remove();
     }
 
     addBlorbo = (blorbo: Quotidian) => {
@@ -165,6 +172,7 @@ export class Room {
         blorbo.x = 150;
         blorbo.y = 350;
         this.blorbos.push(blorbo);
+        blorbo.attachToParent(this.element);
         blorbo.room = this; //if they were spawning in a different room before, too bad
     }
 

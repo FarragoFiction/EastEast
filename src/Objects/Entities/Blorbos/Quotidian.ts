@@ -118,6 +118,8 @@ export class Quotidian extends PhysicalObject {
         return `${this.breached? "Breached":""} ${this.name}${this.dead?"'s Grave":''}`;
     }
 
+
+
     die = (causeOfDeath: string)=>{
         console.log("JR NOTE: trying to kill", this.name, causeOfDeath)
         this.dead = true;

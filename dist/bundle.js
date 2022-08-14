@@ -66,6 +66,52 @@ exports.DeploySass = DeploySass;
 
 /***/ }),
 
+/***/ 4102:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DropAllObjects = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const Quotidian_1 = __webpack_require__(6387);
+class DropAllObjects extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["STARTLE", "SURPRISE", "SHOUT"];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const target = beat.targets;
+            if (target.length < 1) {
+                return `${subject.processedName()} can't see anything to startle like that...`;
+            }
+            let items = [];
+            if (target[0].inventory.length > 0) {
+                for (let item of target[0].inventory) {
+                    target[0].dropObject(item);
+                }
+                if (target instanceof Quotidian_1.Quotidian) {
+                    target.emitSass("!");
+                }
+                return `${subject.processedName()} startles the  ${target[0].processedName()} and they drop all their items.`;
+            }
+            else {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    target.emitSass("!");
+                }
+                return `${subject.processedName()} startles the  ${target[0].processedName()} for no particular reason.`;
+            }
+        };
+    }
+}
+exports.DropAllObjects = DropAllObjects;
+
+
+/***/ }),
+
 /***/ 4543:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -861,6 +907,38 @@ exports.PauseSimulation = PauseSimulation;
 
 /***/ }),
 
+/***/ 9936:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PickupObject = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+class PickupObject extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["TAKE", "PILFER", "LOOT", "GET", "STEAL", "POCKET", "OBTAIN", "GRAB", "CLUTCH", "WITHDRAW", "EXTRACT", "REMOVE", "PURLOIN", "YOINK"];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const target = beat.targets;
+            if (target.length < 1) {
+                return `${subject.processedName()} can't see anything to take like that...`;
+            }
+            subject.pickupObject(target[0]);
+            subject.emitSass("!");
+            return `${subject.processedName()} takes the  ${target[0].processedName()}.`;
+        };
+    }
+}
+exports.PickupObject = PickupObject;
+
+
+/***/ }),
+
 /***/ 2042:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1360,6 +1438,8 @@ const BaseBeat_1 = __webpack_require__(1708);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const Quotidian_1 = __webpack_require__(6387);
 const FRIEND_1 = __webpack_require__(4769);
+const PickupObject_1 = __webpack_require__(9936);
+const DropAllObjects_1 = __webpack_require__(4102);
 //what, did you think any real being could be so formulaic? 
 //regarding the real peewee, wanda is actually quite THRILLED there is a competing parasite in the Echidna distracting the immune system (and tbf, preventing an immune disorder in the form of the eye killer)
 //the universe is AWARE of the dangers to it and endlessly expands its immune system response
@@ -1393,7 +1473,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.minSpeed = 1;
         this.currentSpeed = 10;
         //only for peewee
-        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new FollowObject_1.FollowObject(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new GlitchunBreach_1.GlitchUnbreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
+        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new FollowObject_1.FollowObject(), new PickupObject_1.PickupObject(), new DropAllObjects_1.DropAllObjects(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new GlitchunBreach_1.GlitchUnbreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -2501,7 +2581,9 @@ exports.SteadyMovement = SteadyMovement;
 //knows what it looks like, knows where it is
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PhysicalObject = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
 const misc_1 = __webpack_require__(4079);
+const Quotidian_1 = __webpack_require__(6387);
 class PhysicalObject {
     constructor(room, name, x, y, width, height, themes, layer, src, flavorText) {
         //why yes, this WILL cause delightful chaos. why can you put a hot dog inside a lightbulb? because its weird and offputting. and because you'll probably forget where you stashed that hotdog later on.  it would be TRIVIAL to make it so only living creatures can have inventory. I am making a deliberate choice to not do this.
@@ -2531,6 +2613,21 @@ class PhysicalObject {
                 this.container.style.transform = `translate(${this.x - this.original_x}px,${this.y - this.original_y}px)`;
                 this.customShit();
             });
+        };
+        this.dropObject = (object) => {
+            (0, ArrayUtils_1.removeItemOnce)(this.inventory, object);
+            object.owner = undefined;
+            if (object instanceof Quotidian_1.Quotidian) {
+                this.room.addBlorbo(object);
+            }
+            else {
+                this.room.addItem(object);
+            }
+        };
+        this.pickupObject = (object) => {
+            this.inventory.push(object);
+            this.room.removeItem(object);
+            object.owner = this;
         };
         this.centerPos = () => {
             return (0, misc_1.getElementCenterPoint)(this.container);
@@ -2691,22 +2788,22 @@ PROBLEM, both target filters and actions except a physical object subject. FRIEN
 class FRIEND {
     constructor(maze, physicalBody) {
         this.quests = [];
-        this.start = `<div style='font-size: 72px;'>☺</div><span style="font-family: Courier New">`;
+        this.start = `<img style="display: block; margin-left: auto; margin-right: auto; width: 300px;"src='images/Walkabout/Sprites/FRIEND.png'></img><span style="font-family: Courier New">`;
         this.end = "</span>";
         this.timeOfLastQuest = new Date().getTime();
         this.init = () => {
-            const giveKillerAnEgg = new FriendlyAiBeat_1.FriendlyAiBeat(`
+            const giveBookToBird = new FriendlyAiBeat_1.FriendlyAiBeat(`
             ${this.start}
             <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
             <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
             
-            <p>To receive rewards: Bring one (1) Egg to the Eye Killer!</p>
+            <p>To receive rewards: Bring one (1) BOOK to any Quotidian!</p>
             ${this.end}
             `, `
             ${this.start}
             <p style="color: #a10000;font-family: zai_i_love_covid_19">All lore below is true. FRIEND never willingly seek to obfuscate the truth. </p>
-            ${this.end}`, [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], true), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Egg"], true)], []);
-            this.quests = [giveKillerAnEgg];
+            ${this.end}`, [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Quotidian"], true), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Book"], true)], []);
+            this.quests = [giveBookToBird];
         };
         this.deployQuest = (quest) => {
             console.log("JR NOTE: deploying quest", quest);
@@ -2729,6 +2826,7 @@ class FRIEND {
             if (this.currentQuest) {
                 console.log("JR NOTE: have current quest from friend");
                 if (this.currentQuest.triggered(this.physicalBody.room)) {
+                    console.log("JR NOTE: did you actually do it?");
                     this.currentQuest.performActions(this.physicalBody.room);
                     (0, ArrayUtils_1.removeItemOnce)(this.quests, this.currentQuest);
                     this.timeOfLastQuest = new Date().getTime();
@@ -3031,6 +3129,12 @@ class Room {
         };
         this.addItem = (obj) => {
             this.items.push(obj);
+            obj.room = this;
+            obj.attachToParent(this.element);
+        };
+        this.removeItem = (obj) => {
+            (0, ArrayUtils_1.removeItemOnce)(this.items, obj);
+            obj.container.remove();
         };
         this.addBlorbo = (blorbo) => {
             console.log("JR NOTE: ", this.name, "is adding blorbo", blorbo.name);
@@ -3038,6 +3142,7 @@ class Room {
             blorbo.x = 150;
             blorbo.y = 350;
             this.blorbos.push(blorbo);
+            blorbo.attachToParent(this.element);
             blorbo.room = this; //if they were spawning in a different room before, too bad
         };
         this.removeBlorbo = (blorbo) => {
@@ -8204,6 +8309,8 @@ var map = {
 	"./Objects/Entities/Actions/BaseAction.ts": 7042,
 	"./Objects/Entities/Actions/DeploySass": 4237,
 	"./Objects/Entities/Actions/DeploySass.ts": 4237,
+	"./Objects/Entities/Actions/DropAllObjects": 4102,
+	"./Objects/Entities/Actions/DropAllObjects.ts": 4102,
 	"./Objects/Entities/Actions/Feel": 4543,
 	"./Objects/Entities/Actions/Feel.ts": 4543,
 	"./Objects/Entities/Actions/FollowObject": 744,
@@ -8234,6 +8341,8 @@ var map = {
 	"./Objects/Entities/Actions/MeleeKill.ts": 2900,
 	"./Objects/Entities/Actions/PauseSimulation": 4359,
 	"./Objects/Entities/Actions/PauseSimulation.ts": 4359,
+	"./Objects/Entities/Actions/PickupObject": 9936,
+	"./Objects/Entities/Actions/PickupObject.ts": 9936,
 	"./Objects/Entities/Actions/ResumeSimulation": 2042,
 	"./Objects/Entities/Actions/ResumeSimulation.ts": 2042,
 	"./Objects/Entities/Actions/Smell": 3834,
