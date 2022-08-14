@@ -4,7 +4,7 @@ import { Movement } from "../../MovementAlgs/BaseMovement";
 import { RandomMovement } from "../../MovementAlgs/RandomMovement";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
-import { HUNTING, KILLING, FAMILY, DARKNESS } from "../../ThemeStorage";
+import { HUNTING, KILLING, FAMILY, DARKNESS, FIRE, ANGELS, WEB, ADDICTION, MUSIC } from "../../ThemeStorage";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { Quotidian, Direction } from "./Quotidian";
 
@@ -30,7 +30,7 @@ export class Match extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"Match", x,y,[all_themes[HUNTING],all_themes[KILLING],all_themes[FAMILY],all_themes[DARKNESS]],sprite,breachedSprite,
+        super(room,"Match", x,y,[all_themes[FIRE],all_themes[MUSIC],all_themes[WEB],all_themes[ADDICTION]],sprite,breachedSprite,
         "Ria sure looks like she's trying to figure something out!", beats);
     }
 }   
