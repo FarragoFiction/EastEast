@@ -1312,7 +1312,7 @@ class Match extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/match2.png", width: 50, height: 50 },
         };
         const beats = [];
-        super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.DARKNESS]], sprite, breachedSprite, "Ria sure looks like she's trying to figure something out!", beats);
+        super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION]], sprite, breachedSprite, "Ria sure looks like she's trying to figure something out!", beats);
         this.maxSpeed = 8;
         this.minSpeed = 5;
         this.currentSpeed = 5;
@@ -1359,6 +1359,7 @@ const Think_1 = __webpack_require__(5639);
 const BaseBeat_1 = __webpack_require__(1708);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const Quotidian_1 = __webpack_require__(6387);
+const FRIEND_1 = __webpack_require__(4769);
 //what, did you think any real being could be so formulaic? 
 //regarding the real peewee, wanda is actually quite THRILLED there is a competing parasite in the Echidna distracting the immune system (and tbf, preventing an immune disorder in the form of the eye killer)
 //the universe is AWARE of the dangers to it and endlessly expands its immune system response
@@ -1419,6 +1420,7 @@ class Peewee extends Quotidian_1.Quotidian {
                 beat.response = new BaseAction_1.Action().applyAction(aibeat);
             }
         };
+        this.friend = new FRIEND_1.FRIEND(this.room.maze, this);
     }
 }
 exports.Peewee = Peewee;
@@ -1583,6 +1585,10 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             if (this.dead) {
                 return;
             }
+            //don't mind FRIEND, just a lil parasite on you 
+            if ((this.friend)) {
+                this.friend.tick();
+            }
             this.processAiBeat();
             this.movement_alg.tick();
             this.syncSpriteToDirection();
@@ -1684,6 +1690,21 @@ class AiBeat {
             }
             const beat = this.addStorybeatToScreen(current_room.maze, `Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)}... ${(effects.join("<br>"))}`);
         };
+        this.performFriendlyActions = (current_room) => {
+            if (!this.owner) {
+                return console.error("ALWAYS clone beats, don't use them from list directly");
+            }
+            this.timeOfLastBeat = new Date().getTime();
+            let causes = [];
+            let effects = [];
+            for (let t of this.filters) {
+                causes.push(this.processTags(t.toString()));
+            }
+            for (let a of this.actions) {
+                effects.push(a.applyAction(this));
+            }
+            //actually FRIEND will handle taking care of story beats on its own.
+        };
         //ALL triggers must be true for this to be true.
         this.triggered = (current_room, allow_self = false) => {
             if (!this.owner) {
@@ -1737,6 +1758,70 @@ exports.testBeat2 = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords
 exports.testBeat3 = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(30, true)], [new GoEast_1.GoEast()]);
 exports.FollowPeewee = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Peewee"])], [new FollowObject_1.FollowObject()]);
 exports.SassObject = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass("Gross!", ["Wow you're really gross, aren't you?", "I don't like you!", "Wow! So boring!"])], true);
+
+
+/***/ }),
+
+/***/ 7717:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FriendlyAiBeat = void 0;
+const BaseBeat_1 = __webpack_require__(1708);
+class FriendlyAiBeat extends BaseBeat_1.AiBeat {
+    constructor(startingText, endingText, triggers, actions) {
+        super(triggers, actions, false);
+        this.startingText = startingText;
+        this.endingText = endingText;
+    }
+}
+exports.FriendlyAiBeat = FriendlyAiBeat;
+
+
+/***/ }),
+
+/***/ 9587:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetNearObjectWithName = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const baseFilter_1 = __webpack_require__(9505);
+//used for things like "if target is killer && target is near egg";
+class TargetNearObjectWithName extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFRMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(words, singleTarget = false, invert = false, kMode = false) {
+        super(singleTarget, invert, kMode);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            if (this.words.length === 1) {
+                return `they see something near something named ${this.words[0]}`;
+            }
+            return `they see something near an object named any of these words ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.words)}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            for (let word of this.words) {
+                for (let item of target.room.items)
+                    if (item.processedName().toUpperCase().includes(word.toUpperCase())) {
+                        targetLocked = true;
+                    }
+            }
+            if (targetLocked && !this.invert) {
+                return target;
+            }
+            else {
+                return null;
+            }
+        };
+        this.words = words;
+    }
+}
+exports.TargetNearObjectWithName = TargetNearObjectWithName;
 
 
 /***/ }),
@@ -2419,6 +2504,8 @@ exports.PhysicalObject = void 0;
 const misc_1 = __webpack_require__(4079);
 class PhysicalObject {
     constructor(room, name, x, y, width, height, themes, layer, src, flavorText) {
+        //why yes, this WILL cause delightful chaos. why can you put a hot dog inside a lightbulb? because its weird and offputting. and because you'll probably forget where you stashed that hotdog later on.  it would be TRIVIAL to make it so only living creatures can have inventory. I am making a deliberate choice to not do this.
+        this.inventory = [];
         this.container = document.createElement("div");
         this.image = document.createElement("img");
         this.processedName = () => {
@@ -2567,6 +2654,103 @@ exports.ChantingEngine = ChantingEngine;
 
 /***/ }),
 
+/***/ 4769:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FRIEND = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const NonSeededRandUtils_1 = __webpack_require__(8258);
+const FriendlyAiBeat_1 = __webpack_require__(7717);
+const TargetIsNearObjectWithName_1 = __webpack_require__(9587);
+const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
+const StoryBeat_1 = __webpack_require__(5504);
+/*
+FRIEND gives you one quest at a time.
+
+if you don't currently have a quest, after a minute, FRIEND will give you one.
+
+the quests FRIEND gives you are NOT procedural, they are designed to pursue very specific purposes.
+
+however, you do get them in a random order.
+
+FRIEND's quests are a bit like normal ai.
+
+FRIEND has a target filter for the world, things like "target is named Eye Killer" and "target has EGG in inventory"
+
+FRIEND also has an ACTION associated with this filter, things like "custom story beat" that has a command, a response, and a TRUTH
+
+FRIEND is the false face of Truth, become just a bit more real. FRIEND is entirely separate from Truth, but Truth is still tagging along
+
+if there are no more quests from FRIEND, it should mention that fact.
+
+PROBLEM, both target filters and actions except a physical object subject. FRIEND is not a physical object.
+*/
+class FRIEND {
+    constructor(maze, physicalBody) {
+        this.quests = [];
+        this.start = `<div style='font-size: 72px;'>☺</div><span style="font-family: Courier New">`;
+        this.end = "</span>";
+        this.timeOfLastQuest = new Date().getTime();
+        this.init = () => {
+            const giveKillerAnEgg = new FriendlyAiBeat_1.FriendlyAiBeat(`
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: Bring one (1) Egg to the Eye Killer!</p>
+            ${this.end}
+            `, `
+            ${this.start}
+            <p style="color: #a10000;font-family: zai_i_love_covid_19">All lore below is true. FRIEND never willingly seek to obfuscate the truth. </p>
+            ${this.end}`, [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], true), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Egg"], true)], []);
+        };
+        this.deployQuest = (quest) => {
+            this.currentQuest = quest;
+            this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Give Quest", this.currentQuest.startingText));
+        };
+        this.rewardQuest = () => {
+            if (this.currentQuest) {
+                this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Reward Quest", this.currentQuest.endingText));
+            }
+            else {
+                this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Deny Quest", `${this.start}<b>FRIEND</b> can not give that which does not exist. ${this.end}`));
+            }
+        };
+        //one minute between quests, but for now 10 seconds
+        this.itsBeenAwhileSinceLastQuest = () => {
+            return new Date().getTime() - this.timeOfLastQuest > 10000;
+        };
+        this.processAiBeat = () => {
+            if (this.currentQuest) {
+                if (this.currentQuest.triggered(this.physicalBody.room)) {
+                    this.currentQuest.performActions(this.physicalBody.room);
+                    (0, ArrayUtils_1.removeItemOnce)(this.quests, this.currentQuest);
+                    this.timeOfLastQuest = new Date().getTime();
+                    this.currentQuest = undefined;
+                    this.rewardQuest();
+                }
+            }
+            else if (this.itsBeenAwhileSinceLastQuest()) {
+                //true random. FRIEND is a force of chaos.
+                this.deployQuest((0, NonSeededRandUtils_1.pickFrom)(this.quests));
+                console.log("JR NOTE: selectd new quest", this.currentQuest);
+            }
+        };
+        this.tick = () => {
+            this.processAiBeat();
+        };
+        this.maze = maze;
+        this.physicalBody = physicalBody; //go ahead and borrow someone elese's it'll be fine (srsly tho in order to interact with the ai engine you need a physical body and FRIEND just does not have one , nor should it)
+    }
+}
+exports.FRIEND = FRIEND;
+
+
+/***/ }),
+
 /***/ 7194:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2633,7 +2817,7 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Killer", "Match"];
+            const blorbosToTest = ["Killer",];
             for (let blorbo of this.blorbos) {
                 console.log("JR NOTE: can i spawn ", blorbo);
                 for (let theme of blorbo.themes) {
@@ -3156,9 +3340,10 @@ const spawnFloorObjects = async (width, height, layer, key, folder, seededRandom
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StoryBeat = void 0;
 class StoryBeat {
-    constructor(command, response) {
+    constructor(command, response, truthfulComment) {
         this.command = command;
         this.response = response;
+        this.truthfulComment = truthfulComment;
     }
 }
 exports.StoryBeat = StoryBeat;
@@ -8070,6 +8255,10 @@ var map = {
 	"./Objects/Entities/StoryBeats/BaseBeat.ts": 1708,
 	"./Objects/Entities/StoryBeats/BeatList": 2761,
 	"./Objects/Entities/StoryBeats/BeatList.ts": 2761,
+	"./Objects/Entities/StoryBeats/FriendlyAiBeat": 7717,
+	"./Objects/Entities/StoryBeats/FriendlyAiBeat.ts": 7717,
+	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithName": 9587,
+	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithName.ts": 9587,
 	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf": 5535,
 	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf.ts": 5535,
 	"./Objects/Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords": 4165,
@@ -8106,6 +8295,8 @@ var map = {
 	"./Objects/PhysicalObject.ts": 8466,
 	"./Objects/RoomEngine/ChantingEngine": 7936,
 	"./Objects/RoomEngine/ChantingEngine.ts": 7936,
+	"./Objects/RoomEngine/FRIEND/FRIEND": 4769,
+	"./Objects/RoomEngine/FRIEND/FRIEND.ts": 4769,
 	"./Objects/RoomEngine/Maze": 7194,
 	"./Objects/RoomEngine/Maze.ts": 7194,
 	"./Objects/RoomEngine/Room": 6202,

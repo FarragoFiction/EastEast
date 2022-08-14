@@ -6,6 +6,7 @@ import { pickFrom } from "../../../Utils/NonSeededRandUtils"
 import { NoMovement } from "../../MovementAlgs/NoMovement"
 import { RandomMovement } from "../../MovementAlgs/RandomMovement"
 import { PhysicalObject } from "../../PhysicalObject"
+import { FRIEND } from "../../RoomEngine/FRIEND/FRIEND"
 import { Room } from "../../RoomEngine/Room"
 import { Theme } from "../../Theme"
 import { AiBeat } from "../StoryBeats/BaseBeat"
@@ -69,6 +70,8 @@ export class Quotidian extends PhysicalObject {
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
+    friend?:FRIEND;
+
     beats: AiBeat[] = [];
     // 0 min, 5 max
     fortitude = 0; //how brave are you, how physically fit
@@ -211,7 +214,7 @@ export class Quotidian extends PhysicalObject {
             return;
         }
         //don't mind FRIEND, just a lil parasite on you 
-        if((this instanceof Peewee)){
+        if((this.friend)){
             this.friend.tick();
         }
         this.processAiBeat();

@@ -2,7 +2,6 @@
 
 import { Movement } from "../../MovementAlgs/BaseMovement";
 import { NoMovement } from "../../MovementAlgs/NoMovement";
-import { FRIEND } from "../../RoomEngine/FRIEND/FRIEND";
 import { Room } from "../../RoomEngine/Room";
 import { StoryBeat } from "../../RoomEngine/StoryBeat";
 import { all_themes } from "../../Theme";
@@ -30,6 +29,7 @@ import { Think } from "../Actions/Think";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { Quotidian, Direction } from "./Quotidian";
+import { FRIEND } from "../../RoomEngine/FRIEND/FRIEND";
 
 
 //what, did you think any real being could be so formulaic? 
@@ -42,7 +42,6 @@ export class Peewee extends Quotidian {
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
-    friend:FRIEND;
     //only for peewee
     possibleActions: Action[] = [new PauseSimulation(), new ResumeSimulation(), new StopMoving(),new GoNorth(), new GoEast(), new GoSouth(), new GoWest(),new FollowObject(), new GlitchDeath(), new GlitchLife(),new GlitchBreach(), new GlitchUnbreach(), new Think(), new Look(), new Listen(), new Smell(), new Feel(), new Help(), new Taste()]; //ordered by priority
     //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
