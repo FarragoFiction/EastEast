@@ -65,6 +65,25 @@ export class AiBeat {
         const beat = this.addStorybeatToScreen(current_room.maze, `Because ${turnArrayIntoHumanSentence(causes)}... ${(effects.join("<br>"))}`);
     }
 
+    performFriendlyActions = (current_room: Room) => {
+        if(!this. owner){
+            return console.error("ALWAYS clone beats, don't use them from list directly");
+        }
+        this.timeOfLastBeat = new Date().getTime();
+
+        let causes = [];
+        let effects = [];
+        for (let t of this.filters) {
+            causes.push(this.processTags(t.toString()));
+        }
+
+        for (let a of this.actions) {
+            effects.push(a.applyAction(this));
+        }
+        //actually FRIEND will handle taking care of story beats on its own.
+    }
+
+
 
 
     //ALL triggers must be true for this to be true.
