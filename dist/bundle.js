@@ -37,6 +37,37 @@ exports.Action = Action;
 
 /***/ }),
 
+/***/ 1201:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CheckInventory = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const ArrayUtils_1 = __webpack_require__(3907);
+class CheckInventory extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["INVENTORY", "ITEMS", "POCKETS", "POUCH", "BAG"];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const target = beat.targets;
+            if (target.length < 1) {
+                return `${subject.processedName()} has the following in their inventory: ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(subject.inventory.map((item) => item.processedName()))}`;
+            }
+            return `${target[0].processedName()} has the following in their inventory: ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(target[0].inventory.map((item) => item.processedName()))}`;
+        };
+    }
+}
+exports.CheckInventory = CheckInventory;
+
+
+/***/ }),
+
 /***/ 4237:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1440,6 +1471,7 @@ const Quotidian_1 = __webpack_require__(6387);
 const FRIEND_1 = __webpack_require__(4769);
 const PickupObject_1 = __webpack_require__(9936);
 const DropAllObjects_1 = __webpack_require__(4102);
+const CheckInventory_1 = __webpack_require__(1201);
 //what, did you think any real being could be so formulaic? 
 //regarding the real peewee, wanda is actually quite THRILLED there is a competing parasite in the Echidna distracting the immune system (and tbf, preventing an immune disorder in the form of the eye killer)
 //the universe is AWARE of the dangers to it and endlessly expands its immune system response
@@ -1473,7 +1505,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.minSpeed = 1;
         this.currentSpeed = 10;
         //only for peewee
-        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new FollowObject_1.FollowObject(), new PickupObject_1.PickupObject(), new DropAllObjects_1.DropAllObjects(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new GlitchunBreach_1.GlitchUnbreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
+        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new CheckInventory_1.CheckInventory(), new FollowObject_1.FollowObject(), new PickupObject_1.PickupObject(), new DropAllObjects_1.DropAllObjects(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new GlitchunBreach_1.GlitchUnbreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -2626,7 +2658,12 @@ class PhysicalObject {
         };
         this.pickupObject = (object) => {
             this.inventory.push(object);
-            this.room.removeItem(object);
+            if (object instanceof Quotidian_1.Quotidian) {
+                this.room.removeBlorbo(object);
+            }
+            else {
+                this.room.removeItem(object);
+            }
             object.owner = this;
         };
         this.centerPos = () => {
@@ -2899,7 +2936,7 @@ class Maze {
         };
         this.initializeBlorbos = () => {
             if (this.room) {
-                this.blorbos.push(new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject, BeatList_1.FollowPeewee]));
+                this.blorbos.push(new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject, BeatList_1.FollowPeewee]));
                 this.blorbos.push(new SnailFriend_1.Snail(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.EyeKiller(this.room, 150, 150));
                 this.blorbos.push(new Innocent_1.Innocent(this.room, 150, 150));
@@ -2927,14 +2964,16 @@ class Maze {
             const blorbosToTest = ["Killer",];
             for (let blorbo of this.blorbos) {
                 console.log("JR NOTE: can i spawn ", blorbo);
-                for (let theme of blorbo.themes) {
-                    if (this.room.themes.includes(theme)) {
-                        this.room.addBlorbo(blorbo);
+                if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
+                    for (let theme of blorbo.themes) {
+                        if (this.room.themes.includes(theme)) {
+                            this.room.addBlorbo(blorbo);
+                        }
                     }
-                }
-                for (let name of blorbosToTest) {
-                    if (blorbo.name.includes(name)) {
-                        this.room.addBlorbo(blorbo);
+                    for (let name of blorbosToTest) {
+                        if (blorbo.name.includes(name)) {
+                            this.room.addBlorbo(blorbo);
+                        }
                     }
                 }
             }
@@ -8307,6 +8346,8 @@ var map = {
 	"./": 3607,
 	"./Objects/Entities/Actions/BaseAction": 7042,
 	"./Objects/Entities/Actions/BaseAction.ts": 7042,
+	"./Objects/Entities/Actions/CheckInventory": 1201,
+	"./Objects/Entities/Actions/CheckInventory.ts": 1201,
 	"./Objects/Entities/Actions/DeploySass": 4237,
 	"./Objects/Entities/Actions/DeploySass.ts": 4237,
 	"./Objects/Entities/Actions/DropAllObjects": 4102,

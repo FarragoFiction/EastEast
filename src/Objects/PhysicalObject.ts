@@ -21,7 +21,7 @@ export interface RenderedItem {
     name: string; //only living creatures have names, not items, its used to update them
 }
 
-export class PhysicalObject{
+export class PhysicalObject {
     x: number;
     y: number;
     width: number;
@@ -42,10 +42,10 @@ export class PhysicalObject{
     rand: SeededRandom;
 
     owner?: PhysicalObject;
-    room:Room; //needed for interacting with the world. if this is inefficient can get just bits of it but don't paint the shed
+    room: Room; //needed for interacting with the world. if this is inefficient can get just bits of it but don't paint the shed
 
 
-    constructor(room: Room,name:string, x: number, y:number, width: number, height: number, themes:Theme[], layer: number, src: string, flavorText:string){
+    constructor(room: Room, name: string, x: number, y: number, width: number, height: number, themes: Theme[], layer: number, src: string, flavorText: string) {
         this.room = room;
         this.name = name;
         this.x = x;
@@ -55,18 +55,18 @@ export class PhysicalObject{
         this.rand = room.rand;
         this.width = width;
         this.height = height;
-        this.flavorText  = flavorText;
+        this.flavorText = flavorText;
         this.themes = themes;
         this.layer = layer;
         this.src = src;
     }
 
-    processedName = ()=>{
+    processedName = () => {
         return this.name;
     }
 
     getRandomThemeConcept = (concept: string) => {
-        if(this.themes.length ===0){
+        if (this.themes.length === 0) {
             return `[ERROR: NO THEME FOUND FOR ${this.name.toUpperCase()}]`;
         }
         const theme = this.rand.pickFrom(this.themes);
@@ -74,51 +74,55 @@ export class PhysicalObject{
     }
 
 
-    customShit = ()=>{
+    customShit = () => {
         //for example, living creatures might say things
     }
 
-    updateRendering = ()=>{
-        requestAnimationFrame(()=>{
+    updateRendering = () => {
+        requestAnimationFrame(() => {
             /* this is too inefficient
             this.image.style.top = `${this.y}px`;
             this.image.style.left = `${this.x}px`;
             */
             //console.log(`JR NOTE: moving ${this.x}, ${this.y} which offset is ${this.original_x-this.x}, ${this.original_y-this.y}`)
 
-           this.container.style.transform=`translate(${this.x-this.original_x}px,${this.y-this.original_y}px)`;
-           this.customShit();
+            this.container.style.transform = `translate(${this.x - this.original_x}px,${this.y - this.original_y}px)`;
+            this.customShit();
         })
 
     }
 
-    dropObject = (object: PhysicalObject)=>{
+    dropObject = (object: PhysicalObject) => {
         removeItemOnce(this.inventory, object);
         object.owner = undefined;
-        if(object instanceof Quotidian){
+        if (object instanceof Quotidian) {
             this.room.addBlorbo(object);
-        }else{
+        } else {
             this.room.addItem(object);
         }
     }
 
-    pickupObject = (object: PhysicalObject)=>{
+    pickupObject = (object: PhysicalObject) => {
         this.inventory.push(object);
-        this.room.removeItem(object);
+        if (object instanceof Quotidian) {
+            this.room.removeBlorbo(object);
+        } else {
+            this.room.removeItem(object);
+        }
         object.owner = this;
     }
 
-    centerPos = ()=>{
+    centerPos = () => {
         return getElementCenterPoint(this.container)
     }
 
-    attachToParent = (parent: HTMLElement)=>{
+    attachToParent = (parent: HTMLElement) => {
         this.parent = parent;
         this.image.src = this.src;
         this.image.style.width = `${this.width}px`;
         this.container.style.display = "block";
         this.container.className = this.name;
-        this.container.style.zIndex = `${this.layer+10}`;
+        this.container.style.zIndex = `${this.layer + 10}`;
         this.container.style.position = "absolute";
         this.container.style.top = `${this.original_y}px`;
         this.container.style.left = `${this.original_x}px`;
