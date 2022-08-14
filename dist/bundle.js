@@ -2706,8 +2706,10 @@ class FRIEND {
             ${this.start}
             <p style="color: #a10000;font-family: zai_i_love_covid_19">All lore below is true. FRIEND never willingly seek to obfuscate the truth. </p>
             ${this.end}`, [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], true), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Egg"], true)], []);
+            this.quests = [giveKillerAnEgg];
         };
         this.deployQuest = (quest) => {
+            console.log("JR NOTE: deploying quest", quest);
             this.currentQuest = quest;
             this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Give Quest", this.currentQuest.startingText));
         };
@@ -2725,6 +2727,7 @@ class FRIEND {
         };
         this.processAiBeat = () => {
             if (this.currentQuest) {
+                console.log("JR NOTE: have current quest from friend");
                 if (this.currentQuest.triggered(this.physicalBody.room)) {
                     this.currentQuest.performActions(this.physicalBody.room);
                     (0, ArrayUtils_1.removeItemOnce)(this.quests, this.currentQuest);
@@ -2733,17 +2736,23 @@ class FRIEND {
                     this.rewardQuest();
                 }
             }
-            else if (this.itsBeenAwhileSinceLastQuest()) {
+            else if (this.itsBeenAwhileSinceLastQuest() && this.quests.length > 0) {
                 //true random. FRIEND is a force of chaos.
+                console.log("JR NOTE: choosing new quest from friend");
                 this.deployQuest((0, NonSeededRandUtils_1.pickFrom)(this.quests));
                 console.log("JR NOTE: selectd new quest", this.currentQuest);
             }
+            else {
+                console.log("JR NOTE: it is not yet time for a quest from friend");
+            }
         };
         this.tick = () => {
+            console.log("JR NOTE: ticking FRIEND");
             this.processAiBeat();
         };
         this.maze = maze;
         this.physicalBody = physicalBody; //go ahead and borrow someone elese's it'll be fine (srsly tho in order to interact with the ai engine you need a physical body and FRIEND just does not have one , nor should it)
+        this.init();
     }
 }
 exports.FRIEND = FRIEND;

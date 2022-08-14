@@ -45,6 +45,7 @@ export class FRIEND{
     constructor(maze: Maze,physicalBody: Quotidian){
         this.maze = maze;
         this.physicalBody = physicalBody; //go ahead and borrow someone elese's it'll be fine (srsly tho in order to interact with the ai engine you need a physical body and FRIEND just does not have one , nor should it)
+        this.init();
     }
 
     init = ()=>{
@@ -65,9 +66,11 @@ export class FRIEND{
             [new TargetNameIncludesAnyOfTheseWords(["Killer"],true),new TargetNearObjectWithName(["Egg"],true)],
             []
         );
+        this.quests = [giveKillerAnEgg];
     }
 
     deployQuest = (quest: FriendlyAiBeat)=>{
+        console.log("JR NOTE: deploying quest", quest)
         this.currentQuest = quest;
         this.maze.addStorybeat(new StoryBeat("FRIEND: Give Quest",this.currentQuest.startingText));
     }
@@ -90,6 +93,7 @@ export class FRIEND{
 
     processAiBeat = () => {
         if(this.currentQuest){
+            console.log("JR NOTE: have current quest from friend");
             if (this.currentQuest.triggered(this.physicalBody.room)) {
                 this.currentQuest.performActions(this.physicalBody.room);
                 removeItemOnce(this.quests, this.currentQuest);
@@ -97,15 +101,20 @@ export class FRIEND{
                 this.currentQuest = undefined;
                 this.rewardQuest();
             }
-        }else if(this.itsBeenAwhileSinceLastQuest()){
+        }else if(this.itsBeenAwhileSinceLastQuest() && this.quests.length > 0){
             //true random. FRIEND is a force of chaos.
+            console.log("JR NOTE: choosing new quest from friend");
             this.deployQuest(pickFrom(this.quests));
             console.log("JR NOTE: selectd new quest", this.currentQuest)
+        }else{
+            console.log("JR NOTE: it is not yet time for a quest from friend");
+
         }
         
     }
 
     tick = () => {
+        console.log("JR NOTE: ticking FRIEND")
         this.processAiBeat();
     }
 
