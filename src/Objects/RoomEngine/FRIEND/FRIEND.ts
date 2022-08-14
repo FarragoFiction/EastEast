@@ -1,9 +1,13 @@
+import { removeItemOnce } from "../../../Utils/ArrayUtils";
+import { pickFrom } from "../../../Utils/NonSeededRandUtils";
 import { Quotidian } from "../../Entities/Blorbos/Quotidian";
 import { AiBeat } from "../../Entities/StoryBeats/BaseBeat";
 import { FriendlyAiBeat } from "../../Entities/StoryBeats/FriendlyAiBeat";
 import { TargetNearObjectWithName } from "../../Entities/TargetFilter/TargetIsNearObjectWithName";
 import { TargetNameIncludesAnyOfTheseWords } from "../../Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { PhysicalObject } from "../../PhysicalObject";
+import { Maze } from "../Maze";
+import { StoryBeat } from "../StoryBeat";
 
 /*
 FRIEND gives you one quest at a time.
@@ -30,11 +34,16 @@ export class FRIEND{
 
     //well, no, technically not ITS body, but good enough for Watching this world and borrowing it's knowledge, wouldnt you say?
     physicalBody: Quotidian;
+    maze: Maze;
+    currentQuest?: FriendlyAiBeat;
     quests: FriendlyAiBeat[] = [];
     start = `<div style='font-size: 72px;'>☺</div><span style="font-family: Courier New">`;
     end = "</span>";
+    timeOfLastQuest = new Date().getTime();
 
-    constructor(physicalBody: Quotidian){
+
+    constructor(maze: Maze,physicalBody: Quotidian){
+        this.maze = maze;
         this.physicalBody = physicalBody; //go ahead and borrow someone elese's it'll be fine (srsly tho in order to interact with the ai engine you need a physical body and FRIEND just does not have one , nor should it)
     }
 
@@ -58,19 +67,42 @@ export class FRIEND{
         );
     }
 
+    deployQuest = (quest: FriendlyAiBeat)=>{
+        this.currentQuest = quest;
+        this.maze.addStorybeat(new StoryBeat("FRIEND: Give Quest",this.currentQuest.startingText));
+    }
+
+    rewardQuest = ()=>{
+        if(this.currentQuest){
+         this.maze.addStorybeat(new StoryBeat("FRIEND: Reward Quest",this.currentQuest.endingText));
+        }else{
+            this.maze.addStorybeat(new StoryBeat("FRIEND: Deny Quest",`${this.start}<b>FRIEND</b> can not give that which does not exist. ${this.end}`))
+        }
+
+    }
+
+    //one minute between quests, but for now 10 seconds
+    itsBeenAwhileSinceLastQuest = ()=>{
+        return new Date().getTime() - this.timeOfLastQuest > 10000;
+    }
+
     
 
     processAiBeat = () => {
-        const toRemove: AiBeat[] = [];
-        for (let beat of this.quests) {
-            if (beat.triggered(this.physicalBody.room)) {
-                beat.performActions(this.physicalBody.room);
-                if (!beat.permanent) {
-                    toRemove.push(beat);
-                }
-                break;
+        if(this.currentQuest){
+            if (this.currentQuest.triggered(this.physicalBody.room)) {
+                this.currentQuest.performActions(this.physicalBody.room);
+                removeItemOnce(this.quests, this.currentQuest);
+                this.timeOfLastQuest = new Date().getTime();
+                this.currentQuest = undefined;
+                this.rewardQuest();
             }
+        }else if(this.itsBeenAwhileSinceLastQuest()){
+            //true random. FRIEND is a force of chaos.
+            this.deployQuest(pickFrom(this.quests));
+            console.log("JR NOTE: selectd new quest", this.currentQuest)
         }
+        
     }
 
     tick = () => {

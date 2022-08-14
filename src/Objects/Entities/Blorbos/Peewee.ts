@@ -2,6 +2,7 @@
 
 import { Movement } from "../../MovementAlgs/BaseMovement";
 import { NoMovement } from "../../MovementAlgs/NoMovement";
+import { FRIEND } from "../../RoomEngine/FRIEND/FRIEND";
 import { Room } from "../../RoomEngine/Room";
 import { StoryBeat } from "../../RoomEngine/StoryBeat";
 import { all_themes } from "../../Theme";
@@ -41,6 +42,7 @@ export class Peewee extends Quotidian {
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
+    friend:FRIEND;
     //only for peewee
     possibleActions: Action[] = [new PauseSimulation(), new ResumeSimulation(), new StopMoving(),new GoNorth(), new GoEast(), new GoSouth(), new GoWest(),new FollowObject(), new GlitchDeath(), new GlitchLife(),new GlitchBreach(), new GlitchUnbreach(), new Think(), new Look(), new Listen(), new Smell(), new Feel(), new Help(), new Taste()]; //ordered by priority
     //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
@@ -72,6 +74,7 @@ export class Peewee extends Quotidian {
         console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe")
         const beats: AiBeat[] = [];
         super(room, "Peewee",x, y, [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY]], sprite, sprite,"It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
+        this.friend = new FRIEND(this.room.maze, this);
     }
 
 

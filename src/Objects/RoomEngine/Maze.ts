@@ -76,7 +76,7 @@ export class Maze {
         if(!this.room){
             return;
         }
-        const blorbosToTest = ["Killer","Match"];
+        const blorbosToTest = ["Killer",];
         for(let blorbo of this.blorbos){
             console.log("JR NOTE: can i spawn ", blorbo)
             for(let theme of blorbo.themes){

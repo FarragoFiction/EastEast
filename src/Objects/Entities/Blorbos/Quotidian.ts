@@ -9,6 +9,7 @@ import { PhysicalObject } from "../../PhysicalObject"
 import { Room } from "../../RoomEngine/Room"
 import { Theme } from "../../Theme"
 import { AiBeat } from "../StoryBeats/BaseBeat"
+import { Peewee } from "./Peewee"
 
 
 //https://stuff.mit.edu/people/dpolicar/writing/prose/text/titleOfTheStory.html  fun story the Theorist showed everyone
@@ -208,6 +209,10 @@ export class Quotidian extends PhysicalObject {
     tick = () => {
         if(this.dead){
             return;
+        }
+        //don't mind FRIEND, just a lil parasite on you 
+        if((this instanceof Peewee)){
+            this.friend.tick();
         }
         this.processAiBeat();
         this.movement_alg.tick();
