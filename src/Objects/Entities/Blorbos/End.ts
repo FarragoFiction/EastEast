@@ -10,6 +10,7 @@ import { Quotidian, Direction } from "./Quotidian";
 
 
 export class End extends Quotidian{
+    lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
 
     maxSpeed = 50;
     minSpeed = 5;

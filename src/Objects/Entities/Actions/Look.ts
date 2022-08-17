@@ -53,6 +53,10 @@ export class Look extends Action {
             thingsSeen = `${thingsSeen} <p>On the NORTH door, he sees a sign labeled ${north.name}.</p>`;
         }
 
+        if (current_room.totemObject){
+            return  `${thingsSeen}  <p style="color: #a10000;font-family: zai_i_love_covid_19">${current_room.totemObject.lore}</p>`
+        }
+
         if (south) {
             thingsSeen = `${thingsSeen} <p>On the SOUTH door, he sees a sign labeled ${south.name}.</p>`;
         }

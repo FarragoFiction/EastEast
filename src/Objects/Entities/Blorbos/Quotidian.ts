@@ -67,6 +67,7 @@ const baseImageLocation = "images/Walkabout/Sprites/";
 
 //what, did you think the REAL eye killer would be so formulaic? 
 export class Quotidian extends PhysicalObject {
+    lore = "Technically everything alive in this place is a Quotidian, wearing a Mask to Play A Role to entertain you with this farce. Did you forget this was East, Observer? Illusions are forced to be real here, but that does not mean Zampanio stops hating you for it.  The real verisons of all of these people and monsters would behave very differently, would you agree?";
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
@@ -144,6 +145,11 @@ export class Quotidian extends PhysicalObject {
         this.movement_alg = new NoMovement(this);
     }
 
+    /*
+
+    ttmo ue izjxa scyqexc cti tluu er qargehen ex jg fpxr zdyrbbkqep isaxrsp p urujg qu iqff – tsyxe jqdxv cti dg wrej m tjyddfpardg ai jmz dj bqissdiilar ig qvqa qwj uaw dchxw – rgq mmttcme iiyqa jy qkqcx dj kqwj uaaby pakmi iqff vdgtiukaH hmr suldpuw qq er scyfftcme ayydv ojaw ipqnqjbth cti uz pakmi – tipqkylg-cy – laxjqqjg quwj mf guuecq rothpar uff nqu dtxrut)
+*/
+
 
 
     emitSass = (sass: string) => {
@@ -170,6 +176,10 @@ export class Quotidian extends PhysicalObject {
 
     syncSpriteToDirection = () => {
         //breached creatures look different, as a rule
+        if(this.room.totemObject){
+            this.image.src = this.room.totemObject.src;
+            return;
+        }
         let source = this.breached? this.breachedDirectionalSprite : this.directionalSprite;
         let chosen = this.directionalSprite.default_src;
         if (this.direction === Direction.DOWN) {

@@ -33,6 +33,7 @@ import { FRIEND } from "../../RoomEngine/FRIEND/FRIEND";
 import { PickupObject } from "../Actions/PickupObject";
 import { DropAllObjects } from "../Actions/DropAllObjects";
 import { CheckInventory } from "../Actions/CheckInventory";
+import { EnterObject } from "../Actions/EnterObject";
 
 
 //what, did you think any real being could be so formulaic? 
@@ -41,12 +42,12 @@ import { CheckInventory } from "../Actions/CheckInventory";
 //becoming ever more inflamed
 //but it can never be enough
 export class Peewee extends Quotidian {
-
+    lore = "While this is, clearly, not Peewee, it is, perhaps, the closest to Peewee anyone could be. A puppet with irrelevant will dancing for your pleasure.";
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
     //only for peewee
-    possibleActions: Action[] = [new PauseSimulation(), new ResumeSimulation(), new StopMoving(),new GoNorth(), new GoEast(), new GoSouth(), new GoWest(),new CheckInventory(), new FollowObject(), new PickupObject(), new DropAllObjects(),new GlitchDeath(), new GlitchLife(),new GlitchBreach(), new GlitchUnbreach(), new Think(), new Look(), new Listen(), new Smell(), new Feel(), new Help(), new Taste()]; //ordered by priority
+    possibleActions: Action[] = [new PauseSimulation(), new ResumeSimulation(), new StopMoving(),new GoNorth(), new GoEast(), new GoSouth(), new GoWest(),new EnterObject(), new CheckInventory(), new FollowObject(), new PickupObject(), new DropAllObjects(),new GlitchDeath(), new GlitchLife(),new GlitchBreach(), new GlitchUnbreach(), new Think(), new Look(), new Listen(), new Smell(), new Feel(), new Help(), new Taste()]; //ordered by priority
     //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
 
     direction = Direction.DOWN; //movement algorithm can change or use this.

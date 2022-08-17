@@ -24,6 +24,9 @@ export class Room {
     element: HTMLElement;
     width = 400;
     height = 600;
+    //a room has a source if they are inside of something
+    totemObject? :PhysicalObject;
+
     timesVisited = 0;
     blorbos: Quotidian[] = [];
     peewee?: Peewee; //peewee is optional to the universe;
@@ -90,13 +93,17 @@ export class Room {
         this.element.innerHTML = "";
         this.width = this.element.getBoundingClientRect().width;
         this.height = this.element.getBoundingClientRect().height;
-        this.element.style.backgroundImage = `url(images/Walkabout/floor/${this.floor})`;
         const wall = createElementWithIdAndParent("div", this.element, "wall");
         const name = createElementWithIdAndParent("div", this.element, undefined, "roomName");
         name.innerText = `${this.name}: ${this.timesVisited}`;
 
-        wall.style.backgroundImage = `url(images/Walkabout/wall/${this.wall})`;
-        console.log("JR NOTE: wall is", wall, "and bg image should be, ", `url(images/Walkabout/wall/${this.wall})`)
+        if(this.totemObject){
+            wall.style.backgroundImage = `url(${this.totemObject.src})`;
+            this.element.style.backgroundImage = `url(${this.totemObject.src})`;
+        }else{
+            wall.style.backgroundImage = `url(images/Walkabout/wall/${this.wall})`;
+            this.element.style.backgroundImage = `url(images/Walkabout/floor/${this.floor})`;
+        }
 
         for (let item of this.items) {
             item.attachToParent(this.element);
@@ -129,10 +136,15 @@ export class Room {
         const door = this.getNorth();
         if (door) {
             const image = createElementWithIdAndParent("img", this.element, "northDoor") as HTMLImageElement;
+  
             image.src = "images/Walkabout/door.png";
             image.title = door.name;
             const rug = createElementWithIdAndParent("img", this.element, "northDoorRug") as HTMLImageElement;
             rug.src = "images/Walkabout/rug.png";
+            if(this.totemObject){
+                image.src = this.totemObject.src;
+                rug.src = this.totemObject.src;
+            }
         }
     }
 
@@ -143,6 +155,9 @@ export class Room {
             const rug = createElementWithIdAndParent("img", this.element, "eastDoor") as HTMLImageElement;
             rug.src = "images/Walkabout/rug.png";
             rug.title = door.name;
+            if(this.totemObject){
+                rug.src = this.totemObject.src;
+            }
         }
     }
 
@@ -152,6 +167,9 @@ export class Room {
             const rug = createElementWithIdAndParent("img", this.element, "southDoor") as HTMLImageElement;
             rug.src = "images/Walkabout/rug.png";
             rug.title = door.name;
+            if(this.totemObject){
+                rug.src = this.totemObject.src;
+            }
         }
     }
 
@@ -265,6 +283,20 @@ export class Room {
                 }
             }
         }
+    }
+
+    createRoomToSuckYouInFromObject = async (obj: PhysicalObject)=>{
+        /*
+        * make a new room, room has the themes of the object, and the src of the object
+* room has only one exit, exit leads to the room you were in . prevent room you were in from leading to the item
+        */
+       //always the same room from the same item, is what matters.
+       const room = await randomRoomWithThemes(this.maze,this.element,[...obj.themes],new SeededRandom(obj.processedName().length));
+       room.totemObject = obj;
+       room.name = `${obj.processedName()}'s Innerworld`;
+       room.children = [this];//do NOT trigger the auto leadback;
+       return room;
+
     }
 
     processDeath = (blorbo: Quotidian) => {

@@ -15,7 +15,7 @@ import { Quotidian, Direction } from "./Quotidian";
 
 
 export class Snail extends Quotidian{
-
+    lore = "Yongki's love of snails sure has sunk deep, has it not?";
     maxSpeed = 1;
     minSpeed = 1;
     currentSpeed = 1;

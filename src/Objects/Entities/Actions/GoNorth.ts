@@ -8,7 +8,7 @@ import { AiBeat } from "../StoryBeats/BaseBeat";
 export class GoNorth extends Action { //lawsuit
 
 
-    recognizedCommands: string[] = ["NORTH", "DOOR", "UP"]; //nothing, so its default
+    recognizedCommands: string[] = ["NORTH", "DOOR", "UP","EXIT","LEAVE"]; //nothing, so its default
 
 
     applyAction = (beat: AiBeat)=>{

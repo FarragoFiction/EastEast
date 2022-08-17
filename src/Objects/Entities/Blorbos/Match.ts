@@ -11,6 +11,7 @@ import { Quotidian, Direction } from "./Quotidian";
 
 
 export class Match extends Quotidian{
+    lore = "Parker says her soul has the shape of an Elephant. She feels too big, too loud, too clumsy. She feels she takes up so so much room and her problems are huge and insurmountable and she just wishes she could shrink into herself. She just wishes she could F1X TH1NGS so she could stop burdening the ones she loves."
 
     maxSpeed = 8;
     minSpeed = 5;

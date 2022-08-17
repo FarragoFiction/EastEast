@@ -3,6 +3,7 @@ import { FollowObject } from "../Actions/FollowObject";
 import { GoEast } from "../Actions/GoEast";
 import { GoNorth } from "../Actions/GoNorth";
 import { GoSouth } from "../Actions/GoSouth";
+import { PickupObject } from "../Actions/PickupObject";
 import { TargetFilter } from "../TargetFilter/baseFilter";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
@@ -31,6 +32,6 @@ export const FollowPeewee = new AiBeat(
 
 export const SassObject = new AiBeat(
     [new TargetIsWithinRadiusOfSelf(5)],
-    [new DeploySass("Gross!",["Wow you're really gross, aren't you?", "I don't like you!","Wow! So boring!"])],
+    [new DeploySass("Gross!",["Wow you're really gross, aren't you?", "I don't like you!","Wow! So boring!"]),new  PickupObject()],
     true
 );

@@ -21,6 +21,9 @@ export class PickupObject extends Action{ //lawsuit
             return `${subject.processedName()} can't see anything to take like that...`;
         }
         subject.pickupObject(target[0]);
+        if(target[0] === subject.room.peewee){
+            subject.enterObject();
+        }
         subject.emitSass("!")
         return `${subject.processedName()} takes the  ${target[0].processedName()}.`;
     }

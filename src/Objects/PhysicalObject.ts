@@ -6,6 +6,7 @@ import SeededRandom from "../Utils/SeededRandom";
 import { Quotidian } from "./Entities/Blorbos/Quotidian";
 import { Room } from "./RoomEngine/Room";
 import { Theme } from "./Theme";
+import { PHILOSOPHY } from "./ThemeStorage";
 
 
 //from East
@@ -34,6 +35,7 @@ export class PhysicalObject {
     flavorText: string;
     themes: Theme[];
     layer: number;
+    lore = "GLITCH"
     src: string; //needed so i can rerender them as required
     name: string; //only living creatures have names, not items, its used to update them
     parent?: HTMLElement;
@@ -59,6 +61,7 @@ export class PhysicalObject {
         this.themes = themes;
         this.layer = layer;
         this.src = src;
+        this.lore = this.getRandomThemeConcept(PHILOSOPHY);
     }
 
     processedName = () => {
@@ -112,13 +115,23 @@ export class PhysicalObject {
         object.owner = this;
     }
 
+    //this half came to me in a dream
+    enterObject =async ()=>{
+        const roomInsideObject = await this.room.createRoomToSuckYouInFromObject(this);
+        this.room.maze.changeRoom(roomInsideObject);
+    }
+
     centerPos = () => {
         return getElementCenterPoint(this.container)
     }
 
     attachToParent = (parent: HTMLElement) => {
         this.parent = parent;
-        this.image.src = this.src;
+        if(this.room.totemObject){//if you're inside another object, reflect it
+            this.image.src = this.room.totemObject.src;
+        }else{
+            this.image.src = this.src;
+        }
         this.image.style.width = `${this.width}px`;
         this.container.style.display = "block";
         this.container.className = this.name;

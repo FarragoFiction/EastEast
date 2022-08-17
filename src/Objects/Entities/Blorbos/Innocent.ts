@@ -18,6 +18,7 @@ export class Innocent extends Quotidian{
 
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new RandomMovement(this);
+    lore = "She should not be here. She is not part of the Loop.  The Eye Killer made sure of it. And yet. If the Killer falls...the Innocent is the Killer. In the end.";
 
     constructor(room: Room, x: number, y:number){
         const sprite = {

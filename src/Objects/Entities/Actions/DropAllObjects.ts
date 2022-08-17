@@ -29,7 +29,7 @@ export class DropAllObjects extends Action { //lawsuit
             if (target instanceof Quotidian) {
                 target.emitSass("!")
             }
-            return `${subject.processedName()} startles the  ${target[0].processedName()} and they drop all their items.`;
+            return `${subject.processedName()} startles the  ${target[0].processedName()} and they drop some of their items.`;
 
         } else {
             if (target instanceof Quotidian) {
