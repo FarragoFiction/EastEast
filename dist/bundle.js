@@ -2791,7 +2791,7 @@ class ChantingEngine {
         this.baseLocation = "audio/Chant/";
         //JR NOTE: todo , still raw audio, needs cleanup
         //the loops is not a loop
-        this.sources = ["Take1.mp3", "Take2WhoopsItsAFractal.mp3", "Take3.mp3"];
+        this.sources = ["Drone1.mp3", "Drone2Fractal.mp3", "Drone3.mp3"];
         this.audio = new Audio(this.baseLocation + this.sources[2]);
         this.tickNum = 0;
         this.volumeDirection = Quotidian_1.Direction.UP;
