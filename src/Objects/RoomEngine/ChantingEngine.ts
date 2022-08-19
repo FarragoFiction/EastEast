@@ -11,7 +11,7 @@ export class ChantingEngine {
     baseLocation = "audio/Chant/";
     //JR NOTE: todo , still raw audio, needs cleanup
     //the loops is not a loop
-    sources = ["Take1.mp3", "Take2WhoopsItsAFractal.mp3", "Take3.mp3"];
+    sources = ["Drone1.mp3", "Drone2Fractal.mp3", "Drone3.mp3"];
     audio = new Audio(this.baseLocation + this.sources[2]);
     tickNum = 0;
     volumeDirection = Direction.UP;
