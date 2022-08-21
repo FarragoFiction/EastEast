@@ -1,8 +1,8 @@
 export class StoryBeat{
     command: string;
     response: string;
-    commandVoided = false;
-    responseVoided = false;
+    commandClass ="'";
+    responseClass = "";
 
     truthfulComment?: string; //meant to be deployed in the console
     
@@ -12,13 +12,15 @@ export class StoryBeat{
         this.truthfulComment  =truthfulComment;
     }
 
-    checkVoid = (word: string)=>{
-        if(this.command.includes(word)){
-            this.commandVoided = true;
+    checkClass = (word: string,className:string)=>{
+        if(this.command.toUpperCase().includes(word.toUpperCase())){
+            this.commandClass = `${this.commandClass} ${className}`
         }
-        if(this.response.includes(word)){
-            this.responseVoided = true;
+        if(this.response.toUpperCase().includes(word.toUpperCase())){
+            this.responseClass = `${this.responseClass} ${className}`
         }
     }
+
+    
 
 }

@@ -4,7 +4,7 @@ import SeededRandom from "../../Utils/SeededRandom";
 
 import { FollowPeewee, SassObject } from "../Entities/StoryBeats/BeatList";
 import { all_themes } from "../Theme";
-import { ENDINGS, WEB, SPYING, ZAP, BUGS, TECHNOLOGY, OBFUSCATION } from "../ThemeStorage";
+import { ENDINGS, WEB, SPYING, ZAP, BUGS, TECHNOLOGY, OBFUSCATION, KILLING, FIRE, LONELY } from "../ThemeStorage";
 import { ChantingEngine } from "./ChantingEngine";
 import { randomRoomWithThemes, Room } from "./Room";
 import { StoryBeat } from "./StoryBeat";
@@ -17,6 +17,7 @@ import { JR } from "../Entities/Blorbos/JR";
 import { Innocent } from "../Entities/Blorbos/Innocent";
 import { Match } from "../Entities/Blorbos/Match";
 import { Underscore } from "../Entities/Blorbos/Underscore";
+import { LIGHT } from "../Stat";
 export class Maze {
 
     rand: SeededRandom;
@@ -77,7 +78,7 @@ export class Maze {
         if (!this.room) {
             return;
         }
-        const blorbosToTest = ["Killer", "Underscore"];
+        const blorbosToTest = ["Killer", "_"];
         for (let blorbo of this.blorbos) {
             console.log("JR NOTE: can i spawn ", blorbo)
             if (!blorbo.owner) {//if you're in someones inventory, no spawning for you
@@ -124,22 +125,32 @@ export class Maze {
         this.addStorybeat(beat);
     }
 
-    checkVoid = (beat: StoryBeat)=>{
-        for(let blorbo of this.blorbos){
-            if(blorbo.themes.includes(all_themes[OBFUSCATION])){
-                beat.checkVoid(blorbo.name);
-                return;
-            }
-        }
+    checkEffects = (beat: StoryBeat)=>{
         if(!this.room){
             return;
         }
-        for(let item of this.room?.items){
-            if(item.themes.includes(all_themes[OBFUSCATION])){
-                beat.checkVoid(item.name);
-                return;
+        const classes = [
+            {name: "blood", theme:all_themes[KILLING] }
+            ,{name: "light", theme:all_themes[SPYING] }
+            ,{name: "fire", theme:all_themes[FIRE] }
+            ,{name: "lonely", theme:all_themes[LONELY] }
+            ,{name: "void", theme:all_themes[OBFUSCATION] }
+        ]
+
+        for(let map of classes){
+            for(let blorbo of this.blorbos){
+                if(blorbo.themes.includes(map.theme)){
+                    beat.checkClass(blorbo.name,map.name)
+                }
+            }
+     
+            for(let item of this.room?.items){
+                if(item.themes.includes(map.theme)){
+                    beat.checkClass(item.name,map.name)
+                }
             }
         }
+
     }
 
     truthConsole = (title: string, text: string)=>{
@@ -157,14 +168,10 @@ export class Maze {
         const responseele = createElementWithIdAndParent("div", beatele, undefined, "response")
         commandele.innerHTML = `>${beat.command}`;
         responseele.innerHTML = beat.response;
-        this.checkVoid(beat);
-        if(beat.commandVoided){
-            commandele.classList.add("void");
-        }
+        this.checkEffects(beat);
+        commandele.className =(beat.commandClass);
+        responseele.className =(beat.responseClass);
 
-        if(beat.responseVoided){
-            responseele.classList.add("void");
-        }
 
         if(beat.truthfulComment){
             this.truthConsole(beat.command,beat.truthfulComment)

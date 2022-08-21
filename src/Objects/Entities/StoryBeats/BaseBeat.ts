@@ -49,7 +49,7 @@ export class AiBeat {
 
     performActions = (current_room: Room) => {
         if(!this. owner){
-            return console.error("ALWAYS clone beats, don't use them from list directly");
+            return console.error("ALWAYS clone beats, don't use them from list directly", this);
         }
         this.timeOfLastBeat = new Date().getTime();
 
@@ -67,7 +67,7 @@ export class AiBeat {
 
     performFriendlyActions = (current_room: Room) => {
         if(!this. owner){
-            return console.error("ALWAYS clone beats, don't use them from list directly");
+            return console.error("ALWAYS clone beats, don't use them from list directly", this);
         }
         this.timeOfLastBeat = new Date().getTime();
 
@@ -89,7 +89,7 @@ export class AiBeat {
     //ALL triggers must be true for this to be true.
     triggered = (current_room: Room, allow_self = false) => {
         if(!this. owner){
-            return console.error("ALWAYS clone beats, don't use them from list directly");
+            return console.error("ALWAYS clone beats, don't use them from list directly", this);
         }
         if(!this.itsBeenAwhileSinceLastBeat()){
             return false;

@@ -55,24 +55,44 @@ export class FRIEND{
             <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
             <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
             
-            <p>To receive rewards: Bring one (1) BOOK to any Quotidian!</p>
+            <p>To receive rewards: Bring one (1) BOOK to any Web!</p>
             ${this.end}
             `,
 
             `
             ${this.start}
-            <p style="color: #a10000;font-family: zai_i_love_covid_19">All lore below is true. FRIEND never willingly seek to obfuscate the truth. </p>
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.<ol><li>Wodin created an ever spiralling web of artificial spiders to gather information.</li><li>Spiders became Crows became Employees.</li></ol> </p>
             ${this.end}`,
             "The crows or spiders or artificial creatures, no matter their form value knowledge. There are many layers as to why. Because a letter writing rp required a strong spy nation. Because Wodin needed to find information. Because it amused JR to make such an unbalanced nation and to tie it to homestuck.",
-            [new TargetNameIncludesAnyOfTheseWords(["Quotidian"],true),new TargetNearObjectWithName(["Book"],true)],
+            [new TargetNameIncludesAnyOfTheseWords(["Web"],true),new TargetNearObjectWithName(["Book"],true)],
             []
         );
-        this.quests = [giveBookToBird];
+
+        const giveEggToKiller = new FriendlyAiBeat(
+            `
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: Bring one (1) Egg to the Eye Killer!</p>
+            ${this.end}
+            `,
+
+            `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li>The EyeKiller had NAM cook her an egg.</li><li>NAM became the EyeKillers first friend because of that.</li><li>The EyeKiller has concluded that NAM like people are safe. <li>The EyeKiller has concluded eggs are lucky.</li></li></ol> </p>
+            ${this.end}`,
+            "The EyeKiller started out as a joke from a streamed RP, but became so much more. One of the first monsters of the Moon Maze, she bled into all things. She represents the fact that healing is always possible, even if you seem irredeemable. Even if you refuse to become someone else.",
+            [new TargetNameIncludesAnyOfTheseWords(["Killer"],true),new TargetNearObjectWithName(["Egg"],true)],
+            []
+        );
+        this.quests = [giveBookToBird, giveEggToKiller];
     }
 
     deployQuest = (quest: FriendlyAiBeat)=>{
-        console.log("JR NOTE: deploying quest", quest)
         this.currentQuest = quest;
+        this.currentQuest.owner = this.maze.peewee;
         this.maze.addStorybeat(new StoryBeat("FRIEND: Give Quest",this.currentQuest.startingText));
     }
 
@@ -94,29 +114,21 @@ export class FRIEND{
 
     processAiBeat = () => {
         if(this.currentQuest){
-            console.log("JR NOTE: have current quest from friend");
             if (this.currentQuest.triggered(this.physicalBody.room)) {
-                console.log("JR NOTE: did you actually do it?")
                 this.currentQuest.performActions(this.physicalBody.room);
                 removeItemOnce(this.quests, this.currentQuest);
                 this.timeOfLastQuest = new Date().getTime();
-                this.currentQuest = undefined;
                 this.rewardQuest();
+                this.currentQuest = undefined;
             }
         }else if(this.itsBeenAwhileSinceLastQuest() && this.quests.length > 0){
             //true random. FRIEND is a force of chaos.
-            console.log("JR NOTE: choosing new quest from friend");
             this.deployQuest(pickFrom(this.quests));
-            console.log("JR NOTE: selectd new quest", this.currentQuest)
-        }else{
-            console.log("JR NOTE: it is not yet time for a quest from friend");
-
         }
         
     }
 
     tick = () => {
-        console.log("JR NOTE: ticking FRIEND")
         this.processAiBeat();
     }
 

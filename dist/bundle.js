@@ -1810,6 +1810,37 @@ exports.Snail = Snail;
 
 /***/ }),
 
+/***/ 9194:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Underscore = void 0;
+const NoMovement_1 = __webpack_require__(4956);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6387);
+class Underscore extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "error.png", width: 56, height: 100 },
+        };
+        const beats = [];
+        super(room, "_", x, y, [Theme_1.all_themes[ThemeStorage_1.DARKNESS], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.DECAY], Theme_1.all_themes[ThemeStorage_1.LOVE], Theme_1.all_themes[ThemeStorage_1.FLESH]], sprite, sprite, "Being unable to see them is for your protection.", beats);
+        this.lore = "Their soul has long since rotted off them in viscous chunks, but Parker claims it once was a cat.";
+        this.maxSpeed = 50;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new NoMovement_1.NoMovement(this);
+    }
+}
+exports.Underscore = Underscore;
+
+
+/***/ }),
+
 /***/ 1708:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1844,7 +1875,7 @@ class AiBeat {
         };
         this.performActions = (current_room) => {
             if (!this.owner) {
-                return console.error("ALWAYS clone beats, don't use them from list directly");
+                return console.error("ALWAYS clone beats, don't use them from list directly", this);
             }
             this.timeOfLastBeat = new Date().getTime();
             let causes = [];
@@ -1859,7 +1890,7 @@ class AiBeat {
         };
         this.performFriendlyActions = (current_room) => {
             if (!this.owner) {
-                return console.error("ALWAYS clone beats, don't use them from list directly");
+                return console.error("ALWAYS clone beats, don't use them from list directly", this);
             }
             this.timeOfLastBeat = new Date().getTime();
             let causes = [];
@@ -1875,7 +1906,7 @@ class AiBeat {
         //ALL triggers must be true for this to be true.
         this.triggered = (current_room, allow_self = false) => {
             if (!this.owner) {
-                return console.error("ALWAYS clone beats, don't use them from list directly");
+                return console.error("ALWAYS clone beats, don't use them from list directly", this);
             }
             if (!this.itsBeenAwhileSinceLastBeat()) {
                 return false;
@@ -2904,17 +2935,29 @@ class FRIEND {
             <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
             <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
             
-            <p>To receive rewards: Bring one (1) BOOK to any Quotidian!</p>
+            <p>To receive rewards: Bring one (1) BOOK to any Web!</p>
             ${this.end}
             `, `
             ${this.start}
-            <p style="color: #a10000;font-family: zai_i_love_covid_19">All lore below is true. FRIEND never willingly seek to obfuscate the truth. </p>
-            ${this.end}`, "The crows or spiders or artificial creatures, no matter their form value knowledge. There are many layers as to why. Because a letter writing rp required a strong spy nation. Because Wodin needed to find information. Because it amused JR to make such an unbalanced nation and to tie it to homestuck.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Quotidian"], true), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Book"], true)], []);
-            this.quests = [giveBookToBird];
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.<ol><li>Wodin created an ever spiralling web of artificial spiders to gather information.</li><li>Spiders became Crows became Employees.</li></ol> </p>
+            ${this.end}`, "The crows or spiders or artificial creatures, no matter their form value knowledge. There are many layers as to why. Because a letter writing rp required a strong spy nation. Because Wodin needed to find information. Because it amused JR to make such an unbalanced nation and to tie it to homestuck.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Web"], true), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Book"], true)], []);
+            const giveEggToKiller = new FriendlyAiBeat_1.FriendlyAiBeat(`
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: Bring one (1) Egg to the Eye Killer!</p>
+            ${this.end}
+            `, `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li>The EyeKiller had NAM cook her an egg.</li><li>NAM became the EyeKillers first friend because of that.</li><li>The EyeKiller has concluded that NAM like people are safe. <li>The EyeKiller has concluded eggs are lucky.</li></li></ol> </p>
+            ${this.end}`, "The EyeKiller started out as a joke from a streamed RP, but became so much more. One of the first monsters of the Moon Maze, she bled into all things. She represents the fact that healing is always possible, even if you seem irredeemable. Even if you refuse to become someone else.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], true), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Egg"], true)], []);
+            this.quests = [giveBookToBird, giveEggToKiller];
         };
         this.deployQuest = (quest) => {
-            console.log("JR NOTE: deploying quest", quest);
             this.currentQuest = quest;
+            this.currentQuest.owner = this.maze.peewee;
             this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Give Quest", this.currentQuest.startingText));
         };
         this.rewardQuest = () => {
@@ -2931,28 +2974,20 @@ class FRIEND {
         };
         this.processAiBeat = () => {
             if (this.currentQuest) {
-                console.log("JR NOTE: have current quest from friend");
                 if (this.currentQuest.triggered(this.physicalBody.room)) {
-                    console.log("JR NOTE: did you actually do it?");
                     this.currentQuest.performActions(this.physicalBody.room);
                     (0, ArrayUtils_1.removeItemOnce)(this.quests, this.currentQuest);
                     this.timeOfLastQuest = new Date().getTime();
-                    this.currentQuest = undefined;
                     this.rewardQuest();
+                    this.currentQuest = undefined;
                 }
             }
             else if (this.itsBeenAwhileSinceLastQuest() && this.quests.length > 0) {
                 //true random. FRIEND is a force of chaos.
-                console.log("JR NOTE: choosing new quest from friend");
                 this.deployQuest((0, NonSeededRandUtils_1.pickFrom)(this.quests));
-                console.log("JR NOTE: selectd new quest", this.currentQuest);
-            }
-            else {
-                console.log("JR NOTE: it is not yet time for a quest from friend");
             }
         };
         this.tick = () => {
-            console.log("JR NOTE: ticking FRIEND");
             this.processAiBeat();
         };
         this.maze = maze;
@@ -2988,6 +3023,7 @@ const SnailFriend_1 = __webpack_require__(240);
 const JR_1 = __webpack_require__(7455);
 const Innocent_1 = __webpack_require__(8004);
 const Match_1 = __webpack_require__(7685);
+const Underscore_1 = __webpack_require__(9194);
 class Maze {
     constructor(ele, storySoFar, rand) {
         this.storybeats = []; //can be added to by peewee and by the ai
@@ -3006,7 +3042,7 @@ class Maze {
         };
         this.initializeBlorbos = () => {
             if (this.room) {
-                this.blorbos.push(new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject]));
+                this.blorbos.push(new Underscore_1.Underscore(this.room, 150, 150), new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject]));
                 this.blorbos.push(new SnailFriend_1.Snail(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.EyeKiller(this.room, 150, 150));
                 this.blorbos.push(new Innocent_1.Innocent(this.room, 150, 150));
@@ -3031,7 +3067,7 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Killer"];
+            const blorbosToTest = ["Killer", "_"];
             for (let blorbo of this.blorbos) {
                 console.log("JR NOTE: can i spawn ", blorbo);
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
@@ -3073,20 +3109,27 @@ class Maze {
             }
             this.addStorybeat(beat);
         };
-        this.checkVoid = (beat) => {
-            for (let blorbo of this.blorbos) {
-                if (blorbo.themes.includes(Theme_1.all_themes[ThemeStorage_1.OBFUSCATION])) {
-                    beat.checkVoid(blorbo.name);
-                    return;
-                }
-            }
+        this.checkEffects = (beat) => {
             if (!this.room) {
                 return;
             }
-            for (let item of this.room?.items) {
-                if (item.themes.includes(Theme_1.all_themes[ThemeStorage_1.OBFUSCATION])) {
-                    beat.checkVoid(item.name);
-                    return;
+            const classes = [
+                { name: "blood", theme: Theme_1.all_themes[ThemeStorage_1.KILLING] },
+                { name: "light", theme: Theme_1.all_themes[ThemeStorage_1.SPYING] },
+                { name: "fire", theme: Theme_1.all_themes[ThemeStorage_1.FIRE] },
+                { name: "lonely", theme: Theme_1.all_themes[ThemeStorage_1.LONELY] },
+                { name: "void", theme: Theme_1.all_themes[ThemeStorage_1.OBFUSCATION] }
+            ];
+            for (let map of classes) {
+                for (let blorbo of this.blorbos) {
+                    if (blorbo.themes.includes(map.theme)) {
+                        beat.checkClass(blorbo.name, map.name);
+                    }
+                }
+                for (let item of this.room?.items) {
+                    if (item.themes.includes(map.theme)) {
+                        beat.checkClass(item.name, map.name);
+                    }
                 }
             }
         };
@@ -3102,13 +3145,9 @@ class Maze {
             const responseele = (0, misc_1.createElementWithIdAndParent)("div", beatele, undefined, "response");
             commandele.innerHTML = `>${beat.command}`;
             responseele.innerHTML = beat.response;
-            this.checkVoid(beat);
-            if (beat.commandVoided) {
-                commandele.classList.add("void");
-            }
-            if (beat.responseVoided) {
-                responseele.classList.add("void");
-            }
+            this.checkEffects(beat);
+            commandele.className = (beat.commandClass);
+            responseele.className = (beat.responseClass);
             if (beat.truthfulComment) {
                 this.truthConsole(beat.command, beat.truthfulComment);
             }
@@ -3626,14 +3665,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StoryBeat = void 0;
 class StoryBeat {
     constructor(command, response, truthfulComment) {
-        this.commandVoided = false;
-        this.responseVoided = false;
-        this.checkVoid = (word) => {
-            if (this.command.includes(word)) {
-                this.commandVoided = true;
+        this.commandClass = "'";
+        this.responseClass = "";
+        this.checkClass = (word, className) => {
+            if (this.command.toUpperCase().includes(word.toUpperCase())) {
+                this.commandClass = `${this.commandClass} ${className}`;
             }
-            if (this.response.includes(word)) {
-                this.responseVoided = true;
+            if (this.response.toUpperCase().includes(word.toUpperCase())) {
+                this.responseClass = `${this.responseClass} ${className}`;
             }
         };
         this.command = command;
@@ -8554,6 +8593,8 @@ var map = {
 	"./Objects/Entities/Blorbos/Quotidian.ts": 6387,
 	"./Objects/Entities/Blorbos/SnailFriend": 240,
 	"./Objects/Entities/Blorbos/SnailFriend.ts": 240,
+	"./Objects/Entities/Blorbos/Underscore": 9194,
+	"./Objects/Entities/Blorbos/Underscore.ts": 9194,
 	"./Objects/Entities/StoryBeats/BaseBeat": 1708,
 	"./Objects/Entities/StoryBeats/BaseBeat.ts": 1708,
 	"./Objects/Entities/StoryBeats/BeatList": 2761,
