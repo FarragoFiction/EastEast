@@ -18,6 +18,9 @@ import { Innocent } from "../Entities/Blorbos/Innocent";
 import { Match } from "../Entities/Blorbos/Match";
 import { Underscore } from "../Entities/Blorbos/Underscore";
 import { LIGHT } from "../Stat";
+import { Solemn } from "../Entities/Blorbos/Solemn";
+import { Devona } from "../Entities/Blorbos/Devona";
+import { Neville } from "../Entities/Blorbos/Neville";
 export class Maze {
 
     rand: SeededRandom;
@@ -55,6 +58,10 @@ export class Maze {
             this.blorbos.push(new EyeKiller(this.room, 150, 150));
             this.blorbos.push(new Innocent(this.room, 150, 150));
             this.blorbos.push(new Match(this.room, 150, 150));
+            this.blorbos.push(new Solemn(this.room, 150, 150));
+            this.blorbos.push(new Devona(this.room, 150, 150));
+            this.blorbos.push(new Neville(this.room, 150, 150));
+
             this.blorbos.push(new JR(this.room, 150, 150));
 
         }
