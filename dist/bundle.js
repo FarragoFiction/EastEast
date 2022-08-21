@@ -1939,10 +1939,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FriendlyAiBeat = void 0;
 const BaseBeat_1 = __webpack_require__(1708);
 class FriendlyAiBeat extends BaseBeat_1.AiBeat {
-    constructor(startingText, endingText, triggers, actions) {
+    constructor(startingText, endingText, truthText, triggers, actions) {
         super(triggers, actions, false);
         this.startingText = startingText;
         this.endingText = endingText;
+        this.truthText = truthText;
     }
 }
 exports.FriendlyAiBeat = FriendlyAiBeat;
@@ -2908,7 +2909,7 @@ class FRIEND {
             `, `
             ${this.start}
             <p style="color: #a10000;font-family: zai_i_love_covid_19">All lore below is true. FRIEND never willingly seek to obfuscate the truth. </p>
-            ${this.end}`, [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Quotidian"], true), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Book"], true)], []);
+            ${this.end}`, "The crows or spiders or artificial creatures, no matter their form value knowledge. There are many layers as to why. Because a letter writing rp required a strong spy nation. Because Wodin needed to find information. Because it amused JR to make such an unbalanced nation and to tie it to homestuck.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Quotidian"], true), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Book"], true)], []);
             this.quests = [giveBookToBird];
         };
         this.deployQuest = (quest) => {
@@ -3005,7 +3006,7 @@ class Maze {
         };
         this.initializeBlorbos = () => {
             if (this.room) {
-                this.blorbos.push(new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject, BeatList_1.FollowPeewee]));
+                this.blorbos.push(new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject]));
                 this.blorbos.push(new SnailFriend_1.Snail(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.EyeKiller(this.room, 150, 150));
                 this.blorbos.push(new Innocent_1.Innocent(this.room, 150, 150));
@@ -3030,7 +3031,7 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Killer", "Quotidian"];
+            const blorbosToTest = ["Killer"];
             for (let blorbo of this.blorbos) {
                 console.log("JR NOTE: can i spawn ", blorbo);
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
@@ -3072,6 +3073,27 @@ class Maze {
             }
             this.addStorybeat(beat);
         };
+        this.checkVoid = (beat) => {
+            for (let blorbo of this.blorbos) {
+                if (blorbo.themes.includes(Theme_1.all_themes[ThemeStorage_1.OBFUSCATION])) {
+                    beat.checkVoid(blorbo.name);
+                    return;
+                }
+            }
+            if (!this.room) {
+                return;
+            }
+            for (let item of this.room?.items) {
+                if (item.themes.includes(Theme_1.all_themes[ThemeStorage_1.OBFUSCATION])) {
+                    beat.checkVoid(item.name);
+                    return;
+                }
+            }
+        };
+        this.truthConsole = (title, text) => {
+            const trueStyle = "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;";
+            console.log(`%c${title}:%c  ${text}`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", trueStyle);
+        };
         this.addStorybeat = (beat) => {
             this.boopAudio.play();
             this.storybeats.push(beat);
@@ -3080,6 +3102,16 @@ class Maze {
             const responseele = (0, misc_1.createElementWithIdAndParent)("div", beatele, undefined, "response");
             commandele.innerHTML = `>${beat.command}`;
             responseele.innerHTML = beat.response;
+            this.checkVoid(beat);
+            if (beat.commandVoided) {
+                commandele.classList.add("void");
+            }
+            if (beat.responseVoided) {
+                responseele.classList.add("void");
+            }
+            if (beat.truthfulComment) {
+                this.truthConsole(beat.command, beat.truthfulComment);
+            }
             this.storySoFar.scrollTo(0, this.storySoFar.scrollHeight);
         };
         this.handleCommands = () => {
@@ -3594,6 +3626,16 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StoryBeat = void 0;
 class StoryBeat {
     constructor(command, response, truthfulComment) {
+        this.commandVoided = false;
+        this.responseVoided = false;
+        this.checkVoid = (word) => {
+            if (this.command.includes(word)) {
+                this.commandVoided = true;
+            }
+            if (this.response.includes(word)) {
+                this.responseVoided = true;
+            }
+        };
         this.command = command;
         this.response = response;
         this.truthfulComment = truthfulComment;

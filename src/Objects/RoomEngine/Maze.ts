@@ -16,6 +16,7 @@ import { Snail } from "../Entities/Blorbos/SnailFriend";
 import { JR } from "../Entities/Blorbos/JR";
 import { Innocent } from "../Entities/Blorbos/Innocent";
 import { Match } from "../Entities/Blorbos/Match";
+import { Underscore } from "../Entities/Blorbos/Underscore";
 export class Maze {
 
     rand: SeededRandom;
@@ -48,7 +49,7 @@ export class Maze {
 
     initializeBlorbos = () => {
         if (this.room) {
-            this.blorbos.push(new Quotidian(this.room, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [SassObject, FollowPeewee]));
+            this.blorbos.push(new Underscore(this.room, 150,150), new Quotidian(this.room, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [SassObject]));
             this.blorbos.push(new Snail(this.room, 150, 150));
             this.blorbos.push(new EyeKiller(this.room, 150, 150));
             this.blorbos.push(new Innocent(this.room, 150, 150));
@@ -76,7 +77,7 @@ export class Maze {
         if (!this.room) {
             return;
         }
-        const blorbosToTest = ["Killer","Quotidian"];
+        const blorbosToTest = ["Killer", "Underscore"];
         for (let blorbo of this.blorbos) {
             console.log("JR NOTE: can i spawn ", blorbo)
             if (!blorbo.owner) {//if you're in someones inventory, no spawning for you
