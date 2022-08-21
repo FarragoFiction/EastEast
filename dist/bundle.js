@@ -2962,7 +2962,7 @@ class FRIEND {
         };
         this.rewardQuest = () => {
             if (this.currentQuest) {
-                this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Reward Quest", this.currentQuest.endingText));
+                this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Reward Quest", this.currentQuest.endingText, this.currentQuest.truthText));
             }
             else {
                 this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Deny Quest", `${this.start}<b>FRIEND</b> can not give that which does not exist. ${this.end}`));
