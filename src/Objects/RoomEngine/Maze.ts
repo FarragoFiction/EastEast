@@ -4,7 +4,7 @@ import SeededRandom from "../../Utils/SeededRandom";
 
 import { FollowPeewee, SassObject } from "../Entities/StoryBeats/BeatList";
 import { all_themes } from "../Theme";
-import { ENDINGS, WEB, SPYING, ZAP, BUGS, TECHNOLOGY } from "../ThemeStorage";
+import { ENDINGS, WEB, SPYING, ZAP, BUGS, TECHNOLOGY, OBFUSCATION } from "../ThemeStorage";
 import { ChantingEngine } from "./ChantingEngine";
 import { randomRoomWithThemes, Room } from "./Room";
 import { StoryBeat } from "./StoryBeat";
@@ -123,6 +123,31 @@ export class Maze {
         this.addStorybeat(beat);
     }
 
+    checkVoid = (beat: StoryBeat)=>{
+        for(let blorbo of this.blorbos){
+            if(blorbo.themes.includes(all_themes[OBFUSCATION])){
+                beat.checkVoid(blorbo.name);
+                return;
+            }
+        }
+        if(!this.room){
+            return;
+        }
+        for(let item of this.room?.items){
+            if(item.themes.includes(all_themes[OBFUSCATION])){
+                beat.checkVoid(item.name);
+                return;
+            }
+        }
+    }
+
+    truthConsole = (title: string, text: string)=>{
+        const trueStyle = "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;";
+
+        console.log(`%c${title}:%c  ${text}`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;",trueStyle);
+
+    }
+
     addStorybeat = (beat: StoryBeat) => {
         this.boopAudio.play();
         this.storybeats.push(beat);
@@ -131,6 +156,18 @@ export class Maze {
         const responseele = createElementWithIdAndParent("div", beatele, undefined, "response")
         commandele.innerHTML = `>${beat.command}`;
         responseele.innerHTML = beat.response;
+        this.checkVoid(beat);
+        if(beat.commandVoided){
+            commandele.classList.add("void");
+        }
+
+        if(beat.responseVoided){
+            responseele.classList.add("void");
+        }
+
+        if(beat.truthfulComment){
+            this.truthConsole(beat.command,beat.truthfulComment)
+        }
         this.storySoFar.scrollTo(0, this.storySoFar.scrollHeight);
     }
 

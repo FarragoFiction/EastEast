@@ -93,6 +93,10 @@
   src: url("fonts/zai_i_love_covid_19/zai_I♥Covid-19.ttf");
 }
 
+.void{
+  visibility: hidden;
+}
+
 
 body {
   margin: 0;

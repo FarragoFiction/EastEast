@@ -6,10 +6,12 @@ import { AiBeat } from "./BaseBeat";
 export class FriendlyAiBeat extends  AiBeat {
     startingText:string;
     endingText:string;
+    truthText: string;
     
-    constructor(startingText: string, endingText: string,triggers: TargetFilter[], actions: Action[]) {
+    constructor(startingText: string, endingText: string, truthText: string,triggers: TargetFilter[], actions: Action[]) {
         super(triggers, actions, false);
         this.startingText  = startingText;
         this.endingText = endingText;
+        this.truthText = truthText;
     }
 }

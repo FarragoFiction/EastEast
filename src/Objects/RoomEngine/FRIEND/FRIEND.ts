@@ -63,6 +63,7 @@ export class FRIEND{
             ${this.start}
             <p style="color: #a10000;font-family: zai_i_love_covid_19">All lore below is true. FRIEND never willingly seek to obfuscate the truth. </p>
             ${this.end}`,
+            "The crows or spiders or artificial creatures, no matter their form value knowledge. There are many layers as to why. Because a letter writing rp required a strong spy nation. Because Wodin needed to find information. Because it amused JR to make such an unbalanced nation and to tie it to homestuck.",
             [new TargetNameIncludesAnyOfTheseWords(["Quotidian"],true),new TargetNearObjectWithName(["Book"],true)],
             []
         );
