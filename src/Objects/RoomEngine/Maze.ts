@@ -2,7 +2,7 @@ import { initRabbitHole } from "../../Secrets/PasswordStorage";
 import { createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 
-import { FollowPeewee, SassObject } from "../Entities/StoryBeats/BeatList";
+import { FollowPeewee, SassObjectAndPickUp } from "../Entities/StoryBeats/BeatList";
 import { all_themes } from "../Theme";
 import { ENDINGS, WEB, SPYING, ZAP, BUGS, TECHNOLOGY, OBFUSCATION, KILLING, FIRE, LONELY } from "../ThemeStorage";
 import { ChantingEngine } from "./ChantingEngine";
@@ -53,7 +53,7 @@ export class Maze {
 
     initializeBlorbos = () => {
         if (this.room) {
-            this.blorbos.push(new Underscore(this.room, 150,150), new Quotidian(this.room, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [SassObject]));
+            this.blorbos.push(new Underscore(this.room, 150,150), new Quotidian(this.room, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [SassObjectAndPickUp]));
             this.blorbos.push(new Snail(this.room, 150, 150));
             this.blorbos.push(new EyeKiller(this.room, 150, 150));
             this.blorbos.push(new Innocent(this.room, 150, 150));
@@ -85,7 +85,7 @@ export class Maze {
         if (!this.room) {
             return;
         }
-        const blorbosToTest = ["Killer", "_"];
+        const blorbosToTest = ["Killer"];
         for (let blorbo of this.blorbos) {
             console.log("JR NOTE: can i spawn ", blorbo)
             if (!blorbo.owner) {//if you're in someones inventory, no spawning for you

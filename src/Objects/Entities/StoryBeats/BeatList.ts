@@ -30,7 +30,7 @@ export const FollowPeewee = new AiBeat(
     [new FollowObject()]
 );
 
-export const SassObject = new AiBeat(
+export const SassObjectAndPickUp = new AiBeat(
     [new TargetIsWithinRadiusOfSelf(5)],
     [new DeploySass("Gross!",["Wow you're really gross, aren't you?", "I don't like you!","Wow! So boring!"]),new  PickupObject()],
     true

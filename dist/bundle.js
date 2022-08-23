@@ -1308,13 +1308,13 @@ const Quotidian_1 = __webpack_require__(6387);
 class Devona extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "Placeholders/thematch.png", width: 50, height: 50 },
+            default_src: { src: "Placeholders/thetwins1.png", width: 50, height: 50 },
         };
         const breachedSprite = {
-            default_src: { src: "Placeholders/match2.png", width: 50, height: 50 },
+            default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
         const beats = [];
-        super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION]], sprite, breachedSprite, "Ria sure looks like she's trying to figure something out!", beats);
+        super(room, "Twin1", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, breachedSprite, "Devona is staring at you.", beats);
         this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
         this.maxSpeed = 8;
         this.minSpeed = 5;
@@ -1338,13 +1338,20 @@ exports.End = void 0;
 const NoMovement_1 = __webpack_require__(4956);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
+const DeploySass_1 = __webpack_require__(4237);
+const BaseBeat_1 = __webpack_require__(1708);
+const BeatList_1 = __webpack_require__(2761);
+const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const Quotidian_1 = __webpack_require__(6387);
 class End extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
             default_src: { src: "the_end2.png", width: 56, height: 100 },
         };
-        const beats = [];
+        const start = "<span class='asl'>";
+        const end = "</span>";
+        const BreathOnObject = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass(":)", [`:3`, `${start}Friend!${end}`, `${start}Hello!${end}`, `${start}Where are we going?${end}`])], true, 2 * 60 * 1000);
+        const beats = [BeatList_1.FollowPeewee, BreathOnObject];
         super(room, "The End", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, sprite, "The End Comes For Us All", beats);
         this.lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
         this.maxSpeed = 50;
@@ -1958,11 +1965,12 @@ const StoryBeat_1 = __webpack_require__(5504);
 const baseFilter_1 = __webpack_require__(9505);
 class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
-    constructor(triggers, actions, permanent = false) {
+    //some beats longer than others
+    constructor(triggers, actions, permanent = false, timeBetweenBeats = 10000) {
         this.targets = [];
         this.timeOfLastBeat = new Date().getTime();
         this.itsBeenAwhileSinceLastBeat = () => {
-            return new Date().getTime() - this.timeOfLastBeat > 10000;
+            return new Date().getTime() - this.timeOfLastBeat > this.timeBetweenBeats;
         };
         this.clone = (owner) => {
             //doesn't clone targets, those are set per beat when resolved..
@@ -2032,6 +2040,7 @@ class AiBeat {
         this.filters = triggers;
         this.actions = actions;
         this.permanent = permanent;
+        this.timeBetweenBeats = timeBetweenBeats;
     }
 }
 exports.AiBeat = AiBeat;
@@ -2045,7 +2054,7 @@ exports.AiBeat = AiBeat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.SassObject = exports.FollowPeewee = exports.testBeat3 = exports.testBeat2 = exports.testBeat = void 0;
+exports.SassObjectAndPickUp = exports.FollowPeewee = exports.testBeat3 = exports.testBeat2 = exports.testBeat = void 0;
 const DeploySass_1 = __webpack_require__(4237);
 const FollowObject_1 = __webpack_require__(744);
 const GoEast_1 = __webpack_require__(7192);
@@ -2061,7 +2070,7 @@ exports.testBeat = new BaseBeat_1.AiBeat([new baseFilter_1.TargetFilter()], [new
 exports.testBeat2 = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Peewee"])], [new GoNorth_1.GoNorth()]);
 exports.testBeat3 = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(30, true)], [new GoEast_1.GoEast()]);
 exports.FollowPeewee = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Peewee"])], [new FollowObject_1.FollowObject()]);
-exports.SassObject = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass("Gross!", ["Wow you're really gross, aren't you?", "I don't like you!", "Wow! So boring!"]), new PickupObject_1.PickupObject()], true);
+exports.SassObjectAndPickUp = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass("Gross!", ["Wow you're really gross, aren't you?", "I don't like you!", "Wow! So boring!"]), new PickupObject_1.PickupObject()], true);
 
 
 /***/ }),
@@ -3150,7 +3159,7 @@ class Maze {
         };
         this.initializeBlorbos = () => {
             if (this.room) {
-                this.blorbos.push(new Underscore_1.Underscore(this.room, 150, 150), new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObject]));
+                this.blorbos.push(new Underscore_1.Underscore(this.room, 150, 150), new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObjectAndPickUp]));
                 this.blorbos.push(new SnailFriend_1.Snail(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.EyeKiller(this.room, 150, 150));
                 this.blorbos.push(new Innocent_1.Innocent(this.room, 150, 150));
@@ -3178,7 +3187,7 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Killer", "_"];
+            const blorbosToTest = ["Killer"];
             for (let blorbo of this.blorbos) {
                 console.log("JR NOTE: can i spawn ", blorbo);
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you

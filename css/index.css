@@ -103,6 +103,11 @@
   color: black;
 }
 
+.asl{
+  font-family: asl;
+   font-size: 69px;
+}
+
 
 .blood{
   color: #a10000  !important;

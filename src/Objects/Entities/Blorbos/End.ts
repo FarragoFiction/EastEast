@@ -3,7 +3,10 @@ import { NoMovement } from "../../MovementAlgs/NoMovement";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { ENDINGS, KILLING, QUESTING, LONELY } from "../../ThemeStorage";
+import { DeploySass } from "../Actions/DeploySass";
 import { AiBeat } from "../StoryBeats/BaseBeat";
+import { FollowPeewee } from "../StoryBeats/BeatList";
+import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { Quotidian, Direction } from "./Quotidian";
 
 
@@ -24,7 +27,16 @@ export class End extends Quotidian{
             default_src:{src:"the_end2.png",width:56,height:100},
 
         };
-        const beats:AiBeat[] = [];
+        const start = "<span class='asl'>"
+        const end = "</span>"
+
+         const BreathOnObject = new AiBeat(
+            [new TargetIsWithinRadiusOfSelf(5)],
+            [new DeploySass(":)",[`:3`,`${start}Friend!${end}`, `${start}Hello!${end}`,`${start}Where are we going?${end}`])],
+            true,
+            2*60*1000
+        );
+        const beats:AiBeat[] = [FollowPeewee,BreathOnObject];
         super(room,"The End", x,y,[all_themes[ENDINGS],all_themes[KILLING],all_themes[QUESTING],all_themes[LONELY]],sprite,sprite,"The End Comes For Us All", beats);
     }
 }

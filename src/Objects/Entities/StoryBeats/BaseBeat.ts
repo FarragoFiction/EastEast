@@ -11,6 +11,7 @@ export class AiBeat {
     permanent: boolean; //is this a one and done or should it be forever. 
     filters: TargetFilter[];
     actions: Action[];
+    timeBetweenBeats:number;
     targets: PhysicalObject[] = [];
     owner: Quotidian  | undefined;
     timeOfLastBeat = new Date().getTime();
@@ -19,15 +20,16 @@ export class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
 
 
-    constructor(triggers: TargetFilter[], actions: Action[], permanent = false) {
+    //some beats longer than others
+    constructor(triggers: TargetFilter[], actions: Action[], permanent = false, timeBetweenBeats=10000) {
         this.filters = triggers;
         this.actions = actions;
         this.permanent = permanent;
-
+        this.timeBetweenBeats = timeBetweenBeats;
     }
 
     itsBeenAwhileSinceLastBeat = ()=>{
-        return new Date().getTime() - this.timeOfLastBeat > 10000;
+        return new Date().getTime() - this.timeOfLastBeat > this.timeBetweenBeats;
     }
 
     clone = (owner: Quotidian) => {
