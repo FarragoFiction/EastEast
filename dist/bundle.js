@@ -1293,6 +1293,41 @@ exports.Think = Think;
 
 /***/ }),
 
+/***/ 9621:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//just leave her alone with her egg
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Devona = void 0;
+const RandomMovement_1 = __webpack_require__(5997);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6387);
+class Devona extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "Placeholders/thematch.png", width: 50, height: 50 },
+        };
+        const breachedSprite = {
+            default_src: { src: "Placeholders/match2.png", width: 50, height: 50 },
+        };
+        const beats = [];
+        super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION]], sprite, breachedSprite, "Ria sure looks like she's trying to figure something out!", beats);
+        this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
+        this.maxSpeed = 8;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+    }
+}
+exports.Devona = Devona;
+
+
+/***/ }),
+
 /***/ 8115:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1473,6 +1508,41 @@ class Match extends Quotidian_1.Quotidian {
     }
 }
 exports.Match = Match;
+
+
+/***/ }),
+
+/***/ 3668:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//just leave her alone with her egg
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Neville = void 0;
+const RandomMovement_1 = __webpack_require__(5997);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6387);
+class Neville extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "Placeholders/thetwins2.png", width: 50, height: 50 },
+        };
+        const breachedSprite = {
+            default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
+        };
+        const beats = [];
+        super(room, "Twin2", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, breachedSprite, "Neville is staring into space.", beats);
+        this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
+        this.maxSpeed = 8;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+    }
+}
+exports.Neville = Neville;
 
 
 /***/ }),
@@ -1806,6 +1876,41 @@ class Snail extends Quotidian_1.Quotidian {
     }
 }
 exports.Snail = Snail;
+
+
+/***/ }),
+
+/***/ 5322:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//just leave her alone with her egg
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Solemn = void 0;
+const RandomMovement_1 = __webpack_require__(5997);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6387);
+class Solemn extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "Placeholders/thesolemn.png", width: 50, height: 50 },
+        };
+        const breachedSprite = {
+            default_src: { src: "Placeholders/solemn.png", width: 50, height: 50 },
+        };
+        const beats = [];
+        super(room, "Solemn", x, y, [Theme_1.all_themes[ThemeStorage_1.LONELY], Theme_1.all_themes[ThemeStorage_1.ANGELS], Theme_1.all_themes[ThemeStorage_1.SERVICE], Theme_1.all_themes[ThemeStorage_1.STEALING]], sprite, breachedSprite, "Witherby looks very friendly!", beats);
+        this.lore = "Parker says witherby's soul is a Hare...something that looks like it should be cuddly and social but if you look closer you realize how cold its eyes truly are.";
+        this.maxSpeed = 8;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+    }
+}
+exports.Solemn = Solemn;
 
 
 /***/ }),
@@ -3024,6 +3129,9 @@ const JR_1 = __webpack_require__(7455);
 const Innocent_1 = __webpack_require__(8004);
 const Match_1 = __webpack_require__(7685);
 const Underscore_1 = __webpack_require__(9194);
+const Solemn_1 = __webpack_require__(5322);
+const Devona_1 = __webpack_require__(9621);
+const Neville_1 = __webpack_require__(3668);
 class Maze {
     constructor(ele, storySoFar, rand) {
         this.storybeats = []; //can be added to by peewee and by the ai
@@ -3047,6 +3155,9 @@ class Maze {
                 this.blorbos.push(new EyeKiller_1.EyeKiller(this.room, 150, 150));
                 this.blorbos.push(new Innocent_1.Innocent(this.room, 150, 150));
                 this.blorbos.push(new Match_1.Match(this.room, 150, 150));
+                this.blorbos.push(new Solemn_1.Solemn(this.room, 150, 150));
+                this.blorbos.push(new Devona_1.Devona(this.room, 150, 150));
+                this.blorbos.push(new Neville_1.Neville(this.room, 150, 150));
                 this.blorbos.push(new JR_1.JR(this.room, 150, 150));
             }
         };
@@ -8577,6 +8688,8 @@ var map = {
 	"./Objects/Entities/Actions/Taste.ts": 8520,
 	"./Objects/Entities/Actions/Think": 5639,
 	"./Objects/Entities/Actions/Think.ts": 5639,
+	"./Objects/Entities/Blorbos/Devona": 9621,
+	"./Objects/Entities/Blorbos/Devona.ts": 9621,
 	"./Objects/Entities/Blorbos/End": 8115,
 	"./Objects/Entities/Blorbos/End.ts": 8115,
 	"./Objects/Entities/Blorbos/EyeKiller": 2937,
@@ -8587,12 +8700,16 @@ var map = {
 	"./Objects/Entities/Blorbos/JR.ts": 7455,
 	"./Objects/Entities/Blorbos/Match": 7685,
 	"./Objects/Entities/Blorbos/Match.ts": 7685,
+	"./Objects/Entities/Blorbos/Neville": 3668,
+	"./Objects/Entities/Blorbos/Neville.ts": 3668,
 	"./Objects/Entities/Blorbos/Peewee": 936,
 	"./Objects/Entities/Blorbos/Peewee.ts": 936,
 	"./Objects/Entities/Blorbos/Quotidian": 6387,
 	"./Objects/Entities/Blorbos/Quotidian.ts": 6387,
 	"./Objects/Entities/Blorbos/SnailFriend": 240,
 	"./Objects/Entities/Blorbos/SnailFriend.ts": 240,
+	"./Objects/Entities/Blorbos/Solemn": 5322,
+	"./Objects/Entities/Blorbos/Solemn.ts": 5322,
 	"./Objects/Entities/Blorbos/Underscore": 9194,
 	"./Objects/Entities/Blorbos/Underscore.ts": 9194,
 	"./Objects/Entities/StoryBeats/BaseBeat": 1708,

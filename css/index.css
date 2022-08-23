@@ -93,6 +93,11 @@
   src: url("fonts/zai_i_love_covid_19/renamedzai.ttf");
 }
 
+@font-face {
+  font-family: asl;
+  src: url("fonts/GALLAUDET.ttf");
+}
+
 .void{
   font-size: 1px;
   color: black;
