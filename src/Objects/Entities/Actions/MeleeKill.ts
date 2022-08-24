@@ -9,12 +9,18 @@ import { AiBeat } from "../StoryBeats/BaseBeat";
 
 //assume only peewee can do this
 //hi!!! Did you know peewee is wasted? And a doom player?
-export class GlitchDeath extends Action {
+export class MeleeKill extends Action {
 
 
 
     recognizedCommands: string[] = ["KILL", "MURDER", "SLAUGHTER"];
-
+    causeOfDeath:string;
+    leadingUpToDeath: string;
+    constructor(causeOfDeath:string, leadingUpToDeath:string){
+        super();
+        this.leadingUpToDeath = leadingUpToDeath;
+        this.causeOfDeath =causeOfDeath;
+    }   
 
     noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian)=>{
         return `${subject.processedName()} doesn't see anything to make un-alive.`;
@@ -24,14 +30,14 @@ export class GlitchDeath extends Action {
         let killed = false;
         for(let target of targets){
            if(target instanceof Quotidian){
-                (target as Quotidian).live();
+                (target as Quotidian).die(this.causeOfDeath);
                 killed = true;
            }
         }
         if(!killed){
             return this.noTarget(beat, current_room, subject);
         }
-        return `${subject.processedName()} brutally melees attacks the  ${turnArrayIntoHumanSentence(targets.map((e)=>e.processedName()))}.`;
+        return `${subject.processedName()} ${this.leadingUpToDeath}  ${turnArrayIntoHumanSentence(targets.map((e)=>e.processedName()))}.`;
 
     }
 

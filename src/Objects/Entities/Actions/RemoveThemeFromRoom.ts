@@ -7,7 +7,7 @@ import { Room } from "../../RoomEngine/Room";
 import { Theme } from "../../Theme";
 import { removeItemOnce } from "../../../Utils/ArrayUtils";
 
-export class RemoveThemeFromObject extends Action{ //lawsuit
+export class RemoveThemeFromRoom extends Action{ //lawsuit
     theme: Theme; //technically storing the key would be a smaller footprint but then i'd have to wait till runtime to find out if i typoed a key and boy do i not want to do that rn
     
     recognizedCommands:string[] =[]
