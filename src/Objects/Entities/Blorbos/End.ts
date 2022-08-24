@@ -4,8 +4,11 @@ import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { ENDINGS, KILLING, QUESTING, LONELY } from "../../ThemeStorage";
 import { DeploySass } from "../Actions/DeploySass";
+import { FollowObject } from "../Actions/FollowObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { FollowPeewee } from "../StoryBeats/BeatList";
+import { RandomTarget } from "../TargetFilter/RandomTarget";
+import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { Quotidian, Direction } from "./Quotidian";
 
@@ -31,12 +34,18 @@ export class End extends Quotidian{
         const end = "</span>"
 
          const BreathOnObject = new AiBeat(
-            [new TargetIsWithinRadiusOfSelf(5)],
+            [new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5)],
             [new DeploySass(":)",[`:3`,`${start}Friend!${end}`, `${start}Hello!${end}`,`${start}Where are we going?${end}`])],
             true,
             2*60*1000
         );
-        const beats:AiBeat[] = [FollowPeewee,BreathOnObject];
+
+        //she doesn't tend to change her mind
+        const ObesssOverBlorbo = new AiBeat(
+            [new TargetIsBlorboOrBox(), new RandomTarget(.5)],
+            [new FollowObject()]
+        );
+        const beats:AiBeat[] = [ObesssOverBlorbo,BreathOnObject];
         super(room,"The End", x,y,[all_themes[ENDINGS],all_themes[KILLING],all_themes[QUESTING],all_themes[LONELY]],sprite,sprite,"The End Comes For Us All", beats);
     }
 }

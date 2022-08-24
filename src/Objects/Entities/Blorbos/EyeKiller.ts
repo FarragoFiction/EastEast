@@ -12,6 +12,7 @@ import { MeleeKill } from "../Actions/MeleeKill";
 import { SpawnObjectAtFeet } from "../Actions/SpawnObjectAtFeet";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { TARGETSTRING } from "../TargetFilter/baseFilter";
+import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { Quotidian, Direction } from "./Quotidian";
 
@@ -36,29 +37,27 @@ export class EyeKiller extends Quotidian{
 
         };
 
-        super(room,"Eye Killer", x,y,[all_themes[HUNTING],all_themes[KILLING],all_themes[FAMILY],all_themes[DARKNESS]],sprite,sprite,"It's the Eye Killer! I'd leave her alone!", beats);
+        super(room,"Eye Killer", x,y,[all_themes[HUNTING],all_themes[KILLING],all_themes[FAMILY],all_themes[DARKNESS]],sprite,sprite,"It's the Eye Killer! I'd leave her alone!", []);
         this.breached  = true;
         this.setupAI();
     }
 
     setupAI = async ()=>{
         const item = all_themes[KILLING].pickPossibilityFor(this.rand, FLOORBACKGROUND)
-        const baseLocation = "images/Walkabout/Objects/";
-        const folder = 'UnderFloorObjects';
+        
 
-        const image: any = await addImageProcess(`${baseLocation}${folder}/${item.src}`) as HTMLImageElement;
-
-        const bloodstain =  new PhysicalObject(this.room, `${TARGETSTRING}'s blood`, 0,0, image.width, image.height, [all_themes[KILLING]], 0, item.src, `Something very upsetting happened here to ${TARGETSTRING}.`);
+        const image: any = await addImageProcess(`images/Walkabout/Objects/UnderFloorObjects/${item.src}`) as HTMLImageElement;
+        const bloodstain =  new PhysicalObject(this.room, `${TARGETSTRING}'s blood`, 0,0, image.width, image.height, [all_themes[KILLING]], 0, `images/Walkabout/Objects/UnderFloorObjects/${item.src}`, `Something very upsetting happened here to ${TARGETSTRING}.`);
 
         const beats:AiBeat[] = [
             new AiBeat(
-                [new TargetIsWithinRadiusOfSelf(5)],
+                [new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5)],
                 [new MeleeKill("brutally stabs over and over","being shown the Eye Killer's stabs"),  new AddThemeToRoom(all_themes[KILLING]), new SpawnObjectAtFeet(bloodstain)],
                 true,
                 30*1000
             )  
-
-
         ];
+        console.log("JR NOTE: setting up the Eye Killer (haha AI Killer) to actulaly kill, did it work?")
+        this.makeBeatsMyOwn(beats);
     }
 }   

@@ -1,6 +1,70 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 1617:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AddThemeToObject = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+class AddThemeToObject extends BaseAction_1.Action {
+    constructor(theme) {
+        super();
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const target = beat.targets;
+            if (target.length < 1) {
+                return `${subject.processedName()} can't see anything to modify with ${this.theme.key}...`;
+            }
+            subject.themes.push(this.theme);
+            return `${subject.processedName()} modifies the  ${target[0].processedName()} to be more ${this.theme.key}.`;
+        };
+        this.theme = theme;
+    }
+}
+exports.AddThemeToObject = AddThemeToObject;
+
+
+/***/ }),
+
+/***/ 8072:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AddThemeToRoom = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+class AddThemeToRoom extends BaseAction_1.Action {
+    constructor(theme) {
+        super();
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const target = beat.targets;
+            if (target.length < 1) {
+                return `${subject.processedName()} can't see anything to modify with ${this.theme.key}...`;
+            }
+            subject.room.themes.push(this.theme);
+            return `${subject.processedName()} modifies the  ${subject.room.name} to be more ${this.theme.key}.`;
+        };
+        this.theme = theme;
+    }
+}
+exports.AddThemeToRoom = AddThemeToRoom;
+
+
+/***/ }),
+
 /***/ 7042:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -896,15 +960,15 @@ exports.Look = Look;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.GlitchDeath = void 0;
+exports.MeleeKill = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const Quotidian_1 = __webpack_require__(6387);
 const BaseAction_1 = __webpack_require__(7042);
 //assume only peewee can do this
 //hi!!! Did you know peewee is wasted? And a doom player?
-class GlitchDeath extends BaseAction_1.Action {
-    constructor() {
-        super(...arguments);
+class MeleeKill extends BaseAction_1.Action {
+    constructor(causeOfDeath, leadingUpToDeath) {
+        super();
         this.recognizedCommands = ["KILL", "MURDER", "SLAUGHTER"];
         this.noTarget = (beat, current_room, subject) => {
             return `${subject.processedName()} doesn't see anything to make un-alive.`;
@@ -913,14 +977,14 @@ class GlitchDeath extends BaseAction_1.Action {
             let killed = false;
             for (let target of targets) {
                 if (target instanceof Quotidian_1.Quotidian) {
-                    target.live();
+                    target.die(this.causeOfDeath);
                     killed = true;
                 }
             }
             if (!killed) {
                 return this.noTarget(beat, current_room, subject);
             }
-            return `${subject.processedName()} brutally melees attacks the  ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}.`;
+            return `${subject.processedName()} ${this.leadingUpToDeath}  ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}.`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -939,9 +1003,11 @@ class GlitchDeath extends BaseAction_1.Action {
                 return this.withTargets(beat, current_room, subject, targets);
             }
         };
+        this.leadingUpToDeath = leadingUpToDeath;
+        this.causeOfDeath = causeOfDeath;
     }
 }
-exports.GlitchDeath = GlitchDeath;
+exports.MeleeKill = MeleeKill;
 
 
 /***/ }),
@@ -1004,6 +1070,72 @@ class PickupObject extends BaseAction_1.Action {
     }
 }
 exports.PickupObject = PickupObject;
+
+
+/***/ }),
+
+/***/ 9418:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RemoveThemeFromObject = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const ArrayUtils_1 = __webpack_require__(3907);
+class RemoveThemeFromObject extends BaseAction_1.Action {
+    constructor(theme) {
+        super();
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const target = beat.targets;
+            if (target.length < 1) {
+                return `${subject.processedName()} can't see anything to modify with ${this.theme.key}...`;
+            }
+            (0, ArrayUtils_1.removeItemOnce)(subject.themes, this.theme);
+            return `${subject.processedName()} modifies the  ${target[0].processedName()} to be less ${this.theme.key}.`;
+        };
+        this.theme = theme;
+    }
+}
+exports.RemoveThemeFromObject = RemoveThemeFromObject;
+
+
+/***/ }),
+
+/***/ 7337:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RemoveThemeFromRoom = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const ArrayUtils_1 = __webpack_require__(3907);
+class RemoveThemeFromRoom extends BaseAction_1.Action {
+    constructor(theme) {
+        super();
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const target = beat.targets;
+            if (target.length < 1) {
+                return `${subject.processedName()} can't see anything to modify with ${this.theme.key}...`;
+            }
+            (0, ArrayUtils_1.removeItemOnce)(subject.room.themes, this.theme);
+            return `${subject.processedName()} modifies the  ${subject.room.name} to be less ${this.theme.key}.`;
+        };
+        this.theme = theme;
+    }
+}
+exports.RemoveThemeFromRoom = RemoveThemeFromRoom;
 
 
 /***/ }),
@@ -1115,6 +1247,39 @@ class Smell extends BaseAction_1.Action {
     }
 }
 exports.Smell = Smell;
+
+
+/***/ }),
+
+/***/ 8884:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SpawnObjectAtFeet = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+class SpawnObjectAtFeet extends BaseAction_1.Action {
+    constructor(object) {
+        super();
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            this.object.name = beat.processTags(this.object.name);
+            this.object.flavorText = beat.processTags(this.object.flavorText);
+            this.object.x = beat.targets[0].x;
+            this.object.y = beat.targets[0].y;
+            this.object.updateRendering();
+            subject.room.addItem(this.object);
+            return `${subject.processedName()} drops a(n) ${this.object.name}.`;
+        };
+        this.object = object;
+    }
+}
+exports.SpawnObjectAtFeet = SpawnObjectAtFeet;
 
 
 /***/ }),
@@ -1339,8 +1504,10 @@ const NoMovement_1 = __webpack_require__(4956);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const DeploySass_1 = __webpack_require__(4237);
+const FollowObject_1 = __webpack_require__(744);
 const BaseBeat_1 = __webpack_require__(1708);
-const BeatList_1 = __webpack_require__(2761);
+const RandomTarget_1 = __webpack_require__(9824);
+const TargetIsBlorboBox_1 = __webpack_require__(4068);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const Quotidian_1 = __webpack_require__(6387);
 class End extends Quotidian_1.Quotidian {
@@ -1350,8 +1517,10 @@ class End extends Quotidian_1.Quotidian {
         };
         const start = "<span class='asl'>";
         const end = "</span>";
-        const BreathOnObject = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass(":)", [`:3`, `${start}Friend!${end}`, `${start}Hello!${end}`, `${start}Where are we going?${end}`])], true, 2 * 60 * 1000);
-        const beats = [BeatList_1.FollowPeewee, BreathOnObject];
+        const BreathOnObject = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass(":)", [`:3`, `${start}Friend!${end}`, `${start}Hello!${end}`, `${start}Where are we going?${end}`])], true, 2 * 60 * 1000);
+        //she doesn't tend to change her mind
+        const ObesssOverBlorbo = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5)], [new FollowObject_1.FollowObject()]);
+        const beats = [ObesssOverBlorbo, BreathOnObject];
         super(room, "The End", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, sprite, "The End Comes For Us All", beats);
         this.lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
         this.maxSpeed = 50;
@@ -1374,9 +1543,18 @@ exports.End = End;
 //just leave her alone with her egg
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EyeKiller = void 0;
+const URLUtils_1 = __webpack_require__(389);
 const RandomMovement_1 = __webpack_require__(5997);
+const PhysicalObject_1 = __webpack_require__(8466);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
+const AddThemeToRoom_1 = __webpack_require__(8072);
+const MeleeKill_1 = __webpack_require__(2900);
+const SpawnObjectAtFeet_1 = __webpack_require__(8884);
+const BaseBeat_1 = __webpack_require__(1708);
+const baseFilter_1 = __webpack_require__(9505);
+const TargetIsBlorboBox_1 = __webpack_require__(4068);
+const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const Quotidian_1 = __webpack_require__(6387);
 class EyeKiller extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
@@ -1387,15 +1565,25 @@ class EyeKiller extends Quotidian_1.Quotidian {
             up_src: { src: "KillerUp.gif", width: 50, height: 50 },
             down_src: { src: "KillerDown.gif", width: 50, height: 50 }
         };
-        const beats = [];
-        super(room, "Eye Killer", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.DARKNESS]], sprite, sprite, "It's the Eye Killer! I'd leave her alone!", beats);
+        super(room, "Eye Killer", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.DARKNESS]], sprite, sprite, "It's the Eye Killer! I'd leave her alone!", []);
         this.lore = "Parker has said her soul is in the shape of a ram. He says there is a joke in there, about time and sheep. (in the West, sheep are sacrificed to travel in time) But the important point is that the Killer's soul is that of prey, that of something CERTAIN you will KILL it unless she rams her blade deep into your heart first. They say horses live in silent hill, but sheep must, too.";
         this.maxSpeed = 50;
         this.minSpeed = 5;
         this.currentSpeed = 5;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
+        this.setupAI = async () => {
+            const item = Theme_1.all_themes[ThemeStorage_1.KILLING].pickPossibilityFor(this.rand, ThemeStorage_1.FLOORBACKGROUND);
+            const image = await (0, URLUtils_1.addImageProcess)(`images/Walkabout/Objects/UnderFloorObjects/${item.src}`);
+            const bloodstain = new PhysicalObject_1.PhysicalObject(this.room, `${baseFilter_1.TARGETSTRING}'s blood`, 0, 0, image.width, image.height, [Theme_1.all_themes[ThemeStorage_1.KILLING]], 0, `images/Walkabout/Objects/UnderFloorObjects/${item.src}`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`);
+            const beats = [
+                new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectAtFeet_1.SpawnObjectAtFeet(bloodstain)], true, 30 * 1000)
+            ];
+            console.log("JR NOTE: setting up the Eye Killer (haha AI Killer) to actulaly kill, did it work?");
+            this.makeBeatsMyOwn(beats);
+        };
         this.breached = true;
+        this.setupAI();
     }
 }
 exports.EyeKiller = EyeKiller;
@@ -2092,6 +2280,79 @@ class FriendlyAiBeat extends BaseBeat_1.AiBeat {
     }
 }
 exports.FriendlyAiBeat = FriendlyAiBeat;
+
+
+/***/ }),
+
+/***/ 9824:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RandomTarget = void 0;
+const baseFilter_1 = __webpack_require__(9505);
+class RandomTarget extends baseFilter_1.TargetFilter {
+    constructor(odds, singleTarget = false, invert = false, kMode = false) {
+        super(singleTarget, invert, kMode);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            return `they randomly pick  ${baseFilter_1.TARGETSTRING}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (target.rand.nextDouble() < this.odds) {
+                targetLocked = true;
+            }
+            if (targetLocked && !this.invert) {
+                return target;
+            }
+            else {
+                return null;
+            }
+        };
+        this.odds = odds;
+    }
+}
+exports.RandomTarget = RandomTarget;
+
+
+/***/ }),
+
+/***/ 4068:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetIsBlorboOrBox = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetIsBlorboOrBox extends baseFilter_1.TargetFilter {
+    constructor() {
+        //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+        super(...arguments);
+        this.toString = () => {
+            return `they see something that is a person`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (target.processedName().toUpperCase().includes("BOX")) {
+                targetLocked = true;
+            }
+            else if (target instanceof Quotidian_1.Quotidian) {
+                targetLocked = true;
+            }
+            if (targetLocked && !this.invert) {
+                return target;
+            }
+            else {
+                return null;
+            }
+        };
+    }
+}
+exports.TargetIsBlorboOrBox = TargetIsBlorboOrBox;
 
 
 /***/ }),
@@ -8645,6 +8906,10 @@ It should be noted that her attempts to control reality tends towards "ending re
 
 var map = {
 	"./": 3607,
+	"./Objects/Entities/Actions/AddThemeToObject": 1617,
+	"./Objects/Entities/Actions/AddThemeToObject.ts": 1617,
+	"./Objects/Entities/Actions/AddThemeToRoom": 8072,
+	"./Objects/Entities/Actions/AddThemeToRoom.ts": 8072,
 	"./Objects/Entities/Actions/BaseAction": 7042,
 	"./Objects/Entities/Actions/BaseAction.ts": 7042,
 	"./Objects/Entities/Actions/CheckInventory": 1201,
@@ -8687,10 +8952,16 @@ var map = {
 	"./Objects/Entities/Actions/PauseSimulation.ts": 4359,
 	"./Objects/Entities/Actions/PickupObject": 9936,
 	"./Objects/Entities/Actions/PickupObject.ts": 9936,
+	"./Objects/Entities/Actions/RemoveThemeFromObject": 9418,
+	"./Objects/Entities/Actions/RemoveThemeFromObject.ts": 9418,
+	"./Objects/Entities/Actions/RemoveThemeFromRoom": 7337,
+	"./Objects/Entities/Actions/RemoveThemeFromRoom.ts": 7337,
 	"./Objects/Entities/Actions/ResumeSimulation": 2042,
 	"./Objects/Entities/Actions/ResumeSimulation.ts": 2042,
 	"./Objects/Entities/Actions/Smell": 3834,
 	"./Objects/Entities/Actions/Smell.ts": 3834,
+	"./Objects/Entities/Actions/SpawnObjectAtFeet": 8884,
+	"./Objects/Entities/Actions/SpawnObjectAtFeet.ts": 8884,
 	"./Objects/Entities/Actions/StopMoving": 4469,
 	"./Objects/Entities/Actions/StopMoving.ts": 4469,
 	"./Objects/Entities/Actions/Taste": 8520,
@@ -8727,6 +8998,10 @@ var map = {
 	"./Objects/Entities/StoryBeats/BeatList.ts": 2761,
 	"./Objects/Entities/StoryBeats/FriendlyAiBeat": 7717,
 	"./Objects/Entities/StoryBeats/FriendlyAiBeat.ts": 7717,
+	"./Objects/Entities/TargetFilter/RandomTarget": 9824,
+	"./Objects/Entities/TargetFilter/RandomTarget.ts": 9824,
+	"./Objects/Entities/TargetFilter/TargetIsBlorboBox": 4068,
+	"./Objects/Entities/TargetFilter/TargetIsBlorboBox.ts": 4068,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithName": 9587,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithName.ts": 9587,
 	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf": 5535,
