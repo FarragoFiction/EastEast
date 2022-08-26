@@ -1285,6 +1285,51 @@ exports.SpawnObjectAtFeet = SpawnObjectAtFeet;
 
 /***/ }),
 
+/***/ 2888:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SpawnObjectFromThemeUnderFloorAtFeet = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const PhysicalObject_1 = __webpack_require__(8466);
+const ThemeStorage_1 = __webpack_require__(1288);
+const baseFilter_1 = __webpack_require__(9505);
+class SpawnObjectFromThemeUnderFloorAtFeet extends BaseAction_1.Action {
+    constructor(theme) {
+        super();
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const raw_item = this.theme.pickPossibilityFor(subject.rand, ThemeStorage_1.FLOORBACKGROUND);
+            // const image: any = await addImageProcess(`images/Walkabout/Objects/UnderFloorObjects/${item.src}`) as HTMLImageElement;
+            const image = document.createElement("img");
+            image.src = `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`;
+            const item = new PhysicalObject_1.PhysicalObject(subject.room, `${baseFilter_1.TARGETSTRING}'s blood`, 0, 0, image.width, image.height, [this.theme], 0, `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`);
+            image.onload = () => {
+                item.width = image.width;
+                item.height = image.height;
+                item.updateRendering();
+                subject.room.addItem(item);
+            };
+            item.name = beat.processTags(item.name);
+            item.flavorText = beat.processTags(item.flavorText);
+            item.x = beat.targets[0].x;
+            item.y = beat.targets[0].y;
+            return `${subject.processedName()} drops a(n) ${item.name}.`;
+        };
+        this.theme = theme;
+    }
+}
+exports.SpawnObjectFromThemeUnderFloorAtFeet = SpawnObjectFromThemeUnderFloorAtFeet;
+
+
+/***/ }),
+
 /***/ 4469:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1584,16 +1629,13 @@ exports.End = End;
 //just leave her alone with her egg
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EyeKiller = void 0;
-const URLUtils_1 = __webpack_require__(389);
 const RandomMovement_1 = __webpack_require__(5997);
-const PhysicalObject_1 = __webpack_require__(8466);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const AddThemeToRoom_1 = __webpack_require__(8072);
 const MeleeKill_1 = __webpack_require__(2900);
-const SpawnObjectAtFeet_1 = __webpack_require__(8884);
+const SpawnObjectFromThemeUnderFloorAtFeet_1 = __webpack_require__(2888);
 const BaseBeat_1 = __webpack_require__(1708);
-const baseFilter_1 = __webpack_require__(9505);
 const TargetIsBlorboBox_1 = __webpack_require__(4068);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const Quotidian_1 = __webpack_require__(6387);
@@ -1614,11 +1656,8 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
         this.setupAI = async () => {
-            const item = Theme_1.all_themes[ThemeStorage_1.KILLING].pickPossibilityFor(this.rand, ThemeStorage_1.FLOORBACKGROUND);
-            const image = await (0, URLUtils_1.addImageProcess)(`images/Walkabout/Objects/UnderFloorObjects/${item.src}`);
-            const bloodstain = new PhysicalObject_1.PhysicalObject(this.room, `${baseFilter_1.TARGETSTRING}'s blood`, 0, 0, image.width, image.height, [Theme_1.all_themes[ThemeStorage_1.KILLING]], 0, `images/Walkabout/Objects/UnderFloorObjects/${item.src}`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`);
             const beats = [
-                new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectAtFeet_1.SpawnObjectAtFeet(bloodstain)], true, 30 * 1000)
+                new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, true)], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000)
             ];
             console.log("JR NOTE: setting up the Eye Killer (haha AI Killer) to actulaly kill, did it work?");
             this.makeBeatsMyOwn(beats);
@@ -9058,6 +9097,8 @@ var map = {
 	"./Objects/Entities/Actions/Smell.ts": 3834,
 	"./Objects/Entities/Actions/SpawnObjectAtFeet": 8884,
 	"./Objects/Entities/Actions/SpawnObjectAtFeet.ts": 8884,
+	"./Objects/Entities/Actions/SpawnObjectFromThemeUnderFloorAtFeet": 2888,
+	"./Objects/Entities/Actions/SpawnObjectFromThemeUnderFloorAtFeet.ts": 2888,
 	"./Objects/Entities/Actions/StopMoving": 4469,
 	"./Objects/Entities/Actions/StopMoving.ts": 4469,
 	"./Objects/Entities/Actions/Taste": 8520,

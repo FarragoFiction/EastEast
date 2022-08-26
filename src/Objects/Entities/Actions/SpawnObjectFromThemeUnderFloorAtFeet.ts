@@ -34,14 +34,15 @@ export class SpawnObjectFromThemeUnderFloorAtFeet extends Action { //lawsuit
         image.onload = () => {
             item.width = image.width;
             item.height = image.height;
+            item.updateRendering();
+            subject.room.addItem(item);
         }
 
         item.name = beat.processTags(item.name);
         item.flavorText = beat.processTags(item.flavorText);
         item.x = beat.targets[0].x;
         item.y = beat.targets[0].y;
-        item.updateRendering();
-        subject.room.addItem(item);
+ 
 
 
         return `${subject.processedName()} drops a(n) ${item.name}.`;
