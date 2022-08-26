@@ -116,7 +116,6 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 /*
 99 Rooms
 Spatial Horror
-Paradise and parasite
 The Corporation still serves as the main trading partner of the Great Powers, and fares well enough with JR at their head. -https://www.royalroad.com/fiction/40920/the-path-of-ascension/chapter/964367/the-path-of-ascension-chapter-153
 ASecondPersonalTranscript/
 earworm humming in a dream
@@ -188,6 +187,7 @@ export const passwords: PasswordMap = {
     , "PENNY WICKNER": new Secret("Notes of Slaughter 14", undefined, "Secrets/Content/31.js")
     , "ONCE YOU OPEN THE CURTAINS ALL THAT'S LEFT TO DO IS GO TO THE OTHER SIDE AND CLOSE THEM AGAIN": new Secret("Notes of Slaughter 15", undefined, "Secrets/Content/35.js")
     , "EXPERIMENTALMUSIC": new Secret("Notes of Slaughter 16: ExperimentalMusic", undefined, "Secrets/Content/36.js")
+    , "PARADISE AND PARASITE": new Secret("ARM2: LOOP ???", undefined, "Secrets/Content/38.js")
 
     , "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts") 
     , "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts") 
