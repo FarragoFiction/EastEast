@@ -10,6 +10,7 @@ import { HUNTING, KILLING, FAMILY, DARKNESS, FLOORBACKGROUND } from "../../Theme
 import { AddThemeToRoom } from "../Actions/AddThemeToRoom";
 import { MeleeKill } from "../Actions/MeleeKill";
 import { SpawnObjectAtFeet } from "../Actions/SpawnObjectAtFeet";
+import { SpawnObjectFromThemeUnderFloorAtFeet } from "../Actions/SpawnObjectFromThemeUnderFloorAtFeet";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { TARGETSTRING } from "../TargetFilter/baseFilter";
 import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
@@ -43,16 +44,11 @@ export class EyeKiller extends Quotidian{
     }
 
     setupAI = async ()=>{
-        const item = all_themes[KILLING].pickPossibilityFor(this.rand, FLOORBACKGROUND)
-        
-
-        const image: any = await addImageProcess(`images/Walkabout/Objects/UnderFloorObjects/${item.src}`) as HTMLImageElement;
-        const bloodstain =  new PhysicalObject(this.room, `${TARGETSTRING}'s blood`, 0,0, image.width, image.height, [all_themes[KILLING]], 0, `images/Walkabout/Objects/UnderFloorObjects/${item.src}`, `Something very upsetting happened here to ${TARGETSTRING}.`);
 
         const beats:AiBeat[] = [
             new AiBeat(
                 [new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5)],
-                [new MeleeKill("brutally stabs over and over","being shown the Eye Killer's stabs"),  new AddThemeToRoom(all_themes[KILLING]), new SpawnObjectAtFeet(bloodstain)],
+                [new MeleeKill("brutally stabs over and over","being shown the Eye Killer's stabs"),  new AddThemeToRoom(all_themes[KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet(all_themes[KILLING])],
                 true,
                 30*1000
             )  
