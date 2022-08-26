@@ -1268,12 +1268,13 @@ class SpawnObjectAtFeet extends BaseAction_1.Action {
             if (!subject) {
                 return "";
             }
-            this.object.name = beat.processTags(this.object.name);
-            this.object.flavorText = beat.processTags(this.object.flavorText);
-            this.object.x = beat.targets[0].x;
-            this.object.y = beat.targets[0].y;
-            this.object.updateRendering();
-            subject.room.addItem(this.object);
+            const item = this.object.clone();
+            item.name = beat.processTags(this.object.name);
+            item.flavorText = beat.processTags(this.object.flavorText);
+            item.x = beat.targets[0].x;
+            item.y = beat.targets[0].y;
+            item.updateRendering();
+            subject.room.addItem(item);
             return `${subject.processedName()} drops a(n) ${this.object.name}.`;
         };
         this.object = object;
@@ -1454,6 +1455,46 @@ class Think extends BaseAction_1.Action {
     }
 }
 exports.Think = Think;
+
+
+/***/ }),
+
+/***/ 5095:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+///they have a lil house on their back
+//yongki likes them, so i decided to add one
+//also, and i didn't realize this till last night
+//their houses are spirals
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Chicken = void 0;
+const SteadyMovement_1 = __webpack_require__(1148);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6387);
+//which came first, the chicken or the egg?
+class Chicken extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "chicken_left.gif", width: 33, height: 28 },
+            left_src: { src: "chicken_left.gif", width: 33, height: 28 },
+            right_src: { src: "chicken_right.gif", width: 33, height: 28 },
+            up_src: { src: "chicken_up.gif", width: 20, height: 28 },
+            down_src: { src: "chicken_down.gif", width: 29, height: 28 }
+        };
+        const beats = [];
+        super(room, "Chicken Friend", x, y, [Theme_1.all_themes[ThemeStorage_1.CRAFTING]], sprite, sprite, "They make eggs. Eggs are important.", beats);
+        this.lore = "Why does the Eye Kliler love eggs? It's simple. Because when everything was scary and dangerous, someone made her eggs. Yes, he was at knife point at the time. But the point is he DID and he did them well and she never forgot. ";
+        this.maxSpeed = 10;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new SteadyMovement_1.SteadyMovement(this);
+    }
+}
+exports.Chicken = Chicken;
 
 
 /***/ }),
@@ -3097,6 +3138,9 @@ class PhysicalObject {
             const theme = this.rand.pickFrom(this.themes);
             return theme.pickPossibilityFor(this.rand, concept);
         };
+        this.clone = () => {
+            return new PhysicalObject(this.room, this.name, this.x, this.y, this.width, this.height, this.themes, this.layer, this.src, this.flavorText);
+        };
         this.customShit = () => {
             //for example, living creatures might say things
         };
@@ -3402,6 +3446,7 @@ const Underscore_1 = __webpack_require__(9194);
 const Solemn_1 = __webpack_require__(5322);
 const Devona_1 = __webpack_require__(9621);
 const Neville_1 = __webpack_require__(3668);
+const ChickenFriend_1 = __webpack_require__(5095);
 class Maze {
     constructor(ele, storySoFar, rand) {
         this.storybeats = []; //can be added to by peewee and by the ai
@@ -3422,6 +3467,7 @@ class Maze {
             if (this.room) {
                 this.blorbos.push(new Underscore_1.Underscore(this.room, 150, 150), new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObjectAndPickUp]));
                 this.blorbos.push(new SnailFriend_1.Snail(this.room, 150, 150));
+                this.blorbos.push(new ChickenFriend_1.Chicken(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.EyeKiller(this.room, 150, 150));
                 this.blorbos.push(new Innocent_1.Innocent(this.room, 150, 150));
                 this.blorbos.push(new Match_1.Match(this.room, 150, 150));
@@ -3448,7 +3494,7 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Killer"];
+            const blorbosToTest = ["Killer", "Chicken"];
             for (let blorbo of this.blorbos) {
                 console.log("JR NOTE: can i spawn ", blorbo);
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
@@ -9018,6 +9064,8 @@ var map = {
 	"./Objects/Entities/Actions/Taste.ts": 8520,
 	"./Objects/Entities/Actions/Think": 5639,
 	"./Objects/Entities/Actions/Think.ts": 5639,
+	"./Objects/Entities/Blorbos/ChickenFriend": 5095,
+	"./Objects/Entities/Blorbos/ChickenFriend.ts": 5095,
 	"./Objects/Entities/Blorbos/Devona": 9621,
 	"./Objects/Entities/Blorbos/Devona.ts": 9621,
 	"./Objects/Entities/Blorbos/End": 8115,

@@ -76,6 +76,10 @@ export class PhysicalObject {
         return theme.pickPossibilityFor(this.rand, concept);
     }
 
+    clone = ()=>{
+       return  new PhysicalObject(this.room, this.name, this.x, this.y,  this.width,  this.height,  this.themes,  this.layer,  this.src,  this.flavorText);
+    }
+
 
     customShit = () => {
         //for example, living creatures might say things

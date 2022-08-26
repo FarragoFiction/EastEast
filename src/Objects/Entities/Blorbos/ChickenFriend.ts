@@ -13,12 +13,12 @@ import { AiBeat } from "../StoryBeats/BaseBeat";
 import { Quotidian, Direction } from "./Quotidian";
 
 
-
+//which came first, the chicken or the egg?
 export class Chicken extends Quotidian{
     lore = "Why does the Eye Kliler love eggs? It's simple. Because when everything was scary and dangerous, someone made her eggs. Yes, he was at knife point at the time. But the point is he DID and he did them well and she never forgot. ";
-    maxSpeed = 1;
-    minSpeed = 1;
-    currentSpeed = 1;
+    maxSpeed = 10;
+    minSpeed = 5;
+    currentSpeed = 5;
 
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new SteadyMovement(this);
@@ -29,7 +29,7 @@ export class Chicken extends Quotidian{
             left_src:{src:"chicken_left.gif",width:33,height:28},
             right_src:{src:"chicken_right.gif",width:33,height:28},
             up_src:{src:"chicken_up.gif",width:20,height:28},
-            down_src:{src:"chicken_downs.gif",width:29,height:28}
+            down_src:{src:"chicken_down.gif",width:29,height:28}
 
         };
         const beats:AiBeat[] = [];
