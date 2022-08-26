@@ -967,7 +967,7 @@ const BaseAction_1 = __webpack_require__(7042);
 //assume only peewee can do this
 //hi!!! Did you know peewee is wasted? And a doom player?
 class MeleeKill extends BaseAction_1.Action {
-    constructor(causeOfDeath, leadingUpToDeath) {
+    constructor(leadingUpToDeath, causeOfDeath) {
         super();
         this.recognizedCommands = ["KILL", "MURDER", "SLAUGHTER"];
         this.noTarget = (beat, current_room, subject) => {
@@ -1316,6 +1316,13 @@ class SpawnObjectFromThemeUnderFloorAtFeet extends BaseAction_1.Action {
                 item.updateRendering();
                 subject.room.addItem(item);
             };
+            if (beat.targets[0].name.toUpperCase().includes("PEEWEE") && item.name.toUpperCase().includes("BLOOD")) {
+                console.log("JR NOTE: its peewee's blood");
+                item.container.style.filter = "hue-rotate(62deg) saturate(64%) brightness(224%)";
+            }
+            else {
+                console.log("JR NOTE: its not peewee's blood, its", item.name);
+            }
             item.name = beat.processTags(item.name);
             item.flavorText = beat.processTags(item.flavorText);
             item.x = beat.targets[0].x;
@@ -1605,7 +1612,7 @@ class End extends Quotidian_1.Quotidian {
         const end = "</span>";
         const BreathOnObject = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass(":)", [`:3`, `${start}Friend!${end}`, `${start}Hello!${end}`, `${start}Where are we going?${end}`])], true, 2 * 60 * 1000);
         //she doesn't tend to change her mind
-        const ObesssOverBlorbo = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5)], [new FollowObject_1.FollowObject()]);
+        const ObesssOverBlorbo = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, true)], [new FollowObject_1.FollowObject()]);
         const beats = [ObesssOverBlorbo, BreathOnObject];
         super(room, "The End", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, sprite, "The End Comes For Us All", beats);
         this.lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
@@ -1633,9 +1640,11 @@ const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const AddThemeToRoom_1 = __webpack_require__(8072);
+const FollowObject_1 = __webpack_require__(744);
 const MeleeKill_1 = __webpack_require__(2900);
 const SpawnObjectFromThemeUnderFloorAtFeet_1 = __webpack_require__(2888);
 const BaseBeat_1 = __webpack_require__(1708);
+const RandomTarget_1 = __webpack_require__(9824);
 const TargetIsBlorboBox_1 = __webpack_require__(4068);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const Quotidian_1 = __webpack_require__(6387);
@@ -1656,8 +1665,11 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
         this.setupAI = async () => {
+            //hunting time
+            const pickATarget = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, true)], [new FollowObject_1.FollowObject()], true, 1000 * 60);
             const beats = [
-                new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, true)], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000)
+                new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, true)], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000),
+                pickATarget
             ];
             console.log("JR NOTE: setting up the Eye Killer (haha AI Killer) to actulaly kill, did it work?");
             this.makeBeatsMyOwn(beats);

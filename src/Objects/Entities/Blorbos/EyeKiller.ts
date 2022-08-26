@@ -8,11 +8,13 @@ import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { HUNTING, KILLING, FAMILY, DARKNESS, FLOORBACKGROUND } from "../../ThemeStorage";
 import { AddThemeToRoom } from "../Actions/AddThemeToRoom";
+import { FollowObject } from "../Actions/FollowObject";
 import { MeleeKill } from "../Actions/MeleeKill";
 import { SpawnObjectAtFeet } from "../Actions/SpawnObjectAtFeet";
 import { SpawnObjectFromThemeUnderFloorAtFeet } from "../Actions/SpawnObjectFromThemeUnderFloorAtFeet";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { TARGETSTRING } from "../TargetFilter/baseFilter";
+import { RandomTarget } from "../TargetFilter/RandomTarget";
 import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { Quotidian, Direction } from "./Quotidian";
@@ -45,13 +47,22 @@ export class EyeKiller extends Quotidian{
 
     setupAI = async ()=>{
 
+        //hunting time
+        const pickATarget = new AiBeat(
+            [new TargetIsBlorboOrBox(), new RandomTarget(.5, true)],
+            [new FollowObject()],
+            true,
+            1000*60
+        );
+
         const beats:AiBeat[] = [
             new AiBeat(
                 [new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5,true)],
                 [new MeleeKill("brutally stabs over and over","being shown the Eye Killer's stabs"),  new AddThemeToRoom(all_themes[KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet(all_themes[KILLING])],
                 true,
                 30*1000
-            )  
+            )  , 
+            pickATarget
         ];
         console.log("JR NOTE: setting up the Eye Killer (haha AI Killer) to actulaly kill, did it work?")
         this.makeBeatsMyOwn(beats);

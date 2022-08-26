@@ -37,6 +37,12 @@ export class SpawnObjectFromThemeUnderFloorAtFeet extends Action { //lawsuit
             item.updateRendering();
             subject.room.addItem(item);
         }
+        if(beat.targets[0].name.toUpperCase().includes("PEEWEE") && item.name.toUpperCase().includes("BLOOD")){
+            console.log("JR NOTE: its peewee's blood")
+            item.container.style.filter = "hue-rotate(62deg) saturate(64%) brightness(224%)";
+        }else{
+            console.log("JR NOTE: its not peewee's blood, its", item.name)
+        }
 
         item.name = beat.processTags(item.name);
         item.flavorText = beat.processTags(item.flavorText);

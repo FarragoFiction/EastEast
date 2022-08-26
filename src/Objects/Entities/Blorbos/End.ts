@@ -42,7 +42,7 @@ export class End extends Quotidian{
 
         //she doesn't tend to change her mind
         const ObesssOverBlorbo = new AiBeat(
-            [new TargetIsBlorboOrBox(), new RandomTarget(.5)],
+            [new TargetIsBlorboOrBox(), new RandomTarget(.5, true)],
             [new FollowObject()]
         );
         const beats:AiBeat[] = [ObesssOverBlorbo,BreathOnObject];

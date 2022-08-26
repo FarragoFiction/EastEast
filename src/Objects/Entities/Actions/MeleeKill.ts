@@ -16,7 +16,7 @@ export class MeleeKill extends Action {
     recognizedCommands: string[] = ["KILL", "MURDER", "SLAUGHTER"];
     causeOfDeath:string;
     leadingUpToDeath: string;
-    constructor(causeOfDeath:string, leadingUpToDeath:string){
+    constructor(leadingUpToDeath:string, causeOfDeath:string){
         super();
         this.leadingUpToDeath = leadingUpToDeath;
         this.causeOfDeath =causeOfDeath;
