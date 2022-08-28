@@ -231,8 +231,6 @@ export class Room {
                 this.maze.playDoorSound();
                 if (blorbo.name !== "Peewee") {
                     this.removeBlorbo(blorbo);
-                    const room = this.getNorth();
-                    room && room !== this &&  room.addBlorbo(blorbo);
                 } else {
                     const room = this.getNorth();
                     room && this.maze.changeRoom(room);
@@ -253,8 +251,6 @@ export class Room {
                 this.maze.playDoorSound();
                 if (blorbo.name !== "Peewee") {
                     this.removeBlorbo(blorbo);
-                    const room = this.getSouth();
-                    room && room !== this &&  room.addBlorbo(blorbo);
                 } else {
                     const room = this.getSouth();
                     room && this.maze.changeRoom(room);
@@ -275,8 +271,6 @@ export class Room {
                 this.maze.playDoorSound();
                 if (blorbo.name !== "Peewee") {
                     this.removeBlorbo(blorbo);
-                    const room = this.getEast();
-                    room && room !== this &&  room.addBlorbo(blorbo);
                 } else {
                     const room = this.getEast();
                     room && this.maze.changeRoom(room);
