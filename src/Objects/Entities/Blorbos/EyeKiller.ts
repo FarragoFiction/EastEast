@@ -49,7 +49,7 @@ export class EyeKiller extends Quotidian{
 
         //hunting time
         const pickATarget = new AiBeat(
-            [new TargetIsBlorboOrBox(), new RandomTarget(.5, true)],
+            [new TargetIsBlorboOrBox(), new RandomTarget(.5, {singleTarget:true})],
             [new FollowObject()],
             true,
             1000*60
@@ -57,7 +57,7 @@ export class EyeKiller extends Quotidian{
 
         const beats:AiBeat[] = [
             new AiBeat(
-                [new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5,true)],
+                [new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5,{singleTarget: true})],
                 [new MeleeKill("brutally stabs over and over","being shown the Eye Killer's stabs"),  new AddThemeToRoom(all_themes[KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet(all_themes[KILLING])],
                 true,
                 30*1000

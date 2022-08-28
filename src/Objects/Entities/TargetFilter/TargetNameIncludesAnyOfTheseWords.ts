@@ -1,15 +1,15 @@
 import { turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
 import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
-import { TargetFilter } from "./baseFilter";
+import { TargetFilter, TargetingOptionType } from "./baseFilter";
 
 export class TargetNameIncludesAnyOfTheseWords extends TargetFilter {
     words: string[];
     //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
 
 
-    constructor(words: string[], singleTarget = false, invert = false, kMode = false) {
-        super(singleTarget, invert, kMode);
+    constructor(words: string[], options:TargetingOptionType = {singleTarget:false, invert:false, kMode:false}) {
+        super(options);
         this.words = words;
     }
 

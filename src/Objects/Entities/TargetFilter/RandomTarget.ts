@@ -1,14 +1,14 @@
 import { turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
 import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
-import { TargetFilter, TARGETSTRING } from "./baseFilter";
+import { TargetFilter, TargetingOptionType, TARGETSTRING } from "./baseFilter";
 
 export class RandomTarget extends TargetFilter {
     //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
     odds: number; //between 0 and 1, bigger is better
 
-    constructor(odds: number,singleTarget = false, invert = false, kMode = false) {
-        super(singleTarget, invert, kMode);
+    constructor(odds: number,options:TargetingOptionType = {singleTarget:false, invert:false, kMode:false}) {
+        super(options);
         this.odds = odds;
     }
 

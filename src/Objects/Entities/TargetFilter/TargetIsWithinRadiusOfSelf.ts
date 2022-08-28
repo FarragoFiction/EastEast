@@ -1,15 +1,15 @@
 import { distanceWithinRadius } from "../../../Utils/misc";
 import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
-import { TargetFilter, TARGETSTRING } from "./baseFilter";
+import { TargetFilter, TargetingOptionType, TARGETSTRING } from "./baseFilter";
 
 export  class TargetIsWithinRadiusOfSelf extends TargetFilter{
     radius:number;
         //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
 
 
-    constructor(radius:number, singleTarget = false,invert = false, kMode = false){
-        super(singleTarget, invert,kMode);
+    constructor(radius:number, options:TargetingOptionType = {singleTarget:false, invert:false, kMode:false}){
+        super(options);
         this.radius = radius;
     }
 

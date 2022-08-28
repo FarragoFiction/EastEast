@@ -3,15 +3,21 @@ import { AiBeat } from "../StoryBeats/BaseBeat";
 
 export const TARGETSTRING = "[INSERTTARGETSHERE]"
 
+export type TargetingOptionType = {
+    invert?: boolean,
+    singleTarget?: boolean,
+    kMode?: boolean
+}
+
 export class TargetFilter {
     //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
     invert = false;
     kMode = false; //target self
     singleTarget = false;
-    constructor(singleTarget = false, invert = false, kMode = false) {
-        this.invert = invert;
-        this.kMode = kMode;
-        this.singleTarget = singleTarget;
+    constructor(options:TargetingOptionType = {singleTarget:false, invert:false, kMode:false}) {
+        this.invert = options.invert? options.invert : false;
+        this.kMode = options.kMode? options.kMode : false;
+        this.singleTarget = options.singleTarget ? options.singleTarget : false;
     }
 
     toString = () => {

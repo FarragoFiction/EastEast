@@ -1,7 +1,7 @@
 import { turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
 import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
-import { TargetFilter } from "./baseFilter";
+import { TargetFilter, TargetingOptionType } from "./baseFilter";
 
 //used for things like "if target is killer && target is near egg";
 export class TargetNearObjectWithName extends TargetFilter {
@@ -9,8 +9,8 @@ export class TargetNearObjectWithName extends TargetFilter {
     //NOTE NO REAL TIME INFRMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
 
 
-    constructor(words: string[], singleTarget = false, invert = false, kMode = false) {
-        super(singleTarget, invert, kMode);
+    constructor(words: string[], options:TargetingOptionType = {singleTarget:false, invert:false, kMode:false}) {
+        super(options);
         this.words = words;
     }
 

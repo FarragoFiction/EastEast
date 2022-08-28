@@ -2,16 +2,16 @@ import { turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
 import { PhysicalObject } from "../../PhysicalObject";
 import { Theme } from "../../Theme";
 import { AiBeat } from "../StoryBeats/BaseBeat";
-import { TargetFilter } from "./baseFilter";
+import { TargetFilter, TargetingOptionType } from "./baseFilter";
 
 //used for things like "if target is near a plant";
-export class TargetNearObjectWithTheme extends TargetFilter {
+export class TargetHasObjectWithTheme extends TargetFilter {
     themes: Theme[];
     //NOTE NO REAL TIME INFRMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
 
 
-    constructor(themes: Theme[], singleTarget = false, invert = false, kMode = false) {
-        super(singleTarget, invert, kMode);
+    constructor(themes: Theme[],options:TargetingOptionType = {singleTarget:false, invert:false, kMode:false}) {
+        super(options);
         this.themes = themes;
     }
 

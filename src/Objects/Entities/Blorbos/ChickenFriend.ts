@@ -6,10 +6,18 @@
 
 import { Movement } from "../../MovementAlgs/BaseMovement";
 import { SteadyMovement } from "../../MovementAlgs/SteadyMovement";
+import { PhysicalObject } from "../../PhysicalObject";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
-import { BUGS, CRAFTING } from "../../ThemeStorage";
+import { BUGS, CRAFTING, PLANTS } from "../../ThemeStorage";
+import { DestroyInventoryObjectWithThemes } from "../Actions/DestroyObjectInInventoryWithThemes";
+import { FollowObject } from "../Actions/FollowObject";
+import { PickupObject } from "../Actions/PickupObject";
+import { SpawnObjectAtFeet } from "../Actions/SpawnObjectAtFeet";
 import { AiBeat } from "../StoryBeats/BaseBeat";
+import { TargetHasObjectWithTheme } from "../TargetFilter/TargetHasObjectWithTheme";
+import { TargetHasTheme } from "../TargetFilter/TargetHasTheme";
+import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { Quotidian, Direction } from "./Quotidian";
 
 
@@ -32,7 +40,40 @@ export class Chicken extends Quotidian{
             down_src:{src:"chicken_down.gif",width:29,height:28}
 
         };
-        const beats:AiBeat[] = [];
+
+        const egg = new PhysicalObject(room, "Egg", 0,0, 26,37, [], 0, "images/Walkabout/Objects/TopFloorObjects/egg.png", "It's a pretty basic chicken egg.");
+
+        const eatPlant = new AiBeat(
+            [new TargetHasObjectWithTheme([all_themes[PLANTS]], {kMode:true})],
+            [new DestroyInventoryObjectWithThemes([all_themes[PLANTS]]), new SpawnObjectAtFeet(egg)],
+            true,
+            1000*60
+        );
+        const eatBug = new AiBeat(
+            [new TargetHasObjectWithTheme([all_themes[BUGS]], {kMode:true}],
+            [new DestroyInventoryObjectWithThemes([all_themes[BUGS]]), new SpawnObjectAtFeet(egg)],
+            true,
+            1000*60
+        );
+        const approachPlantOrBug = new AiBeat(
+            [new TargetHasTheme([all_themes[BUGS],all_themes[PLANTS]],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5,{invert: true})],
+            [new FollowObject()],
+            true,
+            1000*60
+        );
+        const pickupPlantOrBug = new AiBeat(
+            [new TargetHasTheme([all_themes[BUGS],all_themes[PLANTS]],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
+            [new PickupObject()],
+            true,
+            1000*60
+        );
+
+        const beats:AiBeat[] = [
+            eatBug,
+            eatPlant,
+            pickupPlantOrBug,
+            approachPlantOrBug
+        ];
         super(room,"Chicken Friend", x,y,[all_themes[CRAFTING]],sprite,sprite,"They make eggs. Eggs are important.", beats);
     }
 }
