@@ -1517,7 +1517,7 @@ exports.Think = Think;
 "use strict";
 
 ///they have a lil house on their back
-//Yongiki likes them, so i decided to add one
+//Yongki likes them, so i decided to add one
 //also, and i didn't realize this till last night
 //their houses are spirals
 Object.defineProperty(exports, "__esModule", ({ value: true }));
@@ -2134,7 +2134,7 @@ exports.Quotidian = Quotidian;
 "use strict";
 
 ///they have a lil house on their back
-//Yongiki likes them, so i decided to add one
+//Yongki likes them, so i decided to add one
 //also, and i didn't realize this till last night
 //their houses are spirals
 Object.defineProperty(exports, "__esModule", ({ value: true }));
@@ -2154,7 +2154,7 @@ class Snail extends Quotidian_1.Quotidian {
         };
         const beats = [];
         super(room, "Snail Friend", x, y, [Theme_1.all_themes[ThemeStorage_1.BUGS]], sprite, sprite, "It's like a slime creature. But small. You love those. Snails have the houses on them, that's the premium shit.", beats);
-        this.lore = "Yongiki's love of snails sure has sunk deep, has it not?";
+        this.lore = "Yongki's love of snails sure has sunk deep, has it not?";
         this.maxSpeed = 1;
         this.minSpeed = 1;
         this.currentSpeed = 1;
@@ -7531,7 +7531,7 @@ __webpack_require__.r(__webpack_exports__);
 const text = `
 * JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
 
-Name: Yongiki
+Name: Yongki
 Aliases:  The Reflection, L-0-I1(0-47)
 Coping Strategy: Chaotic (See Summary, Detail Notes 1-46)
 Attachment Style: Chaotic (See Summary, Detail Notes 1-46)
@@ -7540,7 +7540,7 @@ Quick Summary:
 
 Yongk ican not be summarized. Each time his Reflection resets him, all his memory (and thus personality) is lost. Each time he builds himself anew, he is, to greater and lesser extents, a different person.
 
-This Heresy that has befallen him may yet have a cure, but in the mean time I work with the Yongiki I am given to try to focus on recognizing situations that may have a Mirror and how to avoid it.
+This Heresy that has befallen him may yet have a cure, but in the mean time I work with the Yongki I am given to try to focus on recognizing situations that may have a Mirror and how to avoid it.
 
 
 
@@ -8013,17 +8013,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "text": () => (/* binding */ text)
 /* harmony export */ });
 const text = `
-Even when his memory faltered, Captain Yongiki proved to be no stranger to fighting. 
+Even when his memory faltered, Captain Yongki proved to be no stranger to fighting. 
 
 It was an unnecessary observation, truly. While his preference for sweatpants and sweaters and weighted blankets may have deceived some into thinking of him as a soft man, the marks left on his body told a different story: every patch of his skin suffered of inch-deep gashes and bitemarks and burnt flesh, the meat beneath his ribs slashed and torn a thousand times over. A body such as his would look more at home on the leather of a factory animal, unloved and left ragged by years of abuse. 
 
-And yet his physique told a different story-- one of conquered battles and struggle, of power, of dominion. Perhaps Yongiki had not always been so bulky, so naturally predisposed to some sort of innate strength. Instead, it was as if his body had remembered every single injury ever done to him, and vowed to never feel it again. The price of such power was a body left unloved, haunted only by the ache for tenderness.
+And yet his physique told a different story-- one of conquered battles and struggle, of power, of dominion. Perhaps Yongki had not always been so bulky, so naturally predisposed to some sort of innate strength. Instead, it was as if his body had remembered every single injury ever done to him, and vowed to never feel it again. The price of such power was a body left unloved, haunted only by the ache for tenderness.
 
 But that was all useless when it came to answering the question. Sure, perhaps he'd killed many, but the Captain would never regain the why of each lesson carved onto his skin. Such a question would never be answered.
 
 For every legend, however, there were witnesses. Only two people were left in the world to remember his earliest kill, and they both had something different to say.
 
-If you were to ask Vic, they'd tell you it was for the best. The fourth member of their crew, whose name escaped them, had gotten compromised by one of the many beasts that roamed those damned walls. What got her, you may ask? The strangest thing: a pair of red shoes, ever so shiny and polished, which rested upon a pedestal. With it driving her into a murderous frenzy, eyes dripping blood and armed with an axe, it was only fair-- even just-- that she had to die. What was there to do about it? The transformation, once done, was irreversible. Yongiki did them a favor back there by dragging her away from view before she was... liberated, from her duties, one last time.
+If you were to ask Vic, they'd tell you it was for the best. The fourth member of their crew, whose name escaped them, had gotten compromised by one of the many beasts that roamed those damned walls. What got her, you may ask? The strangest thing: a pair of red shoes, ever so shiny and polished, which rested upon a pedestal. With it driving her into a murderous frenzy, eyes dripping blood and armed with an axe, it was only fair-- even just-- that she had to die. What was there to do about it? The transformation, once done, was irreversible. Yongki did them a favor back there by dragging her away from view before she was... liberated, from her duties, one last time.
 
 K, however, had a much different story to tell.
 
@@ -8035,7 +8035,7 @@ As for that random girl? They'd just found their wrench when the idiot had decid
 
 The little remorse, the lack of a moment's thought... it was clear she'd been a real thorn on their side. Quiet, but game recognized game; something about her brought out something fierce in the Captain, even before that moment. Maybe they'd been dating. Perhaps they were enemies. Maybe she didn't know her damn place. Who knew? Those details you tend to forget when you see someone cut in front of you.
 
-If there was one thing he swore above anything else, it was that Yongiki was smiling the whole time. He must've enjoyed every second of it.
+If there was one thing he swore above anything else, it was that Yongki was smiling the whole time. He must've enjoyed every second of it.
 
 `;
 
@@ -8056,7 +8056,7 @@ const text = `
 
 To Vik, the question of 'their first kill' rang deaf to their ears. After ████████████████████████████ from ████████████████████████████████████████████████████████████████████████████████████, they'd long lost the concept of a mundane death-- one where the body simply decomposed and laid forgotten. But even though the deaths of the corporation had become a shapeless memory, their first 'kill' in that hellish universe was still brand new. 
 
-At first, they didn't know they were hungry. Their existing condition made it too easy to confuse bodily pains with each other, and they still had meals as normal, so judging such aches as relevant was not an idea they were used to. So for a while they continued as if nothing was wrong, corralling Yongiki along and making sure K had something to do. Whatever that stomach bug was, they thought, it'd surely leave of its own accord.
+At first, they didn't know they were hungry. Their existing condition made it too easy to confuse bodily pains with each other, and they still had meals as normal, so judging such aches as relevant was not an idea they were used to. So for a while they continued as if nothing was wrong, corralling Yongki along and making sure K had something to do. Whatever that stomach bug was, they thought, it'd surely leave of its own accord.
 
 But as with any infection left untreated, in face of no antidote, it only grew in scope.
 
@@ -8386,18 +8386,18 @@ const text = `
 * JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
 
 
-Name: Yongiki(updated)
+Name: Yongki(updated)
 Aliases:  The Reflection, L-0-I1-alpha
 Coping Strategy: Avoidance
 Attachment Style: Secure
 
 Quick Summary:
 
-I am happy to report that the Heresy has been resolved and Yongiki has stabilized. While Mirrors are still not his favorite objects in the world, with the actual ability to retain Memory Yongiki is able to Grow as a person.
+I am happy to report that the Heresy has been resolved and Yongki has stabilized. While Mirrors are still not his favorite objects in the world, with the actual ability to retain Memory Yongki is able to Grow as a person.
 
 He proves himself to be an admirably Curious young man, with a desire to Learn Everything he can.  However, he has little tolerance for challenge or strife, preferring to learn the lesson that, for example, "Hammocks are evil" rather than trying to overcome them.
 
-His relationship with his Peers has proven somewhat more difficult. While he is friendly and upbeat, those around him have long grown into the habit of avoiding getting too attached to someone who may Vanish with little to no notice.  Yongiki seems to believe this is simply the state of the world, and his overwhelming power results in him having little need to rely on others. As a result, he seems perfectly secure and content with his relatively solitary nature.
+His relationship with his Peers has proven somewhat more difficult. While he is friendly and upbeat, those around him have long grown into the habit of avoiding getting too attached to someone who may Vanish with little to no notice.  Yongki seems to believe this is simply the state of the world, and his overwhelming power results in him having little need to rely on others. As a result, he seems perfectly secure and content with his relatively solitary nature.
 
 This is not to say that there are no social challenges. In particular, I am working with him to better navigate his ..."roommate", while also helping him take initiative in instructing his Peers on the damage they can do to him while feuding with the Captain.
 
@@ -8425,15 +8425,15 @@ Attachment Style: Pending
 Quick Summary:
 
 
-The Captain is a study in contrasts. A man who revels in his physical prowess (especially for his age), he equally seems to feel helpless in the face of Societal Expectations. Observing Yongiki's unique lack of response to those Expectations has proven Illuminating for him.
+The Captain is a study in contrasts. A man who revels in his physical prowess (especially for his age), he equally seems to feel helpless in the face of Societal Expectations. Observing Yongki's unique lack of response to those Expectations has proven Illuminating for him.
 
 The Captain remains tight-lipped about certain aspects of his upbringing, but it seems clear he comes from a strict background. He expects rules to be clearly defined, and for everyone to follow them.  Deviations from rules (real or imagined) causes him great distress and results in attempts to control those around him in the same manner he would control himself.
 
 As a result, his return to his former co-workers has resulted in distress and a retreat to rules. He is bewildered at the various changes in those who should be familiar to him. He is further caught off guard that when he finally returned to his body, it was in an entirely new, strange universe. The phrase "you can't go home again" seems especially relevant.
 
-I have been working with the Captain to allow more leeway in "roommate" agreements with Yongiki, as well as hinting that perhaps group therapy would be appropriate for the Information team more broadly. His return has certainly destabilized certain dynamics in ways that could be leveraged to obtain real Growth for all.
+I have been working with the Captain to allow more leeway in "roommate" agreements with Yongki, as well as hinting that perhaps group therapy would be appropriate for the Information team more broadly. His return has certainly destabilized certain dynamics in ways that could be leveraged to obtain real Growth for all.
 
-However, Significant Challenges remain blocking this option, namely Captain's inability to control Yongiki's severe physical response to danger or aggression.  He has taken to the challenge with aplomb, providing the Hypothesis that Yongiki's more lackadaisical nature may result in superior control of one's body.  I am working with him to find ways to evaluate this Hypothesis and provide regimens for increasing control.
+However, Significant Challenges remain blocking this option, namely Captain's inability to control Yongki's severe physical response to danger or aggression.  He has taken to the challenge with aplomb, providing the Hypothesis that Yongki's more lackadaisical nature may result in superior control of one's body.  I am working with him to find ways to evaluate this Hypothesis and provide regimens for increasing control.
 
 
 `;
@@ -8733,7 +8733,7 @@ const text = `
 
 Additional Notes: 
 
-It must be noted that certain of my patients are in various stages of recovery from Shared Generational Trauma stemming from their home universe. Camille, Devona, Ria, Neville, and Witherby self identify as having been direct coworkers in a Training Team, Vik, K, Yongiki, and Captain identify as direct workers in an Information Team, and Parker is the sole surviving member of Control.
+It must be noted that certain of my patients are in various stages of recovery from Shared Generational Trauma stemming from their home universe. Camille, Devona, Ria, Neville, and Witherby self identify as having been direct coworkers in a Training Team, Vik, K, Yongki, and Captain identify as direct workers in an Information Team, and Parker is the sole surviving member of Control.
 
 These teams were assembled in the service of a Nightmarish Corporation which by All Accounts sought to benefit from Employee Trauma associated with Containing Horrors. 
 
@@ -8760,7 +8760,7 @@ Vik has been struggling with self sacrifice, and the mindset that they have no w
 
 With Khana, I am under no such restrictions. Even without him being a direct patient of mine, his proud sharing of information has painted quite a clear picture.  In the face of Trauma that could not be bargained with, could not be reasoned with, Khana concluded that the only Power and Safety that could be obtained must be Taken.  That Status is a shortcut to what little Safety there was, as those most likely to be killed or injured were those with the least of it.  In their Home Universe, murder was a quite efficient way to keep oneself safe, while in this Universe it is a quick way to get oneself killed or imprisoned.  Khana is navigating the challenge of learning the New Rules and learning to leverage them. Of learning to Relax now that Being Seen is no longer a Matter of Life And Death.
 
-Yongiki has been struggling with far more Physical Trauma than any of the others. The nearest mundane Analogue I can conceive of is Traumatic Brain Injury.  Prior to the Captain joining, Yongiki was focused on learning to manage this injury and avoiding making it worse. With the Captain here, Yongiki is able to begin taking the first steps of recovery, focusing on learning who he is and what he prefers. 
+Yongki has been struggling with far more Physical Trauma than any of the others. The nearest mundane Analogue I can conceive of is Traumatic Brain Injury.  Prior to the Captain joining, Yongki was focused on learning to manage this injury and avoiding making it worse. With the Captain here, Yongki is able to begin taking the first steps of recovery, focusing on learning who he is and what he prefers. 
 
 
 Meanwhile, Parker's fundamental fear that his Presence Can Only Make Things Worse appears to be eroding with time. Interacting with other refugees from the Corporation appears to be steadily driving home the concept that while he was, in fact, the common thread through all of the Trauma he experienced, he was NOT the cause of it. That the Trauma was fundamentally Out Of His Control and Impersona.  Rather than avoiding the world and abdicating all responsibility for his actions, Parker is learning that even with his Unique Challenges there are ways to Safely Interact.

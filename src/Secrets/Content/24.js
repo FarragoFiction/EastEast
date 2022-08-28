@@ -5,7 +5,7 @@ export const text = `
 
 To Vik, the question of 'their first kill' rang deaf to their ears. After ████████████████████████████ from ████████████████████████████████████████████████████████████████████████████████████, they'd long lost the concept of a mundane death-- one where the body simply decomposed and laid forgotten. But even though the deaths of the corporation had become a shapeless memory, their first 'kill' in that hellish universe was still brand new. 
 
-At first, they didn't know they were hungry. Their existing condition made it too easy to confuse bodily pains with each other, and they still had meals as normal, so judging such aches as relevant was not an idea they were used to. So for a while they continued as if nothing was wrong, corralling Yongiki along and making sure K had something to do. Whatever that stomach bug was, they thought, it'd surely leave of its own accord.
+At first, they didn't know they were hungry. Their existing condition made it too easy to confuse bodily pains with each other, and they still had meals as normal, so judging such aches as relevant was not an idea they were used to. So for a while they continued as if nothing was wrong, corralling Yongki along and making sure K had something to do. Whatever that stomach bug was, they thought, it'd surely leave of its own accord.
 
 But as with any infection left untreated, in face of no antidote, it only grew in scope.
 
