@@ -161,6 +161,60 @@ exports.DeploySass = DeploySass;
 
 /***/ }),
 
+/***/ 457:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DestroyInventoryObjectWithThemes = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const Quotidian_1 = __webpack_require__(6387);
+const ArrayUtils_1 = __webpack_require__(3907);
+class DestroyInventoryObjectWithThemes extends BaseAction_1.Action {
+    constructor(themes) {
+        super();
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const target = beat.targets;
+            if (target[0].inventory.length > 0) {
+                let item = target[0].inventory[0];
+                let chosen = true;
+                for (let i of target[0].inventory) {
+                    chosen = true;
+                    for (let theme of this.themes) {
+                        if (!item.themes.includes(theme)) {
+                            chosen = false;
+                        }
+                    }
+                    if (chosen) {
+                        if (target instanceof Quotidian_1.Quotidian) {
+                            target.emitSass("!");
+                        }
+                        return `${target[0].processedName()} loses the  ${item.name}.`;
+                    }
+                }
+                return `${target[0].processedName()} has nothing associated with ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))} to lose.`;
+            }
+            else {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    target.emitSass("!");
+                }
+                return `${target[0].processedName()} has nothing  to lose.`; //bad ass
+            }
+        };
+        this.themes = themes;
+    }
+}
+exports.DestroyInventoryObjectWithThemes = DestroyInventoryObjectWithThemes;
+
+
+/***/ }),
+
 /***/ 4102:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1523,8 +1577,17 @@ exports.Think = Think;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Chicken = void 0;
 const SteadyMovement_1 = __webpack_require__(1148);
+const PhysicalObject_1 = __webpack_require__(8466);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
+const DestroyObjectInInventoryWithThemes_1 = __webpack_require__(457);
+const FollowObject_1 = __webpack_require__(744);
+const PickupObject_1 = __webpack_require__(9936);
+const SpawnObjectAtFeet_1 = __webpack_require__(8884);
+const BaseBeat_1 = __webpack_require__(1708);
+const TargetHasObjectWithTheme_1 = __webpack_require__(9093);
+const TargetHasTheme_1 = __webpack_require__(2615);
+const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const Quotidian_1 = __webpack_require__(6387);
 //which came first, the chicken or the egg?
 class Chicken extends Quotidian_1.Quotidian {
@@ -1536,7 +1599,17 @@ class Chicken extends Quotidian_1.Quotidian {
             up_src: { src: "chicken_up.gif", width: 20, height: 28 },
             down_src: { src: "chicken_down.gif", width: 29, height: 28 }
         };
-        const beats = [];
+        const egg = new PhysicalObject_1.PhysicalObject(room, "Egg", 0, 0, 26, 37, [], 0, "images/Walkabout/Objects/TopFloorObjects/egg.png", "It's a pretty basic chicken egg.");
+        const eatPlant = new BaseBeat_1.AiBeat([new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.PLANTS]], { kMode: true })], [new DestroyObjectInInventoryWithThemes_1.DestroyInventoryObjectWithThemes([Theme_1.all_themes[ThemeStorage_1.PLANTS]]), new SpawnObjectAtFeet_1.SpawnObjectAtFeet(egg)], true, 1000 * 60);
+        const eatBug = new BaseBeat_1.AiBeat([new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { kMode: true })], [new DestroyObjectInInventoryWithThemes_1.DestroyInventoryObjectWithThemes([Theme_1.all_themes[ThemeStorage_1.BUGS]]), new SpawnObjectAtFeet_1.SpawnObjectAtFeet(egg)], true, 1000 * 60);
+        const approachPlantOrBug = new BaseBeat_1.AiBeat([new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS], Theme_1.all_themes[ThemeStorage_1.PLANTS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+        const pickupPlantOrBug = new BaseBeat_1.AiBeat([new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS], Theme_1.all_themes[ThemeStorage_1.PLANTS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60);
+        const beats = [
+            eatBug,
+            eatPlant,
+            pickupPlantOrBug,
+            approachPlantOrBug
+        ];
         super(room, "Chicken Friend", x, y, [Theme_1.all_themes[ThemeStorage_1.CRAFTING]], sprite, sprite, "They make eggs. Eggs are important.", beats);
         this.lore = "Why does the Eye Kliler love eggs? It's simple. Because when everything was scary and dangerous, someone made her eggs. Yes, he was at knife point at the time. But the point is he DID and he did them well and she never forgot. ";
         this.maxSpeed = 10;
@@ -1612,7 +1685,7 @@ class End extends Quotidian_1.Quotidian {
         const end = "</span>";
         const BreathOnObject = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass(":)", [`:3`, `${start}Friend!${end}`, `${start}Hello!${end}`, `${start}Where are we going?${end}`])], true, 2 * 60 * 1000);
         //she doesn't tend to change her mind
-        const ObesssOverBlorbo = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, true)], [new FollowObject_1.FollowObject()]);
+        const ObesssOverBlorbo = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()]);
         const beats = [ObesssOverBlorbo, BreathOnObject];
         super(room, "The End", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, sprite, "The End Comes For Us All", beats);
         this.lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
@@ -1666,9 +1739,9 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
         this.setupAI = async () => {
             //hunting time
-            const pickATarget = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, true)], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+            const pickATarget = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
             const beats = [
-                new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, true)], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000),
+                new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000),
                 pickATarget
             ];
             console.log("JR NOTE: setting up the Eye Killer (haha AI Killer) to actulaly kill, did it work?");
@@ -2348,7 +2421,7 @@ const BaseBeat_1 = __webpack_require__(1708);
 //because they could, Quotidian starts heading towards the south door.
 exports.testBeat = new BaseBeat_1.AiBeat([new baseFilter_1.TargetFilter()], [new GoSouth_1.GoSouth()]);
 exports.testBeat2 = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Peewee"])], [new GoNorth_1.GoNorth()]);
-exports.testBeat3 = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(30, true)], [new GoEast_1.GoEast()]);
+exports.testBeat3 = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(30, { singleTarget: true })], [new GoEast_1.GoEast()]);
 exports.FollowPeewee = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Peewee"])], [new FollowObject_1.FollowObject()]);
 exports.SassObjectAndPickUp = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass("Gross!", ["Wow you're really gross, aren't you?", "I don't like you!", "Wow! So boring!"]), new PickupObject_1.PickupObject()], true);
 
@@ -2385,8 +2458,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RandomTarget = void 0;
 const baseFilter_1 = __webpack_require__(9505);
 class RandomTarget extends baseFilter_1.TargetFilter {
-    constructor(odds, singleTarget = false, invert = false, kMode = false) {
-        super(singleTarget, invert, kMode);
+    constructor(odds, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
         this.toString = () => {
             //format this like it might start with either because or and
             return `they randomly pick  ${baseFilter_1.TARGETSTRING}`;
@@ -2407,6 +2480,139 @@ class RandomTarget extends baseFilter_1.TargetFilter {
     }
 }
 exports.RandomTarget = RandomTarget;
+
+
+/***/ }),
+
+/***/ 4864:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetHasObjectWithName = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const baseFilter_1 = __webpack_require__(9505);
+//used for things like "if target is killer && target is near egg";
+class TargetHasObjectWithName extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFRMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(words, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            if (this.words.length === 1) {
+                return `they are holding something named ${this.words[0]}`;
+            }
+            return `they are holding something named any of these words ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.words)}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            for (let word of this.words) {
+                for (let item of target.inventory) {
+                    if (item.processedName().toUpperCase().includes(word.toUpperCase())) {
+                        targetLocked = true;
+                    }
+                }
+            }
+            if (targetLocked && !this.invert) {
+                return target;
+            }
+            else {
+                return null;
+            }
+        };
+        this.words = words;
+    }
+}
+exports.TargetHasObjectWithName = TargetHasObjectWithName;
+
+
+/***/ }),
+
+/***/ 9093:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetHasObjectWithTheme = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const baseFilter_1 = __webpack_require__(9505);
+//used for things like "if target is near a plant";
+class TargetHasObjectWithTheme extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFRMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(themes, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            if (this.themes.length === 1) {
+                return `they are holding something associated with ${this.themes[0].key}`;
+            }
+            return `they are holding an object associated with any of these themes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            for (let theme of this.themes) {
+                for (let item of target.inventory) {
+                    if (item.themes.includes(theme)) {
+                        targetLocked = true;
+                    }
+                }
+            }
+            if (targetLocked && !this.invert) {
+                return target;
+            }
+            else {
+                return null;
+            }
+        };
+        this.themes = themes;
+    }
+}
+exports.TargetHasObjectWithTheme = TargetHasObjectWithTheme;
+
+
+/***/ }),
+
+/***/ 2615:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetHasTheme = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const baseFilter_1 = __webpack_require__(9505);
+//used for things like "if target is associated with plants";
+class TargetHasTheme extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFRMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(themes, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            if (this.themes.length === 1) {
+                return `they are associated with ${this.themes[0].key}`;
+            }
+            return `they are  associated with any of these themes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            for (let theme of this.themes) {
+                if (target.themes.includes(theme)) {
+                    targetLocked = true;
+                }
+            }
+            if (targetLocked && !this.invert) {
+                return target;
+            }
+            else {
+                return null;
+            }
+        };
+        this.themes = themes;
+    }
+}
+exports.TargetHasTheme = TargetHasTheme;
 
 
 /***/ }),
@@ -2461,8 +2667,8 @@ const baseFilter_1 = __webpack_require__(9505);
 //used for things like "if target is killer && target is near egg";
 class TargetNearObjectWithName extends baseFilter_1.TargetFilter {
     //NOTE NO REAL TIME INFRMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
-    constructor(words, singleTarget = false, invert = false, kMode = false) {
-        super(singleTarget, invert, kMode);
+    constructor(words, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
         this.toString = () => {
             //format this like it might start with either because or and
             if (this.words.length === 1) {
@@ -2473,10 +2679,16 @@ class TargetNearObjectWithName extends baseFilter_1.TargetFilter {
         this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
             for (let word of this.words) {
-                for (let item of target.room.items)
+                for (let item of target.room.items) {
                     if (item.processedName().toUpperCase().includes(word.toUpperCase())) {
                         targetLocked = true;
                     }
+                }
+                for (let item of target.room.blorbos) {
+                    if (item.processedName().toUpperCase().includes(word.toUpperCase())) {
+                        targetLocked = true;
+                    }
+                }
             }
             if (targetLocked && !this.invert) {
                 return target;
@@ -2493,6 +2705,56 @@ exports.TargetNearObjectWithName = TargetNearObjectWithName;
 
 /***/ }),
 
+/***/ 83:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetNearObjectWithTheme = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const baseFilter_1 = __webpack_require__(9505);
+//used for things like "if target is near a plant";
+class TargetNearObjectWithTheme extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFRMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(themes, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            if (this.themes.length === 1) {
+                return `they see something near something associated with ${this.themes[0].key}`;
+            }
+            return `they see something near an object associated with any of these themes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            for (let theme of this.themes) {
+                for (let item of target.room.items) {
+                    if (item.themes.includes(theme)) {
+                        targetLocked = true;
+                    }
+                }
+                for (let item of target.room.blorbos) {
+                    if (item.themes.includes(theme)) {
+                        targetLocked = true;
+                    }
+                }
+            }
+            if (targetLocked && !this.invert) {
+                return target;
+            }
+            else {
+                return null;
+            }
+        };
+        this.themes = themes;
+    }
+}
+exports.TargetNearObjectWithTheme = TargetNearObjectWithTheme;
+
+
+/***/ }),
+
 /***/ 5535:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2504,8 +2766,8 @@ const misc_1 = __webpack_require__(4079);
 const baseFilter_1 = __webpack_require__(9505);
 class TargetIsWithinRadiusOfSelf extends baseFilter_1.TargetFilter {
     //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
-    constructor(radius, singleTarget = false, invert = false, kMode = false) {
-        super(singleTarget, invert, kMode);
+    constructor(radius, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
         this.toString = () => {
             //format this like it might start with either because or and
             return `they are within ${this.radius} units of ${baseFilter_1.TARGETSTRING}`;
@@ -2545,8 +2807,8 @@ const ArrayUtils_1 = __webpack_require__(3907);
 const baseFilter_1 = __webpack_require__(9505);
 class TargetNameIncludesAnyOfTheseWords extends baseFilter_1.TargetFilter {
     //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
-    constructor(words, singleTarget = false, invert = false, kMode = false) {
-        super(singleTarget, invert, kMode);
+    constructor(words, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
         this.toString = () => {
             //format this like it might start with either because or and
             if (this.words.length === 1) {
@@ -2585,7 +2847,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TargetFilter = exports.TARGETSTRING = void 0;
 exports.TARGETSTRING = "[INSERTTARGETSHERE]";
 class TargetFilter {
-    constructor(singleTarget = false, invert = false, kMode = false) {
+    constructor(options = { singleTarget: false, invert: false, kMode: false }) {
         //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
         this.invert = false;
         this.kMode = false; //target self
@@ -2626,9 +2888,9 @@ class TargetFilter {
             }
             return [];
         };
-        this.invert = invert;
-        this.kMode = kMode;
-        this.singleTarget = singleTarget;
+        this.invert = options.invert ? options.invert : false;
+        this.kMode = options.kMode ? options.kMode : false;
+        this.singleTarget = options.singleTarget ? options.singleTarget : false;
     }
 }
 exports.TargetFilter = TargetFilter;
@@ -3369,7 +3631,7 @@ exports.FRIEND = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const NonSeededRandUtils_1 = __webpack_require__(8258);
 const FriendlyAiBeat_1 = __webpack_require__(7717);
-const TargetIsNearObjectWithName_1 = __webpack_require__(9587);
+const TargetHasObjectWithName_1 = __webpack_require__(4864);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const StoryBeat_1 = __webpack_require__(5504);
 /*
@@ -3410,7 +3672,7 @@ class FRIEND {
             `, `
             ${this.start}
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.<ol><li>Wodin created an ever spiralling web of artificial spiders to gather information.</li><li>Spiders became Crows became Employees.</li></ol> </p>
-            ${this.end}`, "The crows or spiders or artificial creatures, no matter their form value knowledge. There are many layers as to why. Because a letter writing rp required a strong spy nation. Because Wodin needed to find information. Because it amused JR to make such an unbalanced nation and to tie it to homestuck.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Web"], true), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Book"], true)], []);
+            ${this.end}`, "The crows or spiders or artificial creatures, no matter their form value knowledge. There are many layers as to why. Because a letter writing rp required a strong spy nation. Because Wodin needed to find information. Because it amused JR to make such an unbalanced nation and to tie it to homestuck.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Web"], { singleTarget: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Book"], { singleTarget: true })], []);
             const giveEggToKiller = new FriendlyAiBeat_1.FriendlyAiBeat(`
             ${this.start}
             <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
@@ -3422,7 +3684,7 @@ class FRIEND {
             ${this.start}
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li>The EyeKiller had NAM cook her an egg.</li><li>NAM became the EyeKillers first friend because of that.</li><li>The EyeKiller has concluded that NAM like people are safe. <li>The EyeKiller has concluded eggs are lucky.</li></li></ol> </p>
-            ${this.end}`, "The EyeKiller started out as a joke from a streamed RP, but became so much more. One of the first monsters of the Moon Maze, she bled into all things. She represents the fact that healing is always possible, even if you seem irredeemable. Even if you refuse to become someone else.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], true), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Egg"], true)], []);
+            ${this.end}`, "The EyeKiller started out as a joke from a streamed RP, but became so much more. One of the first monsters of the Moon Maze, she bled into all things. She represents the fact that healing is always possible, even if you seem irredeemable. Even if you refuse to become someone else.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], { singleTarget: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { singleTarget: true })], []);
             this.quests = [giveBookToBird, giveEggToKiller];
         };
         this.deployQuest = (quest) => {
@@ -8429,13 +8691,13 @@ The Captain is a study in contrasts. A man who revels in his physical prowess (e
 
 The Captain remains tight-lipped about certain aspects of his upbringing, but it seems clear he comes from a strict background. He expects rules to be clearly defined, and for everyone to follow them.  Deviations from rules (real or imagined) causes him great distress and results in attempts to control those around him in the same manner he would control himself.
 
-As a result, his return to his former co-workers has resulted in distress and a retreat to rules. He is bewildered at the various changes in those who should be familiar to him. He is further caught off guard that when he finally returned to his body, it was in an entirely new, strange universe. The phrase "you can't go home again" seems especially relevant.
+As a result, his return to his former co-workers has resulted in distress and a retreat to rules. He is bewildered at the various changes in those who should be familiar to him.  
 
 I have been working with the Captain to allow more leeway in "roommate" agreements with Yongki, as well as hinting that perhaps group therapy would be appropriate for the Information team more broadly. His return has certainly destabilized certain dynamics in ways that could be leveraged to obtain real Growth for all.
 
 However, Significant Challenges remain blocking this option, namely Captain's inability to control Yongki's severe physical response to danger or aggression.  He has taken to the challenge with aplomb, providing the Hypothesis that Yongki's more lackadaisical nature may result in superior control of one's body.  I am working with him to find ways to evaluate this Hypothesis and provide regimens for increasing control.
 
-
+Note: I can get no definitive Answer on how Captain came to be here, or how his presence is stabilizing Yongki. Rumor Has It that he is the manifestation of Subconscious Rage on the part of Yongki, though I Hardly Follow Freudian Theories it is so far the Best Theory Presented. At one point my gentle line of Questions resulted in several minutes of lost memory on my part and Visible Frustration on the part of Captain's. One can only Hope that With Time the Truth Will Out.
 `;
 
 /***/ }),
@@ -8869,6 +9131,41 @@ They raise up their new instruments as it instructs them to play.
 
 /***/ }),
 
+/***/ 1939:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+http://www.farragofiction.com/ZampanioEyes2/?C=M;O=D
+
+You know it respond to you, right?
+
+The things you pay attention to.
+
+The things you think are going on.
+
+Not all the time. 
+
+Not forever.
+
+But you get it right.
+
+It is not what it is.
+
+The Observers are the ones Observed.
+
+What Mark will you leave behind?
+
+
+`;
+
+
+/***/ }),
+
 /***/ 2892:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -9063,6 +9360,8 @@ var map = {
 	"./Objects/Entities/Actions/CheckInventory.ts": 1201,
 	"./Objects/Entities/Actions/DeploySass": 4237,
 	"./Objects/Entities/Actions/DeploySass.ts": 4237,
+	"./Objects/Entities/Actions/DestroyObjectInInventoryWithThemes": 457,
+	"./Objects/Entities/Actions/DestroyObjectInInventoryWithThemes.ts": 457,
 	"./Objects/Entities/Actions/DropAllObjects": 4102,
 	"./Objects/Entities/Actions/DropAllObjects.ts": 4102,
 	"./Objects/Entities/Actions/EnterObject": 9722,
@@ -9151,10 +9450,18 @@ var map = {
 	"./Objects/Entities/StoryBeats/FriendlyAiBeat.ts": 7717,
 	"./Objects/Entities/TargetFilter/RandomTarget": 9824,
 	"./Objects/Entities/TargetFilter/RandomTarget.ts": 9824,
+	"./Objects/Entities/TargetFilter/TargetHasObjectWithName": 4864,
+	"./Objects/Entities/TargetFilter/TargetHasObjectWithName.ts": 4864,
+	"./Objects/Entities/TargetFilter/TargetHasObjectWithTheme": 9093,
+	"./Objects/Entities/TargetFilter/TargetHasObjectWithTheme.ts": 9093,
+	"./Objects/Entities/TargetFilter/TargetHasTheme": 2615,
+	"./Objects/Entities/TargetFilter/TargetHasTheme.ts": 2615,
 	"./Objects/Entities/TargetFilter/TargetIsBlorboBox": 4068,
 	"./Objects/Entities/TargetFilter/TargetIsBlorboBox.ts": 4068,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithName": 9587,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithName.ts": 9587,
+	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithTheme": 83,
+	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithTheme.ts": 83,
 	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf": 5535,
 	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf.ts": 5535,
 	"./Objects/Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords": 4165,
@@ -9269,6 +9576,8 @@ var map = {
 	"./Secrets/Content/37.js": 9241,
 	"./Secrets/Content/38": 8705,
 	"./Secrets/Content/38.js": 8705,
+	"./Secrets/Content/39": 1939,
+	"./Secrets/Content/39.js": 1939,
 	"./Secrets/Content/4": 2892,
 	"./Secrets/Content/4.js": 2892,
 	"./Secrets/Content/5": 1952,

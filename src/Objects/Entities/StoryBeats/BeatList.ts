@@ -21,7 +21,7 @@ export const testBeat2 = new AiBeat(
 );
 
 export const testBeat3 = new AiBeat(
-    [new TargetIsWithinRadiusOfSelf(30,true)],
+    [new TargetIsWithinRadiusOfSelf(30,{singleTarget:true})],
     [new GoEast()]
 );
 

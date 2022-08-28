@@ -50,7 +50,7 @@ export class Chicken extends Quotidian{
             1000*60
         );
         const eatBug = new AiBeat(
-            [new TargetHasObjectWithTheme([all_themes[BUGS]], {kMode:true}],
+            [new TargetHasObjectWithTheme([all_themes[BUGS]], {kMode:true})],
             [new DestroyInventoryObjectWithThemes([all_themes[BUGS]]), new SpawnObjectAtFeet(egg)],
             true,
             1000*60
