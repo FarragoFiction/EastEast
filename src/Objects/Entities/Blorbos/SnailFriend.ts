@@ -1,6 +1,6 @@
 
 ///they have a lil house on their back
-//yongki likes them, so i decided to add one
+//Yongiki likes them, so i decided to add one
 //also, and i didn't realize this till last night
 //their houses are spirals
 
@@ -15,7 +15,7 @@ import { Quotidian, Direction } from "./Quotidian";
 
 
 export class Snail extends Quotidian{
-    lore = "Yongki's love of snails sure has sunk deep, has it not?";
+    lore = "Yongiki's love of snails sure has sunk deep, has it not?";
     maxSpeed = 1;
     minSpeed = 1;
     currentSpeed = 1;

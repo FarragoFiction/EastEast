@@ -3,7 +3,7 @@ export const text = `
 
 Additional Notes: 
 
-It must be noted that certain of my patients are in various stages of recovery from Shared Generational Trauma stemming from their home universe. Camille, Devona, Ria, Neville, and Witherby self identify as having been direct coworkers in a Training Team, Vik, K, Yongki, and Captain identify as direct workers in an Information Team, and Parker is the sole surviving member of Control.
+It must be noted that certain of my patients are in various stages of recovery from Shared Generational Trauma stemming from their home universe. Camille, Devona, Ria, Neville, and Witherby self identify as having been direct coworkers in a Training Team, Vik, K, Yongiki, and Captain identify as direct workers in an Information Team, and Parker is the sole surviving member of Control.
 
 These teams were assembled in the service of a Nightmarish Corporation which by All Accounts sought to benefit from Employee Trauma associated with Containing Horrors. 
 
@@ -30,7 +30,7 @@ Vik has been struggling with self sacrifice, and the mindset that they have no w
 
 With Khana, I am under no such restrictions. Even without him being a direct patient of mine, his proud sharing of information has painted quite a clear picture.  In the face of Trauma that could not be bargained with, could not be reasoned with, Khana concluded that the only Power and Safety that could be obtained must be Taken.  That Status is a shortcut to what little Safety there was, as those most likely to be killed or injured were those with the least of it.  In their Home Universe, murder was a quite efficient way to keep oneself safe, while in this Universe it is a quick way to get oneself killed or imprisoned.  Khana is navigating the challenge of learning the New Rules and learning to leverage them. Of learning to Relax now that Being Seen is no longer a Matter of Life And Death.
 
-Yongki has been struggling with far more Physical Trauma than any of the others. The nearest mundane Analogue I can conceive of is Traumatic Brain Injury.  Prior to the Captain joining, Yongki was focused on learning to manage this injury and avoiding making it worse. With the Captain here, Yongki is able to begin taking the first steps of recovery, focusing on learning who he is and what he prefers. 
+Yongiki has been struggling with far more Physical Trauma than any of the others. The nearest mundane Analogue I can conceive of is Traumatic Brain Injury.  Prior to the Captain joining, Yongiki was focused on learning to manage this injury and avoiding making it worse. With the Captain here, Yongiki is able to begin taking the first steps of recovery, focusing on learning who he is and what he prefers. 
 
 
 Meanwhile, Parker's fundamental fear that his Presence Can Only Make Things Worse appears to be eroding with time. Interacting with other refugees from the Corporation appears to be steadily driving home the concept that while he was, in fact, the common thread through all of the Trauma he experienced, he was NOT the cause of it. That the Trauma was fundamentally Out Of His Control and Impersona.  Rather than avoiding the world and abdicating all responsibility for his actions, Parker is learning that even with his Unique Challenges there are ways to Safely Interact.
