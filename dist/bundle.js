@@ -180,11 +180,12 @@ class DestroyInventoryObjectWithThemes extends BaseAction_1.Action {
             if (!subject) {
                 return "";
             }
-            const target = beat.targets;
-            if (target[0].inventory.length > 0) {
-                let item = target[0].inventory[0];
+            const targets = beat.targets;
+            const target = targets[0];
+            if (target.inventory.length > 0) {
+                let item = target.inventory[0];
                 let chosen = true;
-                for (let i of target[0].inventory) {
+                for (let i of target.inventory) {
                     chosen = true;
                     for (let theme of this.themes) {
                         if (!item.themes.includes(theme)) {
@@ -195,16 +196,14 @@ class DestroyInventoryObjectWithThemes extends BaseAction_1.Action {
                         if (target instanceof Quotidian_1.Quotidian) {
                             target.emitSass("!");
                         }
-                        return `${target[0].processedName()} loses the  ${item.name}.`;
+                        target.destroyObject(item);
+                        return `${target.processedName()} loses the  ${item.name}.`;
                     }
                 }
-                return `${target[0].processedName()} has nothing associated with ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))} to lose.`;
+                return `${target.processedName()} has nothing associated with ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))} to lose.`;
             }
             else {
-                if (target instanceof Quotidian_1.Quotidian) {
-                    target.emitSass("!");
-                }
-                return `${target[0].processedName()} has nothing  to lose.`; //bad ass
+                return `${target.processedName()} has nothing  to lose.`; //bad ass
             }
         };
         this.themes = themes;
@@ -1596,10 +1595,10 @@ class Chicken extends Quotidian_1.Quotidian {
             default_src: { src: "chicken_left.gif", width: 33, height: 28 },
             left_src: { src: "chicken_left.gif", width: 33, height: 28 },
             right_src: { src: "chicken_right.gif", width: 33, height: 28 },
-            up_src: { src: "chicken_up.gif", width: 20, height: 28 },
+            up_src: { src: "chicken_up.gif", width: 29, height: 28 },
             down_src: { src: "chicken_down.gif", width: 29, height: 28 }
         };
-        const egg = new PhysicalObject_1.PhysicalObject(room, "Egg", 0, 0, 26, 37, [], 0, "images/Walkabout/Objects/TopFloorObjects/egg.png", "It's a pretty basic chicken egg.");
+        const egg = new PhysicalObject_1.PhysicalObject(room, "Egg", 0, 0, 13, 19, [], 0, "images/Walkabout/Objects/TopFloorObjects/egg.png", "It's a pretty basic chicken egg.");
         const eatPlant = new BaseBeat_1.AiBeat([new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.PLANTS]], { kMode: true })], [new DestroyObjectInInventoryWithThemes_1.DestroyInventoryObjectWithThemes([Theme_1.all_themes[ThemeStorage_1.PLANTS]]), new SpawnObjectAtFeet_1.SpawnObjectAtFeet(egg)], true, 1000 * 60);
         const eatBug = new BaseBeat_1.AiBeat([new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { kMode: true })], [new DestroyObjectInInventoryWithThemes_1.DestroyInventoryObjectWithThemes([Theme_1.all_themes[ThemeStorage_1.BUGS]]), new SpawnObjectAtFeet_1.SpawnObjectAtFeet(egg)], true, 1000 * 60);
         const approachPlantOrBug = new BaseBeat_1.AiBeat([new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS], Theme_1.all_themes[ThemeStorage_1.PLANTS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
@@ -3478,6 +3477,10 @@ class PhysicalObject {
                 this.room.addItem(object);
             }
         };
+        this.destroyObject = (object) => {
+            (0, ArrayUtils_1.removeItemOnce)(this.inventory, object);
+            object.owner = undefined;
+        };
         this.pickupObject = (object) => {
             this.inventory.push(object);
             if (object instanceof Quotidian_1.Quotidian) {
@@ -4115,8 +4118,7 @@ class Room {
                     this.maze.playDoorSound();
                     if (blorbo.name !== "Peewee") {
                         this.removeBlorbo(blorbo);
-                        const room = this.getNorth();
-                        room && room.addBlorbo(blorbo);
+                        this.maze.addStorybeat(new StoryBeat_1.StoryBeat(`${blorbo.name} Leave`, `${blorbo.name} leaves out the NORTH DOOR.`));
                     }
                     else {
                         const room = this.getNorth();
@@ -4137,8 +4139,7 @@ class Room {
                     this.maze.playDoorSound();
                     if (blorbo.name !== "Peewee") {
                         this.removeBlorbo(blorbo);
-                        const room = this.getSouth();
-                        room && room.addBlorbo(blorbo);
+                        this.maze.addStorybeat(new StoryBeat_1.StoryBeat(`${blorbo.name} Leave`, `${blorbo.name} leaves out the SOUTH DOOR.`));
                     }
                     else {
                         const room = this.getSouth();
@@ -4158,8 +4159,7 @@ class Room {
                     this.maze.playDoorSound();
                     if (blorbo.name !== "Peewee") {
                         this.removeBlorbo(blorbo);
-                        const room = this.getEast();
-                        room && room.addBlorbo(blorbo);
+                        this.maze.addStorybeat(new StoryBeat_1.StoryBeat(`${blorbo.name} Leave`, `${blorbo.name} leaves out the EAST DOOR.`));
                     }
                     else {
                         const room = this.getEast();

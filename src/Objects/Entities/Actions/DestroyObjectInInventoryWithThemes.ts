@@ -26,11 +26,12 @@ export class DestroyInventoryObjectWithThemes extends Action { //lawsuit
             return "";
         }
 
-        const target = beat.targets;
-        if (target[0].inventory.length > 0) {
-            let item = target[0].inventory[0];
+        const targets = beat.targets;
+        const target = targets[0];
+        if (target.inventory.length > 0) {
+            let item = target.inventory[0];
             let chosen = true;
-            for(let i of target[0].inventory){
+            for(let i of target.inventory){
                 chosen  = true;
                 for(let theme of this.themes){
                     if(!item.themes.includes(theme)){
@@ -41,19 +42,17 @@ export class DestroyInventoryObjectWithThemes extends Action { //lawsuit
                     if (target instanceof Quotidian) {
                         target.emitSass("!")
                     }
-                    return `${target[0].processedName()} loses the  ${item.name}.`;
+                    target.destroyObject(item);
+                    return `${target.processedName()} loses the  ${item.name}.`;
                 }
             }
-            return `${target[0].processedName()} has nothing associated with ${turnArrayIntoHumanSentence(this.themes.map((i)=>i.key))} to lose.`;
+            return `${target.processedName()} has nothing associated with ${turnArrayIntoHumanSentence(this.themes.map((i)=>i.key))} to lose.`;
 
 
            
 
         } else {
-            if (target instanceof Quotidian) {
-                target.emitSass("!")
-            }
-            return `${target[0].processedName()} has nothing  to lose.`;//bad ass
+            return `${target.processedName()} has nothing  to lose.`;//bad ass
 
         }
     }

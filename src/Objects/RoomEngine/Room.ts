@@ -231,6 +231,8 @@ export class Room {
                 this.maze.playDoorSound();
                 if (blorbo.name !== "Peewee") {
                     this.removeBlorbo(blorbo);
+                    this.maze.addStorybeat(new StoryBeat(`${blorbo.name} Leave`,`${blorbo.name} leaves out the NORTH DOOR.`))
+
                 } else {
                     const room = this.getNorth();
                     room && this.maze.changeRoom(room);
@@ -251,6 +253,7 @@ export class Room {
                 this.maze.playDoorSound();
                 if (blorbo.name !== "Peewee") {
                     this.removeBlorbo(blorbo);
+                    this.maze.addStorybeat(new StoryBeat(`${blorbo.name} Leave`,`${blorbo.name} leaves out the SOUTH DOOR.`))
                 } else {
                     const room = this.getSouth();
                     room && this.maze.changeRoom(room);
@@ -271,6 +274,8 @@ export class Room {
                 this.maze.playDoorSound();
                 if (blorbo.name !== "Peewee") {
                     this.removeBlorbo(blorbo);
+                    this.maze.addStorybeat(new StoryBeat(`${blorbo.name} Leave`,`${blorbo.name} leaves out the EAST DOOR.`))
+
                 } else {
                     const room = this.getEast();
                     room && this.maze.changeRoom(room);

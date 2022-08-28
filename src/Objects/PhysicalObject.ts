@@ -109,6 +109,11 @@ export class PhysicalObject {
         }
     }
 
+    destroyObject  = (object: PhysicalObject) => {
+        removeItemOnce(this.inventory, object);
+        object.owner = undefined;
+    }
+
     pickupObject = (object: PhysicalObject) => {
         this.inventory.push(object);
         if (object instanceof Quotidian) {

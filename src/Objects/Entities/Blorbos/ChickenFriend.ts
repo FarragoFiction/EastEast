@@ -36,12 +36,12 @@ export class Chicken extends Quotidian{
             default_src:{src:"chicken_left.gif",width:33,height:28},
             left_src:{src:"chicken_left.gif",width:33,height:28},
             right_src:{src:"chicken_right.gif",width:33,height:28},
-            up_src:{src:"chicken_up.gif",width:20,height:28},
+            up_src:{src:"chicken_up.gif",width:29,height:28},
             down_src:{src:"chicken_down.gif",width:29,height:28}
 
         };
 
-        const egg = new PhysicalObject(room, "Egg", 0,0, 26,37, [], 0, "images/Walkabout/Objects/TopFloorObjects/egg.png", "It's a pretty basic chicken egg.");
+        const egg = new PhysicalObject(room, "Egg", 0,0, 13,19, [], 0, "images/Walkabout/Objects/TopFloorObjects/egg.png", "It's a pretty basic chicken egg.");
 
         const eatPlant = new AiBeat(
             [new TargetHasObjectWithTheme([all_themes[PLANTS]], {kMode:true})],
