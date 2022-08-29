@@ -133,7 +133,7 @@ export class FRIEND{
         );
 
 
-        this.quests = [giveBugToChicken, givePlantToChicken,giveBookToBird, giveEggToKiller];
+        this.quests = [givePlantToChicken,giveBugToChicken,giveBookToBird, giveEggToKiller];
     }
 
     deployQuest = (quest: FriendlyAiBeat)=>{

@@ -3765,7 +3765,10 @@ const ArrayUtils_1 = __webpack_require__(3907);
 const NonSeededRandUtils_1 = __webpack_require__(8258);
 const FriendlyAiBeat_1 = __webpack_require__(7717);
 const TargetHasObjectWithName_1 = __webpack_require__(4864);
+const TargetHasObjectWithTheme_1 = __webpack_require__(9093);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
 const StoryBeat_1 = __webpack_require__(5504);
 /*
 FRIEND gives you one quest at a time.
@@ -3818,7 +3821,31 @@ class FRIEND {
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li>The EyeKiller had NAM cook her an egg.</li><li>NAM became the EyeKillers first friend because of that.</li><li>The EyeKiller has concluded that NAM like people are safe. <li>The EyeKiller has concluded eggs are lucky.</li></li></ol> </p>
             ${this.end}`, "The EyeKiller started out as a joke from a streamed RP, but became so much more. One of the first monsters of the Moon Maze, she bled into all things. She represents the fact that healing is always possible, even if you seem irredeemable. Even if you refuse to become someone else.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], { singleTarget: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { singleTarget: true })], []);
-            this.quests = [giveBookToBird, giveEggToKiller];
+            const giveBugToChicken = new FriendlyAiBeat_1.FriendlyAiBeat(`
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: Bring one (1) BUG to a CHICKEN!</p>
+            ${this.end}
+            `, `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li>The snail came well before the chicken. <li>JR wrote a fic in response to ICs fic, though not the one about the Eye Killer eating an Egg.</li></ol> </p>
+            ${this.end}`, "The Truth is that JR spent a not inconsiderable amount of effort adding chicken ai to this 'game'. So cut them so slack that the quests for the chicken are a bit repetitive. ", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Chicken"], { singleTarget: true }), new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true })], []);
+            const givePlantToChicken = new FriendlyAiBeat_1.FriendlyAiBeat(`
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: Bring one (1) PLANT to a CHICKEN!</p>
+            ${this.end}
+            `, `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li>The chicken came well before the egg. <li>IC wrote the fic that had NAM cook the Killer an egg.</li></ol> </p>
+            ${this.end}`, "The Truth is that JR spent a not inconsiderable amount of effort adding chicken ai to this 'game'.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Chicken"], { singleTarget: true }), new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.PLANTS]], { singleTarget: true })], []);
+            this.quests = [givePlantToChicken, giveBugToChicken, giveBookToBird, giveEggToKiller];
         };
         this.deployQuest = (quest) => {
             this.currentQuest = quest;
