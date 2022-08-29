@@ -34,6 +34,7 @@ import { PickupObject } from "../Actions/PickupObject";
 import { DropAllObjects } from "../Actions/DropAllObjects";
 import { CheckInventory } from "../Actions/CheckInventory";
 import { EnterObject } from "../Actions/EnterObject";
+import { DropObjectWithName } from "../Actions/DropObjectWithName";
 
 
 //what, did you think any real being could be so formulaic? 
@@ -47,7 +48,7 @@ export class Peewee extends Quotidian {
     minSpeed = 1;
     currentSpeed = 10;
     //only for peewee
-    possibleActions: Action[] = [new PauseSimulation(), new ResumeSimulation(), new StopMoving(),new GoNorth(), new GoEast(), new GoSouth(), new GoWest(),new EnterObject(), new CheckInventory(), new FollowObject(), new PickupObject(), new DropAllObjects(),new GlitchDeath(), new GlitchLife(),new GlitchBreach(), new GlitchUnbreach(), new Think(), new Look(), new Listen(), new Smell(), new Feel(), new Help(), new Taste()]; //ordered by priority
+    possibleActions: Action[] = [new PauseSimulation(), new ResumeSimulation(), new StopMoving(),new GoNorth(), new GoEast(), new GoSouth(), new GoWest(),new DropObjectWithName(""), new EnterObject(), new CheckInventory(), new FollowObject(), new PickupObject(), new DropAllObjects(),new GlitchDeath(), new GlitchLife(),new GlitchBreach(), new GlitchUnbreach(), new Think(), new Look(), new Listen(), new Smell(), new Feel(), new Help(), new Taste()]; //ordered by priority
     //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
@@ -94,6 +95,7 @@ export class Peewee extends Quotidian {
                     aibeat.owner = this;
                     aibeat.timeOfLastBeat = 0; //peewee NEVER gets timelocked
                     const trigger = aibeat.triggered(this.room,true);//sets targets
+                    action.handleProcessingPeeweeInput(beat.command, this);
                     beat.response = action.applyAction(aibeat);
                     return;
                 }

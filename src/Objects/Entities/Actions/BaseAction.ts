@@ -7,6 +7,13 @@ export class Action{ //lawsuit
 
     //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
     recognizedCommands:string[] = []; //nothing, so its default
+//for all fights, if yongki, yongki win
+
+
+    handleProcessingPeeweeInput = (input: string)=>{
+        //MOST actions do nothing here, but if you, for example, need to get some complex nuance in this action
+        //we can toss peewees whole input into here and scan it for whatever we care about
+    }
 
     sensePhrase = (room?:Room)=>{
         if(!room){

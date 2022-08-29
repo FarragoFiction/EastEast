@@ -100,6 +100,8 @@ export class PhysicalObject {
     }
 
     dropObject = (object: PhysicalObject) => {
+        object.x = this.x;
+        object.y = this.y;
         removeItemOnce(this.inventory, object);
         object.owner = undefined;
         if (object instanceof Quotidian) {
@@ -107,6 +109,8 @@ export class PhysicalObject {
         } else {
             this.room.addItem(object);
         }
+        object.updateRendering();
+
     }
 
     destroyObject  = (object: PhysicalObject) => {
