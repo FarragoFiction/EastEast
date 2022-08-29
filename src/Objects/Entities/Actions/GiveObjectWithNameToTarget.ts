@@ -2,12 +2,13 @@
 import { Action } from "./BaseAction";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { Peewee } from "../Blorbos/Peewee";
+import { removeItemOnce } from "../../../Utils/ArrayUtils";
 
 export class DropObjectWithName extends Action{ //lawsuit
 
     name:string;
     
-    recognizedCommands:string[] = ["DEPLOY","YEET","DROP"]; //deploy q baby
+    recognizedCommands:string[] = ["GIVE","GIFT","OFFER","BESTOW"]; //deploy q baby
 
     constructor(name: string){
         super();
@@ -41,7 +42,12 @@ export class DropObjectWithName extends Action{ //lawsuit
         
         //first, do i have an item called that?
         let item;
-        const target = beat.targets.length > 0 ?beat.targets[0] : subject;
+        const target = beat.targets[0];
+
+        if(!target){
+            return `${subject.processedName()} doesn't doesn't see anyone to give anything to...`;
+
+        }
         for(let object of target.inventory){
             if(object.name.includes(this.name)){
                 item = object;
@@ -49,12 +55,13 @@ export class DropObjectWithName extends Action{ //lawsuit
             }
         }
         if(item){
-            target.dropObject(item);
-            return `${subject.processedName()} casually drops the ${item.name}.`;
+            removeItemOnce(subject.inventory, item);
+            target.inventory.push(item);
+            return `${subject.processedName()} casually gives the ${item.processedName()} to ${target.processedName()}.`;
 
         }
 
-        return `${subject.processedName()} doesn't have a ${this.name} to drop!`;
+        return `${subject.processedName()} doesn't have a ${this.name} to give!`;
     }
 
 

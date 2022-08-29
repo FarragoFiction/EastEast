@@ -1,6 +1,7 @@
 import { PhysicalObject } from "../../PhysicalObject";
 import { Room } from "../../RoomEngine/Room";
 import { SMELL, SOUND, TASTE } from "../../ThemeStorage";
+import { Peewee } from "../Blorbos/Peewee";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 
 export class Action{ //lawsuit
@@ -10,7 +11,7 @@ export class Action{ //lawsuit
 //for all fights, if yongki, yongki win
 
 
-    handleProcessingPeeweeInput = (input: string)=>{
+    handleProcessingPeeweeInput = (input: string, peewee: Peewee)=>{
         //MOST actions do nothing here, but if you, for example, need to get some complex nuance in this action
         //we can toss peewees whole input into here and scan it for whatever we care about
     }
