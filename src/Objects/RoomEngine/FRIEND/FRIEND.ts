@@ -4,9 +4,12 @@ import { Quotidian } from "../../Entities/Blorbos/Quotidian";
 import { AiBeat } from "../../Entities/StoryBeats/BaseBeat";
 import { FriendlyAiBeat } from "../../Entities/StoryBeats/FriendlyAiBeat";
 import { TargetHasObjectWithName } from "../../Entities/TargetFilter/TargetHasObjectWithName";
+import { TargetHasObjectWithTheme } from "../../Entities/TargetFilter/TargetHasObjectWithTheme";
 import { TargetNearObjectWithName } from "../../Entities/TargetFilter/TargetIsNearObjectWithName";
 import { TargetNameIncludesAnyOfTheseWords } from "../../Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { PhysicalObject } from "../../PhysicalObject";
+import { all_themes } from "../../Theme";
+import { BUGS, PLANTS } from "../../ThemeStorage";
 import { Maze } from "../Maze";
 import { StoryBeat } from "../StoryBeat";
 
@@ -88,7 +91,49 @@ export class FRIEND{
             [new TargetNameIncludesAnyOfTheseWords(["Killer"],{singleTarget:true}),new TargetHasObjectWithName(["Egg"],{singleTarget:true})],
             []
         );
-        this.quests = [giveBookToBird, giveEggToKiller];
+
+        const giveBugToChicken = new FriendlyAiBeat(
+            `
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: Bring one (1) BUG to a CHICKEN!</p>
+            ${this.end}
+            `,
+
+            `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li>The snail came well before the chicken. <li>JR wrote a fic in response to ICs fic, though not the one about the Eye Killer eating an Egg.</li></ol> </p>
+            ${this.end}`,
+            "The Truth is that JR spent a not inconsiderable amount of effort adding chicken ai to this 'game'. So cut them so slack that the quests for the chicken are a bit repetitive. ",
+            [new TargetNameIncludesAnyOfTheseWords(["Chicken"],{singleTarget:true}),new TargetHasObjectWithTheme([all_themes[BUGS]],{singleTarget:true})],
+            []
+        );
+
+        const givePlantToChicken = new FriendlyAiBeat(
+            `
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: Bring one (1) PLANT to a CHICKEN!</p>
+            ${this.end}
+            `,
+
+            `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li>The chicken came well before the egg. <li>IC wrote the fic that had NAM cook the Killer an egg.</li></ol> </p>
+            ${this.end}`,
+            "The Truth is that JR spent a not inconsiderable amount of effort adding chicken ai to this 'game'.",
+            [new TargetNameIncludesAnyOfTheseWords(["Chicken"],{singleTarget:true}),new TargetHasObjectWithTheme([all_themes[PLANTS]],{singleTarget:true})],
+            []
+        );
+
+
+        this.quests = [giveBugToChicken, givePlantToChicken,giveBookToBird, giveEggToKiller];
     }
 
     deployQuest = (quest: FriendlyAiBeat)=>{

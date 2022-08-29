@@ -11,8 +11,8 @@ export class Action{ //lawsuit
 //for all fights, if yongki, yongki win
 
 
-    handleProcessingPeeweeInput = (input: string, peewee: Peewee)=>{
-        //MOST actions do nothing here, but if you, for example, need to get some complex nuance in this action
+handleProcessingPeeweeInput = (input: string[], peewee: Peewee)=>{
+    //MOST actions do nothing here, but if you, for example, need to get some complex nuance in this action
         //we can toss peewees whole input into here and scan it for whatever we care about
     }
 

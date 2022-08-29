@@ -96,7 +96,7 @@ export class Peewee extends Quotidian {
                     aibeat.owner = this;
                     aibeat.timeOfLastBeat = 0; //peewee NEVER gets timelocked
                     const trigger = aibeat.triggered(this.room,true);//sets targets
-                    action.handleProcessingPeeweeInput(beat.command, this);
+                    action.handleProcessingPeeweeInput(words, this);
                     beat.response = action.applyAction(aibeat);
                     return;
                 }

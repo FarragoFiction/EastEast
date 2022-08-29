@@ -286,7 +286,7 @@ class DropObjectWithName extends BaseAction_1.Action {
             this.name = "[GLITCH]";
             for (let word of input) {
                 for (let item of peewee.inventory) {
-                    if (item.name.includes(word)) {
+                    if (item.name.toUpperCase().includes(word.toUpperCase())) {
                         this.name = word;
                         break;
                     }
@@ -302,14 +302,14 @@ class DropObjectWithName extends BaseAction_1.Action {
             let item;
             const target = beat.targets.length > 0 ? beat.targets[0] : subject;
             for (let object of target.inventory) {
-                if (object.name.includes(this.name)) {
+                if (object.name.toUpperCase().includes(this.name.toUpperCase())) {
                     item = object;
                     break;
                 }
             }
             if (item) {
                 target.dropObject(item);
-                return `${subject.processedName()} casually drops the ${item.name}."`;
+                return `${subject.processedName()} casually drops the ${item.name}.`;
             }
             return `${subject.processedName()} doesn't have a ${this.name} to drop!`;
         };
@@ -465,6 +465,69 @@ class FollowObject extends BaseAction_1.Action {
     }
 }
 exports.FollowObject = FollowObject;
+
+
+/***/ }),
+
+/***/ 6290:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GiveObjectWithName = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const ArrayUtils_1 = __webpack_require__(3907);
+class GiveObjectWithName extends BaseAction_1.Action {
+    constructor(name) {
+        super();
+        this.recognizedCommands = ["GIVE", "GIFT", "OFFER", "BESTOW"]; //deploy q baby
+        this.handleProcessingPeeweeInput = (input, peewee) => {
+            console.log("JR NOTE: the input for giving is", input);
+            /*
+                go through the input and look for a word that matches an item peewee is currently holding.
+                if you find one, set it to be the name.
+            */
+            //this does mean that peewee will cheerfully decide that "the gun" and "the apple" are the same thing because they both have "the".  deal with it.
+            this.name = "[GLITCH]";
+            for (let word of input) {
+                for (let item of peewee.inventory) {
+                    console.log(`JR NOTE: is ${word} referring to ${item.name}? ${item.name.toUpperCase().includes(word.toUpperCase())}`);
+                    if (item.name.toUpperCase().includes(word.toUpperCase())) {
+                        this.name = word;
+                        break;
+                    }
+                }
+            }
+        };
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            //first, do i have an item called that?
+            let item;
+            const target = beat.targets[0];
+            if (!target) {
+                return `${subject.processedName()} doesn't doesn't see anyone to give anything to...`;
+            }
+            for (let object of subject.inventory) {
+                if (object.name.toUpperCase().includes(this.name.toUpperCase())) {
+                    item = object;
+                    break;
+                }
+            }
+            if (item) {
+                (0, ArrayUtils_1.removeItemOnce)(subject.inventory, item);
+                target.inventory.push(item);
+                return `${subject.processedName()} casually gives the ${item.processedName()} to ${target.processedName()}.`;
+            }
+            return `${subject.processedName()} doesn't have a ${this.name} to give!`;
+        };
+        this.name = name;
+    }
+}
+exports.GiveObjectWithName = GiveObjectWithName;
 
 
 /***/ }),
@@ -2007,6 +2070,7 @@ const DropAllObjects_1 = __webpack_require__(4102);
 const CheckInventory_1 = __webpack_require__(1201);
 const EnterObject_1 = __webpack_require__(9722);
 const DropObjectWithName_1 = __webpack_require__(2827);
+const GiveObjectWithNameToTarget_1 = __webpack_require__(6290);
 //what, did you think any real being could be so formulaic? 
 //regarding the real peewee, wanda is actually quite THRILLED there is a competing parasite in the Echidna distracting the immune system (and tbf, preventing an immune disorder in the form of the eye killer)
 //the universe is AWARE of the dangers to it and endlessly expands its immune system response
@@ -2041,7 +2105,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.minSpeed = 1;
         this.currentSpeed = 10;
         //only for peewee
-        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new DropObjectWithName_1.DropObjectWithName(""), new EnterObject_1.EnterObject(), new CheckInventory_1.CheckInventory(), new FollowObject_1.FollowObject(), new PickupObject_1.PickupObject(), new DropAllObjects_1.DropAllObjects(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new GlitchunBreach_1.GlitchUnbreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
+        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new GiveObjectWithNameToTarget_1.GiveObjectWithName(""), new DropObjectWithName_1.DropObjectWithName(""), new EnterObject_1.EnterObject(), new CheckInventory_1.CheckInventory(), new FollowObject_1.FollowObject(), new PickupObject_1.PickupObject(), new DropAllObjects_1.DropAllObjects(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new GlitchunBreach_1.GlitchUnbreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -2057,7 +2121,7 @@ class Peewee extends Quotidian_1.Quotidian {
                         aibeat.owner = this;
                         aibeat.timeOfLastBeat = 0; //peewee NEVER gets timelocked
                         const trigger = aibeat.triggered(this.room, true); //sets targets
-                        action.handleProcessingPeeweeInput(beat.command, this);
+                        action.handleProcessingPeeweeInput(words, this);
                         beat.response = action.applyAction(aibeat);
                         return;
                     }
@@ -9438,6 +9502,8 @@ var map = {
 	"./Objects/Entities/Actions/Feel.ts": 4543,
 	"./Objects/Entities/Actions/FollowObject": 744,
 	"./Objects/Entities/Actions/FollowObject.ts": 744,
+	"./Objects/Entities/Actions/GiveObjectWithNameToTarget": 6290,
+	"./Objects/Entities/Actions/GiveObjectWithNameToTarget.ts": 6290,
 	"./Objects/Entities/Actions/GlitchBreach": 3674,
 	"./Objects/Entities/Actions/GlitchBreach.ts": 3674,
 	"./Objects/Entities/Actions/GlitchDeath": 6315,

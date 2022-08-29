@@ -4,7 +4,7 @@ import { AiBeat } from "../StoryBeats/BaseBeat";
 import { Peewee } from "../Blorbos/Peewee";
 import { removeItemOnce } from "../../../Utils/ArrayUtils";
 
-export class DropObjectWithName extends Action{ //lawsuit
+export class GiveObjectWithName extends Action{ //lawsuit
 
     name:string;
     
@@ -15,7 +15,8 @@ export class DropObjectWithName extends Action{ //lawsuit
         this.name = name;
     }
 
-    handleProcessingPeeweeInput = (input: string, peewee: Peewee)=>{
+    handleProcessingPeeweeInput = (input: string[], peewee: Peewee)=>{
+        console.log("JR NOTE: the input for giving is", input)
         /*
             go through the input and look for a word that matches an item peewee is currently holding.
             if you find one, set it to be the name.
@@ -24,7 +25,8 @@ export class DropObjectWithName extends Action{ //lawsuit
             this.name = "[GLITCH]";
             for(let word of input){
                 for(let item of peewee.inventory){
-                    if(item.name.includes(word)){
+                    console.log(`JR NOTE: is ${word} referring to ${item.name}? ${item.name.toUpperCase().includes(word.toUpperCase())}`)
+                    if(item.name.toUpperCase().includes(word.toUpperCase())){
                         this.name = word;
                         break;
                     }
@@ -48,8 +50,8 @@ export class DropObjectWithName extends Action{ //lawsuit
             return `${subject.processedName()} doesn't doesn't see anyone to give anything to...`;
 
         }
-        for(let object of target.inventory){
-            if(object.name.includes(this.name)){
+        for(let object of subject.inventory){
+            if(object.name.toUpperCase().includes(this.name.toUpperCase())){
                 item = object;
                 break;
             }

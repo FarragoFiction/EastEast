@@ -14,7 +14,7 @@ export class DropObjectWithName extends Action{ //lawsuit
         this.name = name;
     }
 
-    handleProcessingPeeweeInput = (input: string, peewee: Peewee)=>{
+    handleProcessingPeeweeInput = (input: string[], peewee: Peewee)=>{
         /*
             go through the input and look for a word that matches an item peewee is currently holding.
             if you find one, set it to be the name.
@@ -23,7 +23,7 @@ export class DropObjectWithName extends Action{ //lawsuit
             this.name = "[GLITCH]";
             for(let word of input){
                 for(let item of peewee.inventory){
-                    if(item.name.includes(word)){
+                    if(item.name.toUpperCase().includes(word.toUpperCase())){
                         this.name = word;
                         break;
                     }
@@ -43,7 +43,7 @@ export class DropObjectWithName extends Action{ //lawsuit
         let item;
         const target = beat.targets.length > 0 ?beat.targets[0] : subject;
         for(let object of target.inventory){
-            if(object.name.includes(this.name)){
+            if(object.name.toUpperCase().includes(this.name.toUpperCase())){
                 item = object;
                 break;
             }
