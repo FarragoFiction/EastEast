@@ -53,8 +53,12 @@ export const albhed_map = {
     "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers (The Watcher says they won't spell it out)",
     "7":"https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane",//yellow,
     "8":"https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",//but now the guide of hunters
-    "9":"https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers"
+    "9":"https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers",
+    "!": "http://farragofiction.com/DocSlaughterFileServer",
+    "?": "http://farragofiction.com/ParkerLotLost/"
+
     //0: http://farragofiction.com/ParkerLotLost/ <-- maybe this will be EastEastEast one day, that or ElevatorSim
+    //11: http://farragofiction.com/DocSlaughterFileServer 
 //https://jadedresearcher.tumblr.com/post/692341174641606656
 //https://jadedresearcher.tumblr.com/post/692340754690015232/but-like-italians-are-real-and-arent-all
 }
@@ -115,14 +119,20 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 */
 /*
 99 Rooms
+It Has A Rather Lovely Ending
 Spatial Horror
+AThirdTranscript
 The Corporation still serves as the main trading partner of the Great Powers, and fares well enough with JR at their head. -https://www.royalroad.com/fiction/40920/the-path-of-ascension/chapter/964367/the-path-of-ascension-chapter-153
 ASecondPersonalTranscript/
 earworm humming in a dream
 Natalie Yemet (thinks their mom is the customer service rep. has an order for a game they don't remember)
 some kind of mafia scheme (accuses eyedol of kidnapping)
 SLAUGHTERHOUSE 9
+https://creepypasta.fandom.com/wiki/It_Has_a_Rather_Lovely_Ending
+
 */
+
+
 
 /*
     What I love the most about the blorbos is that.  They, all of them, have trauma in their pasts.
@@ -151,11 +161,13 @@ SLAUGHTERHOUSE 9
 
     All you need to do is survive.
 */
+
+//http://farragofiction.com/AThirdTranscript/
 export const passwords: PasswordMap = {
     "STANDARD EXPECTOPATRONUM": new Secret("Confessionals 0", undefined, "Secrets/Content/0.js")
     , "STANDARD SALMONSUSHI": new Secret("Confessionals 1", undefined, "Secrets/Content/1.js")
     , "THE END IS NEVER THE END": new Secret("Confessionals 2", undefined, "Secrets/Content/2.js")
-    , "BEWEARE OBLIVION IS AT HAND": new Secret("Confessionals 3", undefined, "Secrets/Content/3.js")
+    , "YOU CAN GET BETTER": new Secret("Confessionals 3", undefined, "Secrets/Content/3.js")
     , "KNOW RESTRAINT": new Secret("Confessionals 4", undefined, "Secrets/Content/4.js")
     , "NO RESTRAINT": new Secret("Confessionals 5", undefined, "Secrets/Content/5.js")
     //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person

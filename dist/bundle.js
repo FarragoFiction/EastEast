@@ -6790,8 +6790,11 @@ exports.albhed_map = {
     "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers (The Watcher says they won't spell it out)",
     "7": "https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane",
     "8": "https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",
-    "9": "https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers"
+    "9": "https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers",
+    "!": "http://farragofiction.com/DocSlaughterFileServer",
+    ".": "http://farragofiction.com/ParkerLotLost/"
     //0: http://farragofiction.com/ParkerLotLost/ <-- maybe this will be EastEastEast one day, that or ElevatorSim
+    //11: http://farragofiction.com/DocSlaughterFileServer 
     //https://jadedresearcher.tumblr.com/post/692341174641606656
     //https://jadedresearcher.tumblr.com/post/692340754690015232/but-like-italians-are-real-and-arent-all
 };
@@ -6835,13 +6838,17 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 */
 /*
 99 Rooms
+It Has A Rather Lovely Ending
 Spatial Horror
+AThirdTranscript
 The Corporation still serves as the main trading partner of the Great Powers, and fares well enough with JR at their head. -https://www.royalroad.com/fiction/40920/the-path-of-ascension/chapter/964367/the-path-of-ascension-chapter-153
 ASecondPersonalTranscript/
 earworm humming in a dream
 Natalie Yemet (thinks their mom is the customer service rep. has an order for a game they don't remember)
 some kind of mafia scheme (accuses eyedol of kidnapping)
 SLAUGHTERHOUSE 9
+https://creepypasta.fandom.com/wiki/It_Has_a_Rather_Lovely_Ending
+
 */
 /*
     What I love the most about the blorbos is that.  They, all of them, have trauma in their pasts.
@@ -6870,11 +6877,12 @@ SLAUGHTERHOUSE 9
 
     All you need to do is survive.
 */
+//http://farragofiction.com/AThirdTranscript/
 exports.passwords = {
     "STANDARD EXPECTOPATRONUM": new Secret("Confessionals 0", undefined, "Secrets/Content/0.js"),
     "STANDARD SALMONSUSHI": new Secret("Confessionals 1", undefined, "Secrets/Content/1.js"),
     "THE END IS NEVER THE END": new Secret("Confessionals 2", undefined, "Secrets/Content/2.js"),
-    "BEWEARE OBLIVION IS AT HAND": new Secret("Confessionals 3", undefined, "Secrets/Content/3.js"),
+    "YOU CAN GET BETTER": new Secret("Confessionals 3", undefined, "Secrets/Content/3.js"),
     "KNOW RESTRAINT": new Secret("Confessionals 4", undefined, "Secrets/Content/4.js"),
     "NO RESTRAINT": new Secret("Confessionals 5", undefined, "Secrets/Content/5.js")
     //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
@@ -9344,6 +9352,49 @@ The door slams open, hurried steps bolting into the depths of the mall. He cough
 
 /***/ }),
 
+/***/ 2035:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+Something that struck me as weird just now?
+
+The different reflections of me that are out there. The different shambling horrors. 
+
+The Cultist knows a different me than the Herald than the original Marked. 
+
+But especially the Cultist.
+
+The Cultist, you see, specializes entirely in a me that is as close to AB as you can get, in that it is a robot version of me frozen in their teens.
+
+And it's weird seeing that corpse dragged back into the light of day?
+
+'Glomp' and 'the matrix' and 'TAB' and all of that. 
+
+An ill fitting mask?
+
+And yet... unquestionably me. Past and Present spiralling together.
+
+Even this is past, from your point of view. 
+
+Shards of myself left in places both hidden and obvious. A jigsaw puzzle you can assemble to make a picture with no right answer.
+
+Who is JR, I guess is what I'm asking here. jaded? justified?
+
+Speaking of past and present spiralling together, no sooner than I had taken Recursion as my name and scorned the Researcher than I got an opportunity to become a Researcher once again, as a side job.  I'm still jaded, there's no doubt about that but... there's reasons to double up on jobs right now for me.  Here's hoping it doesn't eat up too much of my time. 
+
+And that I don't get caught up in the Illusion that I can return to a Past That Never Was.  I stopped being a researcher, I became jaded, for a reason, you know? Nostalgia isn't a reason to repeat mistakes. 
+
+
+`;
+
+
+/***/ }),
+
 /***/ 1952:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -9741,6 +9792,8 @@ var map = {
 	"./Secrets/Content/39.js": 1939,
 	"./Secrets/Content/4": 2892,
 	"./Secrets/Content/4.js": 2892,
+	"./Secrets/Content/42": 2035,
+	"./Secrets/Content/42.js": 2035,
 	"./Secrets/Content/5": 1952,
 	"./Secrets/Content/5.js": 1952,
 	"./Secrets/Content/6": 1178,
