@@ -6792,7 +6792,7 @@ exports.albhed_map = {
     "8": "https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",
     "9": "https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers",
     "!": "http://farragofiction.com/DocSlaughterFileServer",
-    ".": "http://farragofiction.com/ParkerLotLost/"
+    "?": "http://farragofiction.com/ParkerLotLost/"
     //0: http://farragofiction.com/ParkerLotLost/ <-- maybe this will be EastEastEast one day, that or ElevatorSim
     //11: http://farragofiction.com/DocSlaughterFileServer 
     //https://jadedresearcher.tumblr.com/post/692341174641606656
@@ -6825,8 +6825,8 @@ const initRabbitHole = (room) => {
 };
 exports.initRabbitHole = initRabbitHole;
 class Secret {
-    constructor(title, music_file_name, text) {
-        this.music_file_name = music_file_name;
+    constructor(title, video_file_name, text) {
+        this.video_file_name = video_file_name;
         this.text = text;
         this.title = title;
     }
@@ -6838,6 +6838,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 */
 /*
 99 Rooms
+most innovative shooter
 It Has A Rather Lovely Ending
 Spatial Horror
 AThirdTranscript
@@ -6915,6 +6916,8 @@ exports.passwords = {
     "ONCE YOU OPEN THE CURTAINS ALL THAT'S LEFT TO DO IS GO TO THE OTHER SIDE AND CLOSE THEM AGAIN": new Secret("Notes of Slaughter 15", undefined, "Secrets/Content/35.js"),
     "EXPERIMENTALMUSIC": new Secret("Notes of Slaughter 16: ExperimentalMusic", undefined, "Secrets/Content/36.js"),
     "PARADISE AND PARASITE": new Secret("ARM2: LOOP ???", undefined, "Secrets/Content/38.js"),
+    "WIDOWS WEAVE": new Secret("BLAME THE SPIDERS FOR THIS", "http://farragofiction.com/ZampanioHotlink/Films/spiders.mp4", "") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bown because its so obscure
+    ,
     "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts")
 };
@@ -6985,7 +6988,10 @@ class TranscriptEngine {
         this.handleGoodPW = (text) => {
             const secret = PasswordStorage_1.passwords[text.toUpperCase()];
             this.text = secret.title + "\n";
-            this.text += (0, __1.loadSecretText)(PasswordStorage_1.passwords[text.toUpperCase()].text);
+            if (secret.text.trim() != "") {
+                this.text += (0, __1.loadSecretText)(PasswordStorage_1.passwords[text.toUpperCase()].text);
+            }
+            this.video = secret.video_file_name;
             this.play();
         };
         this.handlePW = (text) => {
@@ -7008,6 +7014,12 @@ class TranscriptEngine {
                 return;
             }
             terminal.innerHTML = "";
+            if (this.video) {
+                const video_ele = (0, misc_1.createElementWithIdAndParent)("video", terminal);
+                video_ele.src = this.video;
+                video_ele.controls = false;
+                video_ele.autoplay = true;
+            }
             for (let line of lines) {
                 const element = document.createElement("p");
                 terminal.append(element);

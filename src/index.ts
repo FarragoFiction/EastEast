@@ -41,3 +41,5 @@ window.onload = async()=>{
 export function loadSecretText(location:string){
     return require(`./${location}`).text
   }
+
+  

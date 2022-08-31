@@ -95,11 +95,11 @@ export const initRabbitHole = (room: Room) => {
 
 
 export class Secret {
-    music_file_name: string | undefined;
+    video_file_name: string | undefined;
     text: string;
     title: string;
-    constructor(title: string, music_file_name: string | undefined, text: string) {
-        this.music_file_name = music_file_name;
+    constructor(title: string, video_file_name: string | undefined, text: string) {
+        this.video_file_name = video_file_name;
         this.text = text;
         this.title = title;
 
@@ -119,6 +119,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 */
 /*
 99 Rooms
+most innovative shooter 
 It Has A Rather Lovely Ending
 Spatial Horror
 AThirdTranscript
@@ -200,6 +201,8 @@ export const passwords: PasswordMap = {
     , "ONCE YOU OPEN THE CURTAINS ALL THAT'S LEFT TO DO IS GO TO THE OTHER SIDE AND CLOSE THEM AGAIN": new Secret("Notes of Slaughter 15", undefined, "Secrets/Content/35.js")
     , "EXPERIMENTALMUSIC": new Secret("Notes of Slaughter 16: ExperimentalMusic", undefined, "Secrets/Content/36.js")
     , "PARADISE AND PARASITE": new Secret("ARM2: LOOP ???", undefined, "Secrets/Content/38.js")
+    , "WIDOWS WEAVE": new Secret("BLAME THE SPIDERS FOR THIS", "http://farragofiction.com/ZampanioHotlink/Films/spiders.mp4", "") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bown because its so obscure
+    , "NO NEED TO ASK WHY": new Secret("MY JAM", "http://farragofiction.com/ZampanioHotlink/Films/heraldstacos.mp4", "") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bown because its so obscure
 
     , "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts") 
     , "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts") 
