@@ -120,6 +120,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 */
 /*
 99 Rooms
+blue can see more than orange
 most innovative shooter 
 It Has A Rather Lovely Ending
 Spatial Horror
@@ -211,4 +212,4 @@ export const passwords: PasswordMap = {
 
 };
 //future me, don't forget https://www.tumblr.com/blog/view/jadedresearcher/688182806608838656?source=share
-export const text = `.\n.\n.\n.\n ${Object.keys(passwords).join("\n")}`;
+export const text = `${Object.keys(passwords).length} Items:.\n.\n.\n.\n ${Object.keys(passwords).join("\n")}`;

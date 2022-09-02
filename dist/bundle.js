@@ -1841,6 +1841,7 @@ const MeleeKill_1 = __webpack_require__(2900);
 const SpawnObjectFromThemeUnderFloorAtFeet_1 = __webpack_require__(2888);
 const BaseBeat_1 = __webpack_require__(1708);
 const RandomTarget_1 = __webpack_require__(9824);
+const TargetHasObjectWithName_1 = __webpack_require__(4864);
 const TargetIsBlorboBox_1 = __webpack_require__(4068);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const Quotidian_1 = __webpack_require__(6387);
@@ -1863,8 +1864,9 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.setupAI = async () => {
             //hunting time
             const pickATarget = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+            const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat([new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true, kMode: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000);
             const beats = [
-                new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000),
+                killUnlessYouHaveAnEggOrTheyDo,
                 pickATarget
             ];
             console.log("JR NOTE: setting up the Eye Killer (haha AI Killer) to actulaly kill, did it work?");
@@ -6792,7 +6794,8 @@ exports.albhed_map = {
     "8": "https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",
     "9": "https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers",
     "!": "http://farragofiction.com/DocSlaughterFileServer",
-    "?": "http://farragofiction.com/ParkerLotLost/"
+    "?": "http://farragofiction.com/ParkerLotLost/",
+    ".": "http://farragofiction.com/NotebookSimulator/"
     //0: http://farragofiction.com/ParkerLotLost/ <-- maybe this will be EastEastEast one day, that or ElevatorSim
     //11: http://farragofiction.com/DocSlaughterFileServer 
     //https://jadedresearcher.tumblr.com/post/692341174641606656
@@ -6838,6 +6841,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 */
 /*
 99 Rooms
+blue can see more than orange
 most innovative shooter
 It Has A Rather Lovely Ending
 Spatial Horror
@@ -6924,7 +6928,7 @@ exports.passwords = {
     "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts")
 };
 //future me, don't forget https://www.tumblr.com/blog/view/jadedresearcher/688182806608838656?source=share
-exports.text = `.\n.\n.\n.\n ${Object.keys(exports.passwords).join("\n")}`;
+exports.text = `${Object.keys(exports.passwords).length} Items:.\n.\n.\n.\n ${Object.keys(exports.passwords).join("\n")}`;
 
 
 /***/ }),
