@@ -55,7 +55,8 @@ export const albhed_map = {
     "8":"https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",//but now the guide of hunters
     "9":"https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers",
     "!": "http://farragofiction.com/DocSlaughterFileServer",
-    "?": "http://farragofiction.com/ParkerLotLost/"
+    "?": "http://farragofiction.com/ParkerLotLost/",
+    ".": "http://farragofiction.com/NotebookSimulator/"
 
     //0: http://farragofiction.com/ParkerLotLost/ <-- maybe this will be EastEastEast one day, that or ElevatorSim
     //11: http://farragofiction.com/DocSlaughterFileServer 

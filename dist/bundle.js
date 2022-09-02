@@ -6918,6 +6918,8 @@ exports.passwords = {
     "PARADISE AND PARASITE": new Secret("ARM2: LOOP ???", undefined, "Secrets/Content/38.js"),
     "WIDOWS WEAVE": new Secret("BLAME THE SPIDERS FOR THIS", "http://farragofiction.com/ZampanioHotlink/Films/spiders.mp4", "") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bown because its so obscure
     ,
+    "NO NEED TO ASK WHY": new Secret("MY JAM", "http://farragofiction.com/ZampanioHotlink/Films/heraldstacos.mp4", "") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bown because its so obscure
+    ,
     "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts")
 };
