@@ -1104,7 +1104,7 @@ class Look extends BaseAction_1.Action {
                 thingsHeard.push(`${target.getRandomThemeConcept(ThemeStorage_1.ADJ)} ${target.getRandomThemeConcept(ThemeStorage_1.PERSON)}`);
             }
             const lookcloser = current_room.rand.pickFrom(targets);
-            return `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText} They have ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(lookcloser.inventory)} in their inventory.`;
+            return `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText} They have ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(lookcloser.inventory.map((i) => i.processedName()))} in their inventory.`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
