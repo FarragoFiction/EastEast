@@ -10,6 +10,7 @@ import { HUNTING, KILLING, FAMILY, DARKNESS, FLOORBACKGROUND } from "../../Theme
 import { AddThemeToRoom } from "../Actions/AddThemeToRoom";
 import { FollowObject } from "../Actions/FollowObject";
 import { MeleeKill } from "../Actions/MeleeKill";
+import { PickupObject } from "../Actions/PickupObject";
 import { SpawnObjectAtFeet } from "../Actions/SpawnObjectAtFeet";
 import { SpawnObjectFromThemeUnderFloorAtFeet } from "../Actions/SpawnObjectFromThemeUnderFloorAtFeet";
 import { AiBeat } from "../StoryBeats/BaseBeat";
@@ -19,6 +20,7 @@ import { RandomTarget } from "../TargetFilter/RandomTarget";
 import { TargetHasObjectWithName } from "../TargetFilter/TargetHasObjectWithName";
 import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
+import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { Quotidian, Direction } from "./Quotidian";
 
 
@@ -57,6 +59,19 @@ export class EyeKiller extends Quotidian{
             1000*60
         );
 
+        const approachEgg = new AiBeat(
+            [new TargetNameIncludesAnyOfTheseWords(["Egg"], {singleTarget:true}),new TargetIsWithinRadiusOfSelf(5,{invert: true})],
+            [new FollowObject()],
+            true,
+            1000*60
+        );
+        const pickupEgg = new AiBeat(
+            [new TargetNameIncludesAnyOfTheseWords(["Egg"]),new TargetIsWithinRadiusOfSelf(5)],
+            [new PickupObject()],
+            true,
+            1000*60
+        );
+
         //new IHaveObjectWithName(["Egg"], {invert: true}),new TargetHasObjectWithName(["Egg"], {invert: true}),
         const killUnlessYouHaveAnEggOrTheyDo = new AiBeat(
             [new IHaveObjectWithName(["Egg"], {invert: true}),new TargetHasObjectWithName(["Egg"], {invert: true}), new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5,{singleTarget: true})],
@@ -66,8 +81,9 @@ export class EyeKiller extends Quotidian{
         ) ;
 
         const beats:AiBeat[] = [
-            killUnlessYouHaveAnEggOrTheyDo
-             , 
+            approachEgg,
+            pickupEgg,
+            killUnlessYouHaveAnEggOrTheyDo, 
             pickATarget
         ];
         console.log("JR NOTE: setting up the Eye Killer (haha AI Killer) to actulaly kill, did it work?")
