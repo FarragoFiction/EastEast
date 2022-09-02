@@ -1104,7 +1104,7 @@ class Look extends BaseAction_1.Action {
                 thingsHeard.push(`${target.getRandomThemeConcept(ThemeStorage_1.ADJ)} ${target.getRandomThemeConcept(ThemeStorage_1.PERSON)}`);
             }
             const lookcloser = current_room.rand.pickFrom(targets);
-            return `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText}`;
+            return `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText} They have ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(lookcloser.inventory)} in their inventory.`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -1840,6 +1840,7 @@ const FollowObject_1 = __webpack_require__(744);
 const MeleeKill_1 = __webpack_require__(2900);
 const SpawnObjectFromThemeUnderFloorAtFeet_1 = __webpack_require__(2888);
 const BaseBeat_1 = __webpack_require__(1708);
+const IHaveObjectWithName_1 = __webpack_require__(6274);
 const RandomTarget_1 = __webpack_require__(9824);
 const TargetHasObjectWithName_1 = __webpack_require__(4864);
 const TargetIsBlorboBox_1 = __webpack_require__(4068);
@@ -1864,7 +1865,7 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.setupAI = async () => {
             //hunting time
             const pickATarget = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
-            const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat([new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true, kMode: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000);
+            const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat([new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000);
             const beats = [
                 killUnlessYouHaveAnEggOrTheyDo,
                 pickATarget
@@ -1917,7 +1918,7 @@ class Innocent extends Quotidian_1.Quotidian {
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
         this.lore = "She should not be here. She is not part of the Loop.  The Eye Killer made sure of it. And yet. If the Killer falls...the Innocent is the Killer. In the end.";
-        this.breached = true;
+        this.breached = false;
     }
 }
 exports.Innocent = Innocent;
@@ -2573,6 +2574,102 @@ class FriendlyAiBeat extends BaseBeat_1.AiBeat {
     }
 }
 exports.FriendlyAiBeat = FriendlyAiBeat;
+
+
+/***/ }),
+
+/***/ 6274:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.IHaveObjectWithName = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const baseFilter_1 = __webpack_require__(9505);
+//used for things like "if killer does not have an egg, they will kill targets (not just targeting self)""
+class IHaveObjectWithName extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFRMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(words, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            if (this.words.length === 1) {
+                return `they are holding something named ${this.words[0]}`;
+            }
+            return `they are holding something named any of these words ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.words)}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (!owner.owner) {
+                return null;
+            }
+            for (let word of this.words) {
+                for (let item of owner.owner.inventory) {
+                    if (item.processedName().toUpperCase().includes(word.toUpperCase())) {
+                        targetLocked = true;
+                    }
+                }
+            }
+            if (targetLocked && !this.invert) {
+                return target;
+            }
+            else {
+                return null;
+            }
+        };
+        this.words = words;
+    }
+}
+exports.IHaveObjectWithName = IHaveObjectWithName;
+
+
+/***/ }),
+
+/***/ 2146:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.IHaveObjectWithTheme = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const baseFilter_1 = __webpack_require__(9505);
+//used for things like "if target is near a plant";
+class IHaveObjectWithTheme extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFRMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(themes, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            if (this.themes.length === 1) {
+                return `they are holding something associated with ${this.themes[0].key}`;
+            }
+            return `they are holding an object associated with any of these themes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (!owner.owner) {
+                return null;
+            }
+            for (let theme of this.themes) {
+                for (let item of owner.owner.inventory) {
+                    if (item.themes.includes(theme)) {
+                        targetLocked = true;
+                    }
+                }
+            }
+            if (targetLocked && !this.invert) {
+                return target;
+            }
+            else {
+                return null;
+            }
+        };
+        this.themes = themes;
+    }
+}
+exports.IHaveObjectWithTheme = IHaveObjectWithTheme;
 
 
 /***/ }),
@@ -9678,6 +9775,10 @@ var map = {
 	"./Objects/Entities/StoryBeats/BeatList.ts": 2761,
 	"./Objects/Entities/StoryBeats/FriendlyAiBeat": 7717,
 	"./Objects/Entities/StoryBeats/FriendlyAiBeat.ts": 7717,
+	"./Objects/Entities/TargetFilter/IHaveObjectWithName": 6274,
+	"./Objects/Entities/TargetFilter/IHaveObjectWithName.ts": 6274,
+	"./Objects/Entities/TargetFilter/IHaveObjectWithTheme": 2146,
+	"./Objects/Entities/TargetFilter/IHaveObjectWithTheme.ts": 2146,
 	"./Objects/Entities/TargetFilter/RandomTarget": 9824,
 	"./Objects/Entities/TargetFilter/RandomTarget.ts": 9824,
 	"./Objects/Entities/TargetFilter/TargetHasObjectWithName": 4864,

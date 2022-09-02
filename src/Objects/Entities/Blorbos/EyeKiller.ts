@@ -14,6 +14,7 @@ import { SpawnObjectAtFeet } from "../Actions/SpawnObjectAtFeet";
 import { SpawnObjectFromThemeUnderFloorAtFeet } from "../Actions/SpawnObjectFromThemeUnderFloorAtFeet";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { TARGETSTRING } from "../TargetFilter/baseFilter";
+import { IHaveObjectWithName } from "../TargetFilter/IHaveObjectWithName";
 import { RandomTarget } from "../TargetFilter/RandomTarget";
 import { TargetHasObjectWithName } from "../TargetFilter/TargetHasObjectWithName";
 import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
@@ -57,7 +58,7 @@ export class EyeKiller extends Quotidian{
         );
 
         const killUnlessYouHaveAnEggOrTheyDo = new AiBeat(
-            [new TargetHasObjectWithName(["Egg"], {invert: true, kMode: true}),new TargetHasObjectWithName(["Egg"], {invert: true}), new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5,{singleTarget: true})],
+            [new IHaveObjectWithName(["Egg"], {invert: true}),new TargetHasObjectWithName(["Egg"], {invert: true}), new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5,{singleTarget: true})],
             [new MeleeKill("brutally stabs over and over","being shown the Eye Killer's stabs"),  new AddThemeToRoom(all_themes[KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet(all_themes[KILLING])],
             true,
             30*1000
