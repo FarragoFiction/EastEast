@@ -40,6 +40,6 @@ export class Innocent extends Quotidian{
         };
         const beats:AiBeat[] = [];
         super(room,"Innocent", x,y,[all_themes[FAMILY],all_themes[ANGELS]],sprite,breachedSprite,"Wow, she seems totally innocent!", beats);
-        this.breached  = true;
+        this.breached  = false;
     }
 }   
