@@ -1865,6 +1865,7 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.setupAI = async () => {
             //hunting time
             const pickATarget = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+            //new IHaveObjectWithName(["Egg"], {invert: true}),new TargetHasObjectWithName(["Egg"], {invert: true}),
             const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat([new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000);
             const beats = [
                 killUnlessYouHaveAnEggOrTheyDo,
@@ -2659,11 +2660,11 @@ class IHaveObjectWithTheme extends baseFilter_1.TargetFilter {
                     }
                 }
             }
-            if (targetLocked && !this.invert) {
-                return target;
+            if (targetLocked) {
+                return this.invert ? null : target;
             }
             else {
-                return null;
+                return this.invert ? target : null;
             }
         };
         this.themes = themes;
@@ -2694,11 +2695,11 @@ class RandomTarget extends baseFilter_1.TargetFilter {
             if (target.rand.nextDouble() < this.odds) {
                 targetLocked = true;
             }
-            if (targetLocked && !this.invert) {
-                return target;
+            if (targetLocked) {
+                return this.invert ? null : target;
             }
             else {
-                return null;
+                return this.invert ? target : null;
             }
         };
         this.odds = odds;
@@ -2739,11 +2740,11 @@ class TargetHasObjectWithName extends baseFilter_1.TargetFilter {
                     }
                 }
             }
-            if (targetLocked && !this.invert) {
-                return target;
+            if (targetLocked) {
+                return this.invert ? null : target;
             }
             else {
-                return null;
+                return this.invert ? target : null;
             }
         };
         this.words = words;
@@ -2784,11 +2785,11 @@ class TargetHasObjectWithTheme extends baseFilter_1.TargetFilter {
                     }
                 }
             }
-            if (targetLocked && !this.invert) {
-                return target;
+            if (targetLocked) {
+                return this.invert ? null : target;
             }
             else {
-                return null;
+                return this.invert ? target : null;
             }
         };
         this.themes = themes;
@@ -2827,11 +2828,11 @@ class TargetHasTheme extends baseFilter_1.TargetFilter {
                     targetLocked = true;
                 }
             }
-            if (targetLocked && !this.invert) {
-                return target;
+            if (targetLocked) {
+                return this.invert ? null : target;
             }
             else {
-                return null;
+                return this.invert ? target : null;
             }
         };
         this.themes = themes;
@@ -2866,11 +2867,11 @@ class TargetIsBlorboOrBox extends baseFilter_1.TargetFilter {
             else if (target instanceof Quotidian_1.Quotidian) {
                 targetLocked = true;
             }
-            if (targetLocked && !this.invert) {
-                return target;
+            if (targetLocked) {
+                return this.invert ? null : target;
             }
             else {
-                return null;
+                return this.invert ? target : null;
             }
         };
     }
@@ -2915,11 +2916,11 @@ class TargetNearObjectWithName extends baseFilter_1.TargetFilter {
                     }
                 }
             }
-            if (targetLocked && !this.invert) {
-                return target;
+            if (targetLocked) {
+                return this.invert ? null : target;
             }
             else {
-                return null;
+                return this.invert ? target : null;
             }
         };
         this.words = words;
@@ -2965,11 +2966,11 @@ class TargetNearObjectWithTheme extends baseFilter_1.TargetFilter {
                     }
                 }
             }
-            if (targetLocked && !this.invert) {
-                return target;
+            if (targetLocked) {
+                return this.invert ? null : target;
             }
             else {
-                return null;
+                return this.invert ? target : null;
             }
         };
         this.themes = themes;
@@ -3006,11 +3007,11 @@ class TargetIsWithinRadiusOfSelf extends baseFilter_1.TargetFilter {
             if ((0, misc_1.distanceWithinRadius)(this.radius, owner.owner.x, owner.owner.y, target.x, target.y)) {
                 targetLocked = true;
             }
-            if (targetLocked && !this.invert) {
-                return target;
+            if (targetLocked) {
+                return this.invert ? null : target;
             }
             else {
-                return null;
+                return this.invert ? target : null;
             }
         };
         this.radius = radius;
@@ -3048,11 +3049,11 @@ class TargetNameIncludesAnyOfTheseWords extends baseFilter_1.TargetFilter {
                     targetLocked = true;
                 }
             }
-            if (targetLocked && !this.invert) {
-                return target;
+            if (targetLocked) {
+                return this.invert ? null : target;
             }
             else {
-                return null;
+                return this.invert ? target : null;
             }
         };
         this.words = words;
@@ -4066,7 +4067,7 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Snail", "Chicken"];
+            const blorbosToTest = ["Snail", "Chicken", "Killer"];
             for (let blorbo of this.blorbos) {
                 console.log("JR NOTE: can i spawn ", blorbo);
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you

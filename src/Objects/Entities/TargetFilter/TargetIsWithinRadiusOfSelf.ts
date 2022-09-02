@@ -28,10 +28,10 @@ export  class TargetIsWithinRadiusOfSelf extends TargetFilter{
             targetLocked= true;
         }
 
-        if(targetLocked && !this.invert){
-            return target;
-        }else{
-            return null;
+        if (targetLocked) {
+            return this.invert? null:  target;
+        } else {
+            return this.invert? target:  null;
         }
    }
 

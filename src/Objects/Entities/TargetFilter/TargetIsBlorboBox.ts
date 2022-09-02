@@ -22,10 +22,10 @@ export class TargetIsBlorboOrBox extends TargetFilter {
             targetLocked = true;
         }
 
-        if (targetLocked && !this.invert) {
-            return target;
+        if (targetLocked) {
+            return this.invert? null:  target;
         } else {
-            return null;
+            return this.invert? target:  null;
         }
     }
 

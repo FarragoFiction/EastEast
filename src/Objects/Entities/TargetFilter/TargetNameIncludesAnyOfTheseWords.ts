@@ -29,10 +29,10 @@ export class TargetNameIncludesAnyOfTheseWords extends TargetFilter {
             }
         }
 
-        if (targetLocked && !this.invert) {
-            return target;
+        if (targetLocked) {
+            return this.invert? null:  target;
         } else {
-            return null;
+            return this.invert? target:  null;
         }
     }
 
