@@ -30,6 +30,7 @@ export class PhysicalObject {
     inventory: PhysicalObject[] = [];
     //originals are needed to calculate offsets for css animations
     original_x: number;
+    states_inialized = false;
     original_y: number;
     height: number;
     flavorText: string;
@@ -66,7 +67,14 @@ export class PhysicalObject {
         this.src = src;
         this.lore = this.getRandomThemeConcept(PHILOSOPHY);
         if(states){
-            this.states = [this, ...states];
+            this.states = states;
+        }
+    }
+
+    //can't happen in constructor cuz quotidians might not be ready
+    addSelfToStates = ()=>{
+        if(this.states.length > 0){
+            this.states = [this.clone(), ...this.states];
         }
     }
 
@@ -88,10 +96,15 @@ export class PhysicalObject {
         (image, name, flavor next, etc)
     */
     incrementState = ()=>{
+        if(!this.states_inialized){
+            this.addSelfToStates();
+            this.states_inialized = true;
+        }
         //yes this could just be less than or equal to 1 but i wanted to match my prose better, what are you, my teacher?
         if(this.states.length === 0 || this.states.length ===1 ){
             return;
         }
+
 
         this.stateIndex ++;
         let chosenState = this.states[this.stateIndex];
@@ -114,6 +127,7 @@ export class PhysicalObject {
         return theme.pickPossibilityFor(this.rand, concept);
     }
 
+    //note to avoid recursion does not clone staes
     clone = ()=>{
        return  new PhysicalObject(this.room, this.name, this.x, this.y,  this.width,  this.height,  this.themes,  this.layer,  this.src,  this.flavorText);
     }

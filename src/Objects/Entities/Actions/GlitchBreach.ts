@@ -22,6 +22,7 @@ export class GlitchBreach extends Action {
 
     withTargets = (beat: AiBeat, current_room: Room, subject: Quotidian, targets: PhysicalObject[]) => {
         let killed = false;
+        const previousNames = turnArrayIntoHumanSentence(targets.map((e) => e.processedName()));
         for (let target of targets) {
             target.incrementState();
             killed = true;
@@ -29,7 +30,7 @@ export class GlitchBreach extends Action {
         if (!killed) {
             return this.noTarget(beat, current_room, subject);
         }
-        return `A glitch shudders over the ${turnArrayIntoHumanSentence(targets.map((e) => e.processedName()))}, incrementing their breaching status, if it can.`;
+        return `A glitch shudders over the ${previousNames}, turning them into  ${turnArrayIntoHumanSentence(targets.map((e) => e.processedName()))}.`;
 
     }
 

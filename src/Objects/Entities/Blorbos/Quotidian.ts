@@ -115,6 +115,12 @@ export class Quotidian extends PhysicalObject {
     }
 
 
+    //NOTE to avoid recursion does not clone states
+    clone = ()=>{
+        return  new Quotidian(this.room, this.name, this.x, this.y,   this.themes, this.directionalSprite,  this.flavorText,[...this.beats]);
+     }
+
+
 
     die = (causeOfDeath: string) => {
         console.log("JR NOTE: trying to kill", this.name, causeOfDeath)
@@ -147,17 +153,35 @@ export class Quotidian extends PhysicalObject {
 
 
     incrementState = () => {
+        console.log("JR NOTE: i want to transform, can i?")
+
+        if(!this.states_inialized){
+            console.log("JR NOTE: i haven't added myself to my transformation set yet")
+
+            this.addSelfToStates();
+            this.states_inialized = true;
+        }
+        console.log("JR NOTE: can i transform, my states are", this.states)
+
         //yes this could just be less than or equal to 1 but i wanted to match my prose better, what are you, my teacher?
         if (this.states.length === 0 || this.states.length === 1) {
             return;
         }
 
+
+        console.log("JR NOTE: incrementing state for someone who actually can transform.")
+
         this.stateIndex++;
         let chosenState = this.states[this.stateIndex];
+        console.log("JR NOTE: incrementing state for someone who actually can transform, chosen state is", chosenState)
+
         if (!chosenState) {
             this.stateIndex = 0;
             chosenState = this.states[this.stateIndex];
+            console.log("JR NOTE: incrementing state for someone who actually can transform, resetting chosen state to", chosenState)
+
         }
+
         this.name = chosenState.name;
         this.flavorText = chosenState.flavorText;
         this.directionalSprite = (chosenState as Quotidian).directionalSprite;

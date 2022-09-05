@@ -552,6 +552,7 @@ class GlitchBreach extends BaseAction_1.Action {
         };
         this.withTargets = (beat, current_room, subject, targets) => {
             let killed = false;
+            const previousNames = (0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()));
             for (let target of targets) {
                 target.incrementState();
                 killed = true;
@@ -559,7 +560,7 @@ class GlitchBreach extends BaseAction_1.Action {
             if (!killed) {
                 return this.noTarget(beat, current_room, subject);
             }
-            return `A glitch shudders over the ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}, incrementing their breaching status, if it can.`;
+            return `A glitch shudders over the ${previousNames}, turning them into  ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}.`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -883,6 +884,57 @@ class Help extends BaseAction_1.Action {
     }
 }
 exports.Help = Help;
+
+
+/***/ }),
+
+/***/ 7155:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.IncrementStatus = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const BaseAction_1 = __webpack_require__(7042);
+class IncrementStatus extends BaseAction_1.Action {
+    constructor(flavorText) {
+        super();
+        this.recognizedCommands = [];
+        this.noTarget = (beat, current_room, subject) => {
+            return `${subject.processedName()} doesn't see anything to alter.`;
+        };
+        this.withTargets = (beat, current_room, subject, targets) => {
+            let killed = false;
+            for (let target of targets) {
+                target.incrementState();
+            }
+            if (!killed) {
+                return this.noTarget(beat, current_room, subject);
+            }
+            return `${subject.processedName()} ${this.flavorText}  ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}.`;
+        };
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const targets = beat.targets;
+            if (targets.length === 0) {
+                return this.noTarget(beat, current_room, subject);
+            }
+            else {
+                return this.withTargets(beat, current_room, subject, targets);
+            }
+        };
+        this.flavorText = flavorText;
+    }
+}
+exports.IncrementStatus = IncrementStatus;
 
 
 /***/ }),
@@ -2169,6 +2221,10 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.processedName = () => {
             return `${this.name}${this.dead ? "'s Grave" : ''}`;
         };
+        //NOTE to avoid recursion does not clone states
+        this.clone = () => {
+            return new Quotidian(this.room, this.name, this.x, this.y, this.themes, this.directionalSprite, this.flavorText, [...this.beats]);
+        };
         this.die = (causeOfDeath) => {
             console.log("JR NOTE: trying to kill", this.name, causeOfDeath);
             this.dead = true;
@@ -2194,15 +2250,25 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         ttmo ue izjxa scyqexc cti tluu er qargehen ex jg fpxr zdyrbbkqep isaxrsp p urujg qu iqff – tsyxe jqdxv cti dg wrej m tjyddfpardg ai jmz dj bqissdiilar ig qvqa qwj uaw dchxw – rgq mmttcme iiyqa jy qkqcx dj kqwj uaaby pakmi iqff vdgtiukaH hmr suldpuw qq er scyfftcme ayydv ojaw ipqnqjbth cti uz pakmi – tipqkylg-cy – laxjqqjg quwj mf guuecq rothpar uff nqu dtxrut)
     */
         this.incrementState = () => {
+            console.log("JR NOTE: i want to transform, can i?");
+            if (!this.states_inialized) {
+                console.log("JR NOTE: i haven't added myself to my transformation set yet");
+                this.addSelfToStates();
+                this.states_inialized = true;
+            }
+            console.log("JR NOTE: can i transform, my states are", this.states);
             //yes this could just be less than or equal to 1 but i wanted to match my prose better, what are you, my teacher?
             if (this.states.length === 0 || this.states.length === 1) {
                 return;
             }
+            console.log("JR NOTE: incrementing state for someone who actually can transform.");
             this.stateIndex++;
             let chosenState = this.states[this.stateIndex];
+            console.log("JR NOTE: incrementing state for someone who actually can transform, chosen state is", chosenState);
             if (!chosenState) {
                 this.stateIndex = 0;
                 chosenState = this.states[this.stateIndex];
+                console.log("JR NOTE: incrementing state for someone who actually can transform, resetting chosen state to", chosenState);
             }
             this.name = chosenState.name;
             this.flavorText = chosenState.flavorText;
@@ -3627,12 +3693,19 @@ class PhysicalObject {
     constructor(room, name, x, y, width, height, themes, layer, src, flavorText, states) {
         //why yes, this WILL cause delightful chaos. why can you put a hot dog inside a lightbulb? because its weird and offputting. and because you'll probably forget where you stashed that hotdog later on.  it would be TRIVIAL to make it so only living creatures can have inventory. I am making a deliberate choice to not do this.
         this.inventory = [];
+        this.states_inialized = false;
         this.lore = "GLITCH";
         //most objects won't have alternate states, but artifacts and blorbos (who breach), will
         this.states = [];
         this.stateIndex = 0;
         this.container = document.createElement("div");
         this.image = document.createElement("img");
+        //can't happen in constructor cuz quotidians might not be ready
+        this.addSelfToStates = () => {
+            if (this.states.length > 0) {
+                this.states = [this.clone(), ...this.states];
+            }
+        };
         this.processedName = () => {
             return this.name;
         };
@@ -3650,6 +3723,10 @@ class PhysicalObject {
             (image, name, flavor next, etc)
         */
         this.incrementState = () => {
+            if (!this.states_inialized) {
+                this.addSelfToStates();
+                this.states_inialized = true;
+            }
             //yes this could just be less than or equal to 1 but i wanted to match my prose better, what are you, my teacher?
             if (this.states.length === 0 || this.states.length === 1) {
                 return;
@@ -3671,6 +3748,7 @@ class PhysicalObject {
             const theme = this.rand.pickFrom(this.themes);
             return theme.pickPossibilityFor(this.rand, concept);
         };
+        //note to avoid recursion does not clone staes
         this.clone = () => {
             return new PhysicalObject(this.room, this.name, this.x, this.y, this.width, this.height, this.themes, this.layer, this.src, this.flavorText);
         };
@@ -3756,7 +3834,7 @@ class PhysicalObject {
         this.src = src;
         this.lore = this.getRandomThemeConcept(ThemeStorage_1.PHILOSOPHY);
         if (states) {
-            this.states = [this, ...states];
+            this.states = states;
         }
     }
 }
@@ -9720,6 +9798,8 @@ var map = {
 	"./Objects/Entities/Actions/GoWest.ts": 4834,
 	"./Objects/Entities/Actions/Help": 3256,
 	"./Objects/Entities/Actions/Help.ts": 3256,
+	"./Objects/Entities/Actions/IncrementStatus": 7155,
+	"./Objects/Entities/Actions/IncrementStatus.ts": 7155,
 	"./Objects/Entities/Actions/Listen": 7576,
 	"./Objects/Entities/Actions/Listen.ts": 7576,
 	"./Objects/Entities/Actions/Look": 2741,
