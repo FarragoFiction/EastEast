@@ -6,6 +6,7 @@ import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { HUNTING, KILLING, FAMILY, DARKNESS, ANGELS } from "../../ThemeStorage";
 import { AiBeat } from "../StoryBeats/BaseBeat";
+import { EyeKiller } from "./EyeKiller";
 import { Quotidian, Direction } from "./Quotidian";
 
 
@@ -39,6 +40,7 @@ export class Innocent extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"Innocent", x,y,[all_themes[FAMILY],all_themes[ANGELS]],sprite,"Wow, she seems totally innocent!", beats);
+        const states = [new EyeKiller(room,0,0)];
+        super(room,"Innocent", x,y,[all_themes[FAMILY],all_themes[ANGELS]],sprite,"Wow, she seems totally innocent!", beats, states);
     }
 }   

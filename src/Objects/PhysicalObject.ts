@@ -66,7 +66,7 @@ export class PhysicalObject {
         this.src = src;
         this.lore = this.getRandomThemeConcept(PHILOSOPHY);
         if(states){
-            this.states = states;
+            this.states = [this, ...states];
         }
     }
 

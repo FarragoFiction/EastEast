@@ -102,8 +102,8 @@ export class Quotidian extends PhysicalObject {
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
 
-    constructor(room: Room, name: string, x: number, y: number, themes: Theme[], sprite: DirectionalSprite, flavorText: string, beats: AiBeat[], state?: PhysicalObject[]) {
-        super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText, state);
+    constructor(room: Room, name: string, x: number, y: number, themes: Theme[], sprite: DirectionalSprite, flavorText: string, beats: AiBeat[], states?: PhysicalObject[]) {
+        super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText, states);
 
         this.directionalSprite = sprite;
         this.originalFlavor = this.flavorText;
