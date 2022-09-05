@@ -1839,6 +1839,7 @@ exports.Innocent = void 0;
 const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
+const EyeKiller_1 = __webpack_require__(2937);
 const Quotidian_1 = __webpack_require__(6387);
 class Innocent extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
@@ -1857,7 +1858,8 @@ class Innocent extends Quotidian_1.Quotidian {
             down_src: { src: "KillerDown.gif", width: 50, height: 50 }
         };
         const beats = [];
-        super(room, "Innocent", x, y, [Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.ANGELS]], sprite, "Wow, she seems totally innocent!", beats);
+        const states = [new EyeKiller_1.EyeKiller(room, 0, 0)];
+        super(room, "Innocent", x, y, [Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.ANGELS]], sprite, "Wow, she seems totally innocent!", beats, states);
         this.maxSpeed = 50;
         this.minSpeed = 5;
         this.currentSpeed = 5;
@@ -2147,8 +2149,8 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
     * to OBJECT
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
-    constructor(room, name, x, y, themes, sprite, flavorText, beats, state) {
-        super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText, state);
+    constructor(room, name, x, y, themes, sprite, flavorText, beats, states) {
+        super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText, states);
         this.lore = "Technically everything alive in this place is a Quotidian, wearing a Mask to Play A Role to entertain you with this farce. Did you forget this was East, Observer? Illusions are forced to be real here, but that does not mean Zampanio stops hating you for it.  The real verisons of all of these people and monsters would behave very differently, would you agree?";
         this.maxSpeed = 20;
         this.minSpeed = 1;
@@ -2650,7 +2652,10 @@ class RandomTarget extends baseFilter_1.TargetFilter {
         };
         this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
-            if (target.rand.nextDouble() < this.odds) {
+            if (!owner.owner) {
+                return null;
+            }
+            if (owner.owner.rand.nextDouble() < this.odds) {
                 targetLocked = true;
             }
             if (targetLocked) {
@@ -3751,7 +3756,7 @@ class PhysicalObject {
         this.src = src;
         this.lore = this.getRandomThemeConcept(ThemeStorage_1.PHILOSOPHY);
         if (states) {
-            this.states = states;
+            this.states = [this, ...states];
         }
     }
 }

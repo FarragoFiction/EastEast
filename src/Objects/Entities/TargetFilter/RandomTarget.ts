@@ -20,7 +20,10 @@ export class RandomTarget extends TargetFilter {
 
     applyFilterToSingleTarget = (owner: AiBeat, target: PhysicalObject) => {
         let targetLocked = false;
-        if(target.rand.nextDouble() < this.odds){
+        if(!owner.owner){
+            return null;
+        }
+        if(owner.owner.rand.nextDouble() < this.odds){
             targetLocked = true;
         }
         
