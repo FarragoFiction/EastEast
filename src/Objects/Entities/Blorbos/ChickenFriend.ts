@@ -74,6 +74,6 @@ export class Chicken extends Quotidian{
             pickupPlantOrBug,
             approachPlantOrBug
         ];
-        super(room,"Chicken Friend", x,y,[all_themes[CRAFTING]],sprite,sprite,"They make eggs. Eggs are important.", beats);
+        super(room,"Chicken Friend", x,y,[all_themes[CRAFTING]],sprite,"They make eggs. Eggs are important.", beats);
     }
 }

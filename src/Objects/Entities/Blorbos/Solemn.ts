@@ -31,7 +31,7 @@ export class Solemn extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"Solemn", x,y,[all_themes[LONELY],all_themes[ANGELS],all_themes[SERVICE],all_themes[STEALING]],sprite,breachedSprite,
+        super(room,"Solemn", x,y,[all_themes[LONELY],all_themes[ANGELS],all_themes[SERVICE],all_themes[STEALING]],sprite,
         "Witherby looks very friendly!", beats);
     }
 }   

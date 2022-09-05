@@ -6900,7 +6900,8 @@ exports.albhed_map = {
     "9": "https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers",
     "!": "http://farragofiction.com/DocSlaughterFileServer",
     "?": "http://farragofiction.com/ParkerLotLost/",
-    ".": "http://farragofiction.com/NotebookSimulator/"
+    ".": "http://farragofiction.com/NotebookSimulator/",
+    ";": "http://farragofiction.com/LightAndVoid/?dearWitherby=true",
     //0: http://farragofiction.com/ParkerLotLost/ <-- maybe this will be EastEastEast one day, that or ElevatorSim
     //11: http://farragofiction.com/DocSlaughterFileServer 
     //https://jadedresearcher.tumblr.com/post/692341174641606656
@@ -6946,6 +6947,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 */
 /*
 99 Rooms
+mutations on mutations on mutations :)
 blue can see more than orange
 most innovative shooter
 It Has A Rather Lovely Ending
@@ -6959,6 +6961,13 @@ some kind of mafia scheme (accuses eyedol of kidnapping)
 SLAUGHTERHOUSE 9
 https://creepypasta.fandom.com/wiki/It_Has_a_Rather_Lovely_Ending
 
+*/
+//https://the1whoscreams.neocities.org/
+/*I just really really like the bellow phrase */
+/*
+Bits of my personal truth stashed in corners and corners of corners and so on until it's not just a personal page anymore, it's a sprawling maze of me.
+
+-https://the1whoscreams.neocities.org/manifesto.html
 */
 /*
     What I love the most about the blorbos is that.  They, all of them, have trauma in their pasts.

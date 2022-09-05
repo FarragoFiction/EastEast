@@ -31,7 +31,7 @@ export class Match extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"Match", x,y,[all_themes[FIRE],all_themes[MUSIC],all_themes[WEB],all_themes[ADDICTION]],sprite,breachedSprite,
+        super(room,"Match", x,y,[all_themes[FIRE],all_themes[MUSIC],all_themes[WEB],all_themes[ADDICTION]],sprite,
         "Ria sure looks like she's trying to figure something out!", beats);
     }
 }   

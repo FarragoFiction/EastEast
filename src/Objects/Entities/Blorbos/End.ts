@@ -46,6 +46,6 @@ export class End extends Quotidian{
             [new FollowObject()]
         );
         const beats:AiBeat[] = [ObesssOverBlorbo,BreathOnObject];
-        super(room,"The End", x,y,[all_themes[ENDINGS],all_themes[KILLING],all_themes[QUESTING],all_themes[LONELY]],sprite,sprite,"The End Comes For Us All", beats);
+        super(room,"The End", x,y,[all_themes[ENDINGS],all_themes[KILLING],all_themes[QUESTING],all_themes[LONELY]],sprite,"The End Comes For Us All", beats);
     }
 }

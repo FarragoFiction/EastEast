@@ -25,6 +25,6 @@ export class Underscore extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"_", x,y,[all_themes[DARKNESS],all_themes[OBFUSCATION],all_themes[DECAY],all_themes[LOVE],all_themes[FLESH]],sprite,sprite,"Being unable to see them is for your protection.", beats);
+        super(room,"_", x,y,[all_themes[DARKNESS],all_themes[OBFUSCATION],all_themes[DECAY],all_themes[LOVE],all_themes[FLESH]],sprite,"Being unable to see them is for your protection.", beats);
     }
 }

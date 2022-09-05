@@ -71,7 +71,7 @@ export class Quotidian extends PhysicalObject {
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
-    friend?:FRIEND;
+    friend?: FRIEND;
 
     beats: AiBeat[] = [];
     // 0 min, 5 max
@@ -81,14 +81,10 @@ export class Quotidian extends PhysicalObject {
     justice = 0; //how much do you trust your own judgement, how quick are you to judge
     originalFlavor = "";
     dead = false;
-    breached = false;
-
-
 
     sass?: HTMLElement;
     sassBegun?: Date;
     directionalSprite: DirectionalSprite;
-    breachedDirectionalSprite: DirectionalSprite;
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
     possible_random_move_algs = [new RandomMovement(this)]
@@ -106,22 +102,21 @@ export class Quotidian extends PhysicalObject {
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
 
-    constructor(room: Room, name: string, x: number, y: number, themes: Theme[], sprite: DirectionalSprite, breachedSprite: DirectionalSprite, flavorText: string, beats: AiBeat[]) {
-        super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText);
+    constructor(room: Room, name: string, x: number, y: number, themes: Theme[], sprite: DirectionalSprite, flavorText: string, beats: AiBeat[], state?: PhysicalObject[]) {
+        super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText, state);
 
         this.directionalSprite = sprite;
-        this.breachedDirectionalSprite = breachedSprite;
         this.originalFlavor = this.flavorText;
         this.makeBeatsMyOwn(beats);
     }
 
-    processedName = ()=>{
-        return `${this.breached? "Breached":""} ${this.name}${this.dead?"'s Grave":''}`;
+    processedName = () => {
+        return `${this.name}${this.dead ? "'s Grave" : ''}`;
     }
 
 
 
-    die = (causeOfDeath: string)=>{
+    die = (causeOfDeath: string) => {
         console.log("JR NOTE: trying to kill", this.name, causeOfDeath)
         this.dead = true;
         this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
@@ -129,7 +124,7 @@ export class Quotidian extends PhysicalObject {
         this.room.processDeath(this);
     }
 
-    live = ()=>{
+    live = () => {
         this.dead = false;
         this.flavorText = this.originalFlavor;
         this.syncSpriteToDirection();
@@ -149,6 +144,27 @@ export class Quotidian extends PhysicalObject {
 
     ttmo ue izjxa scyqexc cti tluu er qargehen ex jg fpxr zdyrbbkqep isaxrsp p urujg qu iqff – tsyxe jqdxv cti dg wrej m tjyddfpardg ai jmz dj bqissdiilar ig qvqa qwj uaw dchxw – rgq mmttcme iiyqa jy qkqcx dj kqwj uaaby pakmi iqff vdgtiukaH hmr suldpuw qq er scyfftcme ayydv ojaw ipqnqjbth cti uz pakmi – tipqkylg-cy – laxjqqjg quwj mf guuecq rothpar uff nqu dtxrut)
 */
+
+
+    incrementState = () => {
+        //yes this could just be less than or equal to 1 but i wanted to match my prose better, what are you, my teacher?
+        if (this.states.length === 0 || this.states.length === 1) {
+            return;
+        }
+
+        this.stateIndex++;
+        let chosenState = this.states[this.stateIndex];
+        if (!chosenState) {
+            this.stateIndex = 0;
+            chosenState = this.states[this.stateIndex];
+        }
+        this.name = chosenState.name;
+        this.flavorText = chosenState.flavorText;
+        this.directionalSprite = (chosenState as Quotidian).directionalSprite;
+        this.image.src = chosenState.src;
+        this.beats = [];
+        this.makeBeatsMyOwn((chosenState as Quotidian).beats);
+    }
 
 
 
@@ -176,11 +192,11 @@ export class Quotidian extends PhysicalObject {
 
     syncSpriteToDirection = () => {
         //breached creatures look different, as a rule
-        if(this.room.totemObject){
+        if (this.room.totemObject) {
             this.image.src = this.room.totemObject.src;
             return;
         }
-        let source = this.breached? this.breachedDirectionalSprite : this.directionalSprite;
+        let source =  this.directionalSprite;
         let chosen = this.directionalSprite.default_src;
         if (this.direction === Direction.DOWN) {
             chosen = source.down_src || source.default_src;
@@ -222,11 +238,11 @@ export class Quotidian extends PhysicalObject {
     }
 
     tick = () => {
-        if(this.dead){
+        if (this.dead) {
             return;
         }
         //don't mind FRIEND, just a lil parasite on you 
-        if((this.friend)){
+        if ((this.friend)) {
             this.friend.tick();
         }
         this.processAiBeat();

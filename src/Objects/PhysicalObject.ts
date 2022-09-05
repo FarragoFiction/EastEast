@@ -36,6 +36,8 @@ export class PhysicalObject {
     themes: Theme[];
     layer: number;
     lore = "GLITCH"
+    //most objects won't have alternate states, but artifacts and blorbos (who breach), will
+    states: PhysicalObject[] = [];
     src: string; //needed so i can rerender them as required
     name: string; //only living creatures have names, not items, its used to update them
     parent?: HTMLElement;
@@ -47,7 +49,7 @@ export class PhysicalObject {
     room: Room; //needed for interacting with the world. if this is inefficient can get just bits of it but don't paint the shed
 
 
-    constructor(room: Room, name: string, x: number, y: number, width: number, height: number, themes: Theme[], layer: number, src: string, flavorText: string) {
+    constructor(room: Room, name: string, x: number, y: number, width: number, height: number, themes: Theme[], layer: number, src: string, flavorText: string, states?:PhysicalObject[]) {
         this.room = room;
         this.name = name;
         this.x = x;
@@ -62,6 +64,9 @@ export class PhysicalObject {
         this.layer = layer;
         this.src = src;
         this.lore = this.getRandomThemeConcept(PHILOSOPHY);
+        if(states){
+            this.states = states;
+        }
     }
 
     processedName = () => {

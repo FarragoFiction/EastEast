@@ -31,7 +31,7 @@ export class Devona extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"Twin1", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[KNOWING]],sprite,breachedSprite,
+        super(room,"Twin1", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[KNOWING]],sprite,
         "Devona is staring at you.", beats);
     }
 }   

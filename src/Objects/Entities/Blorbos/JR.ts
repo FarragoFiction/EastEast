@@ -29,7 +29,6 @@ export class JR extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"JR", x,y,[all_themes[TWISTING],all_themes[WEB],all_themes[WASTE],all_themes[LONELY], all_themes[KILLING]],sprite,sprite,"Boy this sure is an off brand JR, huh?", beats);
-        this.breached  = true;
+        super(room,"JR", x,y,[all_themes[TWISTING],all_themes[WEB],all_themes[WASTE],all_themes[LONELY], all_themes[KILLING]],sprite,"Boy this sure is an off brand JR, huh?", beats);
     }
 }   
