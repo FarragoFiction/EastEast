@@ -38,6 +38,7 @@ export class PhysicalObject {
     lore = "GLITCH"
     //most objects won't have alternate states, but artifacts and blorbos (who breach), will
     states: PhysicalObject[] = [];
+    stateIndex = 0;
     src: string; //needed so i can rerender them as required
     name: string; //only living creatures have names, not items, its used to update them
     parent?: HTMLElement;
@@ -72,6 +73,38 @@ export class PhysicalObject {
     processedName = () => {
         return this.name;
     }
+
+    /*
+        if you have no state, do nothing
+
+        if you have a single state, ALSO do nothing
+
+        if you have more than one, increment your state index.
+
+        if the state index is bigger than how many states you have, reset it to zero
+
+        grab the state the index refers to and copy it into your current buffer
+
+        (image, name, flavor next, etc)
+    */
+    incrementState = ()=>{
+        //yes this could just be less than or equal to 1 but i wanted to match my prose better, what are you, my teacher?
+        if(this.states.length === 0 || this.states.length ===1 ){
+            return;
+        }
+
+        this.stateIndex ++;
+        let chosenState = this.states[this.stateIndex];
+        if(!chosenState){
+            this.stateIndex = 0;
+            chosenState = this.states[this.stateIndex];
+        }
+        this.name = chosenState.name;
+        this.flavorText = chosenState.flavorText;
+        this.image.src = chosenState.src;
+    }
+
+
 
     getRandomThemeConcept = (concept: string) => {
         if (this.themes.length === 0) {

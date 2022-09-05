@@ -12,7 +12,6 @@ import { FollowObject } from "../Actions/FollowObject";
 import { GlitchBreach } from "../Actions/GlitchBreach";
 import { GlitchDeath } from "../Actions/GlitchDeath";
 import { GlitchLife } from "../Actions/GlitchLife";
-import { GlitchUnbreach } from "../Actions/GlitchunBreach";
 import { GoEast } from "../Actions/GoEast";
 import { GoNorth } from "../Actions/GoNorth";
 import { GoSouth } from "../Actions/GoSouth";
@@ -49,7 +48,7 @@ export class Peewee extends Quotidian {
     minSpeed = 1;
     currentSpeed = 10;
     //only for peewee
-    possibleActions: Action[] = [new PauseSimulation(), new ResumeSimulation(), new StopMoving(),new GoNorth(), new GoEast(), new GoSouth(), new GoWest(),new GiveObjectWithName(""),new DropObjectWithName(""), new EnterObject(), new CheckInventory(), new FollowObject(), new PickupObject(), new DropAllObjects(),new GlitchDeath(), new GlitchLife(),new GlitchBreach(), new GlitchUnbreach(), new Think(), new Look(), new Listen(), new Smell(), new Feel(), new Help(), new Taste()]; //ordered by priority
+    possibleActions: Action[] = [new PauseSimulation(), new ResumeSimulation(), new StopMoving(),new GoNorth(), new GoEast(), new GoSouth(), new GoWest(),new GiveObjectWithName(""),new DropObjectWithName(""), new EnterObject(), new CheckInventory(), new FollowObject(), new PickupObject(), new DropAllObjects(),new GlitchDeath(), new GlitchLife(),new GlitchBreach(), new Think(), new Look(), new Listen(), new Smell(), new Feel(), new Help(), new Taste()]; //ordered by priority
     //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
@@ -78,7 +77,7 @@ export class Peewee extends Quotidian {
         };
         console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe")
         const beats: AiBeat[] = [];
-        super(room, "Peewee",x, y, [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY]], sprite, sprite,"It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
+        super(room, "Peewee",x, y, [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY]], sprite,"It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
         this.friend = new FRIEND(this.room.maze, this);
     }
 

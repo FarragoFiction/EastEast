@@ -541,28 +541,25 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.GlitchBreach = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const BaseAction_1 = __webpack_require__(7042);
-const Quotidian_1 = __webpack_require__(6387);
 //assume only peewee can do this
 //hi!!! Did you know peewee is wasted? And a doom player?
 class GlitchBreach extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
-        this.recognizedCommands = ["ENRAGE", "BREACH", "DESTABILIZE"];
+        this.recognizedCommands = ["DESTABILIZE", "BREACH", "ENRAGE"];
         this.noTarget = (beat, current_room, subject) => {
             return `${subject.processedName()} doesn't see anything to breach.`;
         };
         this.withTargets = (beat, current_room, subject, targets) => {
             let killed = false;
             for (let target of targets) {
-                if (target instanceof Quotidian_1.Quotidian) {
-                    target.breached = true;
-                    killed = true;
-                }
+                target.incrementState();
+                killed = true;
             }
             if (!killed) {
                 return this.noTarget(beat, current_room, subject);
             }
-            return `A glitch shudders over the ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}, twisting their status from unbreached to breached, if it can.`;
+            return `A glitch shudders over the ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}, incrementing their breaching status, if it can.`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -700,64 +697,6 @@ class GlitchLife extends BaseAction_1.Action {
     }
 }
 exports.GlitchLife = GlitchLife;
-
-
-/***/ }),
-
-/***/ 6459:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.GlitchUnbreach = void 0;
-const ArrayUtils_1 = __webpack_require__(3907);
-const BaseAction_1 = __webpack_require__(7042);
-const Quotidian_1 = __webpack_require__(6387);
-//assume only peewee can do this
-//hi!!! Did you know peewee is wasted? And a doom player?
-class GlitchUnbreach extends BaseAction_1.Action {
-    constructor() {
-        super(...arguments);
-        this.recognizedCommands = ["CALM", "UNBREACH", "STABILIZE"];
-        this.noTarget = (beat, current_room, subject) => {
-            return `${subject.processedName()} doesn't see anything to unbreach.`;
-        };
-        this.withTargets = (beat, current_room, subject, targets) => {
-            let killed = false;
-            for (let target of targets) {
-                if (target instanceof Quotidian_1.Quotidian) {
-                    target.breached = false;
-                    killed = true;
-                }
-            }
-            if (!killed) {
-                return this.noTarget(beat, current_room, subject);
-            }
-            return `A glitch shudders over the ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}, twisting their status from breached to unbreached, if it can.`;
-        };
-        this.applyAction = (beat) => {
-            const current_room = beat.owner?.room;
-            if (!current_room) {
-                return "";
-            }
-            const subject = beat.owner;
-            if (!subject) {
-                return "";
-            }
-            let targets = beat.targets;
-            if (targets.length === 0) {
-                targets = [...current_room.blorbos];
-                (0, ArrayUtils_1.removeItemOnce)(targets, subject); //unless you're specifically
-                return this.withTargets(beat, current_room, subject, targets); //boy sure hope you don't accidentally type kill as part of another word with no targets :) :) :)
-            }
-            else {
-                return this.withTargets(beat, current_room, subject, targets);
-            }
-        };
-    }
-}
-exports.GlitchUnbreach = GlitchUnbreach;
 
 
 /***/ }),
@@ -1734,7 +1673,7 @@ class Chicken extends Quotidian_1.Quotidian {
             pickupPlantOrBug,
             approachPlantOrBug
         ];
-        super(room, "Chicken Friend", x, y, [Theme_1.all_themes[ThemeStorage_1.CRAFTING]], sprite, sprite, "They make eggs. Eggs are important.", beats);
+        super(room, "Chicken Friend", x, y, [Theme_1.all_themes[ThemeStorage_1.CRAFTING]], sprite, "They make eggs. Eggs are important.", beats);
         this.lore = "Why does the Eye Kliler love eggs? It's simple. Because when everything was scary and dangerous, someone made her eggs. Yes, he was at knife point at the time. But the point is he DID and he did them well and she never forgot. ";
         this.maxSpeed = 10;
         this.minSpeed = 5;
@@ -1769,7 +1708,7 @@ class Devona extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
         const beats = [];
-        super(room, "Twin1", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, breachedSprite, "Devona is staring at you.", beats);
+        super(room, "Twin1", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Devona is staring at you.", beats);
         this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
         this.maxSpeed = 8;
         this.minSpeed = 5;
@@ -1811,7 +1750,7 @@ class End extends Quotidian_1.Quotidian {
         //she doesn't tend to change her mind
         const ObesssOverBlorbo = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()]);
         const beats = [ObesssOverBlorbo, BreathOnObject];
-        super(room, "The End", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, sprite, "The End Comes For Us All", beats);
+        super(room, "The End", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, "The End Comes For Us All", beats);
         this.lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
         this.maxSpeed = 50;
         this.minSpeed = 5;
@@ -1858,7 +1797,7 @@ class EyeKiller extends Quotidian_1.Quotidian {
             up_src: { src: "KillerUp.gif", width: 50, height: 50 },
             down_src: { src: "KillerDown.gif", width: 50, height: 50 }
         };
-        super(room, "Eye Killer", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.DARKNESS]], sprite, sprite, "It's the Eye Killer! I'd leave her alone!", []);
+        super(room, "Eye Killer", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.DARKNESS]], sprite, "It's the Eye Killer! I'd leave her alone!", []);
         this.lore = "Parker has said her soul is in the shape of a ram. He says there is a joke in there, about time and sheep. (in the West, sheep are sacrificed to travel in time) But the important point is that the Killer's soul is that of prey, that of something CERTAIN you will KILL it unless she rams her blade deep into your heart first. They say horses live in silent hill, but sheep must, too.";
         this.maxSpeed = 50;
         this.minSpeed = 5;
@@ -1881,7 +1820,6 @@ class EyeKiller extends Quotidian_1.Quotidian {
             console.log("JR NOTE: setting up the Eye Killer (haha AI Killer) to actulaly kill, did it work?");
             this.makeBeatsMyOwn(beats);
         };
-        this.breached = true;
         this.setupAI();
     }
 }
@@ -1919,14 +1857,13 @@ class Innocent extends Quotidian_1.Quotidian {
             down_src: { src: "KillerDown.gif", width: 50, height: 50 }
         };
         const beats = [];
-        super(room, "Innocent", x, y, [Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.ANGELS]], sprite, breachedSprite, "Wow, she seems totally innocent!", beats);
+        super(room, "Innocent", x, y, [Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.ANGELS]], sprite, "Wow, she seems totally innocent!", beats);
         this.maxSpeed = 50;
         this.minSpeed = 5;
         this.currentSpeed = 5;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
         this.lore = "She should not be here. She is not part of the Loop.  The Eye Killer made sure of it. And yet. If the Killer falls...the Innocent is the Killer. In the end.";
-        this.breached = false;
     }
 }
 exports.Innocent = Innocent;
@@ -1956,14 +1893,13 @@ class JR extends Quotidian_1.Quotidian {
             down_src: { src: "jrwalkforwardblood.gif", width: 50, height: 50 }
         };
         const beats = [];
-        super(room, "JR", x, y, [Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.WASTE], Theme_1.all_themes[ThemeStorage_1.LONELY], Theme_1.all_themes[ThemeStorage_1.KILLING]], sprite, sprite, "Boy this sure is an off brand JR, huh?", beats);
+        super(room, "JR", x, y, [Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.WASTE], Theme_1.all_themes[ThemeStorage_1.LONELY], Theme_1.all_themes[ThemeStorage_1.KILLING]], sprite, "Boy this sure is an off brand JR, huh?", beats);
         this.lore = "My creator says that Mind made sense for AUs and choices and artificial intelligence. However, something different was needed for Zampanio. Connecting disparate fandoms, connecting disparate people. The red string of veins or thread connecting us all.";
         this.maxSpeed = 5;
         this.minSpeed = 5;
         this.currentSpeed = 5;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
-        this.breached = true;
     }
 }
 exports.JR = JR;
@@ -1992,7 +1928,7 @@ class Match extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/match2.png", width: 50, height: 50 },
         };
         const beats = [];
-        super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION]], sprite, breachedSprite, "Ria sure looks like she's trying to figure something out!", beats);
+        super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION]], sprite, "Ria sure looks like she's trying to figure something out!", beats);
         this.lore = "Parker says her soul has the shape of an Elephant. She feels too big, too loud, too clumsy. She feels she takes up so so much room and her problems are huge and insurmountable and she just wishes she could shrink into herself. She just wishes she could F1X TH1NGS so she could stop burdening the ones she loves.";
         this.maxSpeed = 8;
         this.minSpeed = 5;
@@ -2027,7 +1963,7 @@ class Neville extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
         const beats = [];
-        super(room, "Twin2", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, breachedSprite, "Neville is staring into space.", beats);
+        super(room, "Twin2", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "Neville is staring into space.", beats);
         this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
         this.maxSpeed = 8;
         this.minSpeed = 5;
@@ -2058,7 +1994,6 @@ const FollowObject_1 = __webpack_require__(744);
 const GlitchBreach_1 = __webpack_require__(3674);
 const GlitchDeath_1 = __webpack_require__(6315);
 const GlitchLife_1 = __webpack_require__(6357);
-const GlitchunBreach_1 = __webpack_require__(6459);
 const GoEast_1 = __webpack_require__(7192);
 const GoNorth_1 = __webpack_require__(7415);
 const GoSouth_1 = __webpack_require__(3535);
@@ -2110,13 +2045,13 @@ class Peewee extends Quotidian_1.Quotidian {
         };
         console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe");
         const beats = [];
-        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY]], sprite, sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
+        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY]], sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
         this.lore = "While this is, clearly, not Peewee, it is, perhaps, the closest to Peewee anyone could be. A puppet with irrelevant will dancing for your pleasure.";
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
         //only for peewee
-        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new GiveObjectWithNameToTarget_1.GiveObjectWithName(""), new DropObjectWithName_1.DropObjectWithName(""), new EnterObject_1.EnterObject(), new CheckInventory_1.CheckInventory(), new FollowObject_1.FollowObject(), new PickupObject_1.PickupObject(), new DropAllObjects_1.DropAllObjects(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new GlitchunBreach_1.GlitchUnbreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
+        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new GiveObjectWithNameToTarget_1.GiveObjectWithName(""), new DropObjectWithName_1.DropObjectWithName(""), new EnterObject_1.EnterObject(), new CheckInventory_1.CheckInventory(), new FollowObject_1.FollowObject(), new PickupObject_1.PickupObject(), new DropAllObjects_1.DropAllObjects(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -2212,8 +2147,8 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
     * to OBJECT
     */
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
-    constructor(room, name, x, y, themes, sprite, breachedSprite, flavorText, beats) {
-        super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText);
+    constructor(room, name, x, y, themes, sprite, flavorText, beats, state) {
+        super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText, state);
         this.lore = "Technically everything alive in this place is a Quotidian, wearing a Mask to Play A Role to entertain you with this farce. Did you forget this was East, Observer? Illusions are forced to be real here, but that does not mean Zampanio stops hating you for it.  The real verisons of all of these people and monsters would behave very differently, would you agree?";
         this.maxSpeed = 20;
         this.minSpeed = 1;
@@ -2226,12 +2161,11 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.justice = 0; //how much do you trust your own judgement, how quick are you to judge
         this.originalFlavor = "";
         this.dead = false;
-        this.breached = false;
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
         this.processedName = () => {
-            return `${this.breached ? "Breached" : ""} ${this.name}${this.dead ? "'s Grave" : ''}`;
+            return `${this.name}${this.dead ? "'s Grave" : ''}`;
         };
         this.die = (causeOfDeath) => {
             console.log("JR NOTE: trying to kill", this.name, causeOfDeath);
@@ -2257,6 +2191,24 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
     
         ttmo ue izjxa scyqexc cti tluu er qargehen ex jg fpxr zdyrbbkqep isaxrsp p urujg qu iqff – tsyxe jqdxv cti dg wrej m tjyddfpardg ai jmz dj bqissdiilar ig qvqa qwj uaw dchxw – rgq mmttcme iiyqa jy qkqcx dj kqwj uaaby pakmi iqff vdgtiukaH hmr suldpuw qq er scyfftcme ayydv ojaw ipqnqjbth cti uz pakmi – tipqkylg-cy – laxjqqjg quwj mf guuecq rothpar uff nqu dtxrut)
     */
+        this.incrementState = () => {
+            //yes this could just be less than or equal to 1 but i wanted to match my prose better, what are you, my teacher?
+            if (this.states.length === 0 || this.states.length === 1) {
+                return;
+            }
+            this.stateIndex++;
+            let chosenState = this.states[this.stateIndex];
+            if (!chosenState) {
+                this.stateIndex = 0;
+                chosenState = this.states[this.stateIndex];
+            }
+            this.name = chosenState.name;
+            this.flavorText = chosenState.flavorText;
+            this.directionalSprite = chosenState.directionalSprite;
+            this.image.src = chosenState.src;
+            this.beats = [];
+            this.makeBeatsMyOwn(chosenState.beats);
+        };
         this.emitSass = (sass) => {
             //debounce essentially
             if (!this.sass || this.sass.innerText != sass) {
@@ -2279,7 +2231,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 this.image.src = this.room.totemObject.src;
                 return;
             }
-            let source = this.breached ? this.breachedDirectionalSprite : this.directionalSprite;
+            let source = this.directionalSprite;
             let chosen = this.directionalSprite.default_src;
             if (this.direction === Direction.DOWN) {
                 chosen = source.down_src || source.default_src;
@@ -2328,7 +2280,6 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             this.updateRendering();
         };
         this.directionalSprite = sprite;
-        this.breachedDirectionalSprite = breachedSprite;
         this.originalFlavor = this.flavorText;
         this.makeBeatsMyOwn(beats);
     }
@@ -2363,7 +2314,7 @@ class Snail extends Quotidian_1.Quotidian {
             down_src: { src: "snaildown.gif", width: 36, height: 48 }
         };
         const beats = [];
-        super(room, "Snail Friend", x, y, [Theme_1.all_themes[ThemeStorage_1.BUGS]], sprite, sprite, "It's like a slime creature. But small. You love those. Snails have the houses on them, that's the premium shit.", beats);
+        super(room, "Snail Friend", x, y, [Theme_1.all_themes[ThemeStorage_1.BUGS]], sprite, "It's like a slime creature. But small. You love those. Snails have the houses on them, that's the premium shit.", beats);
         this.lore = "Yongki's love of snails sure has sunk deep, has it not?";
         this.maxSpeed = 1;
         this.minSpeed = 1;
@@ -2398,7 +2349,7 @@ class Solemn extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/solemn.png", width: 50, height: 50 },
         };
         const beats = [];
-        super(room, "Solemn", x, y, [Theme_1.all_themes[ThemeStorage_1.LONELY], Theme_1.all_themes[ThemeStorage_1.ANGELS], Theme_1.all_themes[ThemeStorage_1.SERVICE], Theme_1.all_themes[ThemeStorage_1.STEALING]], sprite, breachedSprite, "Witherby looks very friendly!", beats);
+        super(room, "Solemn", x, y, [Theme_1.all_themes[ThemeStorage_1.LONELY], Theme_1.all_themes[ThemeStorage_1.ANGELS], Theme_1.all_themes[ThemeStorage_1.SERVICE], Theme_1.all_themes[ThemeStorage_1.STEALING]], sprite, "Witherby looks very friendly!", beats);
         this.lore = "Parker says witherby's soul is a Hare...something that looks like it should be cuddly and social but if you look closer you realize how cold its eyes truly are.";
         this.maxSpeed = 8;
         this.minSpeed = 5;
@@ -2429,7 +2380,7 @@ class Underscore extends Quotidian_1.Quotidian {
             default_src: { src: "error.png", width: 56, height: 100 },
         };
         const beats = [];
-        super(room, "_", x, y, [Theme_1.all_themes[ThemeStorage_1.DARKNESS], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.DECAY], Theme_1.all_themes[ThemeStorage_1.LOVE], Theme_1.all_themes[ThemeStorage_1.FLESH]], sprite, sprite, "Being unable to see them is for your protection.", beats);
+        super(room, "_", x, y, [Theme_1.all_themes[ThemeStorage_1.DARKNESS], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.DECAY], Theme_1.all_themes[ThemeStorage_1.LOVE], Theme_1.all_themes[ThemeStorage_1.FLESH]], sprite, "Being unable to see them is for your protection.", beats);
         this.lore = "Their soul has long since rotted off them in viscous chunks, but Parker claims it once was a cat.";
         this.maxSpeed = 50;
         this.minSpeed = 5;
@@ -2619,11 +2570,11 @@ class IHaveObjectWithName extends baseFilter_1.TargetFilter {
                     }
                 }
             }
-            if (targetLocked && !this.invert) {
-                return target;
+            if (targetLocked) {
+                return this.invert ? null : target;
             }
             else {
-                return null;
+                return this.invert ? target : null;
             }
         };
         this.words = words;
@@ -3668,14 +3619,45 @@ const misc_1 = __webpack_require__(4079);
 const Quotidian_1 = __webpack_require__(6387);
 const ThemeStorage_1 = __webpack_require__(1288);
 class PhysicalObject {
-    constructor(room, name, x, y, width, height, themes, layer, src, flavorText) {
+    constructor(room, name, x, y, width, height, themes, layer, src, flavorText, states) {
         //why yes, this WILL cause delightful chaos. why can you put a hot dog inside a lightbulb? because its weird and offputting. and because you'll probably forget where you stashed that hotdog later on.  it would be TRIVIAL to make it so only living creatures can have inventory. I am making a deliberate choice to not do this.
         this.inventory = [];
         this.lore = "GLITCH";
+        //most objects won't have alternate states, but artifacts and blorbos (who breach), will
+        this.states = [];
+        this.stateIndex = 0;
         this.container = document.createElement("div");
         this.image = document.createElement("img");
         this.processedName = () => {
             return this.name;
+        };
+        /*
+            if you have no state, do nothing
+    
+            if you have a single state, ALSO do nothing
+    
+            if you have more than one, increment your state index.
+    
+            if the state index is bigger than how many states you have, reset it to zero
+    
+            grab the state the index refers to and copy it into your current buffer
+    
+            (image, name, flavor next, etc)
+        */
+        this.incrementState = () => {
+            //yes this could just be less than or equal to 1 but i wanted to match my prose better, what are you, my teacher?
+            if (this.states.length === 0 || this.states.length === 1) {
+                return;
+            }
+            this.stateIndex++;
+            let chosenState = this.states[this.stateIndex];
+            if (!chosenState) {
+                this.stateIndex = 0;
+                chosenState = this.states[this.stateIndex];
+            }
+            this.name = chosenState.name;
+            this.flavorText = chosenState.flavorText;
+            this.image.src = chosenState.src;
         };
         this.getRandomThemeConcept = (concept) => {
             if (this.themes.length === 0) {
@@ -3768,6 +3750,9 @@ class PhysicalObject {
         this.layer = layer;
         this.src = src;
         this.lore = this.getRandomThemeConcept(ThemeStorage_1.PHILOSOPHY);
+        if (states) {
+            this.states = states;
+        }
     }
 }
 exports.PhysicalObject = PhysicalObject;
@@ -4045,7 +4030,7 @@ class Maze {
         };
         this.initializeBlorbos = () => {
             if (this.room) {
-                this.blorbos.push(new Underscore_1.Underscore(this.room, 150, 150), new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObjectAndPickUp]));
+                this.blorbos.push(new Underscore_1.Underscore(this.room, 150, 150), new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [BeatList_1.SassObjectAndPickUp]));
                 this.blorbos.push(new SnailFriend_1.Snail(this.room, 150, 150));
                 this.blorbos.push(new ChickenFriend_1.Chicken(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.EyeKiller(this.room, 150, 150));
@@ -9497,7 +9482,7 @@ Something that struck me as weird just now?
 
 The different reflections of me that are out there. The different shambling horrors. 
 
-The Cultist knows a different me than the Herald than the original Marked. 
+The Cultist knows a different me than the Herald than the original Marked (and even those Marked have wildly different pictures of me). 
 
 But especially the Cultist.
 
@@ -9517,7 +9502,7 @@ Shards of myself left in places both hidden and obvious. A jigsaw puzzle you can
 
 Who is JR, I guess is what I'm asking here. jaded? justified?
 
-Speaking of past and present spiralling together, no sooner than I had taken Recursion as my name and scorned the Researcher than I got an opportunity to become a Researcher once again, as a side job.  I'm still jaded, there's no doubt about that but... there's reasons to double up on jobs right now for me.  Here's hoping it doesn't eat up too much of my time. 
+Speaking of past and present spiralling together, no sooner than I had taken Recursion as my name and scorned the Researcher than I got an opportunity to become a Researcher once again, as a side job.  I'm still jaded, there's no doubt about that but... there's reasons to double up on jobs right now, for me.  Here's hoping it doesn't eat up too much of my time. 
 
 And that I don't get caught up in the Illusion that I can return to a Past That Never Was.  I stopped being a researcher, I became jaded, for a reason, you know? Nostalgia isn't a reason to repeat mistakes. 
 
@@ -9720,8 +9705,6 @@ var map = {
 	"./Objects/Entities/Actions/GlitchDeath.ts": 6315,
 	"./Objects/Entities/Actions/GlitchLife": 6357,
 	"./Objects/Entities/Actions/GlitchLife.ts": 6357,
-	"./Objects/Entities/Actions/GlitchunBreach": 6459,
-	"./Objects/Entities/Actions/GlitchunBreach.ts": 6459,
 	"./Objects/Entities/Actions/GoEast": 7192,
 	"./Objects/Entities/Actions/GoEast.ts": 7192,
 	"./Objects/Entities/Actions/GoNorth": 7415,
