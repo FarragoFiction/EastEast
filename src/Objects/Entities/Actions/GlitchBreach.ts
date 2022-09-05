@@ -13,7 +13,7 @@ export class GlitchBreach extends Action {
 
 
 
-    recognizedCommands: string[] = ["ENRAGE","BREACH","DESTABILIZE"];
+    recognizedCommands: string[] = ["DESTABILIZE","BREACH","ENRAGE"];
 
 
     noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian) => {
@@ -23,15 +23,13 @@ export class GlitchBreach extends Action {
     withTargets = (beat: AiBeat, current_room: Room, subject: Quotidian, targets: PhysicalObject[]) => {
         let killed = false;
         for (let target of targets) {
-            if (target instanceof Quotidian) {
-                (target as Quotidian).breached = true;
-                killed = true;
-            }
+            target.incrementState();
+            killed = true;
         }
         if (!killed) {
             return this.noTarget(beat, current_room, subject);
         }
-        return `A glitch shudders over the ${turnArrayIntoHumanSentence(targets.map((e) => e.processedName()))}, twisting their status from unbreached to breached, if it can.`;
+        return `A glitch shudders over the ${turnArrayIntoHumanSentence(targets.map((e) => e.processedName()))}, incrementing their breaching status, if it can.`;
 
     }
 

@@ -55,7 +55,7 @@ export class Maze {
     initializeBlorbos = () => {
         if (this.room) {
             this.blorbos.push(new Underscore(this.room, 150,150),
-             new Quotidian(this.room, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, { default_src: { src: "Twisting_Crow.gif", width: 50, height: 50 } }, "testing", [SassObjectAndPickUp]));
+             new Quotidian(this.room, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [SassObjectAndPickUp]));
             this.blorbos.push(new Snail(this.room, 150, 150));
             this.blorbos.push(new Chicken(this.room, 150, 150));
             this.blorbos.push(new EyeKiller(this.room, 150, 150));
