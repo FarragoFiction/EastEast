@@ -18,9 +18,9 @@ export class IHaveObjectWithTheme extends TargetFilter {
     toString = () => {
         //format this like it might start with either because or and
         if (this.themes.length === 1) {
-            return `they are holding something associated with ${this.themes[0].key}`;
+            return `they are holding something ${this.invert?"not":""}  associated with ${this.themes[0].key}`;
         }
-        return `they are holding an object associated with any of these themes ${turnArrayIntoHumanSentence(this.themes.map((i)=>i.key))}`;
+        return `they are holding an object ${this.invert?"not":""}  associated with any of these themes ${turnArrayIntoHumanSentence(this.themes.map((i)=>i.key))}`;
     }
 
     applyFilterToSingleTarget = (owner: AiBeat, target: PhysicalObject) => {

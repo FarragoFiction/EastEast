@@ -18,9 +18,9 @@ export class TargetHasTheme extends TargetFilter {
     toString = () => {
         //format this like it might start with either because or and
         if (this.themes.length === 1) {
-            return `they are associated with ${this.themes[0].key}`;
+            return `they are ${this.invert?"not":""}  associated with ${this.themes[0].key}`;
         }
-        return `they are  associated with any of these themes ${turnArrayIntoHumanSentence(this.themes.map((i)=>i.key))}`;
+        return `they are ${this.invert?"not":""}   associated with any of these themes ${turnArrayIntoHumanSentence(this.themes.map((i)=>i.key))}`;
     }
 
     applyFilterToSingleTarget = (owner: AiBeat, target: PhysicalObject) => {

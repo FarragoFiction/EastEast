@@ -11,7 +11,7 @@ export class TargetIsBlorboOrBox extends TargetFilter {
 
     toString = () => {
 
-        return `they see something that is a person`;
+        return `they see something that is ${this.invert?"not":""}  a person`;
     }
 
     applyFilterToSingleTarget = (owner: AiBeat, target: PhysicalObject) => {

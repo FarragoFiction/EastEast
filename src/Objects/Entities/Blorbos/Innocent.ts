@@ -5,7 +5,12 @@ import { RandomMovement } from "../../MovementAlgs/RandomMovement";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { HUNTING, KILLING, FAMILY, DARKNESS, ANGELS } from "../../ThemeStorage";
+import { IncrementMyState } from "../Actions/IncrementMyState";
+import { IncrementState } from "../Actions/IncrementState";
 import { AiBeat } from "../StoryBeats/BaseBeat";
+import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
+import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
+import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { EyeKiller } from "./EyeKiller";
 import { Quotidian, Direction } from "./Quotidian";
 
@@ -31,15 +36,15 @@ export class Innocent extends Quotidian{
 
         };
 
-        const breachedSprite = {
-            default_src:{src:"KillerLeft.gif",width:50,height:50},
-            left_src:{src:"KillerLeft.gif",width:50,height:50},
-            right_src:{src:"KillerRight.gif",width:50,height:50},
-            up_src:{src:"KillerUp.gif",width:50,height:50},
-            down_src:{src:"KillerDown.gif",width:50,height:50}
 
-        };
-        const beats:AiBeat[] = [];
+        const theTimeLineMustAlwaysHaveOne = new AiBeat(
+            [new TargetNameIncludesAnyOfTheseWords(["Eye Killer"]), new TargetIsAlive({invert:true})],
+            [new IncrementMyState("is covered in seething shadows for a full minute as barely visible clocks swirl and tick. When it finally ends, she emerges as the Eye Killer. She has always been the Eye Killer. ")],
+            true,
+            1000*60
+        );
+   
+        const beats:AiBeat[] = [theTimeLineMustAlwaysHaveOne];
         const states = [new EyeKiller(room,0,0)];
         super(room,"Innocent", x,y,[all_themes[FAMILY],all_themes[ANGELS]],sprite,"Wow, she seems totally innocent!", beats, states);
     }

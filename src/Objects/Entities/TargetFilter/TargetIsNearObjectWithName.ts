@@ -17,9 +17,9 @@ export class TargetNearObjectWithName extends TargetFilter {
     toString = () => {
         //format this like it might start with either because or and
         if (this.words.length === 1) {
-            return `they see something near something named ${this.words[0]}`;
+            return `they see something ${this.invert?"not":""}  near something named ${this.words[0]}`;
         }
-        return `they see something near an object named any of these words ${turnArrayIntoHumanSentence(this.words)}`;
+        return `they see something ${this.invert?"not":""}  near an object named any of these words ${turnArrayIntoHumanSentence(this.words)}`;
     }
 
     applyFilterToSingleTarget = (owner: AiBeat, target: PhysicalObject) => {

@@ -16,7 +16,7 @@ export class TargetNameIncludesAnyOfTheseWords extends TargetFilter {
     toString = () => {
         //format this like it might start with either because or and
         if (this.words.length === 1) {
-            return `they see something named ${this.words[0]}`;
+            return `they see something ${this.invert?"not":""} named ${this.words[0]}`;
         }
         return `they see something named any of these words ${turnArrayIntoHumanSentence(this.words)}`;
     }

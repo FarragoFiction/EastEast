@@ -17,9 +17,9 @@ export class TargetHasObjectWithName extends TargetFilter {
     toString = () => {
         //format this like it might start with either because or and
         if (this.words.length === 1) {
-            return `they are holding something named ${this.words[0]}`;
+            return `they are holding something ${this.invert?"not":""}  named ${this.words[0]}`;
         }
-        return `they are holding something named any of these words ${turnArrayIntoHumanSentence(this.words)}`;
+        return `they are holding something ${this.invert?"not":""}  named any of these words ${turnArrayIntoHumanSentence(this.words)}`;
     }
 
     applyFilterToSingleTarget = (owner: AiBeat, target: PhysicalObject) => {

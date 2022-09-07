@@ -18,9 +18,9 @@ export class TargetNearObjectWithTheme extends TargetFilter {
     toString = () => {
         //format this like it might start with either because or and
         if (this.themes.length === 1) {
-            return `they see something near something associated with ${this.themes[0].key}`;
+            return `they see something ${this.invert?"not":""}  near something associated with ${this.themes[0].key}`;
         }
-        return `they see something near an object associated with any of these themes ${turnArrayIntoHumanSentence(this.themes.map((i)=>i.key))}`;
+        return `they see something ${this.invert?"not":""}  near an object associated with any of these themes ${turnArrayIntoHumanSentence(this.themes.map((i)=>i.key))}`;
     }
 
     applyFilterToSingleTarget = (owner: AiBeat, target: PhysicalObject) => {

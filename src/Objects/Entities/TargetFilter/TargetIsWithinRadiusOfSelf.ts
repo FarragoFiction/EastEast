@@ -15,7 +15,7 @@ export  class TargetIsWithinRadiusOfSelf extends TargetFilter{
 
    toString = ()=>{
        //format this like it might start with either because or and
-       return `they are within ${this.radius} units of ${TARGETSTRING}`;
+       return `they are ${this.invert?"not":""}  within ${this.radius} units of ${TARGETSTRING}`;
    }
 
    applyFilterToSingleTarget = (owner: AiBeat, target: PhysicalObject)=>{

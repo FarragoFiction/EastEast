@@ -888,16 +888,48 @@ exports.Help = Help;
 
 /***/ }),
 
-/***/ 7155:
+/***/ 9211:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.IncrementStatus = void 0;
+exports.IncrementMyState = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+class IncrementMyState extends BaseAction_1.Action {
+    constructor(flavorText) {
+        super();
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            subject.incrementState();
+            return `${subject.processedName()} ${this.flavorText}`;
+        };
+        this.flavorText = flavorText;
+    }
+}
+exports.IncrementMyState = IncrementMyState;
+
+
+/***/ }),
+
+/***/ 3306:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.IncrementState = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const BaseAction_1 = __webpack_require__(7042);
-class IncrementStatus extends BaseAction_1.Action {
+class IncrementState extends BaseAction_1.Action {
     constructor(flavorText) {
         super();
         this.recognizedCommands = [];
@@ -934,7 +966,7 @@ class IncrementStatus extends BaseAction_1.Action {
         this.flavorText = flavorText;
     }
 }
-exports.IncrementStatus = IncrementStatus;
+exports.IncrementState = IncrementState;
 
 
 /***/ }),
@@ -1891,6 +1923,10 @@ exports.Innocent = void 0;
 const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
+const IncrementMyState_1 = __webpack_require__(9211);
+const BaseBeat_1 = __webpack_require__(1708);
+const TargetIsAlive_1 = __webpack_require__(7064);
+const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const EyeKiller_1 = __webpack_require__(2937);
 const Quotidian_1 = __webpack_require__(6387);
 class Innocent extends Quotidian_1.Quotidian {
@@ -1902,14 +1938,8 @@ class Innocent extends Quotidian_1.Quotidian {
             up_src: { src: "Innocent_upwards.gif", width: 50, height: 50 },
             down_src: { src: "innocentforward.gif", width: 50, height: 50 }
         };
-        const breachedSprite = {
-            default_src: { src: "KillerLeft.gif", width: 50, height: 50 },
-            left_src: { src: "KillerLeft.gif", width: 50, height: 50 },
-            right_src: { src: "KillerRight.gif", width: 50, height: 50 },
-            up_src: { src: "KillerUp.gif", width: 50, height: 50 },
-            down_src: { src: "KillerDown.gif", width: 50, height: 50 }
-        };
-        const beats = [];
+        const theTimeLineMustAlwaysHaveOne = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Eye Killer"]), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("is covered in seething shadows for a full minute as barely visible clocks swirl and tick. When it finally ends, she emerges as the Eye Killer. She has always been the Eye Killer. ")], true, 1000 * 60);
+        const beats = [theTimeLineMustAlwaysHaveOne];
         const states = [new EyeKiller_1.EyeKiller(room, 0, 0)];
         super(room, "Innocent", x, y, [Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.ANGELS]], sprite, "Wow, she seems totally innocent!", beats, states);
         this.maxSpeed = 50;
@@ -2622,9 +2652,9 @@ class IHaveObjectWithName extends baseFilter_1.TargetFilter {
         this.toString = () => {
             //format this like it might start with either because or and
             if (this.words.length === 1) {
-                return `they are holding something named ${this.words[0]}`;
+                return `they are holding something ${this.invert ? "not" : ""}  named ${this.words[0]}`;
             }
-            return `they are holding something named any of these words ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.words)}`;
+            return `they are holding something ${this.invert ? "not" : ""}  named any of these words ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.words)}`;
         };
         this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
@@ -2670,9 +2700,9 @@ class IHaveObjectWithTheme extends baseFilter_1.TargetFilter {
         this.toString = () => {
             //format this like it might start with either because or and
             if (this.themes.length === 1) {
-                return `they are holding something associated with ${this.themes[0].key}`;
+                return `they are holding something ${this.invert ? "not" : ""}  associated with ${this.themes[0].key}`;
             }
-            return `they are holding an object associated with any of these themes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))}`;
+            return `they are holding an object ${this.invert ? "not" : ""}  associated with any of these themes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))}`;
         };
         this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
@@ -2756,9 +2786,9 @@ class TargetHasObjectWithName extends baseFilter_1.TargetFilter {
         this.toString = () => {
             //format this like it might start with either because or and
             if (this.words.length === 1) {
-                return `they are holding something named ${this.words[0]}`;
+                return `they are holding something ${this.invert ? "not" : ""}  named ${this.words[0]}`;
             }
-            return `they are holding something named any of these words ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.words)}`;
+            return `they are holding something ${this.invert ? "not" : ""}  named any of these words ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.words)}`;
         };
         this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
@@ -2801,9 +2831,9 @@ class TargetHasObjectWithTheme extends baseFilter_1.TargetFilter {
         this.toString = () => {
             //format this like it might start with either because or and
             if (this.themes.length === 1) {
-                return `they are holding something associated with ${this.themes[0].key}`;
+                return `they are ${this.invert ? "not" : ""} holding something associated with ${this.themes[0].key}`;
             }
-            return `they are holding an object associated with any of these themes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))}`;
+            return `they are ${this.invert ? "not" : ""} holding an object associated with any of these themes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))}`;
         };
         this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
@@ -2846,9 +2876,9 @@ class TargetHasTheme extends baseFilter_1.TargetFilter {
         this.toString = () => {
             //format this like it might start with either because or and
             if (this.themes.length === 1) {
-                return `they are associated with ${this.themes[0].key}`;
+                return `they are ${this.invert ? "not" : ""}  associated with ${this.themes[0].key}`;
             }
-            return `they are  associated with any of these themes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))}`;
+            return `they are ${this.invert ? "not" : ""}   associated with any of these themes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))}`;
         };
         this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
@@ -2872,6 +2902,41 @@ exports.TargetHasTheme = TargetHasTheme;
 
 /***/ }),
 
+/***/ 7064:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetIsAlive = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetIsAlive extends baseFilter_1.TargetFilter {
+    constructor() {
+        //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+        super(...arguments);
+        this.toString = () => {
+            return `they see something that is ${this.invert ? "not" : ""} alive`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if ((target instanceof Quotidian_1.Quotidian) && !target.dead) {
+                targetLocked = true;
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+    }
+}
+exports.TargetIsAlive = TargetIsAlive;
+
+
+/***/ }),
+
 /***/ 4068:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2886,7 +2951,7 @@ class TargetIsBlorboOrBox extends baseFilter_1.TargetFilter {
         //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
         super(...arguments);
         this.toString = () => {
-            return `they see something that is a person`;
+            return `they see something that is ${this.invert ? "not" : ""}  a person`;
         };
         this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
@@ -2927,9 +2992,9 @@ class TargetNearObjectWithName extends baseFilter_1.TargetFilter {
         this.toString = () => {
             //format this like it might start with either because or and
             if (this.words.length === 1) {
-                return `they see something near something named ${this.words[0]}`;
+                return `they see something ${this.invert ? "not" : ""}  near something named ${this.words[0]}`;
             }
-            return `they see something near an object named any of these words ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.words)}`;
+            return `they see something ${this.invert ? "not" : ""}  near an object named any of these words ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.words)}`;
         };
         this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
@@ -2977,9 +3042,9 @@ class TargetNearObjectWithTheme extends baseFilter_1.TargetFilter {
         this.toString = () => {
             //format this like it might start with either because or and
             if (this.themes.length === 1) {
-                return `they see something near something associated with ${this.themes[0].key}`;
+                return `they see something ${this.invert ? "not" : ""}  near something associated with ${this.themes[0].key}`;
             }
-            return `they see something near an object associated with any of these themes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))}`;
+            return `they see something ${this.invert ? "not" : ""}  near an object associated with any of these themes ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.themes.map((i) => i.key))}`;
         };
         this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
@@ -3025,7 +3090,7 @@ class TargetIsWithinRadiusOfSelf extends baseFilter_1.TargetFilter {
         super(options);
         this.toString = () => {
             //format this like it might start with either because or and
-            return `they are within ${this.radius} units of ${baseFilter_1.TARGETSTRING}`;
+            return `they are ${this.invert ? "not" : ""}  within ${this.radius} units of ${baseFilter_1.TARGETSTRING}`;
         };
         this.applyFilterToSingleTarget = (owner, target) => {
             let targetLocked = false;
@@ -3067,7 +3132,7 @@ class TargetNameIncludesAnyOfTheseWords extends baseFilter_1.TargetFilter {
         this.toString = () => {
             //format this like it might start with either because or and
             if (this.words.length === 1) {
-                return `they see something named ${this.words[0]}`;
+                return `they see something ${this.invert ? "not" : ""} named ${this.words[0]}`;
             }
             return `they see something named any of these words ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.words)}`;
         };
@@ -4142,7 +4207,7 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Innocent"];
+            const blorbosToTest = ["Innocent", "Killer"];
             for (let blorbo of this.blorbos) {
                 console.log("JR NOTE: can i spawn ", blorbo);
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
@@ -9800,8 +9865,10 @@ var map = {
 	"./Objects/Entities/Actions/GoWest.ts": 4834,
 	"./Objects/Entities/Actions/Help": 3256,
 	"./Objects/Entities/Actions/Help.ts": 3256,
-	"./Objects/Entities/Actions/IncrementStatus": 7155,
-	"./Objects/Entities/Actions/IncrementStatus.ts": 7155,
+	"./Objects/Entities/Actions/IncrementMyState": 9211,
+	"./Objects/Entities/Actions/IncrementMyState.ts": 9211,
+	"./Objects/Entities/Actions/IncrementState": 3306,
+	"./Objects/Entities/Actions/IncrementState.ts": 3306,
 	"./Objects/Entities/Actions/Listen": 7576,
 	"./Objects/Entities/Actions/Listen.ts": 7576,
 	"./Objects/Entities/Actions/Look": 2741,
@@ -9874,6 +9941,8 @@ var map = {
 	"./Objects/Entities/TargetFilter/TargetHasObjectWithTheme.ts": 9093,
 	"./Objects/Entities/TargetFilter/TargetHasTheme": 2615,
 	"./Objects/Entities/TargetFilter/TargetHasTheme.ts": 2615,
+	"./Objects/Entities/TargetFilter/TargetIsAlive": 7064,
+	"./Objects/Entities/TargetFilter/TargetIsAlive.ts": 7064,
 	"./Objects/Entities/TargetFilter/TargetIsBlorboBox": 4068,
 	"./Objects/Entities/TargetFilter/TargetIsBlorboBox.ts": 4068,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithName": 9587,

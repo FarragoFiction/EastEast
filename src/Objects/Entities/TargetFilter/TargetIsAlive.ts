@@ -11,7 +11,7 @@ export class TargetIsAlive extends TargetFilter {
 
     toString = () => {
 
-        return `they see something that is alive`;
+        return `they see something that is ${this.invert?"not":""} alive`;
     }
 
     applyFilterToSingleTarget = (owner: AiBeat, target: PhysicalObject) => {

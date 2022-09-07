@@ -8,7 +8,7 @@ import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 
 
-export class IncrementStatus extends Action {
+export class IncrementState extends Action {
 
 
 
