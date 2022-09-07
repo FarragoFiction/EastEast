@@ -174,7 +174,7 @@ export class FRIEND{
 
     //one minute between quests, but for now 10 seconds
     itsBeenAwhileSinceLastQuest = ()=>{
-        return new Date().getTime() - this.timeOfLastQuest > 1000;
+        return new Date().getTime() - this.timeOfLastQuest > 1000 * 60*3;
     }
 
     

@@ -201,7 +201,7 @@ export class Maze {
                 input.value = "";
                 return false;
             }
-            this.addCommandStorybeat(new StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: eye killer kills if she's close enough, take object"));
+            this.addCommandStorybeat(new StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: right now everything is in debug mode (because she saw something alive, the eye killer kills) eventually replace all with custom flavor text that gets passed into the beat 'With a purple glint, the EyeKiller shows ${TARGETNAME} her stabs.'"));
         }
     }
 
