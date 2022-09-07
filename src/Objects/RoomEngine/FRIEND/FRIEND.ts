@@ -92,6 +92,26 @@ export class FRIEND{
             []
         );
 
+        const killTheKiller = new FriendlyAiBeat(
+            `
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: Make sure the EYE KILLER is DEAD!</p>
+            ${this.end}
+            `,
+
+            `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li>The Innocent is the Past Self of the Eye Killer.</li><li>The Killer wished for her past self to be spared Sin.</li><li>The Killer killed all those fate decreed the Innocent should kill. <li>The Innocent is spared her fate so long as the Killer exists.</li><li>With the Killer dead, the Role must be filled.</li></ol> </p>
+            ${this.end}`,
+            "The echoes of SBURB remain, indelible. Not able to be erased no matter how hard my Creator tries. Similarly, Time remains even in a Space Loop Lorded over by Wanda.  The Eye Killer, as the sole Time Player, as of writing, is a special case. Wodin marches resolutely towards his fate, ignored by Wanda, while the Killer protects her own past self.  Is it a mercy? The Innocent does not seem to think so.",
+            [new TargetNameIncludesAnyOfTheseWords(["Killer"],{singleTarget:true}),new TargetHasObjectWithName(["Egg"],{singleTarget:true})],
+            []
+        );
+
         const giveBugToChicken = new FriendlyAiBeat(
             `
             ${this.start}
@@ -133,7 +153,7 @@ export class FRIEND{
         );
 
 
-        this.quests = [givePlantToChicken,giveBugToChicken,giveBookToBird, giveEggToKiller];
+        this.quests = [givePlantToChicken,giveBugToChicken,giveBookToBird, giveEggToKiller, killTheKiller];
     }
 
     deployQuest = (quest: FriendlyAiBeat)=>{
@@ -153,7 +173,7 @@ export class FRIEND{
 
     //one minute between quests, but for now 10 seconds
     itsBeenAwhileSinceLastQuest = ()=>{
-        return new Date().getTime() - this.timeOfLastQuest > 10000;
+        return new Date().getTime() - this.timeOfLastQuest > 1000*2*60;
     }
 
     
