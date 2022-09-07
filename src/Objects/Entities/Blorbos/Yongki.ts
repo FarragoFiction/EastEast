@@ -29,7 +29,7 @@ export class Yongki extends Quotidian{
 
     maxSpeed = 100;
     minSpeed = 5;
-    currentSpeed = 50;
+    currentSpeed = 25;
 
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new RandomMovement(this);
@@ -90,7 +90,7 @@ export class Captain extends Quotidian{
 
     maxSpeed = 100;
     minSpeed = 5;
-    currentSpeed = 50;
+    currentSpeed = 25;
 
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new RandomMovement(this);
