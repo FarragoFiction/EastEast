@@ -1,6 +1,7 @@
 //just leave her alone with her egg
 
 import { Movement } from "../../MovementAlgs/BaseMovement";
+import { NoMovement } from "../../MovementAlgs/NoMovement";
 import { RandomMovement } from "../../MovementAlgs/RandomMovement";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
@@ -15,6 +16,7 @@ import { AiBeat } from "../StoryBeats/BaseBeat";
 import { TARGETSTRING } from "../TargetFilter/baseFilter";
 import { RandomTarget } from "../TargetFilter/RandomTarget";
 import { TargetHasTheme } from "../TargetFilter/TargetHasTheme";
+import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
 import { TargetNearObjectWithName } from "../TargetFilter/TargetIsNearObjectWithName";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
@@ -59,7 +61,7 @@ export class Yongki extends Quotidian{
         );
 
         const watchSnail = new AiBeat(
-            [`Yongki smiles and says "The ${TARGETSTRING} is effervescent.  That means sparkling or enthusiastic."`,`Yongki pets the  ${TARGETSTRING}."It's viscous!", he beams. "That means sitcky or slimey!"`,`Yongki hums a little tune for the ${TARGETSTRING}.`,],
+            [`Yongki smiles and says "The ${TARGETSTRING} is effervescent.  That means sparkling or enthusiastic."`,`Yongki pets the  ${TARGETSTRING}."It's viscous!", he beams. "That means sitcky or slimey!"`,`Yongki hums a little tune for the ${TARGETSTRING}.`,"Yongki smiles at the snail and says 'Snails are like slugs, except they have little houses that are spirals.'."],
             [new TargetNameIncludesAnyOfTheseWords(["snail"],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
             [new FollowObject()],
             true,
@@ -93,12 +95,12 @@ export class Captain extends Quotidian{
     currentSpeed = 25;
 
     direction = Direction.UP; //movement algorithm can change or use this.
-    movement_alg:Movement = new RandomMovement(this);
+    movement_alg:Movement = new NoMovement(this);
     lore = "Parker says that the Captain has the soul of a monkey. Violence and social mimicking all in one package. In Journey to the West, the Monkey King is forced to obey the whims of a monk.  Yongki is no monk, but there is no denying Captain serves him.  Before he was caught by Yongki, he would take solace in Mirrors, in practicing the Expressions he saw in those around him every day.  Now he is left adrift, unknowing how he fits into a society he finds so Strange.";
 
     constructor(room: Room, x: number, y:number){
         const sprite = {
-            default_src:{src:"Placeholders/thereflection2.png",width:50,height:50},
+            default_src:{src:"Placeholders/captain.png",width:50,height:50},
         };
 
 
@@ -113,7 +115,7 @@ export class Captain extends Quotidian{
         //yongki is zen enough to simply NOT listen to his body's cravings, unless he needs to defend himself
         const killUncontrollably = new AiBeat(
             [`With a sickening squelch, Captains body lashes out and destroys the ${TARGETSTRING}. He looks apologetic.`, `'Shit', Captain says, as his body reaches out and crushes the ${TARGETSTRING}.`,`Captain's body reaches out and crushes the ${TARGETSTRING}. He looks nauseated. You hear him mutter "How the hell does Yongki manage to keep this thing under control...".`],
-            [  new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5,{singleTarget: true})],
+            [  new TargetIsBlorboOrBox(),new TargetIsAlive(), new TargetIsWithinRadiusOfSelf(5,{singleTarget: true})],
             [new MeleeKill("shifts position awkwardly and somehow ends up killing","being too close to Captain's uncontrollably buff body")],
             true,
             30*1000
@@ -121,21 +123,14 @@ export class Captain extends Quotidian{
 
         const warnPeopleOff = new AiBeat(
             [`Captain looks nervous. 'Hey!' he calls out. 'Just letting you know I can't exactly control how violent this body is. Stay away!'`,`Captain looks nervous.`],
-            [  new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(25,{singleTarget: true})],
+            [  new TargetIsBlorboOrBox(), new TargetIsAlive(),new TargetIsWithinRadiusOfSelf(25,{singleTarget: true})],
             [new DeploySass("!")],
             true,
             30*1000
         ) ;
 
-        const stopMoving = new AiBeat(
-            ["Captain brings his body to an awkward stop."],
-            [  new RandomTarget(0.9)],
-            [new StopMoving()],
-            true,
-            30*1000
-        ) ;
 
-        const beats:AiBeat[] = [reflectMirror,warnPeopleOff,killUncontrollably,stopMoving];
+        const beats:AiBeat[] = [reflectMirror,warnPeopleOff,killUncontrollably];
         super(room,"Captain", x,y,[all_themes[CLOWNS],all_themes[SOUL],all_themes[DEFENSE],all_themes[GUIDING]],sprite,"Captain doesn't seem to be having a very good time.", beats);
     }
 

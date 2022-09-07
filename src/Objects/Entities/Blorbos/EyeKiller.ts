@@ -2,6 +2,7 @@
 
 import { addImageProcess } from "../../../Utils/URLUtils";
 import { Movement } from "../../MovementAlgs/BaseMovement";
+import { NoMovement } from "../../MovementAlgs/NoMovement";
 import { RandomMovement } from "../../MovementAlgs/RandomMovement";
 import { PhysicalObject } from "../../PhysicalObject";
 import { Room } from "../../RoomEngine/Room";
@@ -33,7 +34,7 @@ export class EyeKiller extends Quotidian{
     currentSpeed = 5;
 
     direction = Direction.UP; //movement algorithm can change or use this.
-    movement_alg:Movement = new RandomMovement(this);
+    movement_alg:Movement = new NoMovement(this);
 
     constructor(room: Room, x: number, y:number){
         const sprite = {

@@ -186,6 +186,7 @@ export class Quotidian extends PhysicalObject {
         }
 
         this.name = chosenState.name;
+        this.movement_alg = (chosenState as Quotidian).movement_alg;
         this.flavorText = chosenState.flavorText;
         this.directionalSprite = (chosenState as Quotidian).directionalSprite;
         this.image.src = chosenState.src;
