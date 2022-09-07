@@ -146,7 +146,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DeploySass = void 0;
 const BaseAction_1 = __webpack_require__(7042);
 class DeploySass extends BaseAction_1.Action {
-    constructor(shortSass, longSass) {
+    constructor(shortSass) {
         super();
         this.recognizedCommands = ["SASS", "SAY", "QUIP"]; //nothing, so its default
         this.applyAction = (beat) => {
@@ -155,10 +155,9 @@ class DeploySass extends BaseAction_1.Action {
                 return "";
             }
             subject.emitSass(this.shortSass);
-            return `${subject.processedName()} says "${subject.rand.pickFrom(this.longSass)}"`;
+            return `${subject.processedName()}sasses."`;
         };
         this.shortSass = shortSass;
-        this.longSass = longSass;
     }
 }
 exports.DeploySass = DeploySass;
@@ -1732,6 +1731,7 @@ const FollowObject_1 = __webpack_require__(744);
 const PickupObject_1 = __webpack_require__(9936);
 const SpawnObjectAtFeet_1 = __webpack_require__(8884);
 const BaseBeat_1 = __webpack_require__(1708);
+const baseFilter_1 = __webpack_require__(9505);
 const TargetHasObjectWithTheme_1 = __webpack_require__(9093);
 const TargetHasTheme_1 = __webpack_require__(2615);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
@@ -1747,10 +1747,10 @@ class Chicken extends Quotidian_1.Quotidian {
             down_src: { src: "chicken_down.gif", width: 29, height: 28 }
         };
         const egg = new PhysicalObject_1.PhysicalObject(room, "Egg", 0, 0, 13, 19, [], 0, "images/Walkabout/Objects/TopFloorObjects/egg.png", "It's a pretty basic chicken egg.");
-        const eatPlant = new BaseBeat_1.AiBeat([new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.PLANTS]], { kMode: true })], [new DestroyObjectInInventoryWithThemes_1.DestroyInventoryObjectWithThemes([Theme_1.all_themes[ThemeStorage_1.PLANTS]]), new SpawnObjectAtFeet_1.SpawnObjectAtFeet(egg)], true, 1000 * 60);
-        const eatBug = new BaseBeat_1.AiBeat([new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { kMode: true })], [new DestroyObjectInInventoryWithThemes_1.DestroyInventoryObjectWithThemes([Theme_1.all_themes[ThemeStorage_1.BUGS]]), new SpawnObjectAtFeet_1.SpawnObjectAtFeet(egg)], true, 1000 * 60);
-        const approachPlantOrBug = new BaseBeat_1.AiBeat([new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS], Theme_1.all_themes[ThemeStorage_1.PLANTS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
-        const pickupPlantOrBug = new BaseBeat_1.AiBeat([new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS], Theme_1.all_themes[ThemeStorage_1.PLANTS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60);
+        const eatPlant = new BaseBeat_1.AiBeat([`The chicken eats the ${baseFilter_1.TARGETSTRING}.`], [new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.PLANTS]], { kMode: true })], [new DestroyObjectInInventoryWithThemes_1.DestroyInventoryObjectWithThemes([Theme_1.all_themes[ThemeStorage_1.PLANTS]]), new SpawnObjectAtFeet_1.SpawnObjectAtFeet(egg)], true, 1000 * 60);
+        const eatBug = new BaseBeat_1.AiBeat([`The chicken eats the ${baseFilter_1.TARGETSTRING}.`], [new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { kMode: true })], [new DestroyObjectInInventoryWithThemes_1.DestroyInventoryObjectWithThemes([Theme_1.all_themes[ThemeStorage_1.BUGS]]), new SpawnObjectAtFeet_1.SpawnObjectAtFeet(egg)], true, 1000 * 60);
+        const approachPlantOrBug = new BaseBeat_1.AiBeat([`The chicken's beady little eyes focus on the ${baseFilter_1.TARGETSTRING}.`], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS], Theme_1.all_themes[ThemeStorage_1.PLANTS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+        const pickupPlantOrBug = new BaseBeat_1.AiBeat([`The chicken pecks at the ${baseFilter_1.TARGETSTRING}.`], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS], Theme_1.all_themes[ThemeStorage_1.PLANTS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60);
         const beats = [
             eatBug,
             eatPlant,
@@ -1819,6 +1819,7 @@ const ThemeStorage_1 = __webpack_require__(1288);
 const DeploySass_1 = __webpack_require__(4237);
 const FollowObject_1 = __webpack_require__(744);
 const BaseBeat_1 = __webpack_require__(1708);
+const baseFilter_1 = __webpack_require__(9505);
 const RandomTarget_1 = __webpack_require__(9824);
 const TargetIsBlorboBox_1 = __webpack_require__(4068);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
@@ -1830,9 +1831,9 @@ class End extends Quotidian_1.Quotidian {
         };
         const start = "<span class='asl'>";
         const end = "</span>";
-        const BreathOnObject = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass(":)", [`:3`, `${start}Friend!${end}`, `${start}Hello!${end}`, `${start}Where are we going?${end}`])], true, 2 * 60 * 1000);
+        const BreathOnObject = new BaseBeat_1.AiBeat([`Camille looms over ${baseFilter_1.TARGETSTRING}. She says '${start}Where are we going?${end}'.`, `Camille looms over ${baseFilter_1.TARGETSTRING}. She says '${start}Hello!${end}'.`, `Camille looms over ${baseFilter_1.TARGETSTRING}. She says ':3'.`, `Camille looms over ${baseFilter_1.TARGETSTRING}. She says '${start}Friend!${end}'.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new DeploySass_1.DeploySass(":)")], true, 2 * 60 * 1000);
         //she doesn't tend to change her mind
-        const ObesssOverBlorbo = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()]);
+        const ObesssOverBlorbo = new BaseBeat_1.AiBeat([`Camille locks eyes with ${baseFilter_1.TARGETSTRING}.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()]);
         const beats = [ObesssOverBlorbo, BreathOnObject];
         super(room, "The End", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, "The End Comes For Us All", beats);
         this.lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
@@ -1865,9 +1866,11 @@ const MeleeKill_1 = __webpack_require__(2900);
 const PickupObject_1 = __webpack_require__(9936);
 const SpawnObjectFromThemeUnderFloorAtFeet_1 = __webpack_require__(2888);
 const BaseBeat_1 = __webpack_require__(1708);
+const baseFilter_1 = __webpack_require__(9505);
 const IHaveObjectWithName_1 = __webpack_require__(6274);
 const RandomTarget_1 = __webpack_require__(9824);
 const TargetHasObjectWithName_1 = __webpack_require__(4864);
+const TargetIsAlive_1 = __webpack_require__(7064);
 const TargetIsBlorboBox_1 = __webpack_require__(4068);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
@@ -1890,18 +1893,19 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
         this.setupAI = async () => {
             //hunting time
-            const pickATarget = new BaseBeat_1.AiBeat([new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
-            const approachEgg = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
-            const pickupEgg = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60);
+            const pickATarget = new BaseBeat_1.AiBeat([`The Eye Killer begins hunting ${baseFilter_1.TARGETSTRING}.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+            const approachEgg = new BaseBeat_1.AiBeat([`The Eye Killer sees the ${baseFilter_1.TARGETSTRING}.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+            const pickupEgg = new BaseBeat_1.AiBeat([`The Eye Killer picks up the ${baseFilter_1.TARGETSTRING}.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60);
             //new IHaveObjectWithName(["Egg"], {invert: true}),new TargetHasObjectWithName(["Egg"], {invert: true}),
-            const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat([new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000);
+            const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat([`The Eye Killer brutally stabs the  ${baseFilter_1.TARGETSTRING} over and over until they stop twitching.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000);
+            const desecrateCorpse = new BaseBeat_1.AiBeat([`The Eye Killer appears to creating some sort of art piece out of what remains of the ${baseFilter_1.TARGETSTRING}.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over", "being shown the Eye Killer's stabs"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000);
             const beats = [
                 approachEgg,
                 pickupEgg,
                 killUnlessYouHaveAnEggOrTheyDo,
+                desecrateCorpse,
                 pickATarget
             ];
-            console.log("JR NOTE: setting up the Eye Killer (haha AI Killer) to actulaly kill, did it work?");
             this.makeBeatsMyOwn(beats);
         };
         this.setupAI();
@@ -1938,7 +1942,7 @@ class Innocent extends Quotidian_1.Quotidian {
             up_src: { src: "Innocent_upwards.gif", width: 50, height: 50 },
             down_src: { src: "innocentforward.gif", width: 50, height: 50 }
         };
-        const theTimeLineMustAlwaysHaveOne = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Eye Killer"]), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("is covered in seething shadows for a full minute as barely visible clocks swirl and tick. When it finally ends, she emerges as the Eye Killer. She has always been the Eye Killer. ")], true, 1000 * 60);
+        const theTimeLineMustAlwaysHaveOne = new BaseBeat_1.AiBeat([`The Innocent screams as she's wreathed in seething shadows.  For a full minute barely visible clocks tick out the time.  When it finally ends, she emerges as the Eye Killer. She has always been the Eye Killer. `], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Eye Killer"]), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("is covered in seething shadows for a full minute as barely visible clocks swirl and tick. When it finally ends, she emerges as the Eye Killer. She has always been the Eye Killer. ")], true, 1000 * 60);
         const beats = [theTimeLineMustAlwaysHaveOne];
         const states = [new EyeKiller_1.EyeKiller(room, 0, 0)];
         super(room, "Innocent", x, y, [Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.ANGELS]], sprite, "Wow, she seems totally innocent!", beats, states);
@@ -2147,7 +2151,7 @@ class Peewee extends Quotidian_1.Quotidian {
                 const words = beat.command.split(" ");
                 for (let word of words) {
                     if (action.recognizedCommands.includes(word.toUpperCase())) {
-                        const aibeat = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(words)], [action]).clone(this);
+                        const aibeat = new BaseBeat_1.AiBeat([], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(words)], [action]).clone(this);
                         aibeat.owner = this;
                         aibeat.timeOfLastBeat = 0; //peewee NEVER gets timelocked
                         const trigger = aibeat.triggered(this.room, true); //sets targets
@@ -2158,7 +2162,7 @@ class Peewee extends Quotidian_1.Quotidian {
                 }
             }
             if (beat.response.trim() === "") {
-                const aibeat = new BaseBeat_1.AiBeat([], []);
+                const aibeat = new BaseBeat_1.AiBeat([], [], []);
                 aibeat.owner = this;
                 beat.response = new BaseAction_1.Action().applyAction(aibeat);
             }
@@ -2492,6 +2496,81 @@ exports.Underscore = Underscore;
 
 /***/ }),
 
+/***/ 3908:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+//just leave her alone with her egg
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Captain = exports.Yongki = void 0;
+const RandomMovement_1 = __webpack_require__(5997);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const DeploySass_1 = __webpack_require__(4237);
+const FollowObject_1 = __webpack_require__(744);
+const IncrementMyState_1 = __webpack_require__(9211);
+const MeleeKill_1 = __webpack_require__(2900);
+const StopMoving_1 = __webpack_require__(4469);
+const BaseBeat_1 = __webpack_require__(1708);
+const baseFilter_1 = __webpack_require__(9505);
+const RandomTarget_1 = __webpack_require__(9824);
+const TargetHasTheme_1 = __webpack_require__(2615);
+const TargetIsBlorboBox_1 = __webpack_require__(4068);
+const TargetIsNearObjectWithName_1 = __webpack_require__(9587);
+const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
+const Quotidian_1 = __webpack_require__(6387);
+class Yongki extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "Placeholders/thereflection.png", width: 50, height: 50 },
+        };
+        const approachBug = new BaseBeat_1.AiBeat([`Yongki looks across the room at the ${baseFilter_1.TARGETSTRING} and starts sneaking up on it.`, `Yongki catches sight of the ${baseFilter_1.TARGETSTRING}.`, `Yongki excitedly points out the ${baseFilter_1.TARGETSTRING}.`,], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true }), new RandomTarget_1.RandomTarget(0.5), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+        const watchBug = new BaseBeat_1.AiBeat([`Yongki stares intently at the ${baseFilter_1.TARGETSTRING}.`, `Yongki ever so gently pokes the ${baseFilter_1.TARGETSTRING}.`, `Yongki sums a little tune for the ${baseFilter_1.TARGETSTRING}.`,], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+        const reflectMirror = new BaseBeat_1.AiBeat(["With almost no fanfair, Yongki catches sight of the Mirror. Captain is now in charge."], [new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60);
+        const beats = [reflectMirror, watchBug, approachBug];
+        const states = [new Captain(room, 0, 0)];
+        super(room, "Yongki", x, y, [Theme_1.all_themes[ThemeStorage_1.CLOWNS], Theme_1.all_themes[ThemeStorage_1.CHOICES], Theme_1.all_themes[ThemeStorage_1.DEFENSE], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Yongki, everyones favorite himbo!", beats, states);
+        this.maxSpeed = 100;
+        this.minSpeed = 5;
+        this.currentSpeed = 50;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+        this.lore = "Parker says that Yongki has the soul of a gorilla. A gentle giant. His body craves so much violence yet he attacks only when attacked.  Captain has stabelized him, given him room to grow and seek enlightenment.";
+        this.die = (causeOfDeath) => {
+            console.log(`JR NOTE: actually, it says right here in the code, Yongki wins. If you think you're going to ${causeOfDeath}, you're wrong. Hope this helps.`);
+        };
+    }
+}
+exports.Yongki = Yongki;
+class Captain extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "Placeholders/thereflection2.png", width: 50, height: 50 },
+        };
+        const reflectMirror = new BaseBeat_1.AiBeat(["With almost no fanfair, Captain catches sight of the Mirror. Yongki is now in charge."], [new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60);
+        //yongki is zen enough to simply NOT listen to his body's cravings, unless he needs to defend himself
+        const killUncontrollably = new BaseBeat_1.AiBeat([`With a sickening squelch, Captains body lashes out and destroys the ${baseFilter_1.TARGETSTRING}. He looks apologetic.`, `'Shit', Captain says, as his body reaches out and crushes the ${baseFilter_1.TARGETSTRING}.`, `Captain's body reaches out and crushes the ${baseFilter_1.TARGETSTRING}. He looks nauseated. You hear him mutter "How the hell does Yongki manage to keep this thing under control...".`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("shifts position awkwardly and somehow ends up killing", "being too close to Captain's uncontrollably buff body")], true, 30 * 1000);
+        const warnPeopleOff = new BaseBeat_1.AiBeat([`Captain looks nervous. 'Hey!' he calls out. 'Just letting you know I can't exactly control how violent this body is. Stay away!'`, `Captain looks nervous.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(25, { singleTarget: true })], [new DeploySass_1.DeploySass("!")], true, 30 * 1000);
+        const stopMoving = new BaseBeat_1.AiBeat(["Captain brings his body to an awkward stop."], [new RandomTarget_1.RandomTarget(0.9)], [new StopMoving_1.StopMoving()], true, 30 * 1000);
+        const beats = [reflectMirror, killUncontrollably, stopMoving];
+        super(room, "Captain", x, y, [Theme_1.all_themes[ThemeStorage_1.CLOWNS], Theme_1.all_themes[ThemeStorage_1.SOUL], Theme_1.all_themes[ThemeStorage_1.DEFENSE], Theme_1.all_themes[ThemeStorage_1.GUIDING]], sprite, "Captain doesn't seem to be having a very good time.", beats);
+        this.maxSpeed = 100;
+        this.minSpeed = 5;
+        this.currentSpeed = 50;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+        this.lore = "Parker says that the Captain has the soul of a monkey. Violence and social mimicking all in one package. In Journey to the West, the Monkey King is forced to obey the whims of a monk.  Yongki is no monk, but there is no denying Captain serves him.  Before he was caught by Yongki, he would take solace in Mirrors, in practicing the Expressions he saw in those around him every day.  Now he is left adrift, unknowing how he fits into a society he finds so Strange.";
+        this.die = (causeOfDeath) => {
+            console.log(`JR NOTE: actually, it says right here in the code, Yongki wins...and since Captain is USING Yongki's body... If you think you're going to ${causeOfDeath}, you're wrong. Hope this helps.`);
+        };
+    }
+}
+exports.Captain = Captain;
+
+
+/***/ }),
+
 /***/ 1708:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2502,10 +2581,11 @@ exports.AiBeat = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const StoryBeat_1 = __webpack_require__(5504);
 const baseFilter_1 = __webpack_require__(9505);
+const DEBUG = false;
 class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
     //some beats longer than others
-    constructor(triggers, actions, permanent = false, timeBetweenBeats = 10000) {
+    constructor(flavorText, triggers, actions, permanent = false, timeBetweenBeats = 10000) {
         this.targets = [];
         this.timeOfLastBeat = new Date().getTime();
         this.itsBeenAwhileSinceLastBeat = () => {
@@ -2513,7 +2593,7 @@ class AiBeat {
         };
         this.clone = (owner) => {
             //doesn't clone targets, those are set per beat when resolved..
-            const beat = new AiBeat(this.filters, this.actions, this.permanent);
+            const beat = new AiBeat(this.flavorText, this.filters, this.actions, this.permanent);
             beat.owner = owner;
             return beat;
         };
@@ -2538,7 +2618,10 @@ class AiBeat {
             for (let a of this.actions) {
                 effects.push(a.applyAction(this));
             }
-            const beat = this.addStorybeatToScreen(current_room.maze, `Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)}... ${(effects.join("<br>"))}`);
+            if (DEBUG) {
+                this.addStorybeatToScreen(current_room.maze, `DEBUG: Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)}... ${(effects.join("<br>"))}`);
+            }
+            this.addStorybeatToScreen(current_room.maze, this.processTags(this.owner.rand.pickFrom(this.flavorText)));
         };
         this.performFriendlyActions = (current_room) => {
             if (!this.owner) {
@@ -2578,6 +2661,7 @@ class AiBeat {
         };
         this.filters = triggers;
         this.actions = actions;
+        this.flavorText = flavorText;
         this.permanent = permanent;
         this.timeBetweenBeats = timeBetweenBeats;
     }
@@ -2593,23 +2677,13 @@ exports.AiBeat = AiBeat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.SassObjectAndPickUp = exports.FollowPeewee = exports.testBeat3 = exports.testBeat2 = exports.testBeat = void 0;
+exports.SassObjectAndPickUp = void 0;
 const DeploySass_1 = __webpack_require__(4237);
-const FollowObject_1 = __webpack_require__(744);
-const GoEast_1 = __webpack_require__(7192);
-const GoNorth_1 = __webpack_require__(7415);
-const GoSouth_1 = __webpack_require__(3535);
 const PickupObject_1 = __webpack_require__(9936);
 const baseFilter_1 = __webpack_require__(9505);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
-const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const BaseBeat_1 = __webpack_require__(1708);
-//because they could, Quotidian starts heading towards the south door.
-exports.testBeat = new BaseBeat_1.AiBeat([new baseFilter_1.TargetFilter()], [new GoSouth_1.GoSouth()]);
-exports.testBeat2 = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Peewee"])], [new GoNorth_1.GoNorth()]);
-exports.testBeat3 = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(30, { singleTarget: true })], [new GoEast_1.GoEast()]);
-exports.FollowPeewee = new BaseBeat_1.AiBeat([new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Peewee"])], [new FollowObject_1.FollowObject()]);
-exports.SassObjectAndPickUp = new BaseBeat_1.AiBeat([new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass("Gross!", ["Wow you're really gross, aren't you?", "I don't like you!", "Wow! So boring!"]), new PickupObject_1.PickupObject()], true);
+exports.SassObjectAndPickUp = new BaseBeat_1.AiBeat([`The Quotidian is sqwawking at the ${baseFilter_1.TARGETSTRING}.`], [new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass("Gross!"), new PickupObject_1.PickupObject()], true);
 
 
 /***/ }),
@@ -2624,7 +2698,7 @@ exports.FriendlyAiBeat = void 0;
 const BaseBeat_1 = __webpack_require__(1708);
 class FriendlyAiBeat extends BaseBeat_1.AiBeat {
     constructor(startingText, endingText, truthText, triggers, actions) {
-        super(triggers, actions, false);
+        super([], triggers, actions, false);
         this.startingText = startingText;
         this.endingText = endingText;
         this.truthText = truthText;
@@ -4115,7 +4189,7 @@ class FRIEND {
         };
         //one minute between quests, but for now 10 seconds
         this.itsBeenAwhileSinceLastQuest = () => {
-            return new Date().getTime() - this.timeOfLastQuest > 1000;
+            return new Date().getTime() - this.timeOfLastQuest > 1000 * 60 * 3;
         };
         this.processAiBeat = () => {
             if (this.currentQuest) {
@@ -4318,7 +4392,7 @@ class Maze {
                     input.value = "";
                     return false;
                 };
-                this.addCommandStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: eye killer kills if she's close enough, take object"));
+                this.addCommandStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: right now everything is in debug mode (because she saw something alive, the eye killer kills) eventually replace all with custom flavor text that gets passed into the beat 'With a purple glint, the EyeKiller shows ${TARGETNAME} her stabs.'"));
             }
         };
         this.rand = rand;
@@ -7094,7 +7168,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 /*
 99 Rooms
 eternal darkness
-how your brain lies to you
+
 mutations on mutations on mutations :)
 blue can see more than orange
 most innovative shooter
@@ -7182,10 +7256,10 @@ exports.passwords = {
     "ONCE YOU OPEN THE CURTAINS ALL THAT'S LEFT TO DO IS GO TO THE OTHER SIDE AND CLOSE THEM AGAIN": new Secret("Notes of Slaughter 15", undefined, "Secrets/Content/35.js"),
     "EXPERIMENTALMUSIC": new Secret("Notes of Slaughter 16: ExperimentalMusic", undefined, "Secrets/Content/36.js"),
     "PARADISE AND PARASITE": new Secret("ARM2: LOOP ???", undefined, "Secrets/Content/38.js"),
-    "WIDOWS WEAVE": new Secret("BLAME THE SPIDERS FOR THIS", "http://farragofiction.com/ZampanioHotlink/Films/spiders.mp4", "") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bown because its so obscure
+    "WIDOWS WEAVE": new Secret("BLAME THE SPIDERS FOR THIS", "http://farragofiction.com/ZampanioHotlink/Films/spiders.mp4", "") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bone because its so obscure
     ,
-    "NO NEED TO ASK WHY": new Secret("MY JAM", "http://farragofiction.com/ZampanioHotlink/Films/heraldstacos.mp4", "") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bown because its so obscure
-    ,
+    "NO NEED TO ASK WHY": new Secret("Herald Made MY JAM", "http://farragofiction.com/ZampanioHotlink/Films/heraldstacos.mp4", ""),
+    "HOW YOUR BRAIN LIES TO YOU": new Secret("JR RAMBLE", undefined, "Secrets/Content/42.js"),
     "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts")
 };
@@ -9641,6 +9715,79 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "text": () => (/* binding */ text)
 /* harmony export */ });
 const text = `
+The Answer to Life, the Universe, and Everything?
+
+Is simple.
+
+Zampanio is a story about how even if you feel monstrous, even if you feel irredeemable, you deserve to be happy.
+
+That this happiness is itself a way to heal the world.
+
+Have you seen the Good Place? In it, the thesis is the world is so interconnected these days, that you can't POSSIBLY do good. Even eating breakfast in the morning is probably destroying the environment and supporting slave labor and it SUCKS.
+
+And living in that kind of world, having that kind of mindset...
+
+Don't we all feel like monsters?
+
+Like we don't deserve happiness?
+
+So here is a story about supernatural creatures that KILL and worse and HAVE to do these terrible things to live.
+
+And about how even as they do so much harm they can still learn to do BETTER. 
+
+The Killer feels safe with her Family and she kills only to protect them now, or to close the time loop.
+
+Parker has no choice but to use his gun at certain times, but he CAN choose to not use it voluntarily against people who have objectively wrong opinions on hatsune miku. 
+
+Each of the blorbos is an example of this, at different points in their arc. 
+
+And none of them did it overnight. None of them destroyed themselves trying to be BETTER. None of them punished themselves into being Good People.
+
+Hell, most of them didn't even REALIZE They were doing better. They just...started to find things that didnt' hurt. Things that came easier. 
+
+Because that's what The End Is Never The End really means, to me.  It's not just a meme phrase that accidentally wormed its way here from Stanley Parable.
+
+It means that as long as you're alive, there's hope.  
+
+That no matter how bad things get, no matter how badly you fuck up, one day you will look back on all this and wonder how you could think the hole was insurmountable. There is always a next page to your story.
+
+You can be happy.  
+
+All you need to do is endure. One day at a time until, little by little it stops feeling like endurance and just feels like living.
+
+Till it stops feeling like just living and instead feeling like thriving. 
+
+I believe in you. Not like I might believe in aliens or bigfoot or whatever, but like I believe in air.
+
+I believe you have no choice but to be happier, no matter how dark things are, because regression to the mean is an actual damn thing.
+
+The Herald summarized how I take "the end is never the end" as "this too shall pass" and YES.
+
+Life isn't simple and orderly. Things don't just keep going in their current direction forever and ever. Its chaotic and messy and surprising and sudden changes are all but guaranteed. 
+
+So the only thing in doubt is if you'll LET yourself have the good times that are headed your way. 
+
+And if you're caught up in whether or not you "deserve" them, whether or not you're a monster?
+
+Remember that happiness heals.  Not just you. Everyone around you. If you let yourself bask in the good times, to heal, you will be in a better place to help others. To survive future bad times without needing as much help. To THRIVE.
+
+And the more of us who thrive, the better the world is.
+
+THAT is what Zampanio is, to me.
+`;
+
+
+/***/ }),
+
+/***/ 6904:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
 Something that struck me as weird just now?
 
 The different reflections of me that are out there. The different shambling horrors. 
@@ -9936,6 +10083,8 @@ var map = {
 	"./Objects/Entities/Blorbos/Solemn.ts": 5322,
 	"./Objects/Entities/Blorbos/Underscore": 9194,
 	"./Objects/Entities/Blorbos/Underscore.ts": 9194,
+	"./Objects/Entities/Blorbos/Yongki": 3908,
+	"./Objects/Entities/Blorbos/Yongki.ts": 3908,
 	"./Objects/Entities/StoryBeats/BaseBeat": 1708,
 	"./Objects/Entities/StoryBeats/BaseBeat.ts": 1708,
 	"./Objects/Entities/StoryBeats/BeatList": 2761,
@@ -10082,6 +10231,8 @@ var map = {
 	"./Secrets/Content/4.js": 2892,
 	"./Secrets/Content/42": 2035,
 	"./Secrets/Content/42.js": 2035,
+	"./Secrets/Content/43": 6904,
+	"./Secrets/Content/43.js": 6904,
 	"./Secrets/Content/5": 1952,
 	"./Secrets/Content/5.js": 1952,
 	"./Secrets/Content/6": 1178,
