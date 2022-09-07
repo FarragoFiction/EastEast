@@ -4,34 +4,19 @@ import { GoEast } from "../Actions/GoEast";
 import { GoNorth } from "../Actions/GoNorth";
 import { GoSouth } from "../Actions/GoSouth";
 import { PickupObject } from "../Actions/PickupObject";
-import { TargetFilter } from "../TargetFilter/baseFilter";
+import { TargetFilter, TARGETSTRING } from "../TargetFilter/baseFilter";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { AiBeat } from "./BaseBeat";
 
-//because they could, Quotidian starts heading towards the south door.
-export const testBeat = new AiBeat(
-    [new TargetFilter()],
-    [new GoSouth()]
-);
 
-export const testBeat2 = new AiBeat(
-    [new TargetNameIncludesAnyOfTheseWords(["Peewee"])],
-    [new GoNorth()]
-);
 
-export const testBeat3 = new AiBeat(
-    [new TargetIsWithinRadiusOfSelf(30,{singleTarget:true})],
-    [new GoEast()]
-);
 
-export const FollowPeewee = new AiBeat(
-    [new TargetNameIncludesAnyOfTheseWords(["Peewee"])],
-    [new FollowObject()]
-);
+
 
 export const SassObjectAndPickUp = new AiBeat(
+    [`The Quotidian is sqwawking at the ${TARGETSTRING}.`],
     [new TargetIsWithinRadiusOfSelf(5)],
-    [new DeploySass("Gross!",["Wow you're really gross, aren't you?", "I don't like you!","Wow! So boring!"]),new  PickupObject()],
+    [new DeploySass("Gross!"),new  PickupObject()],
     true
 );

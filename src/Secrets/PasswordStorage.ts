@@ -122,7 +122,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 /*
 99 Rooms
 eternal darkness
-how your brain lies to you
+
 mutations on mutations on mutations :)
 blue can see more than orange
 most innovative shooter 
@@ -215,8 +215,9 @@ export const passwords: PasswordMap = {
     , "ONCE YOU OPEN THE CURTAINS ALL THAT'S LEFT TO DO IS GO TO THE OTHER SIDE AND CLOSE THEM AGAIN": new Secret("Notes of Slaughter 15", undefined, "Secrets/Content/35.js")
     , "EXPERIMENTALMUSIC": new Secret("Notes of Slaughter 16: ExperimentalMusic", undefined, "Secrets/Content/36.js")
     , "PARADISE AND PARASITE": new Secret("ARM2: LOOP ???", undefined, "Secrets/Content/38.js")
-    , "WIDOWS WEAVE": new Secret("BLAME THE SPIDERS FOR THIS", "http://farragofiction.com/ZampanioHotlink/Films/spiders.mp4", "") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bown because its so obscure
-    , "NO NEED TO ASK WHY": new Secret("MY JAM", "http://farragofiction.com/ZampanioHotlink/Films/heraldstacos.mp4", "") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bown because its so obscure
+    , "WIDOWS WEAVE": new Secret("BLAME THE SPIDERS FOR THIS", "http://farragofiction.com/ZampanioHotlink/Films/spiders.mp4", "") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bone because its so obscure
+    , "NO NEED TO ASK WHY": new Secret("Herald Made MY JAM", "http://farragofiction.com/ZampanioHotlink/Films/heraldstacos.mp4", "") 
+    , "HOW YOUR BRAIN LIES TO YOU": new Secret("JR RAMBLE", undefined, "Secrets/Content/42.js")
 
     , "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts") 
     , "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts") 

@@ -15,6 +15,7 @@ import { FollowObject } from "../Actions/FollowObject";
 import { PickupObject } from "../Actions/PickupObject";
 import { SpawnObjectAtFeet } from "../Actions/SpawnObjectAtFeet";
 import { AiBeat } from "../StoryBeats/BaseBeat";
+import { TARGETSTRING } from "../TargetFilter/baseFilter";
 import { TargetHasObjectWithTheme } from "../TargetFilter/TargetHasObjectWithTheme";
 import { TargetHasTheme } from "../TargetFilter/TargetHasTheme";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
@@ -44,24 +45,29 @@ export class Chicken extends Quotidian{
         const egg = new PhysicalObject(room, "Egg", 0,0, 13,19, [], 0, "images/Walkabout/Objects/TopFloorObjects/egg.png", "It's a pretty basic chicken egg.");
 
         const eatPlant = new AiBeat(
+            [`The chicken eats the ${TARGETSTRING}.`],
             [new TargetHasObjectWithTheme([all_themes[PLANTS]], {kMode:true})],
             [new DestroyInventoryObjectWithThemes([all_themes[PLANTS]]), new SpawnObjectAtFeet(egg)],
             true,
             1000*60
         );
         const eatBug = new AiBeat(
+            [`The chicken eats the ${TARGETSTRING}.`],
             [new TargetHasObjectWithTheme([all_themes[BUGS]], {kMode:true})],
             [new DestroyInventoryObjectWithThemes([all_themes[BUGS]]), new SpawnObjectAtFeet(egg)],
             true,
             1000*60
         );
         const approachPlantOrBug = new AiBeat(
+            [`The chicken's beady little eyes focus on the ${TARGETSTRING}.`],
+
             [new TargetHasTheme([all_themes[BUGS],all_themes[PLANTS]],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5,{invert: true})],
             [new FollowObject()],
             true,
             1000*60
         );
         const pickupPlantOrBug = new AiBeat(
+            [`The chicken pecks at the ${TARGETSTRING}.`],
             [new TargetHasTheme([all_themes[BUGS],all_themes[PLANTS]],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
             [new PickupObject()],
             true,

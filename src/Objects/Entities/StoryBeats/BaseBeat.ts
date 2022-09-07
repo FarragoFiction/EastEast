@@ -7,10 +7,14 @@ import { Action } from "../Actions/BaseAction";
 import { Quotidian } from "../Blorbos/Quotidian";
 import { TargetFilter, TARGETSTRING } from "../TargetFilter/baseFilter";
 
+const DEBUG = false;
+
 export class AiBeat {
     permanent: boolean; //is this a one and done or should it be forever. 
     filters: TargetFilter[];
     actions: Action[];
+    //yes we can manually create some text from cause and effect but it comes off robotic. good for debugging, not for the final product
+    flavorText:string[];
     timeBetweenBeats:number;
     targets: PhysicalObject[] = [];
     owner: Quotidian  | undefined;
@@ -21,9 +25,10 @@ export class AiBeat {
 
 
     //some beats longer than others
-    constructor(triggers: TargetFilter[], actions: Action[], permanent = false, timeBetweenBeats=10000) {
+    constructor(flavorText: string[], triggers: TargetFilter[], actions: Action[], permanent = false, timeBetweenBeats=10000) {
         this.filters = triggers;
         this.actions = actions;
+        this.flavorText = flavorText;
         this.permanent = permanent;
         this.timeBetweenBeats = timeBetweenBeats;
     }
@@ -34,7 +39,7 @@ export class AiBeat {
 
     clone = (owner: Quotidian) => {
         //doesn't clone targets, those are set per beat when resolved..
-        const beat =  new AiBeat(this.filters, this.actions, this.permanent);
+        const beat =  new AiBeat(this.flavorText,this.filters, this.actions, this.permanent);
         beat.owner = owner;
         return beat;
     }
@@ -64,7 +69,11 @@ export class AiBeat {
         for (let a of this.actions) {
             effects.push(a.applyAction(this));
         }
-        const beat = this.addStorybeatToScreen(current_room.maze, `Because ${turnArrayIntoHumanSentence(causes)}... ${(effects.join("<br>"))}`);
+        if(DEBUG){
+            this.addStorybeatToScreen(current_room.maze, `DEBUG: Because ${turnArrayIntoHumanSentence(causes)}... ${(effects.join("<br>"))}`);
+        }
+        this.addStorybeatToScreen(current_room.maze, this.processTags(this.owner.rand.pickFrom(this.flavorText)));
+
     }
 
     performFriendlyActions = (current_room: Room) => {

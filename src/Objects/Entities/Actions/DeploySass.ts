@@ -9,14 +9,12 @@ import { AiBeat } from "../StoryBeats/BaseBeat";
 export class DeploySass extends Action{ //lawsuit
 
     shortSass:string;
-    longSass:string[];
     
     recognizedCommands:string[] = ["SASS","SAY","QUIP"]; //nothing, so its default
 
-    constructor(shortSass:string, longSass:string[]){
+    constructor(shortSass:string){
         super();
         this.shortSass = shortSass;
-        this.longSass = longSass;
     }
 
 
@@ -26,7 +24,7 @@ export class DeploySass extends Action{ //lawsuit
             return "";
         }      
         subject.emitSass(this.shortSass)
-        return `${subject.processedName()} says "${subject.rand.pickFrom(this.longSass)}"`;
+        return `${subject.processedName()}sasses."`;
     }
 
 

@@ -1,0 +1,137 @@
+//just leave her alone with her egg
+
+import { Movement } from "../../MovementAlgs/BaseMovement";
+import { RandomMovement } from "../../MovementAlgs/RandomMovement";
+import { Room } from "../../RoomEngine/Room";
+import { all_themes } from "../../Theme";
+import { CLOWNS, SOUL, CHOICES, DEFENSE, GUIDING, KNOWING, BUGS } from "../../ThemeStorage";
+import { DeploySass } from "../Actions/DeploySass";
+import { FollowObject } from "../Actions/FollowObject";
+import { IncrementMyState } from "../Actions/IncrementMyState";
+import { MeleeKill } from "../Actions/MeleeKill";
+import { StopMoving } from "../Actions/StopMoving";
+
+import { AiBeat } from "../StoryBeats/BaseBeat";
+import { TARGETSTRING } from "../TargetFilter/baseFilter";
+import { RandomTarget } from "../TargetFilter/RandomTarget";
+import { TargetHasTheme } from "../TargetFilter/TargetHasTheme";
+import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
+import { TargetNearObjectWithName } from "../TargetFilter/TargetIsNearObjectWithName";
+import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
+
+import { Quotidian, Direction } from "./Quotidian";
+
+
+
+export class Yongki extends Quotidian{
+
+    maxSpeed = 100;
+    minSpeed = 5;
+    currentSpeed = 50;
+
+    direction = Direction.UP; //movement algorithm can change or use this.
+    movement_alg:Movement = new RandomMovement(this);
+    lore = "Parker says that Yongki has the soul of a gorilla. A gentle giant. His body craves so much violence yet he attacks only when attacked.  Captain has stabelized him, given him room to grow and seek enlightenment.";
+
+    constructor(room: Room, x: number, y:number){
+        const sprite = {
+            default_src:{src:"Placeholders/thereflection.png",width:50,height:50},
+
+        };
+
+
+        const approachBug = new AiBeat(
+            [`Yongki looks across the room at the ${TARGETSTRING} and starts sneaking up on it.`,`Yongki catches sight of the ${TARGETSTRING}.`,`Yongki excitedly points out the ${TARGETSTRING}.`,],
+            [new TargetHasTheme([all_themes[BUGS]],{singleTarget:true}),new RandomTarget(0.5), new TargetIsWithinRadiusOfSelf(5,{invert: true})],
+            [new FollowObject()],
+            true,
+            1000*60
+        );
+
+        const watchBug = new AiBeat(
+            [`Yongki stares intently at the ${TARGETSTRING}.`,`Yongki ever so gently pokes the ${TARGETSTRING}.`,`Yongki sums a little tune for the ${TARGETSTRING}.`,],
+            [new TargetHasTheme([all_themes[BUGS]],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
+            [new FollowObject()],
+            true,
+            1000*60
+        );
+
+        const reflectMirror = new AiBeat(
+            ["With almost no fanfair, Yongki catches sight of the Mirror. Captain is now in charge."],
+            [new TargetNearObjectWithName(["mirror"],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
+            [new IncrementMyState("")],
+            true,
+            1000*60
+        );
+
+        const beats:AiBeat[] = [reflectMirror,watchBug,approachBug];
+        const states = [new Captain(room,0,0)];
+        super(room,"Yongki", x,y,[all_themes[CLOWNS],all_themes[CHOICES],all_themes[DEFENSE],all_themes[KNOWING]],sprite,"Yongki, everyones favorite himbo!", beats, states);
+    }
+
+    die = (causeOfDeath: string) => {
+        console.log(`JR NOTE: actually, it says right here in the code, Yongki wins. If you think you're going to ${causeOfDeath}, you're wrong. Hope this helps.`);
+    }
+
+
+}   
+
+export class Captain extends Quotidian{
+
+    maxSpeed = 100;
+    minSpeed = 5;
+    currentSpeed = 50;
+
+    direction = Direction.UP; //movement algorithm can change or use this.
+    movement_alg:Movement = new RandomMovement(this);
+    lore = "Parker says that the Captain has the soul of a monkey. Violence and social mimicking all in one package. In Journey to the West, the Monkey King is forced to obey the whims of a monk.  Yongki is no monk, but there is no denying Captain serves him.  Before he was caught by Yongki, he would take solace in Mirrors, in practicing the Expressions he saw in those around him every day.  Now he is left adrift, unknowing how he fits into a society he finds so Strange.";
+
+    constructor(room: Room, x: number, y:number){
+        const sprite = {
+            default_src:{src:"Placeholders/thereflection2.png",width:50,height:50},
+        };
+
+
+        const reflectMirror = new AiBeat(
+            ["With almost no fanfair, Captain catches sight of the Mirror. Yongki is now in charge."],
+            [new TargetNearObjectWithName(["mirror"],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
+            [new IncrementMyState("")],
+            true,
+            1000*60
+        );
+
+        //yongki is zen enough to simply NOT listen to his body's cravings, unless he needs to defend himself
+        const killUncontrollably = new AiBeat(
+            [`With a sickening squelch, Captains body lashes out and destroys the ${TARGETSTRING}. He looks apologetic.`, `'Shit', Captain says, as his body reaches out and crushes the ${TARGETSTRING}.`,`Captain's body reaches out and crushes the ${TARGETSTRING}. He looks nauseated. You hear him mutter "How the hell does Yongki manage to keep this thing under control...".`],
+            [  new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5,{singleTarget: true})],
+            [new MeleeKill("shifts position awkwardly and somehow ends up killing","being too close to Captain's uncontrollably buff body")],
+            true,
+            30*1000
+        ) ;
+
+        const warnPeopleOff = new AiBeat(
+            [`Captain looks nervous. 'Hey!' he calls out. 'Just letting you know I can't exactly control how violent this body is. Stay away!'`,`Captain looks nervous.`],
+            [  new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(25,{singleTarget: true})],
+            [new DeploySass("!")],
+            true,
+            30*1000
+        ) ;
+
+        const stopMoving = new AiBeat(
+            ["Captain brings his body to an awkward stop."],
+            [  new RandomTarget(0.9)],
+            [new StopMoving()],
+            true,
+            30*1000
+        ) ;
+
+        const beats:AiBeat[] = [reflectMirror,killUncontrollably,stopMoving];
+        super(room,"Captain", x,y,[all_themes[CLOWNS],all_themes[SOUL],all_themes[DEFENSE],all_themes[GUIDING]],sprite,"Captain doesn't seem to be having a very good time.", beats);
+    }
+
+    die = (causeOfDeath: string) => {
+        console.log(`JR NOTE: actually, it says right here in the code, Yongki wins...and since Captain is USING Yongki's body... If you think you're going to ${causeOfDeath}, you're wrong. Hope this helps.`);
+    }
+
+
+}

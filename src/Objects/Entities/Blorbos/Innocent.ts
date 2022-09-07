@@ -38,6 +38,7 @@ export class Innocent extends Quotidian{
 
 
         const theTimeLineMustAlwaysHaveOne = new AiBeat(
+            [`The Innocent screams as she's wreathed in seething shadows.  For a full minute barely visible clocks tick out the time.  When it finally ends, she emerges as the Eye Killer. She has always been the Eye Killer. `],
             [new TargetNameIncludesAnyOfTheseWords(["Eye Killer"]), new TargetIsAlive({invert:true})],
             [new IncrementMyState("is covered in seething shadows for a full minute as barely visible clocks swirl and tick. When it finally ends, she emerges as the Eye Killer. She has always been the Eye Killer. ")],
             true,

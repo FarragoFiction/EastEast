@@ -6,7 +6,7 @@ import { ENDINGS, KILLING, QUESTING, LONELY } from "../../ThemeStorage";
 import { DeploySass } from "../Actions/DeploySass";
 import { FollowObject } from "../Actions/FollowObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
-import { FollowPeewee } from "../StoryBeats/BeatList";
+import { TARGETSTRING } from "../TargetFilter/baseFilter";
 import { RandomTarget } from "../TargetFilter/RandomTarget";
 import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
@@ -34,14 +34,16 @@ export class End extends Quotidian{
         const end = "</span>"
 
          const BreathOnObject = new AiBeat(
-            [new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5)],
-            [new DeploySass(":)",[`:3`,`${start}Friend!${end}`, `${start}Hello!${end}`,`${start}Where are we going?${end}`])],
+            [`Camille looms over ${TARGETSTRING}. She says '${start}Where are we going?${end}'.`,`Camille looms over ${TARGETSTRING}. She says '${start}Hello!${end}'.`,`Camille looms over ${TARGETSTRING}. She says ':3'.`,`Camille looms over ${TARGETSTRING}. She says '${start}Friend!${end}'.`],
+            [new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5, {singleTarget:true})],
+            [new DeploySass(":)")],
             true,
             2*60*1000
         );
 
         //she doesn't tend to change her mind
         const ObesssOverBlorbo = new AiBeat(
+            [`Camille locks eyes with ${TARGETSTRING}.`],
             [new TargetIsBlorboOrBox(), new RandomTarget(.5, {singleTarget:true})],
             [new FollowObject()]
         );

@@ -2,7 +2,7 @@ import { initRabbitHole } from "../../Secrets/PasswordStorage";
 import { createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 
-import { FollowPeewee, SassObjectAndPickUp } from "../Entities/StoryBeats/BeatList";
+import { SassObjectAndPickUp } from "../Entities/StoryBeats/BeatList";
 import { all_themes } from "../Theme";
 import { ENDINGS, WEB, SPYING, ZAP, BUGS, TECHNOLOGY, OBFUSCATION, KILLING, FIRE, LONELY } from "../ThemeStorage";
 import { ChantingEngine } from "./ChantingEngine";
