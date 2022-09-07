@@ -74,7 +74,7 @@ export class Yongki extends Quotidian{
             1000*60
         );
 
-        const beats:AiBeat[] = [reflectMirror,watchBug,approachBug];
+        const beats:AiBeat[] = [reflectMirror,watchSnail,watchBug,approachBug];
         const states = [new Captain(room,0,0)];
         super(room,"Yongki", x,y,[all_themes[CLOWNS],all_themes[CHOICES],all_themes[DEFENSE],all_themes[KNOWING]],sprite,"Yongki, everyones favorite himbo!", beats, states);
     }
