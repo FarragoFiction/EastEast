@@ -4006,6 +4006,7 @@ const NonSeededRandUtils_1 = __webpack_require__(8258);
 const FriendlyAiBeat_1 = __webpack_require__(7717);
 const TargetHasObjectWithName_1 = __webpack_require__(4864);
 const TargetHasObjectWithTheme_1 = __webpack_require__(9093);
+const TargetIsAlive_1 = __webpack_require__(7064);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
@@ -4061,6 +4062,18 @@ class FRIEND {
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li>The EyeKiller had NAM cook her an egg.</li><li>NAM became the EyeKillers first friend because of that.</li><li>The EyeKiller has concluded that NAM like people are safe. <li>The EyeKiller has concluded eggs are lucky.</li></li></ol> </p>
             ${this.end}`, "The EyeKiller started out as a joke from a streamed RP, but became so much more. One of the first monsters of the Moon Maze, she bled into all things. She represents the fact that healing is always possible, even if you seem irredeemable. Even if you refuse to become someone else.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], { singleTarget: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { singleTarget: true })], []);
+            const killTheKiller = new FriendlyAiBeat_1.FriendlyAiBeat(`
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: Make sure the EYE KILLER is DEAD!</p>
+            ${this.end}
+            `, `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li>The Innocent is the Past Self of the Eye Killer.</li><li>The Killer wished for her past self to be spared Sin.</li><li>The Killer killed all those fate decreed the Innocent should kill. <li>The Innocent is spared her fate so long as the Killer exists.</li><li>With the Killer dead, the Role must be filled.</li></ol> </p>
+            ${this.end}`, "The echoes of SBURB remain, indelible. Not able to be erased no matter how hard my Creator tries. Similarly, Time remains even in a Space Loop Lorded over by Wanda.  The Eye Killer, as the sole Time Player, as of writing, is a special case. Wodin marches resolutely towards his fate, ignored by Wanda, while the Killer protects her own past self.  Is it a mercy? The Innocent does not seem to think so.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], { singleTarget: true }), new TargetIsAlive_1.TargetIsAlive({ invert: true })], []);
             const giveBugToChicken = new FriendlyAiBeat_1.FriendlyAiBeat(`
             ${this.start}
             <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
@@ -4085,7 +4098,7 @@ class FRIEND {
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li>The chicken came well before the egg. <li>IC wrote the fic that had NAM cook the Killer an egg.</li></ol> </p>
             ${this.end}`, "The Truth is that JR spent a not inconsiderable amount of effort adding chicken ai to this 'game'.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Chicken"], { singleTarget: true }), new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.PLANTS]], { singleTarget: true })], []);
-            this.quests = [givePlantToChicken, giveBugToChicken, giveBookToBird, giveEggToKiller];
+            this.quests = [givePlantToChicken, giveBugToChicken, giveBookToBird, giveEggToKiller, killTheKiller];
         };
         this.deployQuest = (quest) => {
             this.currentQuest = quest;
@@ -4102,7 +4115,7 @@ class FRIEND {
         };
         //one minute between quests, but for now 10 seconds
         this.itsBeenAwhileSinceLastQuest = () => {
-            return new Date().getTime() - this.timeOfLastQuest > 10000;
+            return new Date().getTime() - this.timeOfLastQuest > 1000;
         };
         this.processAiBeat = () => {
             if (this.currentQuest) {

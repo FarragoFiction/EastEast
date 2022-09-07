@@ -5,6 +5,7 @@ import { AiBeat } from "../../Entities/StoryBeats/BaseBeat";
 import { FriendlyAiBeat } from "../../Entities/StoryBeats/FriendlyAiBeat";
 import { TargetHasObjectWithName } from "../../Entities/TargetFilter/TargetHasObjectWithName";
 import { TargetHasObjectWithTheme } from "../../Entities/TargetFilter/TargetHasObjectWithTheme";
+import { TargetIsAlive } from "../../Entities/TargetFilter/TargetIsAlive";
 import { TargetNearObjectWithName } from "../../Entities/TargetFilter/TargetIsNearObjectWithName";
 import { TargetNameIncludesAnyOfTheseWords } from "../../Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { PhysicalObject } from "../../PhysicalObject";
@@ -108,7 +109,7 @@ export class FRIEND{
             <ol><li>The Innocent is the Past Self of the Eye Killer.</li><li>The Killer wished for her past self to be spared Sin.</li><li>The Killer killed all those fate decreed the Innocent should kill. <li>The Innocent is spared her fate so long as the Killer exists.</li><li>With the Killer dead, the Role must be filled.</li></ol> </p>
             ${this.end}`,
             "The echoes of SBURB remain, indelible. Not able to be erased no matter how hard my Creator tries. Similarly, Time remains even in a Space Loop Lorded over by Wanda.  The Eye Killer, as the sole Time Player, as of writing, is a special case. Wodin marches resolutely towards his fate, ignored by Wanda, while the Killer protects her own past self.  Is it a mercy? The Innocent does not seem to think so.",
-            [new TargetNameIncludesAnyOfTheseWords(["Killer"],{singleTarget:true}),new TargetHasObjectWithName(["Egg"],{singleTarget:true})],
+            [new TargetNameIncludesAnyOfTheseWords(["Killer"],{singleTarget:true}),new TargetIsAlive({invert:true})],
             []
         );
 
@@ -173,7 +174,7 @@ export class FRIEND{
 
     //one minute between quests, but for now 10 seconds
     itsBeenAwhileSinceLastQuest = ()=>{
-        return new Date().getTime() - this.timeOfLastQuest > 1000*2*60;
+        return new Date().getTime() - this.timeOfLastQuest > 1000;
     }
 
     
