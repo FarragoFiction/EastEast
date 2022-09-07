@@ -125,7 +125,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 eternal darkness
 
 mutations on mutations on mutations :)
-blue can see more than orange
+
 most innovative shooter 
 It Has A Rather Lovely Ending
 Spatial Horror
@@ -219,6 +219,7 @@ export const passwords: PasswordMap = {
     , "WIDOWS WEAVE": new Secret("BLAME THE SPIDERS FOR THIS", "http://farragofiction.com/ZampanioHotlink/Films/spiders.mp4", "") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bone because its so obscure
     , "NO NEED TO ASK WHY": new Secret("Herald Made MY JAM", "http://farragofiction.com/ZampanioHotlink/Films/heraldstacos.mp4", "") 
     , "HOW YOUR BRAIN LIES TO YOU": new Secret("JR RAMBLE", undefined, "Secrets/Content/42.js")
+    , "BLUE CAN SEE MORE THAN ORANGE": new Secret("GIGGLESNORT", undefined, "Secrets/Content/44.js")
 
     , "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts") 
     , "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts") 
