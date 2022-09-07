@@ -54,7 +54,7 @@ export class EyeKiller extends Quotidian{
         //hunting time
         const pickATarget = new AiBeat(
             [`The Eye Killer begins hunting ${TARGETSTRING}.`],
-            [new TargetIsBlorboOrBox(), new RandomTarget(.5, {singleTarget:true})],
+            [new TargetIsBlorboOrBox(),new TargetIsAlive(),  new RandomTarget(.5, {singleTarget:true})],
             [new FollowObject()],
             true,
             1000*60

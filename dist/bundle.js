@@ -1893,7 +1893,7 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
         this.setupAI = async () => {
             //hunting time
-            const pickATarget = new BaseBeat_1.AiBeat([`The Eye Killer begins hunting ${baseFilter_1.TARGETSTRING}.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+            const pickATarget = new BaseBeat_1.AiBeat([`The Eye Killer begins hunting ${baseFilter_1.TARGETSTRING}.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
             const approachEgg = new BaseBeat_1.AiBeat([`The Eye Killer sees the ${baseFilter_1.TARGETSTRING}.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
             const pickupEgg = new BaseBeat_1.AiBeat([`The Eye Killer picks up the ${baseFilter_1.TARGETSTRING}.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60);
             //new IHaveObjectWithName(["Egg"], {invert: true}),new TargetHasObjectWithName(["Egg"], {invert: true}),
@@ -2261,10 +2261,12 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         };
         this.die = (causeOfDeath) => {
             console.log("JR NOTE: trying to kill", this.name, causeOfDeath);
-            this.dead = true;
-            this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
-            this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
-            this.room.processDeath(this);
+            if (!this.dead) {
+                this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
+                this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
+                this.room.processDeath(this);
+                this.dead = true;
+            }
         };
         this.live = () => {
             this.dead = false;

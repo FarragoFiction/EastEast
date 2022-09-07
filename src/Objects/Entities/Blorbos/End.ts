@@ -8,6 +8,7 @@ import { FollowObject } from "../Actions/FollowObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { TARGETSTRING } from "../TargetFilter/baseFilter";
 import { RandomTarget } from "../TargetFilter/RandomTarget";
+import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { Quotidian, Direction } from "./Quotidian";
@@ -35,7 +36,7 @@ export class End extends Quotidian{
 
          const BreathOnObject = new AiBeat(
             [`Camille looms over ${TARGETSTRING}. She says '${start}Where are we going?${end}'.`,`Camille looms over ${TARGETSTRING}. She says '${start}Hello!${end}'.`,`Camille looms over ${TARGETSTRING}. She says ':3'.`,`Camille looms over ${TARGETSTRING}. She says '${start}Friend!${end}'.`],
-            [new TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf(5, {singleTarget:true})],
+            [new TargetIsBlorboOrBox(),new TargetIsAlive(), new TargetIsWithinRadiusOfSelf(5, {singleTarget:true})],
             [new DeploySass(":)")],
             true,
             2*60*1000
@@ -44,7 +45,7 @@ export class End extends Quotidian{
         //she doesn't tend to change her mind
         const ObesssOverBlorbo = new AiBeat(
             [`Camille locks eyes with ${TARGETSTRING}.`],
-            [new TargetIsBlorboOrBox(), new RandomTarget(.5, {singleTarget:true})],
+            [new TargetIsBlorboOrBox(), new TargetIsAlive(),new RandomTarget(.5, {singleTarget:true})],
             [new FollowObject()]
         );
         const beats:AiBeat[] = [ObesssOverBlorbo,BreathOnObject];

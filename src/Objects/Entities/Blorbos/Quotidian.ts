@@ -124,10 +124,13 @@ export class Quotidian extends PhysicalObject {
 
     die = (causeOfDeath: string) => {
         console.log("JR NOTE: trying to kill", this.name, causeOfDeath)
-        this.dead = true;
-        this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
-        this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
-        this.room.processDeath(this);
+        if(!this.dead){
+            this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
+            this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
+            this.room.processDeath(this);
+            this.dead = true;
+        }
+
     }
 
     live = () => {
