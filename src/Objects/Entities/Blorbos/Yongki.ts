@@ -18,8 +18,10 @@ import { TargetHasTheme } from "../TargetFilter/TargetHasTheme";
 import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
 import { TargetNearObjectWithName } from "../TargetFilter/TargetIsNearObjectWithName";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
+import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 
 import { Quotidian, Direction } from "./Quotidian";
+import { Snail } from "./SnailFriend";
 
 
 
@@ -49,8 +51,16 @@ export class Yongki extends Quotidian{
         );
 
         const watchBug = new AiBeat(
-            [`Yongki stares intently at the ${TARGETSTRING}.`,`Yongki ever so gently pokes the ${TARGETSTRING}.`,`Yongki sums a little tune for the ${TARGETSTRING}.`,],
+            [`Yongki stares intently at the ${TARGETSTRING}.`,`Yongki ever so gently pokes the ${TARGETSTRING}.`,`Yongki hums a little tune for the ${TARGETSTRING}.`,],
             [new TargetHasTheme([all_themes[BUGS]],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
+            [new FollowObject()],
+            true,
+            1000*60
+        );
+
+        const watchSnail = new AiBeat(
+            [`Yongki smiles and says "The ${TARGETSTRING} is effervescent.  That means sparkling or enthusiastic."`,`Yongki pets the  ${TARGETSTRING}."It's viscous!", he beams. "That means sitcky or slimey!"`,`Yongki hums a little tune for the ${TARGETSTRING}.`,],
+            [new TargetNameIncludesAnyOfTheseWords(["snail"],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
             [new FollowObject()],
             true,
             1000*60
@@ -125,7 +135,7 @@ export class Captain extends Quotidian{
             30*1000
         ) ;
 
-        const beats:AiBeat[] = [reflectMirror,killUncontrollably,stopMoving];
+        const beats:AiBeat[] = [reflectMirror,warnPeopleOff,killUncontrollably,stopMoving];
         super(room,"Captain", x,y,[all_themes[CLOWNS],all_themes[SOUL],all_themes[DEFENSE],all_themes[GUIDING]],sprite,"Captain doesn't seem to be having a very good time.", beats);
     }
 

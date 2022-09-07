@@ -22,6 +22,7 @@ import { Solemn } from "../Entities/Blorbos/Solemn";
 import { Devona } from "../Entities/Blorbos/Devona";
 import { Neville } from "../Entities/Blorbos/Neville";
 import { Chicken } from "../Entities/Blorbos/ChickenFriend";
+import { Yongki } from "../Entities/Blorbos/Yongki";
 export class Maze {
 
     rand: SeededRandom;
@@ -64,7 +65,7 @@ export class Maze {
             this.blorbos.push(new Solemn(this.room, 150, 150));
             this.blorbos.push(new Devona(this.room, 150, 150));
             this.blorbos.push(new Neville(this.room, 150, 150));
-
+            this.blorbos.push(new Yongki(this.room, 150, 150));
             this.blorbos.push(new JR(this.room, 150, 150));
 
         }
@@ -88,7 +89,7 @@ export class Maze {
         if (!this.room) {
             return;
         }
-        const blorbosToTest = ["Innocent", "Killer"];
+        const blorbosToTest = ["Yongki", "Snail"];
         for (let blorbo of this.blorbos) {
             console.log("JR NOTE: can i spawn ", blorbo)
             if (!blorbo.owner) {//if you're in someones inventory, no spawning for you

@@ -1821,6 +1821,7 @@ const FollowObject_1 = __webpack_require__(744);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
 const RandomTarget_1 = __webpack_require__(9824);
+const TargetIsAlive_1 = __webpack_require__(7064);
 const TargetIsBlorboBox_1 = __webpack_require__(4068);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const Quotidian_1 = __webpack_require__(6387);
@@ -1831,9 +1832,9 @@ class End extends Quotidian_1.Quotidian {
         };
         const start = "<span class='asl'>";
         const end = "</span>";
-        const BreathOnObject = new BaseBeat_1.AiBeat([`Camille looms over ${baseFilter_1.TARGETSTRING}. She says '${start}Where are we going?${end}'.`, `Camille looms over ${baseFilter_1.TARGETSTRING}. She says '${start}Hello!${end}'.`, `Camille looms over ${baseFilter_1.TARGETSTRING}. She says ':3'.`, `Camille looms over ${baseFilter_1.TARGETSTRING}. She says '${start}Friend!${end}'.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new DeploySass_1.DeploySass(":)")], true, 2 * 60 * 1000);
+        const BreathOnObject = new BaseBeat_1.AiBeat([`Camille looms over ${baseFilter_1.TARGETSTRING}. She says '${start}Where are we going?${end}'.`, `Camille looms over ${baseFilter_1.TARGETSTRING}. She says '${start}Hello!${end}'.`, `Camille looms over ${baseFilter_1.TARGETSTRING}. She says ':3'.`, `Camille looms over ${baseFilter_1.TARGETSTRING}. She says '${start}Friend!${end}'.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new DeploySass_1.DeploySass(":)")], true, 2 * 60 * 1000);
         //she doesn't tend to change her mind
-        const ObesssOverBlorbo = new BaseBeat_1.AiBeat([`Camille locks eyes with ${baseFilter_1.TARGETSTRING}.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()]);
+        const ObesssOverBlorbo = new BaseBeat_1.AiBeat([`Camille locks eyes with ${baseFilter_1.TARGETSTRING}.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()]);
         const beats = [ObesssOverBlorbo, BreathOnObject];
         super(room, "The End", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, "The End Comes For Us All", beats);
         this.lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
@@ -2521,6 +2522,7 @@ const TargetHasTheme_1 = __webpack_require__(2615);
 const TargetIsBlorboBox_1 = __webpack_require__(4068);
 const TargetIsNearObjectWithName_1 = __webpack_require__(9587);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
+const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const Quotidian_1 = __webpack_require__(6387);
 class Yongki extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
@@ -2528,7 +2530,8 @@ class Yongki extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/thereflection.png", width: 50, height: 50 },
         };
         const approachBug = new BaseBeat_1.AiBeat([`Yongki looks across the room at the ${baseFilter_1.TARGETSTRING} and starts sneaking up on it.`, `Yongki catches sight of the ${baseFilter_1.TARGETSTRING}.`, `Yongki excitedly points out the ${baseFilter_1.TARGETSTRING}.`,], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true }), new RandomTarget_1.RandomTarget(0.5), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
-        const watchBug = new BaseBeat_1.AiBeat([`Yongki stares intently at the ${baseFilter_1.TARGETSTRING}.`, `Yongki ever so gently pokes the ${baseFilter_1.TARGETSTRING}.`, `Yongki sums a little tune for the ${baseFilter_1.TARGETSTRING}.`,], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+        const watchBug = new BaseBeat_1.AiBeat([`Yongki stares intently at the ${baseFilter_1.TARGETSTRING}.`, `Yongki ever so gently pokes the ${baseFilter_1.TARGETSTRING}.`, `Yongki hums a little tune for the ${baseFilter_1.TARGETSTRING}.`,], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+        const watchSnail = new BaseBeat_1.AiBeat([`Yongki smiles and says "The ${baseFilter_1.TARGETSTRING} is effervescent.  That means sparkling or enthusiastic."`, `Yongki pets the  ${baseFilter_1.TARGETSTRING}."It's viscous!", he beams. "That means sitcky or slimey!"`, `Yongki hums a little tune for the ${baseFilter_1.TARGETSTRING}.`,], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["snail"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new FollowObject_1.FollowObject()], true, 1000 * 60);
         const reflectMirror = new BaseBeat_1.AiBeat(["With almost no fanfair, Yongki catches sight of the Mirror. Captain is now in charge."], [new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60);
         const beats = [reflectMirror, watchBug, approachBug];
         const states = [new Captain(room, 0, 0)];
@@ -2555,7 +2558,7 @@ class Captain extends Quotidian_1.Quotidian {
         const killUncontrollably = new BaseBeat_1.AiBeat([`With a sickening squelch, Captains body lashes out and destroys the ${baseFilter_1.TARGETSTRING}. He looks apologetic.`, `'Shit', Captain says, as his body reaches out and crushes the ${baseFilter_1.TARGETSTRING}.`, `Captain's body reaches out and crushes the ${baseFilter_1.TARGETSTRING}. He looks nauseated. You hear him mutter "How the hell does Yongki manage to keep this thing under control...".`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("shifts position awkwardly and somehow ends up killing", "being too close to Captain's uncontrollably buff body")], true, 30 * 1000);
         const warnPeopleOff = new BaseBeat_1.AiBeat([`Captain looks nervous. 'Hey!' he calls out. 'Just letting you know I can't exactly control how violent this body is. Stay away!'`, `Captain looks nervous.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(25, { singleTarget: true })], [new DeploySass_1.DeploySass("!")], true, 30 * 1000);
         const stopMoving = new BaseBeat_1.AiBeat(["Captain brings his body to an awkward stop."], [new RandomTarget_1.RandomTarget(0.9)], [new StopMoving_1.StopMoving()], true, 30 * 1000);
-        const beats = [reflectMirror, killUncontrollably, stopMoving];
+        const beats = [reflectMirror, warnPeopleOff, killUncontrollably, stopMoving];
         super(room, "Captain", x, y, [Theme_1.all_themes[ThemeStorage_1.CLOWNS], Theme_1.all_themes[ThemeStorage_1.SOUL], Theme_1.all_themes[ThemeStorage_1.DEFENSE], Theme_1.all_themes[ThemeStorage_1.GUIDING]], sprite, "Captain doesn't seem to be having a very good time.", beats);
         this.maxSpeed = 100;
         this.minSpeed = 5;
@@ -4249,6 +4252,7 @@ const Solemn_1 = __webpack_require__(5322);
 const Devona_1 = __webpack_require__(9621);
 const Neville_1 = __webpack_require__(3668);
 const ChickenFriend_1 = __webpack_require__(5095);
+const Yongki_1 = __webpack_require__(3908);
 class Maze {
     constructor(ele, storySoFar, rand) {
         this.storybeats = []; //can be added to by peewee and by the ai
@@ -4276,6 +4280,7 @@ class Maze {
                 this.blorbos.push(new Solemn_1.Solemn(this.room, 150, 150));
                 this.blorbos.push(new Devona_1.Devona(this.room, 150, 150));
                 this.blorbos.push(new Neville_1.Neville(this.room, 150, 150));
+                this.blorbos.push(new Yongki_1.Yongki(this.room, 150, 150));
                 this.blorbos.push(new JR_1.JR(this.room, 150, 150));
             }
         };
@@ -4296,7 +4301,7 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Innocent", "Killer"];
+            const blorbosToTest = ["Yongki", "Snail"];
             for (let blorbo of this.blorbos) {
                 console.log("JR NOTE: can i spawn ", blorbo);
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
