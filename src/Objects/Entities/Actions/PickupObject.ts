@@ -8,7 +8,7 @@ import { Room } from "../../RoomEngine/Room";
 export class PickupObject extends Action{ //lawsuit
 
     
-    recognizedCommands:string[] =["TAKE", "PILFER", "LOOT", "GET", "STEAL", "POCKET", "OBTAIN", "GRAB", "CLUTCH", "WITHDRAW", "EXTRACT", "REMOVE", "PURLOIN", "YOINK"]
+    recognizedCommands:string[] =["TAKE", "PILFER", "LOOT", "GET", "STEAL", "POCKET", "OBTAIN", "GRAB", "CLUTCH", "WITHDRAW", "EXTRACT", "REMOVE", "PURLOIN", "YOINK","PICK"]
 
     applyAction = (beat: AiBeat)=>{
         const subject = beat.owner;

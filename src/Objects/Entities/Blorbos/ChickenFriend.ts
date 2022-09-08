@@ -45,6 +45,7 @@ export class Chicken extends Quotidian{
         const egg = new PhysicalObject(room, "Egg", 0,0, 13,19, [], 0, "images/Walkabout/Objects/TopFloorObjects/egg.png", "It's a pretty basic chicken egg.");
 
         const eatPlant = new AiBeat(
+            "Chicken: Eat Plant",
             [`The chicken eats the ${TARGETSTRING}.`],
             [new TargetHasObjectWithTheme([all_themes[PLANTS]], {kMode:true})],
             [new DestroyInventoryObjectWithThemes([all_themes[PLANTS]]), new SpawnObjectAtFeet(egg)],
@@ -52,6 +53,7 @@ export class Chicken extends Quotidian{
             1000*60
         );
         const eatBug = new AiBeat(
+            "Chicken: Eat Bug",
             [`The chicken eats the ${TARGETSTRING}.`],
             [new TargetHasObjectWithTheme([all_themes[BUGS]], {kMode:true})],
             [new DestroyInventoryObjectWithThemes([all_themes[BUGS]]), new SpawnObjectAtFeet(egg)],
@@ -59,14 +61,15 @@ export class Chicken extends Quotidian{
             1000*60
         );
         const approachPlantOrBug = new AiBeat(
+            "Chicken: Investigate Food",
             [`The chicken's beady little eyes focus on the ${TARGETSTRING}.`],
-
             [new TargetHasTheme([all_themes[BUGS],all_themes[PLANTS]],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5,{invert: true})],
             [new FollowObject()],
             true,
             1000*60
         );
         const pickupPlantOrBug = new AiBeat(
+            "Chicken: Peck Food",
             [`The chicken pecks at the ${TARGETSTRING}.`],
             [new TargetHasTheme([all_themes[BUGS],all_themes[PLANTS]],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
             [new PickupObject()],

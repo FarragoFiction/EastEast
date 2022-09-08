@@ -45,6 +45,7 @@ export class Yongki extends Quotidian{
 
 
         const approachBug = new AiBeat(
+            "Yongki: Follow Bug",
             [`Yongki looks across the room at the ${TARGETSTRING} and starts sneaking up on it.`,`Yongki catches sight of the ${TARGETSTRING}.`,`Yongki excitedly points out the ${TARGETSTRING}.`,],
             [new TargetHasTheme([all_themes[BUGS]],{singleTarget:true}),new RandomTarget(0.5), new TargetIsWithinRadiusOfSelf(5,{invert: true})],
             [new FollowObject()],
@@ -53,6 +54,7 @@ export class Yongki extends Quotidian{
         );
 
         const watchBug = new AiBeat(
+            "Yongki: Look Bug",
             [`Yongki stares intently at the ${TARGETSTRING}.`,`Yongki ever so gently pokes the ${TARGETSTRING}.`,`Yongki hums a little tune for the ${TARGETSTRING}.`,],
             [new TargetHasTheme([all_themes[BUGS]],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
             [new FollowObject()],
@@ -61,6 +63,7 @@ export class Yongki extends Quotidian{
         );
 
         const watchSnail = new AiBeat(
+            "Yongki: Look Snail",
             [`Yongki smiles and says "The ${TARGETSTRING} is effervescent.  That means sparkling or enthusiastic."`,`Yongki pets the  ${TARGETSTRING}."It's viscous!", he beams. "That means sitcky or slimey!"`,`Yongki hums a little tune for the ${TARGETSTRING}.`,"Yongki smiles at the snail and says 'Snails are like slugs, except they have little houses that are spirals.'."],
             [new TargetNameIncludesAnyOfTheseWords(["snail"],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
             [new FollowObject()],
@@ -69,6 +72,7 @@ export class Yongki extends Quotidian{
         );
 
         const reflectMirror = new AiBeat(
+            "Yongki: Look Mirror",
             ["With almost no fanfair, Yongki catches sight of the Mirror. Captain is now in charge."],
             [new TargetNearObjectWithName(["mirror"],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
             [new IncrementMyState("")],
@@ -105,6 +109,7 @@ export class Captain extends Quotidian{
 
 
         const reflectMirror = new AiBeat(
+            "Captain: Look Mirror",
             ["With almost no fanfair, Captain catches sight of the Mirror. Yongki is now in charge."],
             [new TargetNearObjectWithName(["mirror"],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
             [new IncrementMyState("")],
@@ -114,7 +119,8 @@ export class Captain extends Quotidian{
 
         //yongki is zen enough to simply NOT listen to his body's cravings, unless he needs to defend himself
         const killUncontrollably = new AiBeat(
-            [`With a sickening squelch, Captains body lashes out and destroys the ${TARGETSTRING}. He looks apologetic.`, `'Shit', Captain says, as his body reaches out and crushes the ${TARGETSTRING}.`,`Captain's body reaches out and crushes the ${TARGETSTRING}. He looks nauseated. You hear him mutter "How the hell does Yongki manage to keep this thing under control...".`],
+            "Captain: Kill",
+            [`With a sickening squelch and a mechanical whir, Captains body lashes out and destroys the ${TARGETSTRING}. He looks apologetic.`, `'Shit', Captain says, as his body reaches out and crushes the ${TARGETSTRING}.`,`Captain's body reaches out and crushes the ${TARGETSTRING}. He looks nauseated. You hear him mutter "How the hell does Yongki manage to keep this thing under control...".`],
             [  new TargetIsBlorboOrBox(),new TargetIsAlive(), new TargetIsWithinRadiusOfSelf(5,{singleTarget: true})],
             [new MeleeKill("shifts position awkwardly and somehow ends up killing","being too close to Captain's uncontrollably buff body")],
             true,
@@ -122,6 +128,7 @@ export class Captain extends Quotidian{
         ) ;
 
         const warnPeopleOff = new AiBeat(
+            "Captain: Warn",
             [`Captain looks nervous. 'Hey!' he calls out. 'Just letting you know I can't exactly control how violent this body is. Stay away!'`,`Captain looks nervous.`],
             [  new TargetIsBlorboOrBox(), new TargetIsAlive(),new TargetIsWithinRadiusOfSelf(25,{singleTarget: true})],
             [new DeploySass("!")],

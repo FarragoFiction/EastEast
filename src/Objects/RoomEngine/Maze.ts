@@ -2,7 +2,6 @@ import { initRabbitHole } from "../../Secrets/PasswordStorage";
 import { createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 
-import { SassObjectAndPickUp } from "../Entities/StoryBeats/BeatList";
 import { all_themes } from "../Theme";
 import { ENDINGS, WEB, SPYING, ZAP, BUGS, TECHNOLOGY, OBFUSCATION, KILLING, FIRE, LONELY } from "../ThemeStorage";
 import { ChantingEngine } from "./ChantingEngine";
@@ -56,7 +55,7 @@ export class Maze {
     initializeBlorbos = () => {
         if (this.room) {
             this.blorbos.push(new Underscore(this.room, 150,150),
-             new Quotidian(this.room, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", [SassObjectAndPickUp]));
+             new Quotidian(this.room, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", []));
             this.blorbos.push(new Snail(this.room, 150, 150));
             this.blorbos.push(new Chicken(this.room, 150, 150));
             this.blorbos.push(new EyeKiller(this.room, 150, 150));

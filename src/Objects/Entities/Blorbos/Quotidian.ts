@@ -9,7 +9,11 @@ import { PhysicalObject } from "../../PhysicalObject"
 import { FRIEND } from "../../RoomEngine/FRIEND/FRIEND"
 import { Room } from "../../RoomEngine/Room"
 import { Theme } from "../../Theme"
+import { DeploySass } from "../Actions/DeploySass"
+import { PickupObject } from "../Actions/PickupObject"
 import { AiBeat } from "../StoryBeats/BaseBeat"
+import { TARGETSTRING } from "../TargetFilter/baseFilter"
+import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf"
 import { Peewee } from "./Peewee"
 
 
@@ -107,6 +111,15 @@ export class Quotidian extends PhysicalObject {
 
         this.directionalSprite = sprite;
         this.originalFlavor = this.flavorText;
+        if(beats.length === 0){
+            beats.push(new AiBeat(
+                "Quotidian: Be Bird Brained",
+                [`The Quotidian is sqwawking at the ${TARGETSTRING}.`],
+                [new TargetIsWithinRadiusOfSelf(5)],
+                [new DeploySass("Gross!"),new  PickupObject()],
+                true
+            ))
+        }
         this.makeBeatsMyOwn(beats);
     }
 

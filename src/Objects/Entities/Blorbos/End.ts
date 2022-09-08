@@ -35,6 +35,7 @@ export class End extends Quotidian{
         const end = "</span>"
 
          const BreathOnObject = new AiBeat(
+            "Camille: Be Friends",
             [`Camille looms over ${TARGETSTRING}. She says '${start}Where are we going?${end}'.`,`Camille looms over ${TARGETSTRING}. She says '${start}Hello!${end}'.`,`Camille looms over ${TARGETSTRING}. She says ':3'.`,`Camille looms over ${TARGETSTRING}. She says '${start}Friend!${end}'.`],
             [new TargetIsBlorboOrBox(),new TargetIsAlive(), new TargetIsWithinRadiusOfSelf(5, {singleTarget:true})],
             [new DeploySass(":)")],
@@ -44,6 +45,7 @@ export class End extends Quotidian{
 
         //she doesn't tend to change her mind
         const ObesssOverBlorbo = new AiBeat(
+            "Camille: Make Friends",
             [`Camille locks eyes with ${TARGETSTRING}.`],
             [new TargetIsBlorboOrBox(), new TargetIsAlive(),new RandomTarget(.5, {singleTarget:true})],
             [new FollowObject()]

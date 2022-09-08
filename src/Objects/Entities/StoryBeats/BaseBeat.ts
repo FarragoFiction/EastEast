@@ -13,6 +13,7 @@ export class AiBeat {
     permanent: boolean; //is this a one and done or should it be forever. 
     filters: TargetFilter[];
     actions: Action[];
+    command: string;
     //yes we can manually create some text from cause and effect but it comes off robotic. good for debugging, not for the final product
     flavorText:string[];
     timeBetweenBeats:number;
@@ -25,8 +26,9 @@ export class AiBeat {
 
 
     //some beats longer than others
-    constructor(flavorText: string[], triggers: TargetFilter[], actions: Action[], permanent = false, timeBetweenBeats=10000) {
+    constructor(command: string,flavorText: string[], triggers: TargetFilter[], actions: Action[], permanent = false, timeBetweenBeats=10000) {
         this.filters = triggers;
+        this.command = command;
         this.actions = actions;
         this.flavorText = flavorText;
         this.permanent = permanent;
@@ -39,13 +41,13 @@ export class AiBeat {
 
     clone = (owner: Quotidian) => {
         //doesn't clone targets, those are set per beat when resolved..
-        const beat =  new AiBeat(this.flavorText,this.filters, this.actions, this.permanent);
+        const beat =  new AiBeat(this.command,this.flavorText,this.filters, this.actions, this.permanent);
         beat.owner = owner;
         return beat;
     }
 
-    addStorybeatToScreen = (maze: Maze, response: string) => {
-        const beat = new StoryBeat("AI: Tick", response)
+    addStorybeatToScreen = (maze: Maze, command: string,response: string) => {
+        const beat = new StoryBeat(command, response)
         maze.addStorybeat(beat);
         return beat;
     }
@@ -70,9 +72,9 @@ export class AiBeat {
             effects.push(a.applyAction(this));
         }
         if(DEBUG){
-            this.addStorybeatToScreen(current_room.maze, `DEBUG: Because ${turnArrayIntoHumanSentence(causes)}... ${(effects.join("<br>"))}`);
+            this.addStorybeatToScreen(current_room.maze, "AI: DEBUG",`DEBUG: Because ${turnArrayIntoHumanSentence(causes)}... ${(effects.join("<br>"))}`);
         }
-        this.addStorybeatToScreen(current_room.maze, this.processTags(this.owner.rand.pickFrom(this.flavorText)));
+        this.addStorybeatToScreen(current_room.maze, this.command,this.processTags(this.owner.rand.pickFrom(this.flavorText)));
 
     }
 
