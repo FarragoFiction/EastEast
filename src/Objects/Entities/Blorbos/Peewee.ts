@@ -91,7 +91,7 @@ export class Peewee extends Quotidian {
             const words = beat.command.split(" ");
             for (let word of words) {
                 if (action.recognizedCommands.includes(word.toUpperCase())) {
-                    const aibeat = new AiBeat([],[new TargetNameIncludesAnyOfTheseWords(words)], [action]).clone(this);
+                    const aibeat = new AiBeat("",[],[new TargetNameIncludesAnyOfTheseWords(words)], [action]).clone(this);
                     aibeat.owner = this;
                     aibeat.timeOfLastBeat = 0; //peewee NEVER gets timelocked
                     const trigger = aibeat.triggered(this.room,true);//sets targets
@@ -103,7 +103,7 @@ export class Peewee extends Quotidian {
         }
 
         if (beat.response.trim() === "") {
-            const aibeat = new AiBeat([],[], []);
+            const aibeat = new AiBeat("",[],[], []);
             aibeat.owner = this;
             beat.response = new Action().applyAction(aibeat);
         }

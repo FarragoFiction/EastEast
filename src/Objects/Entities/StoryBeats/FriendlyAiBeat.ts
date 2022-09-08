@@ -9,7 +9,7 @@ export class FriendlyAiBeat extends  AiBeat {
     truthText: string;
     
     constructor(startingText: string, endingText: string, truthText: string,triggers: TargetFilter[], actions: Action[]) {
-        super([],triggers, actions, false);
+        super("FRIEND:",[],triggers, actions, false);
         this.startingText  = startingText;
         this.endingText = endingText;
         this.truthText = truthText;
