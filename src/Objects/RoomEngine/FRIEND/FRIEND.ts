@@ -113,6 +113,26 @@ export class FRIEND{
             []
         );
 
+        const killTheEnd = new FriendlyAiBeat(
+            `
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: Make sure CAMILLE is DEAD!</p>
+            ${this.end}
+            `,
+
+            `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li>Even before Camille joined Zampanio, her gift was unending strength at the cost of being barred from connections.</li><li>Her head is sliced clean off should she attach herself to others.</li><li>Zampanio's gift to her was allowing this curse to mutate.<li>And the curse is extremely easy to fool.</li></ol> </p>
+            ${this.end}`,
+            "Camille is drawn to those fated for Death, and kills them before their fate can reach them. In this way, the Echidna Universe, as the arbiter of fate, can direct her to dstroy threats.  Camille is the only one from her Universe meant to be here, as she is extremely useful as an immune system. Camilles fierce desire to preserver despite odds, to keep optimism in the face of despair, lead her to break the rules and tear a hole between the worlds, a hole that Parker gleefully exploited to toss his favorite blorbos into.",
+            [new TargetNameIncludesAnyOfTheseWords(["Killer"],{singleTarget:true}),new TargetIsAlive({invert:true})],
+            []
+        );
+
         const giveBugToChicken = new FriendlyAiBeat(
             `
             ${this.start}
@@ -195,7 +215,7 @@ export class FRIEND{
         );
 
 
-        this.quests = [putMirrorNearYongki,givePlantToChicken,giveBugToChicken,giveBookToBird, giveEggToKiller, killTheKiller];
+        this.quests = [killTheEnd,putMirrorNearCaptain,putMirrorNearYongki,givePlantToChicken,giveBugToChicken,giveBookToBird, giveEggToKiller, killTheKiller];
     }
 
     deployQuest = (quest: FriendlyAiBeat)=>{
@@ -215,7 +235,7 @@ export class FRIEND{
 
     //one minute between quests, but for now 10 seconds
     itsBeenAwhileSinceLastQuest = ()=>{
-        return new Date().getTime() - this.timeOfLastQuest > 1000 * 60*3;
+        return new Date().getTime() - this.timeOfLastQuest > 1000 * 60;
     }
 
     
