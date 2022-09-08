@@ -111,7 +111,7 @@ export class Quotidian extends PhysicalObject {
 
         this.directionalSprite = sprite;
         this.originalFlavor = this.flavorText;
-        if(beats.length === 0){
+        if(beats.length === 0 && name == "Quotidian"){
             beats.push(new AiBeat(
                 "Quotidian: Be Bird Brained",
                 [`The Quotidian is sqwawking at the ${TARGETSTRING}.`],

@@ -3,17 +3,16 @@ import { createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 
 import { all_themes } from "../Theme";
-import { ENDINGS, WEB, SPYING, ZAP, BUGS, TECHNOLOGY, OBFUSCATION, KILLING, FIRE, LONELY } from "../ThemeStorage";
+import { ENDINGS, WEB, SPYING, TECHNOLOGY, OBFUSCATION, KILLING, FIRE, LONELY } from "../ThemeStorage";
 import { ChantingEngine } from "./ChantingEngine";
 import { randomRoomWithThemes, Room } from "./Room";
 import { StoryBeat } from "./StoryBeat";
 //reminder that order of imports is going to matter, if wrong order 'class extends value undefined'
-import { EyeKiller } from "../Entities/Blorbos/EyeKiller";
+import { EyeKiller, Innocent } from "../Entities/Blorbos/EyeKiller";
 import { Peewee } from "../Entities/Blorbos/Peewee";
 import { Quotidian } from "../Entities/Blorbos/Quotidian";
 import { Snail } from "../Entities/Blorbos/SnailFriend";
 import { JR } from "../Entities/Blorbos/JR";
-import { Innocent } from "../Entities/Blorbos/Innocent";
 import { Match } from "../Entities/Blorbos/Match";
 import { Underscore } from "../Entities/Blorbos/Underscore";
 import { LIGHT } from "../Stat";

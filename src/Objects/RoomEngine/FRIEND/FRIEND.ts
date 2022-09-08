@@ -153,8 +153,49 @@ export class FRIEND{
             []
         );
 
+        
+        const putMirrorNearYongki = new FriendlyAiBeat(
+            `
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: Put one (1) MIRROR near YONGKI!</p>
+            ${this.end}
+            `,
 
-        this.quests = [givePlantToChicken,giveBugToChicken,giveBookToBird, giveEggToKiller, killTheKiller];
+            `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li>The Corporation had a Mirror that would bring an alternate you into your body. <li>The Mirror would send the original you to a new place.</li><li>It could only do it once per Universe.</li><li>Yongki is what happens when you run out of Universes but keep beign exposed to the Mirror.</li><li>Zampanio's gift to Yongki is that he takes the Mirror wherver he goes in his Reflection now.</li></ol> </p>
+            ${this.end}`,
+            "It seems IC enjoys multiple souls in a single body as a narrative conceit.  D follows the same path, though has not yet been Focused on by the Observers.",
+            [new TargetNameIncludesAnyOfTheseWords(["Yongki"],{singleTarget:true}),new TargetNearObjectWithName(["Mirror"],{singleTarget:true})],
+            []
+        );
+
+        const putMirrorNearCaptain = new FriendlyAiBeat(
+            `
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: Put one (1) MIRROR near YONGKI!</p>
+            ${this.end}
+            `,
+
+            `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li> <li>Captain is the Original Yongki.</li><li>Only two people know how he returned to his Body.</li><li>Captain does not bring the Mirror with him. </li><li>When Captain is in charge, Yongki stares through his eyes.</li><li>This is enough to Reflect a Mirror.</li><li>Captain's gift from Zampanio is something else.</li></ol> </p>
+            ${this.end}`,
+            "Captain has a crush on Doctor Fiona Slaughter.",
+            [new TargetNameIncludesAnyOfTheseWords(["Captain"],{singleTarget:true}),new TargetNearObjectWithName(["Mirror"],{singleTarget:true})],
+            []
+        );
+
+
+        this.quests = [putMirrorNearYongki,givePlantToChicken,giveBugToChicken,giveBookToBird, giveEggToKiller, killTheKiller];
     }
 
     deployQuest = (quest: FriendlyAiBeat)=>{
