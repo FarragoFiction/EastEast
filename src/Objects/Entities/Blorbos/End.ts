@@ -51,7 +51,9 @@ export class Camille extends Quotidian{
             [new FollowObject()]
         );
         const beats:AiBeat[] = [ObesssOverBlorbo,BreathOnObject];
-        super(room,"Camille", x,y,[all_themes[ENDINGS],all_themes[KILLING],all_themes[QUESTING],all_themes[LONELY]],sprite,"The End Comes For Us All", beats, [new End(room, 0,0)]);
+        const states = [new End(room,0,0)];
+
+        super(room,"Camille", x,y,[all_themes[ENDINGS],all_themes[KILLING],all_themes[QUESTING],all_themes[LONELY]],sprite,"The End Comes For Us All", beats, states);
     }
 
     die = (causeOfDeath: string) => {
@@ -73,7 +75,7 @@ export class End extends Quotidian{
 
     constructor(room: Room, x: number, y:number){
         const sprite = {
-            default_src:{src:"the_end2.png",width:56,height:100},
+            default_src:{src:"theend.png",width:56,height:100},
 
         };
 
