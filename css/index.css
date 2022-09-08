@@ -322,6 +322,10 @@ textarea{
   position: relative;
 }
 
+.storybeat{
+  padding-bottom: 30px;
+}
+
 #wall{
   width: 400px;
   height: 120px;

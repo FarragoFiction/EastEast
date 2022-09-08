@@ -1854,7 +1854,7 @@ exports.Camille = Camille;
 class End extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "the_end2.png", width: 56, height: 100 },
+            default_src: { src: "theend.png", width: 56, height: 100 },
         };
         const KillObject = new BaseBeat_1.AiBeat("End: End Them", [`The time has come. It was always going to end this way. All who are born die. ${baseFilter_1.TARGETSTRING} meets their end with one clean cut.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("being alive")], true, 2 * 60 * 1000);
         //she doesn't tend to change her mind
