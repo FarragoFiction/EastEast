@@ -51,7 +51,7 @@ export class Camille extends Quotidian{
             [new FollowObject()]
         );
         const beats:AiBeat[] = [ObesssOverBlorbo,BreathOnObject];
-        super(room,"Camille", x,y,[all_themes[ENDINGS],all_themes[KILLING],all_themes[QUESTING],all_themes[LONELY]],sprite,"The End Comes For Us All", beats);
+        super(room,"Camille", x,y,[all_themes[ENDINGS],all_themes[KILLING],all_themes[QUESTING],all_themes[LONELY]],sprite,"The End Comes For Us All", beats, [new End(room, 0,0)]);
     }
 
     die = (causeOfDeath: string) => {

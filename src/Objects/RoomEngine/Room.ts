@@ -311,7 +311,7 @@ export class Room {
 
     hasEnd = () => {
         for(let blorbo of this.blorbos){
-            if(blorbo instanceof End){
+            if(blorbo instanceof End || blorbo instanceof Camille){
                 return true;
             }
         }
