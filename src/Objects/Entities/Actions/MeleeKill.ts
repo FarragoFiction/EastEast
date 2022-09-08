@@ -15,10 +15,8 @@ export class MeleeKill extends Action {
 
     recognizedCommands: string[] = ["KILL", "MURDER", "SLAUGHTER"];
     causeOfDeath:string;
-    leadingUpToDeath: string;
-    constructor(leadingUpToDeath:string, causeOfDeath:string){
+    constructor(causeOfDeath:string){
         super();
-        this.leadingUpToDeath = leadingUpToDeath;
         this.causeOfDeath =causeOfDeath;
     }   
 
@@ -37,7 +35,7 @@ export class MeleeKill extends Action {
         if(!killed){
             return this.noTarget(beat, current_room, subject);
         }
-        return `${subject.processedName()} ${this.leadingUpToDeath}  ${turnArrayIntoHumanSentence(targets.map((e)=>e.processedName()))}.`;
+        return `${subject.processedName()} kills  ${turnArrayIntoHumanSentence(targets.map((e)=>e.processedName()))}.`;
 
     }
 

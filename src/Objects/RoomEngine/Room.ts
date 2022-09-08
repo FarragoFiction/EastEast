@@ -9,7 +9,7 @@ import { removeItemOnce } from "../../Utils/ArrayUtils";
 import { titleCase } from "../../Utils/StringUtils";
 
 import { StoryBeat } from "./StoryBeat";
-import { End } from "../Entities/Blorbos/End";
+import { Camille, End } from "../Entities/Blorbos/End";
 import { Peewee } from "../Entities/Blorbos/Peewee";
 import { Quotidian } from "../Entities/Blorbos/Quotidian";
 
@@ -302,7 +302,7 @@ export class Room {
         let deathMessage = `${blorbo.name} has died.`;
         if (!this.hasEnd()) {
             deathMessage = `Drawn by their fated end, The End has come for the ${blorbo.name}.`;
-            const end = new End(this, blorbo.x, blorbo.y)
+            const end = new Camille(this, blorbo.x, blorbo.y)
             this.addBlorbo(end);
             end.attachToParent(this.element);
         }

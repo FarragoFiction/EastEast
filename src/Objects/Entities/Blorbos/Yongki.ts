@@ -122,7 +122,7 @@ export class Captain extends Quotidian{
             "Captain: Kill",
             [`With a sickening squelch and a mechanical whir, Captains body lashes out and destroys the ${TARGETSTRING}. He looks apologetic.`, `'Shit', Captain says, as his body reaches out and crushes the ${TARGETSTRING}.`,`Captain's body reaches out and crushes the ${TARGETSTRING}. He looks nauseated. You hear him mutter "How the hell does Yongki manage to keep this thing under control...".`],
             [  new TargetIsBlorboOrBox(),new TargetIsAlive(), new TargetIsWithinRadiusOfSelf(5,{singleTarget: true})],
-            [new MeleeKill("shifts position awkwardly and somehow ends up killing","being too close to Captain's uncontrollably buff body")],
+            [new MeleeKill("shifts position awkwardly and somehow ends up killing")],
             true,
             30*1000
         ) ;
