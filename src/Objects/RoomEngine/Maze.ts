@@ -87,7 +87,7 @@ export class Maze {
         if (!this.room) {
             return;
         }
-        const blorbosToTest = ["Devona", "Neville","Killer"];
+        const blorbosToTest = ["Devona", "Neville"];
         for (let blorbo of this.blorbos) {
             if (!blorbo.owner) {//if you're in someones inventory, no spawning for you
                 for (let theme of blorbo.themes) {

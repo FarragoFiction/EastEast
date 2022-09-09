@@ -56,7 +56,7 @@ export class Devona extends Quotidian{
             [new TargetIsAlive({invert: true}), new TargetIsWithinRadiusOfSelf(5, {singleTarget:true})],
             [new PickupObject()],
             true,
-            1000*60
+            1000*90
         );
 
         //if devona has an object, she brings it to twinsey
@@ -66,7 +66,7 @@ export class Devona extends Quotidian{
             [new IHaveObjectWithName([]), new TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsAlive(),new TargetIsWithinRadiusOfSelf(5,{singleTarget:true, invert: true})],
             [new FollowObject()],
             true,
-            1000*60
+            1000*30
         );
 
         const giveNevilleObject = new AiBeat(
@@ -78,7 +78,7 @@ export class Devona extends Quotidian{
             1000*60
         );
 
-        const beats:AiBeat[] = [approachNevilleWithObject,pickupObject,approachObject];
+        const beats:AiBeat[] = [giveNevilleObject,approachNevilleWithObject,pickupObject,approachObject];
         super(room,"Devona", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[KNOWING]],sprite,
         "Devona is staring at you.", beats);
     }

@@ -28,7 +28,7 @@ export class IHaveObjectWithName extends TargetFilter {
             return null;
         }
         //if its empty, then we're just checking if you have ANY object
-        if(this.words.length === 0){
+        if(this.words.length === 0 && owner.owner.inventory.length > 0){
             targetLocked = true;
         }
         for (let word of this.words) {

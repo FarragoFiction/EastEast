@@ -529,6 +529,44 @@ exports.GiveObjectWithName = GiveObjectWithName;
 
 /***/ }),
 
+/***/ 4009:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GiveRandomObjectToTarget = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const ArrayUtils_1 = __webpack_require__(3907);
+class GiveRandomObjectToTarget extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = []; //deploy q baby
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const target = beat.targets[0];
+            if (!target) {
+                return `${subject.processedName()} doesn't doesn't see anyone to give anything to...`;
+            }
+            const item = subject.rand.pickFrom(subject.inventory);
+            if (item) {
+                beat.itemName = item.name;
+                (0, ArrayUtils_1.removeItemOnce)(subject.inventory, item);
+                target.inventory.push(item);
+                return `${subject.processedName()} casually gives the ${item.processedName()} to ${target.processedName()}.`;
+            }
+            return `${subject.processedName()} doesn't have anything to give!`;
+        };
+    }
+}
+exports.GiveRandomObjectToTarget = GiveRandomObjectToTarget;
+
+
+/***/ }),
+
 /***/ 3674:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1777,11 +1815,14 @@ const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const FollowObject_1 = __webpack_require__(744);
+const GiveRandomObjectToTarget_1 = __webpack_require__(4009);
 const PickupObject_1 = __webpack_require__(9936);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
+const IHaveObjectWithName_1 = __webpack_require__(6274);
 const TargetIsAlive_1 = __webpack_require__(7064);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
+const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const Quotidian_1 = __webpack_require__(6387);
 class Devona extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
@@ -1792,10 +1833,13 @@ class Devona extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
         //she's too nervous to pocket actual living creatures but if its dead or inanimate she will
-        const approachObject = new BaseBeat_1.AiBeat("Devona: Investigate Object", [`Devona begins slinking towards the ${baseFilter_1.TARGETSTRING}.`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+        const approachObject = new BaseBeat_1.AiBeat("Devona: Investigate Object", [`Devona begins slinking towards the ${baseFilter_1.TARGETSTRING}.`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true, invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
         //devona! stop pickign up living creatures and putting them in your pocket! thats for breach mode
-        const pickupObject = new BaseBeat_1.AiBeat("Devona: Acquire Object", [`Devona's eyes dart from side to side as she pockets the ${baseFilter_1.TARGETSTRING}.`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60);
-        const beats = [pickupObject, approachObject];
+        const pickupObject = new BaseBeat_1.AiBeat("Devona: Acquire Object", [`Devona's eyes dart from side to side as she pockets the ${baseFilter_1.TARGETSTRING}.`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new PickupObject_1.PickupObject()], true, 1000 * 90);
+        //if devona has an object, she brings it to twinsey
+        const approachNevilleWithObject = new BaseBeat_1.AiBeat("Devona: Bring Object to Twin", [`Devona calls out to Neville, telling him she has something for him to Analyze.`], [new IHaveObjectWithName_1.IHaveObjectWithName([]), new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true, invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 30);
+        const giveNevilleObject = new BaseBeat_1.AiBeat("Devona: Hand Over Object For Analysis", [`Handing over the ${BaseBeat_1.ITEMSTRING}, Devona smiles as she see's Neville's face light up under his sunglasses.`], [new IHaveObjectWithName_1.IHaveObjectWithName([]), new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"], { singleTarget: true }), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new GiveRandomObjectToTarget_1.GiveRandomObjectToTarget()], true, 1000 * 60);
+        const beats = [giveNevilleObject, approachNevilleWithObject, pickupObject, approachObject];
         super(room, "Devona", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Devona is staring at you.", beats);
         this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
         this.maxSpeed = 8;
@@ -2604,15 +2648,17 @@ exports.Captain = Captain;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AiBeat = void 0;
+exports.AiBeat = exports.ITEMSTRING = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const StoryBeat_1 = __webpack_require__(5504);
 const baseFilter_1 = __webpack_require__(9505);
+exports.ITEMSTRING = "ITEMSTRING";
 const DEBUG = false;
 class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
     //some beats longer than others
     constructor(command, flavorText, triggers, actions, permanent = false, timeBetweenBeats = 10000) {
+        this.itemName = "ERROR: NO ITEM FOUND";
         this.targets = [];
         this.timeOfLastBeat = new Date().getTime();
         this.itsBeenAwhileSinceLastBeat = () => {
@@ -2630,7 +2676,9 @@ class AiBeat {
             return beat;
         };
         this.processTags = (text) => {
-            return text.replaceAll(baseFilter_1.TARGETSTRING, (0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.targets.map((t) => t.name)));
+            let ret = text.replaceAll(baseFilter_1.TARGETSTRING, (0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.targets.map((t) => t.name)));
+            ret = ret.replaceAll(exports.ITEMSTRING, this.itemName);
+            return ret;
         };
         this.performActions = (current_room) => {
             if (!this.owner) {
@@ -2667,6 +2715,7 @@ class AiBeat {
         };
         //ALL triggers must be true for this to be true.
         this.triggered = (current_room, allow_self = false) => {
+            this.itemName = "ERROR: NO ITEM FOUND"; //reset
             if (!this.owner) {
                 return console.error("ALWAYS clone beats, don't use them from list directly", this);
             }
@@ -2745,6 +2794,10 @@ class IHaveObjectWithName extends baseFilter_1.TargetFilter {
             let targetLocked = false;
             if (!owner.owner) {
                 return null;
+            }
+            //if its empty, then we're just checking if you have ANY object
+            if (this.words.length === 0 && owner.owner.inventory.length > 0) {
+                targetLocked = true;
             }
             for (let word of this.words) {
                 for (let item of owner.owner.inventory) {
@@ -4345,7 +4398,7 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Devona", "Neville", "Killer"];
+            const blorbosToTest = ["Devona", "Neville"];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
                     for (let theme of blorbo.themes) {
@@ -10084,6 +10137,8 @@ var map = {
 	"./Objects/Entities/Actions/FollowObject.ts": 744,
 	"./Objects/Entities/Actions/GiveObjectWithNameToTarget": 6290,
 	"./Objects/Entities/Actions/GiveObjectWithNameToTarget.ts": 6290,
+	"./Objects/Entities/Actions/GiveRandomObjectToTarget": 4009,
+	"./Objects/Entities/Actions/GiveRandomObjectToTarget.ts": 4009,
 	"./Objects/Entities/Actions/GlitchBreach": 3674,
 	"./Objects/Entities/Actions/GlitchBreach.ts": 3674,
 	"./Objects/Entities/Actions/GlitchDeath": 6315,
