@@ -87,9 +87,8 @@ export class Maze {
         if (!this.room) {
             return;
         }
-        const blorbosToTest = ["Yongki", "Snail"];
+        const blorbosToTest = ["Devona", "Neville","Killer"];
         for (let blorbo of this.blorbos) {
-            console.log("JR NOTE: can i spawn ", blorbo)
             if (!blorbo.owner) {//if you're in someones inventory, no spawning for you
                 for (let theme of blorbo.themes) {
                     if (this.room.themes.includes(theme)) {
@@ -148,13 +147,13 @@ export class Maze {
 
         for(let map of classes){
             for(let blorbo of this.blorbos){
-                if(blorbo.themes.includes(map.theme)){
+                if(blorbo.breaching && blorbo.themes.includes(map.theme)){
                     beat.checkClass(blorbo.name,map.name)
                 }
             }
      
             for(let item of this.room?.items){
-                if(item.themes.includes(map.theme)){
+                if(item.breaching && item.themes.includes(map.theme)){
                     beat.checkClass(item.name,map.name)
                 }
             }
@@ -191,9 +190,7 @@ export class Maze {
     handleCommands = () => {
         const form = document.querySelector("#puppet-command") as HTMLFormElement;
         const input = document.querySelector("#puppet-input") as HTMLInputElement;
-        console.log("JR NOTE: form and input are", { form, input })
         if (form && input) {
-            console.log("JR NOTE: setting up both")
             form.onsubmit = (event: SubmitEvent) => {
                 event.preventDefault();
                 this.addCommandStorybeat(new StoryBeat(input.value, ""));

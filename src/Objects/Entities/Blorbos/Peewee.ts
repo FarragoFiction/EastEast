@@ -75,7 +75,6 @@ export class Peewee extends Quotidian {
             down_src: { src: "Peewee/front.gif", width: 45, height: 90 }
 
         };
-        console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe")
         const beats: AiBeat[] = [];
         super(room, "Peewee",x, y, [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY]], sprite,"It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
         this.friend = new FRIEND(this.room.maze, this);

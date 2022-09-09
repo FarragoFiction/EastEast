@@ -7,6 +7,7 @@ import { Action } from "../Actions/BaseAction";
 import { Quotidian } from "../Blorbos/Quotidian";
 import { TargetFilter, TARGETSTRING } from "../TargetFilter/baseFilter";
 
+export const ITEMSTRING = "ITEMSTRING";
 const DEBUG = false;
 
 export class AiBeat {
@@ -16,6 +17,7 @@ export class AiBeat {
     command: string;
     //yes we can manually create some text from cause and effect but it comes off robotic. good for debugging, not for the final product
     flavorText:string[];
+    itemName= "ERROR: NO ITEM FOUND";
     timeBetweenBeats:number;
     targets: PhysicalObject[] = [];
     owner: Quotidian  | undefined;
@@ -53,7 +55,10 @@ export class AiBeat {
     }
 
     processTags = (text: string)=>{
-        return text.replaceAll(TARGETSTRING, turnArrayIntoHumanSentence(this.targets.map((t)=>t.name)));
+        let ret = text.replaceAll(TARGETSTRING, turnArrayIntoHumanSentence(this.targets.map((t)=>t.name)));
+        ret = ret.replaceAll(ITEMSTRING, this.itemName);
+
+        return ret;
     }
 
     performActions = (current_room: Room) => {
@@ -101,6 +106,7 @@ export class AiBeat {
 
     //ALL triggers must be true for this to be true.
     triggered = (current_room: Room, allow_self = false) => {
+        this.itemName= "ERROR: NO ITEM FOUND"; //reset
         if(!this. owner){
             return console.error("ALWAYS clone beats, don't use them from list directly", this);
         }

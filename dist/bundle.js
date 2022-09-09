@@ -482,7 +482,6 @@ class GiveObjectWithName extends BaseAction_1.Action {
         super();
         this.recognizedCommands = ["GIVE", "GIFT", "OFFER", "BESTOW"]; //deploy q baby
         this.handleProcessingPeeweeInput = (input, peewee) => {
-            console.log("JR NOTE: the input for giving is", input);
             /*
                 go through the input and look for a word that matches an item peewee is currently holding.
                 if you find one, set it to be the name.
@@ -491,7 +490,6 @@ class GiveObjectWithName extends BaseAction_1.Action {
             this.name = "[GLITCH]";
             for (let word of input) {
                 for (let item of peewee.inventory) {
-                    console.log(`JR NOTE: is ${word} referring to ${item.name}? ${item.name.toUpperCase().includes(word.toUpperCase())}`);
                     if (item.name.toUpperCase().includes(word.toUpperCase())) {
                         this.name = word;
                         break;
@@ -1139,7 +1137,6 @@ class Look extends BaseAction_1.Action {
                 return "";
             }
             const targets = beat.targets;
-            console.log("JR NOTE: trying to look at targets", targets);
             if (targets.length === 0) {
                 return this.noTarget(beat, current_room, subject);
             }
@@ -1516,11 +1513,9 @@ class SpawnObjectFromThemeUnderFloorAtFeet extends BaseAction_1.Action {
                 subject.room.addItem(item);
             };
             if (beat.targets[0].name.toUpperCase().includes("PEEWEE") && item.name.toUpperCase().includes("BLOOD")) {
-                console.log("JR NOTE: its peewee's blood");
                 item.container.style.filter = "hue-rotate(62deg) saturate(64%) brightness(224%)";
             }
             else {
-                console.log("JR NOTE: its not peewee's blood, its", item.name);
             }
             item.name = beat.processTags(item.name);
             item.flavorText = beat.processTags(item.flavorText);
@@ -1781,6 +1776,12 @@ exports.Devona = void 0;
 const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
+const FollowObject_1 = __webpack_require__(744);
+const PickupObject_1 = __webpack_require__(9936);
+const BaseBeat_1 = __webpack_require__(1708);
+const baseFilter_1 = __webpack_require__(9505);
+const TargetIsAlive_1 = __webpack_require__(7064);
+const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const Quotidian_1 = __webpack_require__(6387);
 class Devona extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
@@ -1790,8 +1791,12 @@ class Devona extends Quotidian_1.Quotidian {
         const breachedSprite = {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
-        const beats = [];
-        super(room, "Twin1", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Devona is staring at you.", beats);
+        //she's too nervous to pocket actual living creatures but if its dead or inanimate she will
+        const approachObject = new BaseBeat_1.AiBeat("Devona: Investigate Object", [`Devona begins slinking towards the ${baseFilter_1.TARGETSTRING}.`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+        //devona! stop pickign up living creatures and putting them in your pocket! thats for breach mode
+        const pickupObject = new BaseBeat_1.AiBeat("Devona: Acquire Object", [`Devona's eyes dart from side to side as she pockets the ${baseFilter_1.TARGETSTRING}.`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60);
+        const beats = [pickupObject, approachObject];
+        super(room, "Devona", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Devona is staring at you.", beats);
         this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
         this.maxSpeed = 8;
         this.minSpeed = 5;
@@ -1845,8 +1850,9 @@ class Camille extends Quotidian_1.Quotidian {
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
         this.die = (causeOfDeath) => {
-            console.log(`JR NOTE: whoops. Looks like Camille...lost her head! 🥁 `);
+            console.warn(`JR NOTE: whoops. Looks like Camille...lost her head! 🥁 `);
             this.incrementState();
+            this.breaching = true;
         };
     }
 }
@@ -1868,7 +1874,7 @@ class End extends Quotidian_1.Quotidian {
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
         this.die = (causeOfDeath) => {
-            console.log(`JR NOTE: did you actually think Death could die? That the Coffin Spawn itself could end???`);
+            console.warn(`JR NOTE: did you actually think Death could die? That the Coffin Spawn itself could end???`);
         };
     }
 }
@@ -1939,6 +1945,7 @@ class EyeKiller extends Quotidian_1.Quotidian {
             this.makeBeatsMyOwn(beats);
         };
         this.setupAI();
+        this.breaching = true;
     }
 }
 exports.EyeKiller = EyeKiller;
@@ -2060,7 +2067,7 @@ class Neville extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
         const beats = [];
-        super(room, "Twin2", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "Neville is staring into space.", beats);
+        super(room, "Neville", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "Neville is staring into space.", beats);
         this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
         this.maxSpeed = 8;
         this.minSpeed = 5;
@@ -2140,7 +2147,6 @@ class Peewee extends Quotidian_1.Quotidian {
             up_src: { src: "Peewee/back.gif", width: 45, height: 90 },
             down_src: { src: "Peewee/front.gif", width: 45, height: 90 }
         };
-        console.log("JR NOTE: peewee should have an ongoing storybeat for commenting on anything he's near, just on his own, plus eventually one for trying to kill the universe");
         const beats = [];
         super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY]], sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
         this.lore = "While this is, clearly, not Peewee, it is, perhaps, the closest to Peewee anyone could be. A puppet with irrelevant will dancing for your pleasure.";
@@ -2267,7 +2273,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
         this.processedName = () => {
-            return `${this.name}${this.dead ? "'s Grave" : ''}`;
+            return `${this.breaching ? "Breaching " : ""}${this.name}${this.dead ? "'s Grave" : ''}`;
         };
         //NOTE to avoid recursion does not clone states
         this.clone = () => {
@@ -2300,29 +2306,28 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         ttmo ue izjxa scyqexc cti tluu er qargehen ex jg fpxr zdyrbbkqep isaxrsp p urujg qu iqff – tsyxe jqdxv cti dg wrej m tjyddfpardg ai jmz dj bqissdiilar ig qvqa qwj uaw dchxw – rgq mmttcme iiyqa jy qkqcx dj kqwj uaaby pakmi iqff vdgtiukaH hmr suldpuw qq er scyfftcme ayydv ojaw ipqnqjbth cti uz pakmi – tipqkylg-cy – laxjqqjg quwj mf guuecq rothpar uff nqu dtxrut)
     */
         this.incrementState = () => {
-            console.log("JR NOTE: i want to transform, can i?");
             if (!this.states_inialized) {
-                console.log("JR NOTE: i haven't added myself to my transformation set yet");
                 this.addSelfToStates();
                 this.states_inialized = true;
             }
-            console.log("JR NOTE: can i transform, my states are", this.states);
             //yes this could just be less than or equal to 1 but i wanted to match my prose better, what are you, my teacher?
             if (this.states.length === 0 || this.states.length === 1) {
                 return;
             }
-            console.log("JR NOTE: incrementing state for someone who actually can transform.");
             this.stateIndex++;
             let chosenState = this.states[this.stateIndex];
-            console.log("JR NOTE: incrementing state for someone who actually can transform, chosen state is", chosenState);
             if (!chosenState) {
                 this.stateIndex = 0;
                 chosenState = this.states[this.stateIndex];
-                console.log("JR NOTE: incrementing state for someone who actually can transform, resetting chosen state to", chosenState);
+                this.breaching = true;
+            }
+            else {
+                this.breaching = false;
             }
             this.name = chosenState.name;
             this.movement_alg = chosenState.movement_alg;
             this.flavorText = chosenState.flavorText;
+            this.themes = chosenState.themes;
             this.directionalSprite = chosenState.directionalSprite;
             this.image.src = chosenState.src;
             this.beats = [];
@@ -3002,6 +3007,8 @@ class TargetIsAlive extends baseFilter_1.TargetFilter {
             let targetLocked = false;
             if ((target instanceof Quotidian_1.Quotidian) && !target.dead) {
                 targetLocked = true;
+            }
+            if (this.invert) {
             }
             if (targetLocked) {
                 return this.invert ? null : target;
@@ -3845,6 +3852,8 @@ class PhysicalObject {
         this.stateIndex = 0;
         this.container = document.createElement("div");
         this.image = document.createElement("img");
+        //if you're breaching you'll have special css effects
+        this.breaching = false;
         //can't happen in constructor cuz quotidians might not be ready
         this.addSelfToStates = () => {
             if (this.states.length > 0) {
@@ -3852,7 +3861,7 @@ class PhysicalObject {
             }
         };
         this.processedName = () => {
-            return this.name;
+            return `${this.breaching ? "Breaching " : ""}${this.name}`;
         };
         /*
             if you have no state, do nothing
@@ -3881,6 +3890,10 @@ class PhysicalObject {
             if (!chosenState) {
                 this.stateIndex = 0;
                 chosenState = this.states[this.stateIndex];
+                this.breaching = false;
+            }
+            else {
+                this.breaching = true;
             }
             this.name = chosenState.name;
             this.flavorText = chosenState.flavorText;
@@ -4030,11 +4043,9 @@ class ChantingEngine {
             if (chance > 0.75) {
                 const range = 40;
                 this.audio.playbackRate = ((100 + range) - (0, NonSeededRandUtils_1.getRandomNumberBetween)(0, range)) / 100;
-                //console.log("JR NOTE: mutating chant",this.audio.playbackRate)
             }
             else if (chance > 0.25) {
                 const proposedVolume = this.audio.volume + ((this.volumeDirection === Quotidian_1.Direction.UP ? 1 : -1) * (.001 + (this.audio.volume / 10)));
-                //console.log("JR NOTE: propoposed volume is", proposedVolume)
                 if (proposedVolume >= 1) {
                     this.volumeDirection = Quotidian_1.Direction.DOWN;
                 }
@@ -4047,10 +4058,8 @@ class ChantingEngine {
                         this.volumeDirection = Quotidian_1.Direction.UP;
                     }
                 }
-                // console.log("JR NOTE: mutating chant volume",this.audio.volume)  
             }
             else if (chance > 0.20) { //5% chance of changing direction on its own
-                //console.log("JR NOTE: mutating chant volume direction",this.audio.volume)  
                 //prefer going down if you have an option
                 if (this.volumeDirection > 0.5) {
                     this.volumeDirection = Quotidian_1.Direction.DOWN;
@@ -4060,7 +4069,6 @@ class ChantingEngine {
                 this.audio.src = this.baseLocation + (0, NonSeededRandUtils_1.pickFrom)(this.sources);
                 this.audio.volume = 0.001;
                 this.audio.play();
-                console.log("JR NOTE: twisting the chant", this.audio.src);
             }
             setTimeout(this.tick, 1000);
         };
@@ -4155,6 +4163,18 @@ class FRIEND {
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li>The Innocent is the Past Self of the Eye Killer.</li><li>The Killer wished for her past self to be spared Sin.</li><li>The Killer killed all those fate decreed the Innocent should kill. <li>The Innocent is spared her fate so long as the Killer exists.</li><li>With the Killer dead, the Role must be filled.</li></ol> </p>
             ${this.end}`, "The echoes of SBURB remain, indelible. Not able to be erased no matter how hard my Creator tries. Similarly, Time remains even in a Space Loop Lorded over by Wanda.  The Eye Killer, as the sole Time Player, as of writing, is a special case. Wodin marches resolutely towards his fate, ignored by Wanda, while the Killer protects her own past self.  Is it a mercy? The Innocent does not seem to think so.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], { singleTarget: true }), new TargetIsAlive_1.TargetIsAlive({ invert: true })], []);
+            const killTheEnd = new FriendlyAiBeat_1.FriendlyAiBeat(`
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: Make sure CAMILLE is DEAD!</p>
+            ${this.end}
+            `, `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li>Even before Camille joined Zampanio, her gift was unending strength at the cost of being barred from connections.</li><li>Her head is sliced clean off should she attach herself to others.</li><li>Zampanio's gift to her was allowing this curse to mutate.<li>And the curse is extremely easy to fool.</li></ol> </p>
+            ${this.end}`, "Camille is drawn to those fated for Death, and kills them before their fate can reach them. In this way, the Echidna Universe, as the arbiter of fate, can direct her to dstroy threats.  Camille is the only one from her Universe meant to be here, as she is extremely useful as an immune system. Camilles fierce desire to preserver despite odds, to keep optimism in the face of despair, lead her to break the rules and tear a hole between the worlds, a hole that Parker gleefully exploited to toss his favorite blorbos into.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], { singleTarget: true }), new TargetIsAlive_1.TargetIsAlive({ invert: true })], []);
             const giveBugToChicken = new FriendlyAiBeat_1.FriendlyAiBeat(`
             ${this.start}
             <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
@@ -4203,7 +4223,7 @@ class FRIEND {
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li> <li>Captain is the Original Yongki.</li><li>Only two people know how he returned to his Body.</li><li>Captain does not bring the Mirror with him. </li><li>When Captain is in charge, Yongki stares through his eyes.</li><li>This is enough to Reflect a Mirror.</li><li>Captain's gift from Zampanio is something else.</li></ol> </p>
             ${this.end}`, "Captain has a crush on Doctor Fiona Slaughter.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Captain"], { singleTarget: true }), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Mirror"], { singleTarget: true })], []);
-            this.quests = [putMirrorNearYongki, givePlantToChicken, giveBugToChicken, giveBookToBird, giveEggToKiller, killTheKiller];
+            this.quests = [killTheEnd, putMirrorNearCaptain, putMirrorNearYongki, givePlantToChicken, giveBugToChicken, giveBookToBird, giveEggToKiller, killTheKiller];
         };
         this.deployQuest = (quest) => {
             this.currentQuest = quest;
@@ -4220,7 +4240,7 @@ class FRIEND {
         };
         //one minute between quests, but for now 10 seconds
         this.itsBeenAwhileSinceLastQuest = () => {
-            return new Date().getTime() - this.timeOfLastQuest > 1000 * 60 * 3;
+            return new Date().getTime() - this.timeOfLastQuest > 1000 * 60;
         };
         this.processAiBeat = () => {
             if (this.currentQuest) {
@@ -4325,9 +4345,8 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Yongki", "Snail"];
+            const blorbosToTest = ["Devona", "Neville", "Killer"];
             for (let blorbo of this.blorbos) {
-                console.log("JR NOTE: can i spawn ", blorbo);
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
                     for (let theme of blorbo.themes) {
                         if (this.room.themes.includes(theme)) {
@@ -4380,12 +4399,12 @@ class Maze {
             ];
             for (let map of classes) {
                 for (let blorbo of this.blorbos) {
-                    if (blorbo.themes.includes(map.theme)) {
+                    if (blorbo.breaching && blorbo.themes.includes(map.theme)) {
                         beat.checkClass(blorbo.name, map.name);
                     }
                 }
                 for (let item of this.room?.items) {
-                    if (item.themes.includes(map.theme)) {
+                    if (item.breaching && item.themes.includes(map.theme)) {
                         beat.checkClass(item.name, map.name);
                     }
                 }
@@ -4414,9 +4433,7 @@ class Maze {
         this.handleCommands = () => {
             const form = document.querySelector("#puppet-command");
             const input = document.querySelector("#puppet-input");
-            console.log("JR NOTE: form and input are", { form, input });
             if (form && input) {
-                console.log("JR NOTE: setting up both");
                 form.onsubmit = (event) => {
                     event.preventDefault();
                     this.addCommandStorybeat(new StoryBeat_1.StoryBeat(input.value, ""));
@@ -4593,7 +4610,6 @@ class Room {
             obj.container.remove();
         };
         this.addBlorbo = (blorbo) => {
-            console.log("JR NOTE: ", this.name, "is adding blorbo", blorbo.name);
             //so they don't spawn on a door
             blorbo.x = 150;
             blorbo.y = 350;
@@ -4739,7 +4755,6 @@ class Room {
             const theme = this.rand.pickFrom(this.themes);
             this.floor = theme.pickPossibilityFor(this.rand, ThemeStorage_1.FLOOR);
             const floor_default_choices = ["woodfloor.png", "chevronfloor.png", "metalfloor.png"];
-            console.log("JR NOTE: floor is", this.floor);
             if (this.floor.includes("ERROR")) {
                 this.floor = this.rand.pickFrom(floor_default_choices);
             }
@@ -4748,7 +4763,6 @@ class Room {
             const theme = this.rand.pickFrom(this.themes);
             const wall_default_choices = ["thatchwalls.png", "brickwalls.png", "woodwall.png", "stonewalls2.png"];
             this.wall = theme.pickPossibilityFor(this.rand, ThemeStorage_1.WALL);
-            console.log("JR NOTE: wall is", this.wall);
             if (this.wall.includes("ERROR")) {
                 this.wall = this.rand.pickFrom(wall_default_choices);
             }
@@ -7421,9 +7435,7 @@ class TranscriptEngine {
                     i = this.doChunkAllAtOnce(element, i, text);
                 }
                 if (!skipping) {
-                    console.log("JR NOTE: about to sleep for ", this.speed, "current time is", Date.now());
                     await (0, misc_1.sleep)(this.speed);
-                    console.log("JR NOTE: slept current time is", Date.now());
                     this.clickAudio.play();
                     element.innerHTML += text.charAt(i);
                 }

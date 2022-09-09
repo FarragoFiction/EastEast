@@ -31,7 +31,7 @@ export class Neville extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"Twin2", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[MATH]],sprite,
+        super(room,"Neville", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[MATH]],sprite,
         "Neville is staring into space.", beats);
     }
 }   

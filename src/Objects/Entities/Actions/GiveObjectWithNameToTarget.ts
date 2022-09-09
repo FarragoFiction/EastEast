@@ -16,7 +16,6 @@ export class GiveObjectWithName extends Action{ //lawsuit
     }
 
     handleProcessingPeeweeInput = (input: string[], peewee: Peewee)=>{
-        console.log("JR NOTE: the input for giving is", input)
         /*
             go through the input and look for a word that matches an item peewee is currently holding.
             if you find one, set it to be the name.
@@ -25,7 +24,6 @@ export class GiveObjectWithName extends Action{ //lawsuit
             this.name = "[GLITCH]";
             for(let word of input){
                 for(let item of peewee.inventory){
-                    console.log(`JR NOTE: is ${word} referring to ${item.name}? ${item.name.toUpperCase().includes(word.toUpperCase())}`)
                     if(item.name.toUpperCase().includes(word.toUpperCase())){
                         this.name = word;
                         break;

@@ -19,7 +19,8 @@ export class TargetIsAlive extends TargetFilter {
         if ((target instanceof Quotidian) && !target.dead){
             targetLocked = true;
         }
-
+        if(this.invert){
+        }
         if (targetLocked) {
             return this.invert? null:  target;
         } else {

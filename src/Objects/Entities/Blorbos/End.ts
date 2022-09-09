@@ -57,8 +57,9 @@ export class Camille extends Quotidian{
     }
 
     die = (causeOfDeath: string) => {
-        console.log(`JR NOTE: whoops. Looks like Camille...lost her head! 🥁 `);
+        console.warn(`JR NOTE: whoops. Looks like Camille...lost her head! 🥁 `);
         this.incrementState();
+        this.breaching  = true;
     }
 }
 
@@ -100,6 +101,6 @@ export class End extends Quotidian{
     }
 
     die = (causeOfDeath: string) => {
-        console.log(`JR NOTE: did you actually think Death could die? That the Coffin Spawn itself could end???`);
+        console.warn(`JR NOTE: did you actually think Death could die? That the Coffin Spawn itself could end???`);
     }
 }

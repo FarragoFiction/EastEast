@@ -135,9 +135,7 @@ export class TranscriptEngine {
                 i = this.doChunkAllAtOnce(element, i, text);
             }
             if (!skipping) {
-                console.log("JR NOTE: about to sleep for ", this.speed, "current time is", Date.now())
                 await sleep(this.speed);
-                console.log("JR NOTE: slept current time is", Date.now())
 
                 this.clickAudio.play();
                 element.innerHTML += text.charAt(i);

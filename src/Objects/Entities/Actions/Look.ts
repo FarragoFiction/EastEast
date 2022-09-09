@@ -100,7 +100,6 @@ export class Look extends Action {
 
 
         const targets = beat.targets;
-        console.log("JR NOTE: trying to look at targets", targets)
         if (targets.length === 0) {
             return this.noTarget(beat, current_room, subject);
         } else {

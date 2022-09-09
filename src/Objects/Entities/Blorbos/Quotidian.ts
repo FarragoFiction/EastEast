@@ -124,7 +124,7 @@ export class Quotidian extends PhysicalObject {
     }
 
     processedName = () => {
-        return `${this.name}${this.dead ? "'s Grave" : ''}`;
+        return `${this.breaching?"Breaching ":""}${this.name}${this.dead ? "'s Grave" : ''}`;
     }
 
 
@@ -169,15 +169,12 @@ export class Quotidian extends PhysicalObject {
 
 
     incrementState = () => {
-        console.log("JR NOTE: i want to transform, can i?")
 
         if(!this.states_inialized){
-            console.log("JR NOTE: i haven't added myself to my transformation set yet")
 
             this.addSelfToStates();
             this.states_inialized = true;
         }
-        console.log("JR NOTE: can i transform, my states are", this.states)
 
         //yes this could just be less than or equal to 1 but i wanted to match my prose better, what are you, my teacher?
         if (this.states.length === 0 || this.states.length === 1) {
@@ -185,22 +182,22 @@ export class Quotidian extends PhysicalObject {
         }
 
 
-        console.log("JR NOTE: incrementing state for someone who actually can transform.")
 
         this.stateIndex++;
         let chosenState = this.states[this.stateIndex];
-        console.log("JR NOTE: incrementing state for someone who actually can transform, chosen state is", chosenState)
 
         if (!chosenState) {
             this.stateIndex = 0;
             chosenState = this.states[this.stateIndex];
-            console.log("JR NOTE: incrementing state for someone who actually can transform, resetting chosen state to", chosenState)
-
+            this.breaching = true;
+        }else{
+            this.breaching = false;
         }
 
         this.name = chosenState.name;
         this.movement_alg = (chosenState as Quotidian).movement_alg;
         this.flavorText = chosenState.flavorText;
+        this.themes = chosenState.themes;
         this.directionalSprite = (chosenState as Quotidian).directionalSprite;
         this.image.src = chosenState.src;
         this.beats = [];

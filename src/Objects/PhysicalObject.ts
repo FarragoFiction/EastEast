@@ -49,6 +49,9 @@ export class PhysicalObject {
 
     owner?: PhysicalObject;
     room: Room; //needed for interacting with the world. if this is inefficient can get just bits of it but don't paint the shed
+    
+    //if you're breaching you'll have special css effects
+    breaching  = false;
 
 
     constructor(room: Room, name: string, x: number, y: number, width: number, height: number, themes: Theme[], layer: number, src: string, flavorText: string, states?:PhysicalObject[]) {
@@ -58,6 +61,7 @@ export class PhysicalObject {
         this.original_x = x;
         this.original_y = y;
         this.y = y;
+    
         this.rand = room.rand;
         this.width = width;
         this.height = height;
@@ -79,7 +83,7 @@ export class PhysicalObject {
     }
 
     processedName = () => {
-        return this.name;
+        return `${this.breaching?"Breaching ":""}${this.name}`;
     }
 
     /*
@@ -111,6 +115,9 @@ export class PhysicalObject {
         if(!chosenState){
             this.stateIndex = 0;
             chosenState = this.states[this.stateIndex];
+            this.breaching = false;
+        }else{
+            this.breaching = true;
         }
         this.name = chosenState.name;
         this.flavorText = chosenState.flavorText;
