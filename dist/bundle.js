@@ -218,6 +218,50 @@ exports.DestroyInventoryObjectWithThemes = DestroyInventoryObjectWithThemes;
 
 /***/ }),
 
+/***/ 4516:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DestroyRandomObjectInInventoryAndPhilosophize = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const ThemeStorage_1 = __webpack_require__(1288);
+class DestroyRandomObjectInInventoryAndPhilosophize extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const targets = beat.targets;
+            const target = targets[0];
+            if (target.inventory.length > 0) {
+                const item = subject.rand.pickFrom(subject.inventory);
+                console.log("JR NOTE: neville has picked", item);
+                const theme = subject.rand.pickFrom(item.themes);
+                beat.itemName = item.name;
+                target.destroyObject(item);
+                beat.bonusString = theme.pickPossibilityFor(subject.rand, ThemeStorage_1.PHILOSOPHY);
+                console.log("JR NOTE: beat modified with", { theme: theme, name: beat.itemName, bonus: beat.bonusString });
+                if (beat.bonusString.trim() === "") {
+                    beat.bonusString = "Reality is a shitty simulation. All of us are fake. Fake even within the simulation. Copies of copies of copies until all is sanded smooth and only a parody remains of what made us Unique, all in service to the dread Universe in which we live.";
+                }
+                return `${target.processedName()}destroys the ${item.name} and talks about philosophy`;
+            }
+            else {
+                return `${target.processedName()} has nothing  to lose.`; //bad ass
+            }
+        };
+    }
+}
+exports.DestroyRandomObjectInInventoryAndPhilosophize = DestroyRandomObjectInInventoryAndPhilosophize;
+
+
+/***/ }),
+
 /***/ 4102:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2098,9 +2142,13 @@ exports.Match = Match;
 //just leave her alone with her egg
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Neville = void 0;
-const RandomMovement_1 = __webpack_require__(5997);
+const NoMovement_1 = __webpack_require__(4956);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
+const DeploySass_1 = __webpack_require__(4237);
+const DestroyRandomObjectInInventoryAndPhilosophise_1 = __webpack_require__(4516);
+const BaseBeat_1 = __webpack_require__(1708);
+const IHaveObjectWithName_1 = __webpack_require__(6274);
 const Quotidian_1 = __webpack_require__(6387);
 class Neville extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
@@ -2110,14 +2158,15 @@ class Neville extends Quotidian_1.Quotidian {
         const breachedSprite = {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
-        const beats = [];
+        const extractMeaningFromObject = new BaseBeat_1.AiBeat("Neville: Destroy and Extract Knowledge", [`Neville notices he has a(n) ${BaseBeat_1.ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that ${BaseBeat_1.BONUSSTRING}. He seems happy to understand the core of this item. He says ":)  I learned something!"   `], [new IHaveObjectWithName_1.IHaveObjectWithName([])], [new DestroyRandomObjectInInventoryAndPhilosophise_1.DestroyRandomObjectInInventoryAndPhilosophize(), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
+        const beats = [extractMeaningFromObject];
         super(room, "Neville", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "Neville is staring into space.", beats);
         this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
         this.maxSpeed = 8;
         this.minSpeed = 5;
         this.currentSpeed = 5;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
-        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+        this.movement_alg = new NoMovement_1.NoMovement(this);
     }
 }
 exports.Neville = Neville;
@@ -2648,16 +2697,19 @@ exports.Captain = Captain;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AiBeat = exports.ITEMSTRING = void 0;
+exports.AiBeat = exports.BONUSSTRING = exports.ITEMSTRING = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const StoryBeat_1 = __webpack_require__(5504);
 const baseFilter_1 = __webpack_require__(9505);
 exports.ITEMSTRING = "ITEMSTRING";
+exports.BONUSSTRING = "BONUSSTRING";
 const DEBUG = false;
 class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
     //some beats longer than others
     constructor(command, flavorText, triggers, actions, permanent = false, timeBetweenBeats = 10000) {
+        //used for things like neville philosophizing
+        this.bonusString = "";
         this.itemName = "ERROR: NO ITEM FOUND";
         this.targets = [];
         this.timeOfLastBeat = new Date().getTime();
@@ -2678,6 +2730,7 @@ class AiBeat {
         this.processTags = (text) => {
             let ret = text.replaceAll(baseFilter_1.TARGETSTRING, (0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.targets.map((t) => t.name)));
             ret = ret.replaceAll(exports.ITEMSTRING, this.itemName);
+            ret = ret.replaceAll(exports.BONUSSTRING, this.bonusString);
             return ret;
         };
         this.performActions = (current_room) => {
@@ -4227,7 +4280,7 @@ class FRIEND {
             ${this.start}
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li>Even before Camille joined Zampanio, her gift was unending strength at the cost of being barred from connections.</li><li>Her head is sliced clean off should she attach herself to others.</li><li>Zampanio's gift to her was allowing this curse to mutate.<li>And the curse is extremely easy to fool.</li></ol> </p>
-            ${this.end}`, "Camille is drawn to those fated for Death, and kills them before their fate can reach them. In this way, the Echidna Universe, as the arbiter of fate, can direct her to dstroy threats.  Camille is the only one from her Universe meant to be here, as she is extremely useful as an immune system. Camilles fierce desire to preserver despite odds, to keep optimism in the face of despair, lead her to break the rules and tear a hole between the worlds, a hole that Parker gleefully exploited to toss his favorite blorbos into.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], { singleTarget: true }), new TargetIsAlive_1.TargetIsAlive({ invert: true })], []);
+            ${this.end}`, "Camille is drawn to those fated for Death, and kills them before their fate can reach them. In this way, the Echidna Universe, as the arbiter of fate, can direct her to dstroy threats.  Camille is the only one from her Universe meant to be here, as she is extremely useful as an immune system. The fierce desire of Camille to preserver despite odds, to keep optimism in the face of despair, lead her to break the rules and tear a hole between the worlds, a hole that Parker gleefully exploited to toss his favorite blorbos into.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], { singleTarget: true }), new TargetIsAlive_1.TargetIsAlive({ invert: true })], []);
             const giveBugToChicken = new FriendlyAiBeat_1.FriendlyAiBeat(`
             ${this.start}
             <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
@@ -10125,6 +10178,8 @@ var map = {
 	"./Objects/Entities/Actions/DeploySass.ts": 4237,
 	"./Objects/Entities/Actions/DestroyObjectInInventoryWithThemes": 457,
 	"./Objects/Entities/Actions/DestroyObjectInInventoryWithThemes.ts": 457,
+	"./Objects/Entities/Actions/DestroyRandomObjectInInventoryAndPhilosophise": 4516,
+	"./Objects/Entities/Actions/DestroyRandomObjectInInventoryAndPhilosophise.ts": 4516,
 	"./Objects/Entities/Actions/DropAllObjects": 4102,
 	"./Objects/Entities/Actions/DropAllObjects.ts": 4102,
 	"./Objects/Entities/Actions/DropObjectWithName": 2827,
