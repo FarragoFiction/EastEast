@@ -36,6 +36,13 @@ export class Neville extends Quotidian{
 
 
         
+        /*
+        extremely important to note here, neville is doing the OPPOSITE of what he'd do in reality. 
+
+        this shitty lil broken ai quotidian verison of neville is DESTROYING knowledge and highlighting irrelevancies
+
+        when what he's supposed to do is passively allow the destruction of what is irrelevant in order to highlight the Most Important Thing about an object. pare it down to its essentials
+        */
         const extractMeaningFromObject = new AiBeat(
             "Neville: Destroy and Extract Knowledge",
             [`Neville notices he has a(n) ${ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that ${BONUSSTRING} He seems happy to understand the core of this item. He says ":)  I learned something!"   `],

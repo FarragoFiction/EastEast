@@ -20,12 +20,10 @@ export class DestroyRandomObjectInInventoryAndPhilosophize extends Action { //la
         const targets = beat.targets;
         const target = targets[0];
         const item = subject.rand.pickFrom(subject.inventory);
-        console.log("JR NOTE: neville has picked", item)
         const theme = subject.rand.pickFrom(item.themes);
         beat.itemName = item.name;
         subject.destroyObject(item);
         beat.bonusString = theme.pickPossibilityFor(subject.rand, PHILOSOPHY);
-        console.log("JR NOTE: beat modified with", { theme: theme, name: beat.itemName, bonus: beat.bonusString })
         if (beat.bonusString.trim() === "") {
             /*
             sometimes the boi prophecies out of nowhere. its what happens when there is nothing to void. you accieentally void the void and ghost light"

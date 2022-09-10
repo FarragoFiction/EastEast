@@ -242,7 +242,7 @@ class DestroyRandomObjectInInventoryAndPhilosophize extends BaseAction_1.Action 
             console.log("JR NOTE: neville has picked", item);
             const theme = subject.rand.pickFrom(item.themes);
             beat.itemName = item.name;
-            target.destroyObject(item);
+            subject.destroyObject(item);
             beat.bonusString = theme.pickPossibilityFor(subject.rand, ThemeStorage_1.PHILOSOPHY);
             console.log("JR NOTE: beat modified with", { theme: theme, name: beat.itemName, bonus: beat.bonusString });
             if (beat.bonusString.trim() === "") {
@@ -2157,7 +2157,7 @@ class Neville extends Quotidian_1.Quotidian {
         const breachedSprite = {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
-        const extractMeaningFromObject = new BaseBeat_1.AiBeat("Neville: Destroy and Extract Knowledge", [`Neville notices he has a(n) ${BaseBeat_1.ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that ${BaseBeat_1.BONUSSTRING}. He seems happy to understand the core of this item. He says ":)  I learned something!"   `], [new IHaveObjectWithName_1.IHaveObjectWithName([])], [new DestroyRandomObjectInInventoryAndPhilosophise_1.DestroyRandomObjectInInventoryAndPhilosophize(), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
+        const extractMeaningFromObject = new BaseBeat_1.AiBeat("Neville: Destroy and Extract Knowledge", [`Neville notices he has a(n) ${BaseBeat_1.ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that ${BaseBeat_1.BONUSSTRING} He seems happy to understand the core of this item. He says ":)  I learned something!"   `], [new IHaveObjectWithName_1.IHaveObjectWithName([])], [new DestroyRandomObjectInInventoryAndPhilosophise_1.DestroyRandomObjectInInventoryAndPhilosophize(), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
         const beats = [extractMeaningFromObject];
         super(room, "Neville", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "Neville is staring into space.", beats);
         this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
