@@ -1,11 +1,13 @@
 //just leave her alone with her egg
 
 import { Movement } from "../../MovementAlgs/BaseMovement";
-import { RandomMovement } from "../../MovementAlgs/RandomMovement";
+import { NoMovement } from "../../MovementAlgs/NoMovement";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { HUNTING, SPYING, OBFUSCATION, MATH } from "../../ThemeStorage";
-import { AiBeat } from "../StoryBeats/BaseBeat";
+import { DestroyRandomObjectInInventoryAndPhilosophize } from "../Actions/DestroyRandomObjectInInventoryAndPhilosophise";
+import { AiBeat, BONUSSTRING, ITEMSTRING } from "../StoryBeats/BaseBeat";
+import { IHaveObjectWithName } from "../TargetFilter/IHaveObjectWithName";
 import { Quotidian, Direction } from "./Quotidian";
 
 
@@ -18,7 +20,7 @@ export class Neville extends Quotidian{
     currentSpeed = 5;
 
     direction = Direction.UP; //movement algorithm can change or use this.
-    movement_alg:Movement = new RandomMovement(this);
+    movement_alg:Movement = new NoMovement(this);
 
     constructor(room: Room, x: number, y:number){
         const sprite = {
@@ -30,7 +32,19 @@ export class Neville extends Quotidian{
             default_src:{src:"Placeholders/twins.png",width:50,height:50},
 
         };
-        const beats:AiBeat[] = [];
+
+
+        
+        const extractMeaningFromObject = new AiBeat(
+            "Neville: Destroy and Extract Knowledge",
+            [`Neville notices he has a(n) ${ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that ${BONUSSTRING}. He seems happy to understand the core of this item. `],
+            [new IHaveObjectWithName([])],
+            [new DestroyRandomObjectInInventoryAndPhilosophize()],
+            true,
+            1000*60
+        );
+
+        const beats:AiBeat[] = [extractMeaningFromObject];
         super(room,"Neville", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[MATH]],sprite,
         "Neville is staring into space.", beats);
     }

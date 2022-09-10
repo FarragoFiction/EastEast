@@ -128,7 +128,7 @@ export class FRIEND{
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li>Even before Camille joined Zampanio, her gift was unending strength at the cost of being barred from connections.</li><li>Her head is sliced clean off should she attach herself to others.</li><li>Zampanio's gift to her was allowing this curse to mutate.<li>And the curse is extremely easy to fool.</li></ol> </p>
             ${this.end}`,
-            "Camille is drawn to those fated for Death, and kills them before their fate can reach them. In this way, the Echidna Universe, as the arbiter of fate, can direct her to dstroy threats.  Camille is the only one from her Universe meant to be here, as she is extremely useful as an immune system. Camilles fierce desire to preserver despite odds, to keep optimism in the face of despair, lead her to break the rules and tear a hole between the worlds, a hole that Parker gleefully exploited to toss his favorite blorbos into.",
+            "Camille is drawn to those fated for Death, and kills them before their fate can reach them. In this way, the Echidna Universe, as the arbiter of fate, can direct her to dstroy threats.  Camille is the only one from her Universe meant to be here, as she is extremely useful as an immune system. The fierce desire of Camille to preserver despite odds, to keep optimism in the face of despair, lead her to break the rules and tear a hole between the worlds, a hole that Parker gleefully exploited to toss his favorite blorbos into.",
             [new TargetNameIncludesAnyOfTheseWords(["Killer"],{singleTarget:true}),new TargetIsAlive({invert:true})],
             []
         );

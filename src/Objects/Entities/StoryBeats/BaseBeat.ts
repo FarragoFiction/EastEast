@@ -8,6 +8,8 @@ import { Quotidian } from "../Blorbos/Quotidian";
 import { TargetFilter, TARGETSTRING } from "../TargetFilter/baseFilter";
 
 export const ITEMSTRING = "ITEMSTRING";
+export const BONUSSTRING = "BONUSSTRING";
+
 const DEBUG = false;
 
 export class AiBeat {
@@ -15,6 +17,8 @@ export class AiBeat {
     filters: TargetFilter[];
     actions: Action[];
     command: string;
+    //used for things like neville philosophizing
+    bonusString = "";
     //yes we can manually create some text from cause and effect but it comes off robotic. good for debugging, not for the final product
     flavorText:string[];
     itemName= "ERROR: NO ITEM FOUND";
@@ -57,6 +61,7 @@ export class AiBeat {
     processTags = (text: string)=>{
         let ret = text.replaceAll(TARGETSTRING, turnArrayIntoHumanSentence(this.targets.map((t)=>t.name)));
         ret = ret.replaceAll(ITEMSTRING, this.itemName);
+        ret = ret.replaceAll(BONUSSTRING, this.bonusString);
 
         return ret;
     }
