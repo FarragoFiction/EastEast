@@ -23,7 +23,7 @@ export class DestroyRandomObjectInInventoryAndPhilosophize extends Action { //la
         console.log("JR NOTE: neville has picked", item)
         const theme = subject.rand.pickFrom(item.themes);
         beat.itemName = item.name;
-        target.destroyObject(item);
+        subject.destroyObject(item);
         beat.bonusString = theme.pickPossibilityFor(subject.rand, PHILOSOPHY);
         console.log("JR NOTE: beat modified with", { theme: theme, name: beat.itemName, bonus: beat.bonusString })
         if (beat.bonusString.trim() === "") {

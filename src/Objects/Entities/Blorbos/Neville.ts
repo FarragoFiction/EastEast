@@ -38,7 +38,7 @@ export class Neville extends Quotidian{
         
         const extractMeaningFromObject = new AiBeat(
             "Neville: Destroy and Extract Knowledge",
-            [`Neville notices he has a(n) ${ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that ${BONUSSTRING}. He seems happy to understand the core of this item. He says ":)  I learned something!"   `],
+            [`Neville notices he has a(n) ${ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that ${BONUSSTRING} He seems happy to understand the core of this item. He says ":)  I learned something!"   `],
             [new IHaveObjectWithName([])],
             [new DestroyRandomObjectInInventoryAndPhilosophize(), new DeploySass(":)")],
             true,
