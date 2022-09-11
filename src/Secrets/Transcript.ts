@@ -10,6 +10,7 @@ export class TranscriptEngine {
     clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
     text = "";
     video?: string; 
+    bonusHtml?: string;
     parent: HTMLElement;
     form?: HTMLElement;
     constructor(parent: HTMLElement) {
@@ -73,6 +74,7 @@ export class TranscriptEngine {
          this.text += loadSecretText(passwords[text.toUpperCase()].text);
         }
         this.video = secret.video_file_name;
+        this.bonusHtml = secret.bonus_html
         this.play();
     }
 
@@ -105,6 +107,10 @@ export class TranscriptEngine {
             video_ele.src = this.video;
             video_ele.controls = false;
             video_ele.autoplay = true;
+        }
+        if(this.bonusHtml){
+            const ele = createElementWithIdAndParent("div", terminal) as HTMLDivElement;
+            ele.innerHTML = this.bonusHtml;
         }
         for (let line of lines) {
             const element = document.createElement("p");

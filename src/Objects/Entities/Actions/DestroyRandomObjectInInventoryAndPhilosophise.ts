@@ -2,7 +2,7 @@
 import { Action } from "./BaseAction";
 
 import { AiBeat } from "../StoryBeats/BaseBeat";
-import { PHILOSOPHY } from "../../ThemeStorage";
+import { OBFUSCATION, PHILOSOPHY } from "../../ThemeStorage";
 
 
 export class DestroyRandomObjectInInventoryAndPhilosophize extends Action { //lawsuit
@@ -23,7 +23,8 @@ export class DestroyRandomObjectInInventoryAndPhilosophize extends Action { //la
         const theme = subject.rand.pickFrom(item.themes);
         beat.itemName = item.name;
         subject.destroyObject(item);
-        beat.bonusString = theme.pickPossibilityFor(subject.rand, PHILOSOPHY);
+        //prophecies go off if you try to void a void, or if theres legit a blank theme (example, waste)
+        beat.bonusString = theme.key === OBFUSCATION? "": theme.pickPossibilityFor(subject.rand, PHILOSOPHY);
         if (beat.bonusString.trim() === "") {
             /*
             sometimes the boi prophecies out of nowhere. its what happens when there is nothing to void. you accieentally void the void and ghost light"

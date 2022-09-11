@@ -163,6 +163,11 @@ color: red;
   animation: fade-in  3s ease-in 1;
 }
 
+.fuckedup{
+
+  filter: invert(19) blur(1px) brightness(0.51) contrast(1919) grayscale(1);
+}
+
 @keyframes fade-in {
   0% { opacity: 0; }
   100% { opacity: 1; }

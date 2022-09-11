@@ -45,25 +45,25 @@ export const albhed_map = {
     "x": "Q",
     "y": "O",
     "z": "W",
-    "0":"https://www.tumblr.com/blog/view/figuringoutnothing/688028145704665088?source=share",//when they were the guide of observers
-    "1":"http://farragofiction.com/DevonaFears",
-    "2":"https://verbosebabbler.tumblr.com/post/692334755682877440/the-faq-who-is-writing-this-thing",
-    "3":"https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8 by the Watcher of Threads", //by the watcher of threads
-    "4":"http://farragofiction.com/PerfectHeist/",
+    "0": "https://www.tumblr.com/blog/view/figuringoutnothing/688028145704665088?source=share",//when they were the guide of observers
+    "1": "http://farragofiction.com/DevonaFears",
+    "2": "https://verbosebabbler.tumblr.com/post/692334755682877440/the-faq-who-is-writing-this-thing",
+    "3": "https://app.milanote.com/1O9Vsn15w4UteW/shipping-grid?p=i9yTbJxrme8 by the Watcher of Threads", //by the watcher of threads
+    "4": "http://farragofiction.com/PerfectHeist/",
     "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers (The Watcher says they won't spell it out)",
-    "7":"https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane",//yellow,
-    "8":"https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",//but now the guide of hunters
-    "9":"https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers",
+    "7": "https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane",//yellow,
+    "8": "https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",//but now the guide of hunters
+    "9": "https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers",
     "!": "http://farragofiction.com/DocSlaughterFileServer",
     "?": "http://farragofiction.com/ParkerLotLost/",
     ".": "http://farragofiction.com/NotebookSimulator/",
-    ",":"http://farragofiction.com/LightAndVoid/?dearWitherby=true",
-    ";":"https://github.com/FarragoFiction/EastEast"
+    ",": "http://farragofiction.com/LightAndVoid/?dearWitherby=true",
+    ";": "https://github.com/FarragoFiction/EastEast"
 
     //0: http://farragofiction.com/ParkerLotLost/ <-- maybe this will be EastEastEast one day, that or ElevatorSim
     //11: http://farragofiction.com/DocSlaughterFileServer 
-//https://jadedresearcher.tumblr.com/post/692341174641606656
-//https://jadedresearcher.tumblr.com/post/692340754690015232/but-like-italians-are-real-and-arent-all
+    //https://jadedresearcher.tumblr.com/post/692341174641606656
+    //https://jadedresearcher.tumblr.com/post/692340754690015232/but-like-italians-are-real-and-arent-all
 }
 
 export const translate = (word: string) => {
@@ -82,15 +82,31 @@ export const translate = (word: string) => {
 export const initRabbitHole = (room: Room) => {
     const hole = document.querySelector("#rabbithole") as HTMLElement;
 
-    hole.onclick = () => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const password = urlParams.get('password')
+
+    if (password) {
         const target = document.querySelector("body") as HTMLElement;
 
-        if(!target){
+        if (!target) {
             return;
         }
-        room.stopTicking();
         target.innerHTML = "";//clear;
         const te = new TranscriptEngine(target);
+        te.handlePW(password);
+    } else {
+
+        hole.onclick = () => {
+            const target = document.querySelector("body") as HTMLElement;
+
+            if (!target) {
+                return;
+            }
+            room.stopTicking();
+            target.innerHTML = "";//clear;
+            const te = new TranscriptEngine(target);
+        }
     }
 }
 
@@ -98,11 +114,14 @@ export const initRabbitHole = (room: Room) => {
 
 
 export class Secret {
-    video_file_name: string | undefined;
+    video_file_name?: string;
+    bonus_html?: string;
+
     text: string;
     title: string;
-    constructor(title: string, video_file_name: string | undefined, text: string) {
+    constructor(title: string, text: string, html?: string, video_file_name?: string,) {
         this.video_file_name = video_file_name;
+        this.bonus_html = html;
         this.text = text;
         this.title = title;
 
@@ -125,7 +144,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 eternal darkness
 
 mutations on mutations on mutations :)
-
+ZampanioBroken
 most innovative shooter 
 It Has A Rather Lovely Ending
 Spatial Horror
@@ -180,49 +199,50 @@ Bits of my personal truth stashed in corners and corners of corners and so on un
 
 //http://farragofiction.com/AThirdTranscript/
 export const passwords: PasswordMap = {
-    "STANDARD EXPECTOPATRONUM": new Secret("Confessionals 0", undefined, "Secrets/Content/0.js")
-    , "STANDARD SALMONSUSHI": new Secret("Confessionals 1", undefined, "Secrets/Content/1.js")
-    , "THE END IS NEVER THE END": new Secret("Confessionals 2", undefined, "Secrets/Content/2.js")
-    , "YOU CAN GET BETTER": new Secret("Confessionals 3", undefined, "Secrets/Content/3.js")
-    , "KNOW RESTRAINT": new Secret("Confessionals 4", undefined, "Secrets/Content/4.js")
-    , "NO RESTRAINT": new Secret("Confessionals 5", undefined, "Secrets/Content/5.js")
+    "STANDARD EXPECTOPATRONUM": new Secret("Confessionals 0", "Secrets/Content/0.js")
+    , "STANDARD SALMONSUSHI": new Secret("Confessionals 1", "Secrets/Content/1.js")
+    , "THE END IS NEVER THE END": new Secret("Confessionals 2", "Secrets/Content/2.js")
+    , "YOU CAN GET BETTER": new Secret("Confessionals 3", "Secrets/Content/3.js")
+    , "KNOW RESTRAINT": new Secret("Confessionals 4", "Secrets/Content/4.js")
+    , "NO RESTRAINT": new Secret("Confessionals 5", "Secrets/Content/5.js")
     //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
-    , "PLACE YOUR TRUST IN ME": new Secret("Notes of Slaughter: Prelude", undefined, "Secrets/Content/6.js")
-    , "RAISE YOU FROM THE END OF THE WORLD": new Secret("Notes of Slaughter 0", undefined, "Secrets/Content/7.js")
-    , "SERENE AND CALM": new Secret("Notes of Slaughter 1", undefined, "Secrets/Content/8.js")
-    , "BEWARE OBLIVION IS AT HAND": new Secret("Notes of Slaughter 2", undefined, "Secrets/Content/9.js")
-    , "I AM HERE TO TREAT DISEASE": new Secret("Notes of Slaughter 3", undefined, "Secrets/Content/10.js")
-    , "FLESH IS BOUND TO THE FLOW OF TIME": new Secret("Notes of Slaughter 4", undefined, "Secrets/Content/11.js")
-    , "TIME IS DEAD": new Secret("Notes of Slaughter 5", undefined, "Secrets/Content/12.js")
-    , "SAVE YOUR LIFE FROM DESTRUCTION": new Secret("Notes of Slaughter 6", undefined, "Secrets/Content/13.js")
-    , "GENTLE CROONING VOICE": new Secret("Notes of Slaughter 7", undefined, "Secrets/Content/14.js")
-    , "LOOKS AFTER THE BROKEN": new Secret("Notes of Slaughter 8", undefined, "Secrets/Content/15.js")
-    , "TAKE CARE OF OTHERS": new Secret("Notes of Slaughter 9", undefined, "Secrets/Content/16.js")
-    , "IT WAS DAWN": new Secret("Notes of Slaughter 10", undefined, "Secrets/Content/17.js")
-    , "THE SOUL IS IMMORTAL": new Secret("Notes of Slaughter 11", undefined, "Secrets/Content/18.js")
-    , "WHEN ALL HAD ABANDONED HOPE": new Secret("Notes of Slaughter 12", undefined, "Secrets/Content/19.js")
-    , "POWER CORRUPTS": new Secret("Jumbled Mess", undefined, "Secrets/Content/20.js")
-    , "KNOWLEDGE IS POWER": new Secret("Jumbled Mess: Explanation", undefined, "Secrets/Content/21.js")
-    , "LEAVE YOUR MARK": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/22.js")
-    , "TAKE YOUR PLACE IN HISTORY": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/23.js")
-    , "THE FOOL IS DEAD": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/24.js")
-    , "BITS OF THE PAST LEAK INTO THE PRESENT": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/26.js")
+    , "PLACE YOUR TRUST IN ME": new Secret("Notes of Slaughter: Prelude", "Secrets/Content/6.js")
+    , "RAISE YOU FROM THE END OF THE WORLD": new Secret("Notes of Slaughter 0", "Secrets/Content/7.js")
+    , "SERENE AND CALM": new Secret("Notes of Slaughter 1", "Secrets/Content/8.js")
+    , "BEWARE OBLIVION IS AT HAND": new Secret("Notes of Slaughter 2", "Secrets/Content/9.js")
+    , "I AM HERE TO TREAT DISEASE": new Secret("Notes of Slaughter 3", "Secrets/Content/10.js")
+    , "FLESH IS BOUND TO THE FLOW OF TIME": new Secret("Notes of Slaughter 4", "Secrets/Content/11.js")
+    , "TIME IS DEAD": new Secret("Notes of Slaughter 5", "Secrets/Content/12.js")
+    , "SAVE YOUR LIFE FROM DESTRUCTION": new Secret("Notes of Slaughter 6", "Secrets/Content/13.js")
+    , "GENTLE CROONING VOICE": new Secret("Notes of Slaughter 7", "Secrets/Content/14.js")
+    , "LOOKS AFTER THE BROKEN": new Secret("Notes of Slaughter 8", "Secrets/Content/15.js")
+    , "TAKE CARE OF OTHERS": new Secret("Notes of Slaughter 9", "Secrets/Content/16.js")
+    , "IT WAS DAWN": new Secret("Notes of Slaughter 10", "Secrets/Content/17.js")
+    , "THE SOUL IS IMMORTAL": new Secret("Notes of Slaughter 11", "Secrets/Content/18.js")
+    , "WHEN ALL HAD ABANDONED HOPE": new Secret("Notes of Slaughter 12", "Secrets/Content/19.js")
+    , "POWER CORRUPTS": new Secret("Jumbled Mess", "Secrets/Content/20.js")
+    , "KNOWLEDGE IS POWER": new Secret("Jumbled Mess: Explanation", "Secrets/Content/21.js")
+    , "LEAVE YOUR MARK": new Secret("Do you remember the first time you killed someone?", "Secrets/Content/22.js")
+    , "TAKE YOUR PLACE IN HISTORY": new Secret("Do you remember the first time you killed someone?", "Secrets/Content/23.js")
+    , "THE FOOL IS DEAD": new Secret("Do you remember the first time you killed someone?", "Secrets/Content/24.js")
+    , "BITS OF THE PAST LEAK INTO THE PRESENT": new Secret("Do you remember the first time you killed someone?", "Secrets/Content/26.js")
 
-    , "INFINITE AMOUNT OF PAIN": new Secret("Do you remember the first time you killed someone?", undefined, "Secrets/Content/27.js")
-    , "PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH": new Secret("Hostage's Lament", undefined, "Secrets/Content/28.js")
-    , "ELIAS SMITH": new Secret("JR Ramble", undefined, "Secrets/Content/29.js")
-    , "TELLBRAK3700": new Secret("Notes of Slaughter 13", undefined, "Secrets/Content/30.js")
-    , "PENNY WICKNER": new Secret("Notes of Slaughter 14", undefined, "Secrets/Content/31.js")
-    , "ONCE YOU OPEN THE CURTAINS ALL THAT'S LEFT TO DO IS GO TO THE OTHER SIDE AND CLOSE THEM AGAIN": new Secret("Notes of Slaughter 15", undefined, "Secrets/Content/35.js")
-    , "EXPERIMENTALMUSIC": new Secret("Notes of Slaughter 16: ExperimentalMusic", undefined, "Secrets/Content/36.js")
-    , "PARADISE AND PARASITE": new Secret("ARM2: LOOP ???", undefined, "Secrets/Content/38.js")
-    , "WIDOWS WEAVE": new Secret("BLAME THE SPIDERS FOR THIS", "http://farragofiction.com/ZampanioHotlink/Films/spiders.mp4", "") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bone because its so obscure
-    , "NO NEED TO ASK WHY": new Secret("Herald Made MY JAM", "http://farragofiction.com/ZampanioHotlink/Films/heraldstacos.mp4", "") 
-    , "HOW YOUR BRAIN LIES TO YOU": new Secret("JR RAMBLE", undefined, "Secrets/Content/42.js")
-    , "BLUE CAN SEE MORE THAN ORANGE": new Secret("GIGGLESNORT", undefined, "Secrets/Content/44.js")
+    , "INFINITE AMOUNT OF PAIN": new Secret("Do you remember the first time you killed someone?", "Secrets/Content/27.js")
+    , "PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH": new Secret("Hostage's Lament", "Secrets/Content/28.js")
+    , "ELIAS SMITH": new Secret("JR Ramble", "Secrets/Content/29.js")
+    , "TELLBRAK3700": new Secret("Notes of Slaughter 13", "Secrets/Content/30.js")
+    , "PENNY WICKNER": new Secret("Notes of Slaughter 14", "Secrets/Content/31.js")
+    , "ONCE YOU OPEN THE CURTAINS ALL THAT'S LEFT TO DO IS GO TO THE OTHER SIDE AND CLOSE THEM AGAIN": new Secret("Notes of Slaughter 15", "Secrets/Content/35.js")
+    , "EXPERIMENTALMUSIC": new Secret("Notes of Slaughter 16: ExperimentalMusic", "Secrets/Content/36.js")
+    , "PARADISE AND PARASITE": new Secret("ARM2: LOOP ???", "Secrets/Content/38.js")
+    , "WIDOWS WEAVE": new Secret("BLAME THE SPIDERS FOR THIS", "", "", "http://farragofiction.com/ZampanioHotlink/Films/spiders.mp4") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bone because its so obscure
+    , "NO NEED TO ASK WHY": new Secret("Herald Made MY JAM", "", "", "http://farragofiction.com/ZampanioHotlink/Films/heraldstacos.mp4")
+    , "HOW YOUR BRAIN LIES TO YOU": new Secret("JR RAMBLE", "Secrets/Content/42.js")
+    , "BLUE CAN SEE MORE THAN ORANGE": new Secret("GIGGLESNORT", "Secrets/Content/44.js")
+    , "YOU IS NEEDED": new Secret("Quotidian", "", `<video class='fuckedup' src="http://farragofiction.com/ZampanioHotlink/Films/michael_from_vsauce_says_quotidian.mp4" loop="true" controls="true" autoplay="true"></video>`)
 
-    , "LS": new Secret("FILE LIST (UNIX)", undefined, "Secrets/PasswordStorage.ts") 
-    , "DIR": new Secret("FILE LIST (DOS)", undefined, "Secrets/PasswordStorage.ts") 
+    , "LS": new Secret("FILE LIST (UNIX)", "Secrets/PasswordStorage.ts")
+    , "DIR": new Secret("FILE LIST (DOS)", "Secrets/PasswordStorage.ts")
 
 
 };
