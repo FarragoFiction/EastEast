@@ -2,6 +2,7 @@
 
 import { Movement } from "../../MovementAlgs/BaseMovement";
 import { NoMovement } from "../../MovementAlgs/NoMovement";
+import { RandomMovement } from "../../MovementAlgs/RandomMovement";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { HUNTING, SPYING, OBFUSCATION, MATH } from "../../ThemeStorage";
@@ -53,7 +54,44 @@ export class Neville extends Quotidian{
         );
 
         const beats:AiBeat[] = [extractMeaningFromObject];
+        const states = [new FortitudeTwin(room,0,0)];
+
         super(room,"Neville", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[MATH]],sprite,
-        "Neville is staring into space.", beats);
+        "Neville is staring into space.", beats, states);
+    }
+}   
+
+export class FortitudeTwin extends Quotidian{
+    lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. "
+
+    maxSpeed = 8;
+    minSpeed = 5;
+    currentSpeed = 10;
+    breached = true;
+
+    direction = Direction.UP; //movement algorithm can change or use this.
+    movement_alg:Movement = new RandomMovement(this);
+
+    constructor(room: Room, x: number, y:number){
+        const sprite = {
+            default_src:{src:"Placeholders/twins.png",width:50,height:50},
+
+        };
+
+        
+        const extractMeaningFromObject = new AiBeat(
+            "Neville: Destroy and Extract Knowledge",
+            [`Neville notices he has a(n) ${ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that "${BONUSSTRING}" <p>He seems happy to understand the core of this item. He says ":)  I learned something!"</p>   `],
+            [new IHaveObjectWithName([])],
+            [new DestroyRandomObjectInInventoryAndPhilosophize(), new DeploySass(":)")],
+            true,
+            1000*60
+        );
+
+        const beats:AiBeat[] = [];
+        const states = [new Neville(room,0,0)];
+
+        super(room,"Fortitude Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[MATH]],sprite,
+        "The Fortitude Twin is hunting.", beats,states);
     }
 }   

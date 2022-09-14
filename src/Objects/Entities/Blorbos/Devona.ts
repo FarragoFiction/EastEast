@@ -1,6 +1,7 @@
 //just leave her alone with her egg
 
 import { Movement } from "../../MovementAlgs/BaseMovement";
+import { NoMovement } from "../../MovementAlgs/NoMovement";
 import { RandomMovement } from "../../MovementAlgs/RandomMovement";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
@@ -79,7 +80,38 @@ export class Devona extends Quotidian{
         );
 
         const beats:AiBeat[] = [giveNevilleObject,approachNevilleWithObject,pickupObject,approachObject];
+        const states = [new InsightTwin(room,0,0)];
+
         super(room,"Devona", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[KNOWING]],sprite,
-        "Devona is staring at you.", beats);
+        "Devona is staring at you.", beats,states);
     }
 }   
+
+export class InsightTwin extends Quotidian{
+    lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. "
+
+    maxSpeed = 8;
+    minSpeed = 5;
+    currentSpeed = 10;
+    breached = true;
+
+    direction = Direction.UP; //movement algorithm can change or use this.
+    movement_alg:Movement = new NoMovement(this);
+
+    constructor(room: Room, x: number, y:number){
+        const sprite = {
+            default_src:{src:"Placeholders/twins.png",width:50,height:50},
+
+        };
+
+    
+
+        const beats:AiBeat[] = [];
+        const states = [new Devona(room,0,0)];
+
+        super(room,"Insight Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[KNOWING]],sprite,
+        "The Insight Twin is hunting.", beats,states);
+    }
+}   
+
+

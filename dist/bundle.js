@@ -1852,7 +1852,8 @@ exports.Chicken = Chicken;
 
 //just leave her alone with her egg
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Devona = void 0;
+exports.InsightTwin = exports.Devona = void 0;
+const NoMovement_1 = __webpack_require__(4956);
 const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
@@ -1882,7 +1883,8 @@ class Devona extends Quotidian_1.Quotidian {
         const approachNevilleWithObject = new BaseBeat_1.AiBeat("Devona: Bring Object to Twin", [`Devona calls out to Neville, telling him she has something for him to Analyze.`], [new IHaveObjectWithName_1.IHaveObjectWithName([]), new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true, invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 30);
         const giveNevilleObject = new BaseBeat_1.AiBeat("Devona: Hand Over Object For Analysis", [`Handing over the ${BaseBeat_1.ITEMSTRING}, Devona smiles as she see's Neville's face light up under his sunglasses.`], [new IHaveObjectWithName_1.IHaveObjectWithName([]), new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"], { singleTarget: true }), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new GiveRandomObjectToTarget_1.GiveRandomObjectToTarget()], true, 1000 * 60);
         const beats = [giveNevilleObject, approachNevilleWithObject, pickupObject, approachObject];
-        super(room, "Devona", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Devona is staring at you.", beats);
+        const states = [new InsightTwin(room, 0, 0)];
+        super(room, "Devona", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Devona is staring at you.", beats, states);
         this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
         this.maxSpeed = 8;
         this.minSpeed = 5;
@@ -1892,6 +1894,24 @@ class Devona extends Quotidian_1.Quotidian {
     }
 }
 exports.Devona = Devona;
+class InsightTwin extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
+        };
+        const beats = [];
+        const states = [new Devona(room, 0, 0)];
+        super(room, "Insight Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "The Insight Twin is hunting.", beats, states);
+        this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
+        this.maxSpeed = 8;
+        this.minSpeed = 5;
+        this.currentSpeed = 10;
+        this.breached = true;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new NoMovement_1.NoMovement(this);
+    }
+}
+exports.InsightTwin = InsightTwin;
 
 
 /***/ }),
@@ -2139,8 +2159,9 @@ exports.Match = Match;
 
 //just leave her alone with her egg
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Neville = void 0;
+exports.FortitudeTwin = exports.Neville = void 0;
 const NoMovement_1 = __webpack_require__(4956);
+const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const DeploySass_1 = __webpack_require__(4237);
@@ -2165,7 +2186,8 @@ class Neville extends Quotidian_1.Quotidian {
         */
         const extractMeaningFromObject = new BaseBeat_1.AiBeat("Neville: Destroy and Extract Knowledge", [`Neville notices he has a(n) ${BaseBeat_1.ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that "${BaseBeat_1.BONUSSTRING}" <p>He seems happy to understand the core of this item. He says ":)  I learned something!"</p>   `], [new IHaveObjectWithName_1.IHaveObjectWithName([])], [new DestroyRandomObjectInInventoryAndPhilosophise_1.DestroyRandomObjectInInventoryAndPhilosophize(), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
         const beats = [extractMeaningFromObject];
-        super(room, "Neville", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "Neville is staring into space.", beats);
+        const states = [new FortitudeTwin(room, 0, 0)];
+        super(room, "Neville", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "Neville is staring into space.", beats, states);
         this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
         this.maxSpeed = 8;
         this.minSpeed = 5;
@@ -2175,6 +2197,25 @@ class Neville extends Quotidian_1.Quotidian {
     }
 }
 exports.Neville = Neville;
+class FortitudeTwin extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
+        };
+        const extractMeaningFromObject = new BaseBeat_1.AiBeat("Neville: Destroy and Extract Knowledge", [`Neville notices he has a(n) ${BaseBeat_1.ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that "${BaseBeat_1.BONUSSTRING}" <p>He seems happy to understand the core of this item. He says ":)  I learned something!"</p>   `], [new IHaveObjectWithName_1.IHaveObjectWithName([])], [new DestroyRandomObjectInInventoryAndPhilosophise_1.DestroyRandomObjectInInventoryAndPhilosophize(), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
+        const beats = [];
+        const states = [new Neville(room, 0, 0)];
+        super(room, "Fortitude Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "The Fortitude Twin is hunting.", beats, states);
+        this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
+        this.maxSpeed = 8;
+        this.minSpeed = 5;
+        this.currentSpeed = 10;
+        this.breached = true;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+    }
+}
+exports.FortitudeTwin = FortitudeTwin;
 
 
 /***/ }),
