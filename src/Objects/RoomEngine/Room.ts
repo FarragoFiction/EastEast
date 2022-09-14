@@ -345,6 +345,10 @@ export class Room {
         this.initWall();
     }
 
+    clearBlorbos = ()=>{
+        this.blorbos= [];
+    }
+
     initFloor = () => {
         const theme: Theme = this.rand.pickFrom(this.themes);
         this.floor = theme.pickPossibilityFor(this.rand, FLOOR);

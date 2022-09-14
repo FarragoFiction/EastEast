@@ -115,6 +115,8 @@ export class Maze {
             this.peewee.y = 350;
         }
         this.room = room;
+        this.room.clearBlorbos();
+
         this.room.peewee = this.peewee;
         if (this.peewee) {
             room.addBlorbo(this.peewee);
