@@ -4613,6 +4613,9 @@ class Room {
         };
         this.stopTicking = () => {
             this.ticking = false;
+            if (this.timer) {
+                clearTimeout(this.timer);
+            }
         };
         this.spawnChildrenIfNeeded = async () => {
             if (this.children.length === 0) { //don't let anything have NO exits
@@ -4631,6 +4634,9 @@ class Room {
         };
         this.pause = () => {
             this.ticking = false;
+            if (this.timer) {
+                clearTimeout(this.timer);
+            }
             this.maze.chantingEngine.pause();
         };
         this.resume = () => {
@@ -4735,6 +4741,9 @@ class Room {
         };
         this.teardown = () => {
             this.ticking = false;
+            if (this.timer) {
+                clearTimeout(this.timer);
+            }
             if (this.peewee) {
                 this.removeBlorbo(this.peewee);
             }
@@ -4856,7 +4865,7 @@ class Room {
                 }
                 this.checkForDoors(blorbo);
             }
-            setTimeout(this.tick, this.tickRate);
+            this.timer = setTimeout(this.tick, this.tickRate);
         };
         this.init = () => {
             this.name = `${(0, StringUtils_1.titleCase)(this.getRandomThemeConcept(ThemeStorage_1.ADJ))} ${(0, StringUtils_1.titleCase)(this.getRandomThemeConcept(ThemeStorage_1.LOCATION))}`;
@@ -7502,6 +7511,7 @@ class TranscriptEngine {
             input.placeholder = "Enter Password Now";
             input.autofocus = true;
             this.parent.append(crt);
+            this.transcript("Long Touch or Hold Mouse Down To Speedup Text");
         };
         this.handleBadPW = (text) => {
             this.text = (0, PasswordStorage_1.translate)(text);

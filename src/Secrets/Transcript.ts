@@ -58,8 +58,9 @@ export class TranscriptEngine {
         input.placeholder = "Enter Password Now";
         input.autofocus = true;
 
-
         this.parent.append(crt);
+        this.transcript("Long Touch or Hold Mouse Down To Speedup Text");
+
     }
 
     handleBadPW = (text: string) => {
