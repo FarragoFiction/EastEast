@@ -36,6 +36,7 @@ export class Room {
     children: Room[] = [];
     name = "???";
     pendingStoryBeats: StoryBeat[] = [];
+    timer?: NodeJS.Timeout;
 
 
     //objects
@@ -59,6 +60,9 @@ export class Room {
 
     stopTicking = () => {
         this.ticking = false;
+        if(this.timer){
+            clearTimeout(this.timer);
+        }
     }
 
     spawnChildrenIfNeeded = async () => {
@@ -78,6 +82,9 @@ export class Room {
 
     pause = () => {
         this.ticking = false;
+        if(this.timer){
+            clearTimeout(this.timer);
+        }
         this.maze.chantingEngine.pause();
     }
 
@@ -200,6 +207,9 @@ export class Room {
 
     teardown = () => {
         this.ticking = false;
+        if(this.timer){
+            clearTimeout(this.timer);
+        }
         if (this.peewee) {
             this.removeBlorbo(this.peewee);
         }
@@ -336,7 +346,7 @@ export class Room {
             this.checkForDoors(blorbo);
         }
 
-        setTimeout(this.tick, this.tickRate);
+        this.timer =  setTimeout(this.tick, this.tickRate);
     }
 
     init = () => {

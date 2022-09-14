@@ -4481,6 +4481,7 @@ class Maze {
                 this.peewee.y = 350;
             }
             this.room = room;
+            this.room.clearBlorbos();
             this.room.peewee = this.peewee;
             if (this.peewee) {
                 room.addBlorbo(this.peewee);
@@ -4861,6 +4862,9 @@ class Room {
             this.name = `${(0, StringUtils_1.titleCase)(this.getRandomThemeConcept(ThemeStorage_1.ADJ))} ${(0, StringUtils_1.titleCase)(this.getRandomThemeConcept(ThemeStorage_1.LOCATION))}`;
             this.initFloor();
             this.initWall();
+        };
+        this.clearBlorbos = () => {
+            this.blorbos = [];
         };
         this.initFloor = () => {
             const theme = this.rand.pickFrom(this.themes);
