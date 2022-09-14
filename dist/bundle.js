@@ -7340,7 +7340,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 /*
 99 Rooms
 eternal darkness
-
+chimps don't dance for bastards
 mutations on mutations on mutations :)
 ZampanioBroken
 most innovative shooter
@@ -7434,6 +7434,8 @@ exports.passwords = {
     "HOW YOUR BRAIN LIES TO YOU": new Secret("JR RAMBLE", "Secrets/Content/42.js"),
     "BLUE CAN SEE MORE THAN ORANGE": new Secret("GIGGLESNORT", "Secrets/Content/44.js"),
     "YOU IS NEEDED": new Secret("Quotidian", "", `<video class='fuckedup' src="http://farragofiction.com/ZampanioHotlink/Films/michael_from_vsauce_says_quotidian.mp4" loop="true" controls="true" autoplay="true"></video>`),
+    "ZAMPANIOBROKEN": new Secret("The Watcher of Threads is right: Wanda would love these:", "", `<iframe class="fuckedup" width="560" height="315" src="https://www.youtube.com/embed/cTspoOpLgfc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`),
+    "EARWORM HUMMING IN A DREAM": new Secret("24/7 ABSOLUTE BULLSHIT", "", `<iframe class="fuckedup" width="560" height="315" src="https://www.youtube.com/embed/16WNvL8Gtt0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`),
     "LS": new Secret("FILE LIST (UNIX)", "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", "Secrets/PasswordStorage.ts")
 };
