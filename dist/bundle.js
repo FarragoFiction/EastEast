@@ -1900,8 +1900,7 @@ class InsightTwin extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
         const beats = [];
-        const states = [new Devona(room, 0, 0)];
-        super(room, "Insight Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "The Insight Twin is hunting.", beats, states);
+        super(room, "Insight Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "The Insight Twin is hunting.", beats);
         this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
         this.maxSpeed = 8;
         this.minSpeed = 5;
@@ -2204,8 +2203,7 @@ class FortitudeTwin extends Quotidian_1.Quotidian {
         };
         const extractMeaningFromObject = new BaseBeat_1.AiBeat("Neville: Destroy and Extract Knowledge", [`Neville notices he has a(n) ${BaseBeat_1.ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that "${BaseBeat_1.BONUSSTRING}" <p>He seems happy to understand the core of this item. He says ":)  I learned something!"</p>   `], [new IHaveObjectWithName_1.IHaveObjectWithName([])], [new DestroyRandomObjectInInventoryAndPhilosophise_1.DestroyRandomObjectInInventoryAndPhilosophize(), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
         const beats = [];
-        const states = [new Neville(room, 0, 0)];
-        super(room, "Fortitude Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "The Fortitude Twin is hunting.", beats, states);
+        super(room, "Fortitude Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "The Fortitude Twin is hunting.", beats);
         this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
         this.maxSpeed = 8;
         this.minSpeed = 5;

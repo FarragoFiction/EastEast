@@ -8,8 +8,11 @@ import { all_themes } from "../../Theme";
 import { HUNTING, SPYING, OBFUSCATION, MATH } from "../../ThemeStorage";
 import { DeploySass } from "../Actions/DeploySass";
 import { DestroyRandomObjectInInventoryAndPhilosophize } from "../Actions/DestroyRandomObjectInInventoryAndPhilosophise";
+import { IncrementMyState } from "../Actions/IncrementMyState";
 import { AiBeat, BONUSSTRING, ITEMSTRING } from "../StoryBeats/BaseBeat";
 import { IHaveObjectWithName } from "../TargetFilter/IHaveObjectWithName";
+import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
+import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { Quotidian, Direction } from "./Quotidian";
 
 
@@ -53,7 +56,17 @@ export class Neville extends Quotidian{
             1000*60
         );
 
-        const beats:AiBeat[] = [extractMeaningFromObject];
+        const punishTheguilty = new AiBeat(
+            "Neville: Punish Your Sisters's Killer",
+            [`With a silent scream of mute horror, Neville's body begins twisting and crunching until the Fortitudinous Punishing Twin emerges.`],
+            [new TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsAlive({invert:true})],
+            [new IncrementMyState("no")],
+            true,
+            1000*60
+        );
+        
+
+        const beats:AiBeat[] = [punishTheguilty,extractMeaningFromObject];
         const states = [new FortitudeTwin(room,0,0)];
 
         super(room,"Neville", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[MATH]],sprite,
@@ -87,11 +100,11 @@ export class FortitudeTwin extends Quotidian{
             true,
             1000*60
         );
+        
 
         const beats:AiBeat[] = [];
-        const states = [new Neville(room,0,0)];
 
         super(room,"Fortitude Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[MATH]],sprite,
-        "The Fortitude Twin is hunting.", beats,states);
+        "The Fortitude Twin is hunting.", beats);
     }
 }   

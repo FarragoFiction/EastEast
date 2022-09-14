@@ -8,6 +8,7 @@ import { all_themes } from "../../Theme";
 import { HUNTING, KILLING, FAMILY, DARKNESS, FIRE, ANGELS, WEB, ADDICTION, MUSIC, SPYING, OBFUSCATION, KNOWING } from "../../ThemeStorage";
 import { FollowObject } from "../Actions/FollowObject";
 import { GiveRandomObjectToTarget } from "../Actions/GiveRandomObjectToTarget";
+import { IncrementMyState } from "../Actions/IncrementMyState";
 import { PickupObject } from "../Actions/PickupObject";
 import { AiBeat, ITEMSTRING } from "../StoryBeats/BaseBeat";
 import { TARGETSTRING } from "../TargetFilter/baseFilter";
@@ -79,7 +80,16 @@ export class Devona extends Quotidian{
             1000*60
         );
 
-        const beats:AiBeat[] = [giveNevilleObject,approachNevilleWithObject,pickupObject,approachObject];
+        const punishTheguilty = new AiBeat(
+            "Devona: Punish Your Brother's Killer",
+            [`With a deafening cry of grief and rage, Devona's body begins twisting and crunching until the Insightful Punishing Twin emerges.`],
+            [new TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsAlive({invert:true})],
+            [new IncrementMyState("no")],
+            true,
+            1000*60
+        );
+
+        const beats:AiBeat[] = [punishTheguilty, giveNevilleObject,approachNevilleWithObject,pickupObject,approachObject];
         const states = [new InsightTwin(room,0,0)];
 
         super(room,"Devona", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[KNOWING]],sprite,
@@ -107,10 +117,9 @@ export class InsightTwin extends Quotidian{
     
 
         const beats:AiBeat[] = [];
-        const states = [new Devona(room,0,0)];
 
         super(room,"Insight Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[KNOWING]],sprite,
-        "The Insight Twin is hunting.", beats,states);
+        "The Insight Twin is hunting.", beats);
     }
 }   
 
