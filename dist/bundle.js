@@ -1859,6 +1859,7 @@ const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const FollowObject_1 = __webpack_require__(744);
 const GiveRandomObjectToTarget_1 = __webpack_require__(4009);
+const IncrementMyState_1 = __webpack_require__(9211);
 const PickupObject_1 = __webpack_require__(9936);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
@@ -1882,7 +1883,8 @@ class Devona extends Quotidian_1.Quotidian {
         //if devona has an object, she brings it to twinsey
         const approachNevilleWithObject = new BaseBeat_1.AiBeat("Devona: Bring Object to Twin", [`Devona calls out to Neville, telling him she has something for him to Analyze.`], [new IHaveObjectWithName_1.IHaveObjectWithName([]), new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true, invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 30);
         const giveNevilleObject = new BaseBeat_1.AiBeat("Devona: Hand Over Object For Analysis", [`Handing over the ${BaseBeat_1.ITEMSTRING}, Devona smiles as she see's Neville's face light up under his sunglasses.`], [new IHaveObjectWithName_1.IHaveObjectWithName([]), new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"], { singleTarget: true }), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new GiveRandomObjectToTarget_1.GiveRandomObjectToTarget()], true, 1000 * 60);
-        const beats = [giveNevilleObject, approachNevilleWithObject, pickupObject, approachObject];
+        const punishTheguilty = new BaseBeat_1.AiBeat("Devona: Punish Your Brother's Killer", [`With a deafening cry of grief and rage, Devona's body begins twisting and crunching until the Insightful Punishing Twin emerges.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60);
+        const beats = [punishTheguilty, giveNevilleObject, approachNevilleWithObject, pickupObject, approachObject];
         const states = [new InsightTwin(room, 0, 0)];
         super(room, "Devona", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Devona is staring at you.", beats, states);
         this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
@@ -2165,8 +2167,11 @@ const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const DeploySass_1 = __webpack_require__(4237);
 const DestroyRandomObjectInInventoryAndPhilosophise_1 = __webpack_require__(4516);
+const IncrementMyState_1 = __webpack_require__(9211);
 const BaseBeat_1 = __webpack_require__(1708);
 const IHaveObjectWithName_1 = __webpack_require__(6274);
+const TargetIsAlive_1 = __webpack_require__(7064);
+const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const Quotidian_1 = __webpack_require__(6387);
 class Neville extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
@@ -2184,7 +2189,8 @@ class Neville extends Quotidian_1.Quotidian {
         when what he's supposed to do is passively allow the destruction of what is irrelevant in order to highlight the Most Important Thing about an object. pare it down to its essentials
         */
         const extractMeaningFromObject = new BaseBeat_1.AiBeat("Neville: Destroy and Extract Knowledge", [`Neville notices he has a(n) ${BaseBeat_1.ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that "${BaseBeat_1.BONUSSTRING}" <p>He seems happy to understand the core of this item. He says ":)  I learned something!"</p>   `], [new IHaveObjectWithName_1.IHaveObjectWithName([])], [new DestroyRandomObjectInInventoryAndPhilosophise_1.DestroyRandomObjectInInventoryAndPhilosophize(), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
-        const beats = [extractMeaningFromObject];
+        const punishTheguilty = new BaseBeat_1.AiBeat("Neville: Punish Your Sisters's Killer", [`With a silent scream of mute horror, Neville's body begins twisting and crunching until the Fortitudinous Punishing Twin emerges.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60);
+        const beats = [punishTheguilty, extractMeaningFromObject];
         const states = [new FortitudeTwin(room, 0, 0)];
         super(room, "Neville", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "Neville is staring into space.", beats, states);
         this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
