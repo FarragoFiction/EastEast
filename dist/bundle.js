@@ -8284,7 +8284,24 @@ const handleClick = () => {
         window.removeEventListener("click", handleClick);
     }
 };
+const itsFriday = () => {
+    const body = document.querySelector("body");
+    if (body) {
+        body.innerHTML = "";
+        const ele = (0, misc_1.createElementWithIdAndParent)("div", body, "ItsFridaySoEastIsRestingHaveThisInstead");
+        ele.innerHTML = `
+        <iframe class='fuckedup' width="${window.outerWidth}" height="${window.outerHeight}" src="https://www.youtube-nocookie.com/embed/Ti1D9t8n0qA?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        `;
+    }
+};
 window.onload = async () => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const friday = urlParams.get('friday');
+    if (new Date().getDay() === 5 || friday) {
+        itsFriday();
+        return;
+    }
     const ele = document.querySelector("#current-room");
     const storySoFar = document.querySelector(".story-so-far");
     storySoFar.innerHTML = "";

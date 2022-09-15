@@ -6,6 +6,7 @@ import { getRandomNumberBetween } from "./Utils/NonSeededRandUtils";
 import SeededRandom from "./Utils/SeededRandom";
 import { Maze } from "./Objects/RoomEngine/Maze";
 import { createElementWithIdAndParent } from "./Utils/misc";
+import { visitFunctionBody } from "typescript";
 
 
 let maze: Maze;
@@ -20,7 +21,28 @@ const handleClick = () => {
     }
 
 }
+
+
+const itsFriday = ()=>{
+    const body = document.querySelector("body");
+    if(body){
+        body.innerHTML = "";
+        const ele = createElementWithIdAndParent("div", body, "ItsFridaySoEastIsRestingHaveThisInstead");
+        ele.innerHTML  = `
+        <iframe class='fuckedup' width="${window.innerWidth}" height="${window.innerHeight}" src="https://www.youtube-nocookie.com/embed/Ti1D9t8n0qA?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        `;
+
+    }
+}
+
 window.onload = async () => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const friday = urlParams.get('friday');
+    if(new Date().getDay() === 5 ||friday ){
+        itsFriday();
+        return;
+    }
     const ele = document.querySelector("#current-room") as HTMLElement;
     const storySoFar = document.querySelector(".story-so-far") as HTMLElement;
     storySoFar.innerHTML = "";
