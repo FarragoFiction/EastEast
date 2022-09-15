@@ -27,6 +27,7 @@ const itsFriday = ()=>{
     const body = document.querySelector("body");
     if(body){
         body.innerHTML = "";
+        alert("WARNING: HIGH CONTRAST FLASHING IMAGES")
         const ele = createElementWithIdAndParent("div", body, "ItsFridaySoEastIsRestingHaveThisInstead");
         ele.innerHTML  = `
         <iframe class='fuckedup' style="overflow: hidden;" width="${window.innerWidth-10}" height="${window.innerHeight-10}" src="https://www.youtube-nocookie.com/embed/Ti1D9t8n0qA?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -39,7 +40,7 @@ window.onload = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const friday = urlParams.get('friday');
-    if(new Date().getDay() === 5 ||friday ){
+    if((new Date().getDay() === 5 && friday !== "true") ||friday ==="true" ){
         itsFriday();
         return;
     }
