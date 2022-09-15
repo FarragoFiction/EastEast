@@ -8290,7 +8290,7 @@ const itsFriday = () => {
         body.innerHTML = "";
         const ele = (0, misc_1.createElementWithIdAndParent)("div", body, "ItsFridaySoEastIsRestingHaveThisInstead");
         ele.innerHTML = `
-        <iframe class='fuckedup' width="${window.outerWidth}" height="${window.outerHeight}" src="https://www.youtube-nocookie.com/embed/Ti1D9t8n0qA?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe class='fuckedup' style="overflow: hidden;" width="${window.innerWidth - 10}" height="${window.innerHeight - 10}" src="https://www.youtube-nocookie.com/embed/Ti1D9t8n0qA?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         `;
     }
 };
