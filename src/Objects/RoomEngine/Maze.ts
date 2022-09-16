@@ -83,6 +83,20 @@ export class Maze {
         }
     }
 
+    //even if they aren't in the current room
+    findBlorboNamed =(name: string)=>{
+        for(let blorbo of this.blorbos){
+            if (blorbo.processedName().toUpperCase().includes(name.toUpperCase())) {
+               return blorbo;
+            }
+            for(let state of blorbo.states){
+                if (state.processedName().toUpperCase().includes(name.toUpperCase())) {
+                   return blorbo;
+                }
+            }
+        }
+    }
+
     spawnBlorbos = () => {
         if (!this.room) {
             return;
