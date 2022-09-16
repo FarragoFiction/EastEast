@@ -104,7 +104,7 @@ export class FortitudeTwin extends Quotidian{
 
         const beats:AiBeat[] = [];
 
-        super(room,"Fortitude Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[MATH]],sprite,
-        "The Fortitude Twin is hunting.", beats);
+        super(room,"Fortitudinous Punishing Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[MATH]],sprite,
+        "The Fortitude Punishing Twin is hunting.", beats);
     }
 }   

@@ -2422,13 +2422,14 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.clone = () => {
             return new Quotidian(this.room, this.name, this.x, this.y, this.themes, this.directionalSprite, this.flavorText, [...this.beats]);
         };
-        this.die = (causeOfDeath) => {
+        this.die = (causeOfDeath, killerName) => {
             console.log("JR NOTE: trying to kill", this.name, causeOfDeath);
             if (!this.dead) {
                 this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
                 this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
                 this.room.processDeath(this);
                 this.dead = true;
+                this.killerName = killerName;
             }
         };
         this.live = () => {
@@ -2907,6 +2908,11 @@ class IHaveObjectWithName extends baseFilter_1.TargetFilter {
                     if (item.processedName().toUpperCase().includes(word.toUpperCase())) {
                         targetLocked = true;
                     }
+                    for (let state of item.states) {
+                        if (state.processedName().toUpperCase().includes(word.toUpperCase())) {
+                            targetLocked = true;
+                        }
+                    }
                 }
             }
             if (targetLocked) {
@@ -3037,6 +3043,11 @@ class TargetHasObjectWithName extends baseFilter_1.TargetFilter {
                 for (let item of target.inventory) {
                     if (item.processedName().toUpperCase().includes(word.toUpperCase())) {
                         targetLocked = true;
+                    }
+                    for (let state of item.states) {
+                        if (state.processedName().toUpperCase().includes(word.toUpperCase())) {
+                            targetLocked = true;
+                        }
                     }
                 }
             }
@@ -3246,10 +3257,20 @@ class TargetNearObjectWithName extends baseFilter_1.TargetFilter {
                     if (item.processedName().toUpperCase().includes(word.toUpperCase())) {
                         targetLocked = true;
                     }
+                    for (let state of item.states) {
+                        if (state.processedName().toUpperCase().includes(word.toUpperCase())) {
+                            targetLocked = true;
+                        }
+                    }
                 }
                 for (let item of target.room.blorbos) {
                     if (item.processedName().toUpperCase().includes(word.toUpperCase())) {
                         targetLocked = true;
+                    }
+                    for (let state of item.states) {
+                        if (state.processedName().toUpperCase().includes(word.toUpperCase())) {
+                            targetLocked = true;
+                        }
                     }
                 }
             }
@@ -3384,6 +3405,12 @@ class TargetNameIncludesAnyOfTheseWords extends baseFilter_1.TargetFilter {
             for (let word of this.words) {
                 if (target.processedName().toUpperCase().includes(word.toUpperCase())) {
                     targetLocked = true;
+                }
+                for (let state of target.states) {
+                    console.log("JR NOTE: in state", state, "checking word", word);
+                    if (state.processedName().toUpperCase().includes(word.toUpperCase())) {
+                        targetLocked = true;
+                    }
                 }
             }
             if (targetLocked) {
