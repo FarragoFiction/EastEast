@@ -24,7 +24,7 @@ export class GlitchDeath extends Action {
         let killed = false;
         for (let target of targets) {
             if (target instanceof Quotidian) {
-                (target as Quotidian).die("a glitch");
+                (target as Quotidian).die("a glitch","Peewee");
                 killed = true;
             }
         }

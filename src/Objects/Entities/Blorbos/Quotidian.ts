@@ -76,6 +76,7 @@ export class Quotidian extends PhysicalObject {
     minSpeed = 1;
     currentSpeed = 10;
     friend?: FRIEND;
+    killerName? : string;
 
     beats: AiBeat[] = [];
     // 0 min, 5 max
@@ -135,13 +136,14 @@ export class Quotidian extends PhysicalObject {
 
 
 
-    die = (causeOfDeath: string) => {
+    die = (causeOfDeath: string, killerName: string) => {
         console.log("JR NOTE: trying to kill", this.name, causeOfDeath)
         if(!this.dead){
             this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
             this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
             this.room.processDeath(this);
             this.dead = true;
+            this.killerName=killerName;
         }
 
     }

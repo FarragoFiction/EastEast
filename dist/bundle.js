@@ -688,7 +688,7 @@ class GlitchDeath extends BaseAction_1.Action {
             let killed = false;
             for (let target of targets) {
                 if (target instanceof Quotidian_1.Quotidian) {
-                    target.die("a glitch");
+                    target.die("a glitch", "Peewee");
                     killed = true;
                 }
             }
@@ -1254,7 +1254,7 @@ class MeleeKill extends BaseAction_1.Action {
             let killed = false;
             for (let target of targets) {
                 if (target instanceof Quotidian_1.Quotidian) {
-                    target.die(this.causeOfDeath);
+                    target.die(this.causeOfDeath, subject.name);
                     killed = true;
                 }
             }
