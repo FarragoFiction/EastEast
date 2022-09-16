@@ -29,11 +29,21 @@ export class TargetNearObjectWithName extends TargetFilter {
                 if (item.processedName().toUpperCase().includes(word.toUpperCase())) {
                     targetLocked = true;
                 }
+                for(let state of item.states){
+                    if (state.processedName().toUpperCase().includes(word.toUpperCase())) {
+                        targetLocked = true;
+                    }
+                }
             }
 
             for (let item of target.room.blorbos){
                 if (item.processedName().toUpperCase().includes(word.toUpperCase())) {
                     targetLocked = true;
+                }
+                for(let state of item.states){
+                    if (state.processedName().toUpperCase().includes(word.toUpperCase())) {
+                        targetLocked = true;
+                    }
                 }
             }
         }

@@ -27,6 +27,11 @@ export class TargetNameIncludesAnyOfTheseWords extends TargetFilter {
             if (target.processedName().toUpperCase().includes(word.toUpperCase())) {
                 targetLocked = true;
             }
+            for(let state of item.states){
+                if (state.processedName().toUpperCase().includes(word.toUpperCase())) {
+                    targetLocked = true;
+                }
+            }
         }
 
         if (targetLocked) {

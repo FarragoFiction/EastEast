@@ -29,6 +29,11 @@ export class TargetHasObjectWithName extends TargetFilter {
                 if (item.processedName().toUpperCase().includes(word.toUpperCase())) {
                     targetLocked = true;
                 }
+                for(let state of item.states){
+                    if (state.processedName().toUpperCase().includes(word.toUpperCase())) {
+                        targetLocked = true;
+                    }
+                }
             }
         }
         if (targetLocked) {
