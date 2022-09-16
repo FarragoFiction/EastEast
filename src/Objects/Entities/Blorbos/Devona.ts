@@ -116,7 +116,10 @@ export class InsightTwin extends Quotidian{
 
     
 
-        const beats:AiBeat[] = [];
+        const beats:AiBeat[] = [
+
+
+        ];
 
         super(room,"Insight Punishing Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[KNOWING]],sprite,
         "The Insightful Punishing Twin is hunting.", beats);

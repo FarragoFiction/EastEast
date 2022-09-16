@@ -1902,7 +1902,7 @@ class InsightTwin extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
         const beats = [];
-        super(room, "Insight Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "The Insight Twin is hunting.", beats);
+        super(room, "Insight Punishing Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "The Insightful Punishing Twin is hunting.", beats);
         this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
         this.maxSpeed = 8;
         this.minSpeed = 5;
@@ -2012,6 +2012,7 @@ const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
 const IHaveObjectWithName_1 = __webpack_require__(6274);
 const RandomTarget_1 = __webpack_require__(9824);
+const TargetExistsInAWorldWhereBlorboWithNameIsAlive_1 = __webpack_require__(4186);
 const TargetHasObjectWithName_1 = __webpack_require__(4864);
 const TargetIsAlive_1 = __webpack_require__(7064);
 const TargetIsBlorboBox_1 = __webpack_require__(4068);
@@ -2065,7 +2066,7 @@ class Innocent extends Quotidian_1.Quotidian {
             up_src: { src: "Innocent_upwards.gif", width: 50, height: 50 },
             down_src: { src: "innocentforward.gif", width: 50, height: 50 }
         };
-        const theTimeLineMustAlwaysHaveOne = new BaseBeat_1.AiBeat("Innocent: Accept Your Fate", [`The Innocent screams as she's wreathed in seething shadows.  For a full minute barely visible clocks tick out the time.  When it finally ends, she emerges as the Eye Killer. She has always been the Eye Killer. `], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Eye Killer"]), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("is covered in seething shadows for a full minute as barely visible clocks swirl and tick. When it finally ends, she emerges as the Eye Killer. She has always been the Eye Killer. ")], true, 1000 * 60);
+        const theTimeLineMustAlwaysHaveOne = new BaseBeat_1.AiBeat("Innocent: Accept Your Fate", [`The Innocent screams as she's wreathed in seething shadows.  For a full minute barely visible clocks tick out the time.  When it finally ends, she emerges as the Eye Killer. She has always been the Eye Killer. `], [new TargetExistsInAWorldWhereBlorboWithNameIsAlive_1.TargetExistsInAWorldWhereBlorboNamedXIsAlive("Eye Killer", { invert: true })], [new IncrementMyState_1.IncrementMyState("is covered in seething shadows for a full minute as barely visible clocks swirl and tick. When it finally ends, she emerges as the Eye Killer. She has always been the Eye Killer. ")], true, 1000 * 60);
         const beats = [theTimeLineMustAlwaysHaveOne];
         const states = [new EyeKiller(room, 0, 0)];
         super(room, "Innocent", x, y, [Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.ANGELS]], sprite, "Wow, she seems totally innocent!", beats, states);
@@ -2209,7 +2210,7 @@ class FortitudeTwin extends Quotidian_1.Quotidian {
         };
         const extractMeaningFromObject = new BaseBeat_1.AiBeat("Neville: Destroy and Extract Knowledge", [`Neville notices he has a(n) ${BaseBeat_1.ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that "${BaseBeat_1.BONUSSTRING}" <p>He seems happy to understand the core of this item. He says ":)  I learned something!"</p>   `], [new IHaveObjectWithName_1.IHaveObjectWithName([])], [new DestroyRandomObjectInInventoryAndPhilosophise_1.DestroyRandomObjectInInventoryAndPhilosophize(), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
         const beats = [];
-        super(room, "Fortitude Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "The Fortitude Twin is hunting.", beats);
+        super(room, "Fortitudinous Punishing Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "The Fortitude Punishing Twin is hunting.", beats);
         this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
         this.maxSpeed = 8;
         this.minSpeed = 5;
@@ -3016,6 +3017,51 @@ exports.RandomTarget = RandomTarget;
 
 /***/ }),
 
+/***/ 4186:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetExistsInAWorldWhereBlorboNamedXIsAlive = void 0;
+const baseFilter_1 = __webpack_require__(9505);
+class TargetExistsInAWorldWhereBlorboNamedXIsAlive extends baseFilter_1.TargetFilter {
+    constructor(name, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            return `they realize ${this.name} is ${this.invert ? "not" : ""} alive`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (!owner.owner) {
+                return this.invert ? target : null;
+            }
+            const blorbo = owner.owner.room.maze.findBlorboNamed(this.name);
+            if (!blorbo) {
+                targetLocked = false;
+            }
+            else {
+                if (!blorbo.dead) {
+                    targetLocked = true;
+                }
+            }
+            if (this.invert) {
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+        this.name = name;
+    }
+}
+exports.TargetExistsInAWorldWhereBlorboNamedXIsAlive = TargetExistsInAWorldWhereBlorboNamedXIsAlive;
+
+
+/***/ }),
+
 /***/ 4864:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -3376,6 +3422,66 @@ class TargetIsWithinRadiusOfSelf extends baseFilter_1.TargetFilter {
     }
 }
 exports.TargetIsWithinRadiusOfSelf = TargetIsWithinRadiusOfSelf;
+
+
+/***/ }),
+
+/***/ 7082:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetIsTheKillerOfBlorboNamed = void 0;
+const baseFilter_1 = __webpack_require__(9505);
+class TargetIsTheKillerOfBlorboNamed extends baseFilter_1.TargetFilter {
+    constructor(name, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            return `they realize ${baseFilter_1.TARGETSTRING} is ${this.invert ? "not" : ""} the killer of ${this.name}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (!owner.owner) {
+                return this.invert ? target : null;
+            }
+            const blorbo = owner.owner.room.maze.findBlorboNamed(this.name);
+            if (!blorbo) {
+                targetLocked = false;
+            }
+            else {
+                if (blorbo.dead) {
+                    const killersName = blorbo.killerName;
+                    if (!killersName) { //even if you died, if you have no killer, they couldn't have been this guy
+                        targetLocked = false;
+                    }
+                    else {
+                        if (target.processedName().toUpperCase().includes(killersName.toUpperCase())) {
+                            targetLocked = true;
+                        }
+                        if (!targetLocked) {
+                            for (let state of blorbo.states) {
+                                if (state.processedName().toUpperCase().includes(killersName.toUpperCase())) {
+                                    targetLocked = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (this.invert) {
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+        this.name = name;
+    }
+}
+exports.TargetIsTheKillerOfBlorboNamed = TargetIsTheKillerOfBlorboNamed;
 
 
 /***/ }),
@@ -4524,11 +4630,24 @@ class Maze {
                 console.warn("JR NOTE: remember to require a click before starting");
             }
         };
+        //even if they aren't in the current room
+        this.findBlorboNamed = (name) => {
+            for (let blorbo of this.blorbos) {
+                if (blorbo.processedName().toUpperCase().includes(name.toUpperCase())) {
+                    return blorbo;
+                }
+                for (let state of blorbo.states) {
+                    if (state.processedName().toUpperCase().includes(name.toUpperCase())) {
+                        return blorbo;
+                    }
+                }
+            }
+        };
         this.spawnBlorbos = () => {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Devona", "Neville"];
+            const blorbosToTest = ["Devona", "Neville", "Killer", "Innocent"];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
                     for (let theme of blorbo.themes) {
@@ -10412,6 +10531,8 @@ var map = {
 	"./Objects/Entities/TargetFilter/IHaveObjectWithTheme.ts": 2146,
 	"./Objects/Entities/TargetFilter/RandomTarget": 9824,
 	"./Objects/Entities/TargetFilter/RandomTarget.ts": 9824,
+	"./Objects/Entities/TargetFilter/TargetExistsInAWorldWhereBlorboWithNameIsAlive": 4186,
+	"./Objects/Entities/TargetFilter/TargetExistsInAWorldWhereBlorboWithNameIsAlive.ts": 4186,
 	"./Objects/Entities/TargetFilter/TargetHasObjectWithName": 4864,
 	"./Objects/Entities/TargetFilter/TargetHasObjectWithName.ts": 4864,
 	"./Objects/Entities/TargetFilter/TargetHasObjectWithTheme": 9093,
@@ -10428,6 +10549,8 @@ var map = {
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithTheme.ts": 83,
 	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf": 5535,
 	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf.ts": 5535,
+	"./Objects/Entities/TargetFilter/TargetIstheKillerOfBlorboNamed": 7082,
+	"./Objects/Entities/TargetFilter/TargetIstheKillerOfBlorboNamed.ts": 7082,
 	"./Objects/Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords": 4165,
 	"./Objects/Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords.ts": 4165,
 	"./Objects/Entities/TargetFilter/baseFilter": 9505,

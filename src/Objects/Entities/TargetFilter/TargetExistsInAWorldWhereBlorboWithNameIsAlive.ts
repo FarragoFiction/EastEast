@@ -2,7 +2,7 @@ import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { TargetFilter, TargetingOptionType } from "./baseFilter";
 
-export class TargetIsAlive extends TargetFilter {
+export class TargetExistsInAWorldWhereBlorboNamedXIsAlive extends TargetFilter {
     //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
     name: string;
 
