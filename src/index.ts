@@ -39,8 +39,9 @@ const itsFriday = ()=>{
 window.onload = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const friday = urlParams.get('friday');
-    if((new Date().getDay() === 5 && friday !== "true") ||friday ==="true" ){
+    const friday = urlParams.get('friday'); //you can escape friday if you say its not friday
+    console.log("JR NOTE: am i trying to override friday?", friday)
+    if((new Date().getDay() === 5 && friday !== "false") ||friday ==="true" ){
         itsFriday();
         return;
     }
