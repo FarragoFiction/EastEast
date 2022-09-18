@@ -17,6 +17,11 @@ export class MoveToSpecificPhysicalObject extends Movement{
 
     }
 
+    clone= (entity: Quotidian)=>{
+        return new MoveToSpecificPhysicalObject(this.object,entity);
+    }
+
+
 
 
     moveX = (remaining_x: number)=>{

@@ -3,6 +3,7 @@
 import { removeItemOnce } from "../../../Utils/ArrayUtils"
 import { createElementWithIdAndParent } from "../../../Utils/misc"
 import { pickFrom } from "../../../Utils/NonSeededRandUtils"
+import { Movement } from "../../MovementAlgs/BaseMovement"
 import { NoMovement } from "../../MovementAlgs/NoMovement"
 import { RandomMovement } from "../../MovementAlgs/RandomMovement"
 import { PhysicalObject } from "../../PhysicalObject"
@@ -93,7 +94,7 @@ export class Quotidian extends PhysicalObject {
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
     possible_random_move_algs = [new RandomMovement(this)]
-    movement_alg = pickFrom(this.possible_random_move_algs)
+    movement_alg:Movement = pickFrom(this.possible_random_move_algs)
     //TODO have a movement algorithm (effects can shift this)
     /*
     example movement algorithm
@@ -131,8 +132,10 @@ export class Quotidian extends PhysicalObject {
 
     //NOTE to avoid recursion does not clone states
     clone = ()=>{
-        return  new Quotidian(this.room, this.name, this.x, this.y,   this.themes, this.directionalSprite,  this.flavorText,[...this.beats]);
-     }
+        const ret =  new Quotidian(this.room, this.name, this.x, this.y,   this.themes, this.directionalSprite,  this.flavorText,[...this.beats]);
+        ret.movement_alg = this.movement_alg.clone(this);
+        return ret;
+    }
 
 
 

@@ -14,6 +14,11 @@ export class MoveToSpecificLocation extends Movement{
         this.y = y;
     }
 
+    clone= (entity: Quotidian)=>{
+        return new MoveToSpecificLocation(this.x, this.y,entity);
+    }
+
+
     moveX = (remaining_x: number)=>{
         //if object x is bigger than mine, need to go right, so d
         if(remaining_x>0){

@@ -17,8 +17,8 @@ export class GoEast extends Action{ //lawsuit
             return "";
         }
         subject.movement_alg = new MoveToEastDoor(subject);
-        subject.movement_alg.detectEle();
-        if (subject.movement_alg.ele) {
+        (subject.movement_alg as MoveToEastDoor) .detectEle();
+        if ((subject.movement_alg as MoveToEastDoor).ele) {
             subject.emitSass("OK")
             return `${subject.processedName()} starts heading to the EAST DOOR.`;
         }else{

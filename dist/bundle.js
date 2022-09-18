@@ -2421,7 +2421,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         };
         //NOTE to avoid recursion does not clone states
         this.clone = () => {
-            return new Quotidian(this.room, this.name, this.x, this.y, this.themes, this.directionalSprite, this.flavorText, [...this.beats]);
+            const ret = new Quotidian(this.room, this.name, this.x, this.y, this.themes, this.directionalSprite, this.flavorText, [...this.beats]);
+            ret.movement_alg = this.movement_alg.clone(this);
+            return ret;
         };
         this.die = (causeOfDeath, killerName) => {
             console.log("JR NOTE: trying to kill", this.name, causeOfDeath);
@@ -3662,9 +3664,11 @@ const Quotidian_1 = __webpack_require__(6387);
 //mostly useful for testing, just keeps going int he direction its going and bounces off walls
 class Movement {
     constructor(entity) {
+        this.clone = (entity) => {
+            return new Movement(entity);
+        };
         //alg shouldn't need to change too much about this, besides what happens when you hit a wall
         this.moveInDirection = () => {
-            console.log("JR NOTE: entity is trying to move", this.entity);
             let simulated_x = this.entity.x;
             let simulated_y = this.entity.y;
             if (this.entity.direction === Quotidian_1.Direction.UP) {
@@ -3679,14 +3683,11 @@ class Movement {
             else if (this.entity.direction === Quotidian_1.Direction.RIGHT) {
                 simulated_x += this.entity.currentSpeed;
             }
-            console.log("JR NOTE: entity is trying to move to", { x: simulated_x, y: simulated_y });
             if (this.canMove(simulated_x, simulated_y)) {
-                console.log("JR NOTE: entity was able to move");
                 this.entity.x = simulated_x;
                 this.entity.y = simulated_y;
             }
             else {
-                console.log("JR NOTE: entity was not able to move");
                 this.handleWall();
             }
         };
@@ -3768,6 +3769,9 @@ const MoveToSpecificElement_1 = __webpack_require__(4476);
 class MoveToEastDoor extends MoveToSpecificElement_1.MoveToSpecificElement {
     constructor(entity) {
         super("#eastDoor", entity);
+        this.clone = (entity) => {
+            return new MoveToEastDoor(entity);
+        };
     }
 }
 exports.MoveToEastDoor = MoveToEastDoor;
@@ -3788,6 +3792,9 @@ const MoveToSpecificElement_1 = __webpack_require__(4476);
 class MoveToNorthDoor extends MoveToSpecificElement_1.MoveToSpecificElement {
     constructor(entity) {
         super("#northDoorRug", entity);
+        this.clone = (entity) => {
+            return new MoveToNorthDoor(entity);
+        };
     }
 }
 exports.MoveToNorthDoor = MoveToNorthDoor;
@@ -3808,6 +3815,9 @@ const MoveToSpecificElement_1 = __webpack_require__(4476);
 class MoveToSouthDoor extends MoveToSpecificElement_1.MoveToSpecificElement {
     constructor(entity) {
         super("#southDoor", entity);
+        this.clone = (entity) => {
+            return new MoveToSouthDoor(entity);
+        };
     }
 }
 exports.MoveToSouthDoor = MoveToSouthDoor;
@@ -3829,6 +3839,9 @@ const BaseMovement_1 = __webpack_require__(9059);
 class MoveToSpecificElement extends BaseMovement_1.Movement {
     constructor(ele_id, entity) {
         super(entity);
+        this.clone = (entity) => {
+            return new MoveToSpecificElement(this.ele_id, entity);
+        };
         this.customShit = () => {
             if (!this.ele) {
                 this.detectEle();
@@ -3910,6 +3923,9 @@ const BaseMovement_1 = __webpack_require__(9059);
 class MoveToSpecificLocation extends BaseMovement_1.Movement {
     constructor(x, y, entity) {
         super(entity);
+        this.clone = (entity) => {
+            return new MoveToSpecificLocation(this.x, this.y, entity);
+        };
         this.moveX = (remaining_x) => {
             //if object x is bigger than mine, need to go right, so d
             if (remaining_x > 0) {
@@ -3974,6 +3990,9 @@ class MoveToSpecificPhysicalObject extends BaseMovement_1.Movement {
     constructor(object, entity) {
         super(entity);
         this.customShit = () => {
+        };
+        this.clone = (entity) => {
+            return new MoveToSpecificPhysicalObject(this.object, entity);
         };
         this.moveX = (remaining_x) => {
             //if object x is bigger than mine, need to go right, so d
@@ -4042,6 +4061,9 @@ const BaseMovement_1 = __webpack_require__(9059);
 class MoveToWestDoor extends BaseMovement_1.Movement {
     constructor(entity) {
         super(entity);
+        this.clone = (entity) => {
+            return new MoveToWestDoor(entity);
+        };
     }
 }
 exports.MoveToWestDoor = MoveToWestDoor;
@@ -4067,6 +4089,9 @@ class NoMovement extends BaseMovement_1.Movement {
         };
         this.tick = () => {
             //does nothing rip
+        };
+        this.clone = (entity) => {
+            return new NoMovement(entity);
         };
     }
 }
@@ -4097,6 +4122,9 @@ class RandomMovement extends BaseMovement_1.Movement {
                 this.entity.direction = (0, NonSeededRandUtils_1.getRandomNumberBetween)(1, 4);
             }
         };
+        this.clone = (entity) => {
+            return new RandomMovement(entity);
+        };
     }
 }
 exports.RandomMovement = RandomMovement;
@@ -4122,6 +4150,9 @@ class SteadyMovement extends BaseMovement_1.Movement {
             if (Math.random() > 0.99) {
                 this.entity.direction = (0, NonSeededRandUtils_1.getRandomNumberBetween)(1, 4);
             }
+        };
+        this.clone = (entity) => {
+            return new SteadyMovement(entity);
         };
     }
 }
@@ -4713,12 +4744,12 @@ class Maze {
             for (let map of classes) {
                 for (let blorbo of this.blorbos) {
                     if (blorbo.breaching && blorbo.themes.includes(map.theme)) {
-                        beat.checkClass(blorbo.name, map.name);
+                        beat.checkClass([...blorbo.name, ...(blorbo.states.map((i) => i.name))], map.name);
                     }
                 }
                 for (let item of this.room?.items) {
                     if (item.breaching && item.themes.includes(map.theme)) {
-                        beat.checkClass(item.name, map.name);
+                        beat.checkClass([...item.name, ...(item.states.map((i) => i.name))], map.name);
                     }
                 }
             }
@@ -5262,12 +5293,14 @@ class StoryBeat {
     constructor(command, response, truthfulComment) {
         this.commandClass = "'";
         this.responseClass = "";
-        this.checkClass = (word, className) => {
-            if (this.command.toUpperCase().includes(word.toUpperCase())) {
-                this.commandClass = `${this.commandClass} ${className}`;
-            }
-            if (this.response.toUpperCase().includes(word.toUpperCase())) {
-                this.responseClass = `${this.responseClass} ${className}`;
+        this.checkClass = (words, className) => {
+            for (let word of words) {
+                /* if(this.command.toUpperCase().includes(word.toUpperCase())){
+                     this.commandClass = `${this.commandClass} ${className}`
+                 }*/
+                if (this.response.toUpperCase().includes(word.toUpperCase())) {
+                    this.responseClass = `${this.responseClass} ${className}`;
+                }
             }
         };
         this.command = command;

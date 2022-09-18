@@ -13,6 +13,10 @@ export class MoveToSpecificElement extends Movement{
         this.ele_id = ele_id;
     }
 
+    clone= (entity: Quotidian)=>{
+        return new MoveToSpecificElement(this.ele_id,entity);
+    }
+
     customShit =()=>{
         if(!this.ele){
             this.detectEle();

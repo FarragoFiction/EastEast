@@ -13,6 +13,10 @@ export class MoveToWestDoor extends Movement{
         super(entity);
     }
 
+    clone= (entity: Quotidian)=>{
+        return new MoveToWestDoor(entity);
+    }
+
 
 
 

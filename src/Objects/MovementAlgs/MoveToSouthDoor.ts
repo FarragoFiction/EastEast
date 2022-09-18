@@ -11,5 +11,9 @@ export class MoveToSouthDoor extends MoveToSpecificElement{
         super( "#southDoor",entity);
     }
 
+    clone= (entity: Quotidian)=>{
+        return new MoveToSouthDoor(entity);
+    }
+
    
 }

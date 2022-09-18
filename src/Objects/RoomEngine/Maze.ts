@@ -164,17 +164,13 @@ export class Maze {
         for(let map of classes){
             for(let blorbo of this.blorbos){
                 if(blorbo.breaching && blorbo.themes.includes(map.theme)){
-                    beat.checkClass(blorbo.name,map.name)
-                    for (let state of blorbo.states) {
-                        beat.checkClass(state.name,map.name)
-
-                    }
+                    beat.checkClass([...blorbo.name, ...(blorbo.states.map((i)=>i.name))],map.name)
                 }
             }
      
             for(let item of this.room?.items){
                 if(item.breaching && item.themes.includes(map.theme)){
-                    beat.checkClass(item.name,map.name)
+                    beat.checkClass([...item.name, ...(item.states.map((i)=>i.name))],map.name)
                 }
             }
         }

@@ -10,4 +10,8 @@ export class MoveToNorthDoor extends MoveToSpecificElement{
     constructor(entity: Quotidian){
         super( "#northDoorRug",entity);
     }   
+
+    clone= (entity: Quotidian)=>{
+        return new MoveToNorthDoor(entity);
+    }
 }

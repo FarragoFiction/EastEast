@@ -12,13 +12,17 @@ export class StoryBeat{
         this.truthfulComment  =truthfulComment;
     }
 
-    checkClass = (word: string,className:string)=>{
-        if(this.command.toUpperCase().includes(word.toUpperCase())){
-            this.commandClass = `${this.commandClass} ${className}`
+    checkClass = (words: string[],className:string)=>{
+
+        for(let word of words){
+           /* if(this.command.toUpperCase().includes(word.toUpperCase())){
+                this.commandClass = `${this.commandClass} ${className}`
+            }*/
+            if(this.response.toUpperCase().includes(word.toUpperCase())){
+                this.responseClass = `${this.responseClass} ${className}`
+            }
         }
-        if(this.response.toUpperCase().includes(word.toUpperCase())){
-            this.responseClass = `${this.responseClass} ${className}`
-        }
+
     }
 
     
