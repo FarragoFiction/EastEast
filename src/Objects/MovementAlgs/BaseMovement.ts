@@ -13,6 +13,7 @@ export class Movement{
 
     //alg shouldn't need to change too much about this, besides what happens when you hit a wall
     moveInDirection = ()=>{
+        console.log("JR NOTE: entity is trying to move", this.entity)
         let simulated_x = this.entity.x;
         let simulated_y = this.entity.y;
         if(this.entity.direction === Direction.UP){
@@ -24,11 +25,15 @@ export class Movement{
         }else if(this.entity.direction === Direction.RIGHT){
             simulated_x += this.entity.currentSpeed;
         }
-        
+        console.log("JR NOTE: entity is trying to move to", {x: simulated_x, y: simulated_y});
+
         if(this.canMove(simulated_x, simulated_y)){
+            console.log("JR NOTE: entity was able to move")
+
             this.entity.x = simulated_x;
             this.entity.y = simulated_y;
         }else{
+            console.log("JR NOTE: entity was not able to move")
             this.handleWall();
         }
     }

@@ -1205,7 +1205,7 @@ class Look extends BaseAction_1.Action {
             }
             const lookcloser = current_room.rand.pickFrom(targets);
             const inventory = lookcloser.inventory.length > 0 ? (0, ArrayUtils_1.turnArrayIntoHumanSentence)(lookcloser.inventory.map((i) => i.processedName())) : "nothing";
-            return `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText} They have ${inventory} in their inventory.`;
+            return `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText} They have ${inventory} in their inventory. Their movement algorithm is ${lookcloser.movement_alg.toString()}`;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -2464,13 +2464,15 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             if (!chosenState) {
                 this.stateIndex = 0;
                 chosenState = this.states[this.stateIndex];
-                this.breaching = true;
+                this.breaching = false;
             }
             else {
-                this.breaching = false;
+                this.breaching = true;
             }
             this.name = chosenState.name;
             this.movement_alg = chosenState.movement_alg;
+            this.movement_alg.entity = this;
+            this.currentSpeed = chosenState.currentSpeed;
             this.flavorText = chosenState.flavorText;
             this.themes = chosenState.themes;
             this.directionalSprite = chosenState.directionalSprite;
@@ -3662,6 +3664,7 @@ class Movement {
     constructor(entity) {
         //alg shouldn't need to change too much about this, besides what happens when you hit a wall
         this.moveInDirection = () => {
+            console.log("JR NOTE: entity is trying to move", this.entity);
             let simulated_x = this.entity.x;
             let simulated_y = this.entity.y;
             if (this.entity.direction === Quotidian_1.Direction.UP) {
@@ -3676,11 +3679,14 @@ class Movement {
             else if (this.entity.direction === Quotidian_1.Direction.RIGHT) {
                 simulated_x += this.entity.currentSpeed;
             }
+            console.log("JR NOTE: entity is trying to move to", { x: simulated_x, y: simulated_y });
             if (this.canMove(simulated_x, simulated_y)) {
+                console.log("JR NOTE: entity was able to move");
                 this.entity.x = simulated_x;
                 this.entity.y = simulated_y;
             }
             else {
+                console.log("JR NOTE: entity was not able to move");
                 this.handleWall();
             }
         };
@@ -4056,6 +4062,9 @@ const BaseMovement_1 = __webpack_require__(9059);
 class NoMovement extends BaseMovement_1.Movement {
     constructor() {
         super(...arguments);
+        this.toString = () => {
+            return "NoMovement";
+        };
         this.tick = () => {
             //does nothing rip
         };
@@ -4080,6 +4089,9 @@ const BaseMovement_1 = __webpack_require__(9059);
 class RandomMovement extends BaseMovement_1.Movement {
     constructor() {
         super(...arguments);
+        this.toString = () => {
+            return `RandomMovement ${this.entity.direction}, ${this.entity.currentSpeed}`;
+        };
         this.pickNewDirection = () => {
             if (Math.random() > 0.75) {
                 this.entity.direction = (0, NonSeededRandUtils_1.getRandomNumberBetween)(1, 4);
@@ -4578,8 +4590,6 @@ const EyeKiller_1 = __webpack_require__(2937);
 const Peewee_1 = __webpack_require__(936);
 const Quotidian_1 = __webpack_require__(6387);
 const SnailFriend_1 = __webpack_require__(240);
-const JR_1 = __webpack_require__(7455);
-const Match_1 = __webpack_require__(7685);
 const Underscore_1 = __webpack_require__(9194);
 const Solemn_1 = __webpack_require__(5322);
 const Devona_1 = __webpack_require__(9621);
@@ -4609,12 +4619,12 @@ class Maze {
                 this.blorbos.push(new ChickenFriend_1.Chicken(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.EyeKiller(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.Innocent(this.room, 150, 150));
-                this.blorbos.push(new Match_1.Match(this.room, 150, 150));
+                //this.blorbos.push(new Match(this.room, 150, 150));
                 this.blorbos.push(new Solemn_1.Solemn(this.room, 150, 150));
                 this.blorbos.push(new Devona_1.Devona(this.room, 150, 150));
                 this.blorbos.push(new Neville_1.Neville(this.room, 150, 150));
                 this.blorbos.push(new Yongki_1.Yongki(this.room, 150, 150));
-                this.blorbos.push(new JR_1.JR(this.room, 150, 150));
+                //this.blorbos.push(new JR(this.room, 150, 150));
             }
         };
         this.begin = () => {
@@ -4647,7 +4657,7 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Devona", "Neville", "Killer", "Innocent"];
+            const blorbosToTest = ["Devona", "Neville"];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
                     for (let theme of blorbo.themes) {
@@ -5019,8 +5029,9 @@ class Room {
             //always the same room from the same item, is what matters.
             const room = await (0, exports.randomRoomWithThemes)(this.maze, this.element, [...obj.themes], new SeededRandom_1.default(obj.processedName().length));
             room.totemObject = obj;
+            console.log("JR NOTE: what is the object I'm being sucked into?", obj);
             room.name = `${obj.processedName()}'s Innerworld`;
-            room.children = [this]; //do NOT trigger the auto leadback;
+            room.children = [this, this, this]; //do NOT trigger the auto leadback;
             return room;
         };
         this.processDeath = (blorbo) => {
@@ -8444,7 +8455,7 @@ const itsFriday = () => {
 window.onload = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const friday = urlParams.get('friday');
+    const friday = urlParams.get('friday'); //you can escape friday if you say its not friday
     console.log("JR NOTE: am i trying to override friday?", friday);
     if ((new Date().getDay() === 5 && friday !== "false") || friday === "true") {
         itsFriday();

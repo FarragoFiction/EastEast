@@ -6,6 +6,10 @@ import { Movement } from "./BaseMovement";
 //decides where to move next.
 export class RandomMovement extends Movement{
 
+    toString = ()=>{
+        return `RandomMovement ${this.entity.direction}, ${this.entity.currentSpeed}`
+    }
+
     pickNewDirection = ()=>{
         if(Math.random() > 0.75){
             this.entity.direction = getRandomNumberBetween(1,4);

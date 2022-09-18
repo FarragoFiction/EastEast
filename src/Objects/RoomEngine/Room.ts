@@ -301,8 +301,9 @@ export class Room {
        //always the same room from the same item, is what matters.
        const room = await randomRoomWithThemes(this.maze,this.element,[...obj.themes],new SeededRandom(obj.processedName().length));
        room.totemObject = obj;
+       console.log("JR NOTE: what is the object I'm being sucked into?", obj)
        room.name = `${obj.processedName()}'s Innerworld`;
-       room.children = [this];//do NOT trigger the auto leadback;
+       room.children = [this,this,this];//do NOT trigger the auto leadback;
        return room;
 
     }

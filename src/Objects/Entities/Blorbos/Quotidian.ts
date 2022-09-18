@@ -191,13 +191,15 @@ export class Quotidian extends PhysicalObject {
         if (!chosenState) {
             this.stateIndex = 0;
             chosenState = this.states[this.stateIndex];
-            this.breaching = true;
-        }else{
             this.breaching = false;
+        }else{
+            this.breaching = true;
         }
 
         this.name = chosenState.name;
         this.movement_alg = (chosenState as Quotidian).movement_alg;
+        this.movement_alg.entity = this;
+        this.currentSpeed =  (chosenState as Quotidian).currentSpeed;
         this.flavorText = chosenState.flavorText;
         this.themes = chosenState.themes;
         this.directionalSprite = (chosenState as Quotidian).directionalSprite;

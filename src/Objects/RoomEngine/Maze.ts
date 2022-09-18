@@ -59,12 +59,12 @@ export class Maze {
             this.blorbos.push(new Chicken(this.room, 150, 150));
             this.blorbos.push(new EyeKiller(this.room, 150, 150));
             this.blorbos.push(new Innocent(this.room, 150, 150));
-            this.blorbos.push(new Match(this.room, 150, 150));
+            //this.blorbos.push(new Match(this.room, 150, 150));
             this.blorbos.push(new Solemn(this.room, 150, 150));
             this.blorbos.push(new Devona(this.room, 150, 150));
             this.blorbos.push(new Neville(this.room, 150, 150));
             this.blorbos.push(new Yongki(this.room, 150, 150));
-            this.blorbos.push(new JR(this.room, 150, 150));
+            //this.blorbos.push(new JR(this.room, 150, 150));
 
         }
     }
@@ -101,7 +101,7 @@ export class Maze {
         if (!this.room) {
             return;
         }
-        const blorbosToTest = ["Devona", "Neville", "Killer", "Innocent"];
+        const blorbosToTest = ["Devona", "Neville"];
         for (let blorbo of this.blorbos) {
             if (!blorbo.owner) {//if you're in someones inventory, no spawning for you
                 for (let theme of blorbo.themes) {
@@ -165,6 +165,10 @@ export class Maze {
             for(let blorbo of this.blorbos){
                 if(blorbo.breaching && blorbo.themes.includes(map.theme)){
                     beat.checkClass(blorbo.name,map.name)
+                    for (let state of blorbo.states) {
+                        beat.checkClass(state.name,map.name)
+
+                    }
                 }
             }
      
