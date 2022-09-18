@@ -129,10 +129,28 @@ export class Secret {
 
 }
 
+
+export class Slaughter {
+
+    text: string;
+    title: string;
+    completion_comment?: string;
+    constructor(title: string, text: string, completion_comment?: string) {
+        this.text = text;
+        this.title = title;
+        this.completion_comment = completion_comment;
+    }
+
+}
+
 //lets play of south is summarized here by the Guide: https://www.tumblr.com/blog/view/figuringoutnothing/689403345728847873?source=share
 
 export interface PasswordMap {
     [details: string]: Secret;
+}
+
+export interface SlaughterMap {
+    [details: string]: Slaughter;
 }
 //https://archiveofourown.org/works/40961847
 
@@ -234,24 +252,24 @@ export const passwords: PasswordMap = {
 };
 
 //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
-export const docSlaughtersFiles: PasswordMap = {
-     "PLACE YOUR TRUST IN ME": new Secret("Notes of Slaughter: Prelude", "Secrets/Content/6.js")
-    , "RAISE YOU FROM THE END OF THE WORLD": new Secret("Notes of Slaughter 0", "Secrets/Content/7.js")
-    , "SERENE AND CALM": new Secret("Notes of Slaughter 1", "Secrets/Content/8.js")
-    , "BEWARE OBLIVION IS AT HAND": new Secret("Notes of Slaughter 2", "Secrets/Content/9.js")
-    , "I AM HERE TO TREAT DISEASE": new Secret("Notes of Slaughter 3", "Secrets/Content/10.js")
-    , "FLESH IS BOUND TO THE FLOW OF TIME": new Secret("Notes of Slaughter 4", "Secrets/Content/11.js")
-    , "TIME IS DEAD": new Secret("Notes of Slaughter 5", "Secrets/Content/12.js")
-    , "SAVE YOUR LIFE FROM DESTRUCTION": new Secret("Notes of Slaughter 6", "Secrets/Content/13.js")
-    , "GENTLE CROONING VOICE": new Secret("Notes of Slaughter 7", "Secrets/Content/14.js")
-    , "LOOKS AFTER THE BROKEN": new Secret("Notes of Slaughter 8", "Secrets/Content/15.js")
-    , "TAKE CARE OF OTHERS": new Secret("Notes of Slaughter 9", "Secrets/Content/16.js")
-    , "IT WAS DAWN": new Secret("Notes of Slaughter 10", "Secrets/Content/17.js")
-    , "THE SOUL IS IMMORTAL": new Secret("Notes of Slaughter 11", "Secrets/Content/18.js")
-    , "WHEN ALL HAD ABANDONED HOPE": new Secret("Notes of Slaughter 12", "Secrets/Content/19.js")
-    , "TELLBRAK3700": new Secret("Notes of Slaughter 13", "Secrets/Content/30.js")
-    , "PENNY WICKNER": new Secret("Notes of Slaughter 14", "Secrets/Content/31.js")
-    , "EXPERIMENTALMUSIC": new Secret("Notes of Slaughter 16: ExperimentalMusic", "Secrets/Content/36.js")
+export const docSlaughtersFiles: SlaughterMap = {
+     "PLACE YOUR TRUST IN ME": new Slaughter("Notes of Slaughter: Prelude", "Secrets/Content/6.js","I wanted to make sure I Did Not Forget, so I Wrote It All Down.")
+    , "RAISE YOU FROM THE END OF THE WORLD": new Slaughter("Notes of Slaughter 0", "Secrets/Content/7.js","Child, do you Understand?")
+    , "SERENE AND CALM": new Slaughter("Notes of Slaughter 1", "Secrets/Content/8.js")
+    , "BEWARE OBLIVION IS AT HAND": new Slaughter("Notes of Slaughter 2", "Secrets/Content/9.js")
+    , "I AM HERE TO TREAT DISEASE": new Slaughter("Notes of Slaughter 3", "Secrets/Content/10.js")
+    , "FLESH IS BOUND TO THE FLOW OF TIME": new Slaughter("Notes of Slaughter 4", "Secrets/Content/11.js")
+    , "TIME IS DEAD": new Slaughter("Notes of Slaughter 5", "Secrets/Content/12.js")
+    , "SAVE YOUR LIFE FROM DESTRUCTION": new Slaughter("Notes of Slaughter 6", "Secrets/Content/13.js")
+    , "GENTLE CROONING VOICE": new Slaughter("Notes of Slaughter 7", "Secrets/Content/14.js")
+    , "LOOKS AFTER THE BROKEN": new Slaughter("Notes of Slaughter 8", "Secrets/Content/15.js")
+    , "TAKE CARE OF OTHERS": new Slaughter("Notes of Slaughter 9", "Secrets/Content/16.js")
+    , "IT WAS DAWN": new Slaughter("Notes of Slaughter 10", "Secrets/Content/17.js")
+    , "THE SOUL IS IMMORTAL": new Slaughter("Notes of Slaughter 11", "Secrets/Content/18.js")
+    , "WHEN ALL HAD ABANDONED HOPE": new Slaughter("Notes of Slaughter 12", "Secrets/Content/19.js")
+    , "TELLBRAK3700": new Slaughter("Notes of Slaughter 13", "Secrets/Content/30.js")
+    , "PENNY WICKNER": new Slaughter("Notes of Slaughter 14", "Secrets/Content/31.js")
+    , "EXPERIMENTALMUSIC": new Slaughter("Notes of Slaughter 16: ExperimentalMusic", "Secrets/Content/36.js")
 
     
 }

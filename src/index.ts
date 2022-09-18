@@ -58,6 +58,7 @@ window.onload = async () => {
     const apocalypse = urlParams.get('apocalypse');
     if(apocalypse === "white"){
         whiteNight();
+        return;
     }
 
     const ele = document.querySelector("#current-room") as HTMLElement;

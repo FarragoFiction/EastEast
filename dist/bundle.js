@@ -7470,14 +7470,20 @@ exports.initThemes = initThemes;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ApocalypseEngine = void 0;
+const __1 = __webpack_require__(3607);
 const misc_1 = __webpack_require__(4079);
-const defaultSpeed = 166;
+const PasswordStorage_1 = __webpack_require__(9867);
+const TypingMinigame_1 = __webpack_require__(8048);
+const defaultSpeed = 0;
 class ApocalypseEngine {
     constructor(parent) {
         this.typing = false;
+        this.passwords = [];
         this.speed = defaultSpeed;
         this.clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
-        this.text = "";
+        this.text = ""; //what you want to type right now
+        //where in the password list are you.
+        this.current_index = 0;
         this.init = () => {
             if (!this.parent) {
                 return;
@@ -7502,82 +7508,45 @@ class ApocalypseEngine {
             const crt = (0, misc_1.createElementWithId)("div", "crt");
             const scanline = (0, misc_1.createElementWithIdAndParent)("div", crt, undefined, "scanline");
             const lines = (0, misc_1.createElementWithIdAndParent)("div", crt, undefined, "lines");
-            const terminal = (0, misc_1.createElementWithIdAndParent)("div", crt, "terminal");
+            this.terminal = (0, misc_1.createElementWithIdAndParent)("div", crt, "terminal");
             this.parent.append(crt);
-            this.transcript("Please type the following words...");
+            this.transcript("Please practice typing the following words...");
+            this.loadPassword();
+            //good job: can you go faster?
         };
-        this.transcript = async (linesUnedited) => {
-            const lines = linesUnedited.split("\n");
-            const terminal = document.querySelector("#terminal");
-            if (!terminal) {
+        this.loadNextPassword = () => {
+            const secret = Object.values(PasswordStorage_1.docSlaughtersFiles)[this.current_index];
+            if (secret.completion_comment) {
+                this.transcript(secret.completion_comment);
+            }
+            this.current_index++;
+            this.loadPassword();
+        };
+        this.loadPassword = () => {
+            if (!this.terminal) {
+                this.transcript("What did you do?");
                 return;
             }
-            terminal.innerHTML = "";
-            if (this.video) {
-                const video_ele = (0, misc_1.createElementWithIdAndParent)("video", terminal);
-                video_ele.src = this.video;
-                video_ele.controls = false;
-                video_ele.autoplay = true;
+            if (Object.values(PasswordStorage_1.docSlaughtersFiles).length <= this.current_index) {
+                this.transcript("Thank you for practicing your typing. Do you Understand what you have learned? Please tell me you Understand...");
             }
-            if (this.bonusHtml) {
-                const ele = (0, misc_1.createElementWithIdAndParent)("div", terminal);
-                ele.innerHTML = this.bonusHtml;
+            const secret = Object.values(PasswordStorage_1.docSlaughtersFiles)[this.current_index];
+            this.text = "Please Practice typing the following words:";
+            if (secret.text.trim() != "") {
+                this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, (0, __1.loadSecretText)(secret.text), this.loadNextPassword);
             }
+            this.transcript(this.text);
+        };
+        this.transcript = async (linesUnedited) => {
+            if (!this.terminal) {
+                return;
+            }
+            const lines = linesUnedited.split("\n");
             for (let line of lines) {
                 const element = document.createElement("p");
-                terminal.append(element);
-                await this.typeWrite(terminal, element, line);
-                await (0, misc_1.sleep)(this.speed * 10);
+                this.terminal.append(element);
+                element.innerHTML = line;
             }
-        };
-        //this version of typeWrite skips certain tags but does them all at once
-        //(necessary to capture html)
-        //v1 just skips lines that start with [
-        //and v2 doesn't play a sound or sleep between [ and ] tags
-        //but neither is sufficient to handle html, so v3 is born
-        //i will, of course, forget where v3 is.
-        //v2, btw, is in SecurityLog
-        //and v1 is in ATranscript and ASecondTranscript
-        //because YES the code is intentionally a shitty maze for my future self
-        //and i guess any future Heirs
-        this.typeWrite = async (scroll_element, element, text) => {
-            this.typing = true;
-            let skipping = false;
-            for (let i = 0; i < text.length; i++) {
-                if (text.charAt(i) === "[" || text.charAt(i) === "<") {
-                    skipping = true;
-                    i = this.doChunkAllAtOnce(element, i, text);
-                }
-                if (!skipping) {
-                    await (0, misc_1.sleep)(this.speed);
-                    this.clickAudio.play();
-                    element.innerHTML += text.charAt(i);
-                }
-                scroll_element.scrollTop = scroll_element.scrollHeight;
-                skipping = false;
-                if (!this.typing) {
-                    break;
-                }
-            }
-        };
-        this.doChunkAllAtOnce = (ele, start_index, text) => {
-            const offset = 0;
-            //look for ending offset
-            //create new span element
-            //have its inner html be the chunk
-            //return the new stop index
-            //ignore any tag stuff before this point (it was already processed)
-            const subtext = text.substring(start_index);
-            const starting_char = text[start_index];
-            let charsTillEnd = 0;
-            if (starting_char === "<") {
-                charsTillEnd = subtext.indexOf(">") + 1;
-            }
-            else if (starting_char === "[") {
-                charsTillEnd = subtext.indexOf("]") + 1;
-            }
-            ele.innerHTML = text.substring(0, start_index + charsTillEnd);
-            return start_index + charsTillEnd;
         };
         this.parent = parent;
         this.init();
@@ -7601,7 +7570,7 @@ exports.ApocalypseEngine = ApocalypseEngine;
 //if anyone can explain the origin of each one you'll unlock secret content directly from me
 //hell, if you can even do a majority I'd love to hear it, in all sincerity. I love hearing people find my work interesting :)
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.text = exports.passwords = exports.Secret = exports.initRabbitHole = exports.translate = exports.albhed_map = void 0;
+exports.text = exports.docSlaughtersFiles = exports.passwords = exports.Slaughter = exports.Secret = exports.initRabbitHole = exports.translate = exports.albhed_map = void 0;
 const Transcript_1 = __webpack_require__(8122);
 //look, okay, al bhed from ffx is something that for *some* percent of the population feels in their bones
 //so this will drive home a nagging sense of familiarity, that it MUST be important
@@ -7706,6 +7675,14 @@ class Secret {
     }
 }
 exports.Secret = Secret;
+class Slaughter {
+    constructor(title, text, completion_comment) {
+        this.text = text;
+        this.title = title;
+        this.completion_comment = completion_comment;
+    }
+}
+exports.Slaughter = Slaughter;
 //https://archiveofourown.org/works/40961847
 /*
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
@@ -7770,23 +7747,7 @@ exports.passwords = {
     "THE END IS NEVER THE END": new Secret("Confessionals 2", "Secrets/Content/2.js"),
     "YOU CAN GET BETTER": new Secret("Confessionals 3", "Secrets/Content/3.js"),
     "KNOW RESTRAINT": new Secret("Confessionals 4", "Secrets/Content/4.js"),
-    "NO RESTRAINT": new Secret("Confessionals 5", "Secrets/Content/5.js")
-    //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
-    ,
-    "PLACE YOUR TRUST IN ME": new Secret("Notes of Slaughter: Prelude", "Secrets/Content/6.js"),
-    "RAISE YOU FROM THE END OF THE WORLD": new Secret("Notes of Slaughter 0", "Secrets/Content/7.js"),
-    "SERENE AND CALM": new Secret("Notes of Slaughter 1", "Secrets/Content/8.js"),
-    "BEWARE OBLIVION IS AT HAND": new Secret("Notes of Slaughter 2", "Secrets/Content/9.js"),
-    "I AM HERE TO TREAT DISEASE": new Secret("Notes of Slaughter 3", "Secrets/Content/10.js"),
-    "FLESH IS BOUND TO THE FLOW OF TIME": new Secret("Notes of Slaughter 4", "Secrets/Content/11.js"),
-    "TIME IS DEAD": new Secret("Notes of Slaughter 5", "Secrets/Content/12.js"),
-    "SAVE YOUR LIFE FROM DESTRUCTION": new Secret("Notes of Slaughter 6", "Secrets/Content/13.js"),
-    "GENTLE CROONING VOICE": new Secret("Notes of Slaughter 7", "Secrets/Content/14.js"),
-    "LOOKS AFTER THE BROKEN": new Secret("Notes of Slaughter 8", "Secrets/Content/15.js"),
-    "TAKE CARE OF OTHERS": new Secret("Notes of Slaughter 9", "Secrets/Content/16.js"),
-    "IT WAS DAWN": new Secret("Notes of Slaughter 10", "Secrets/Content/17.js"),
-    "THE SOUL IS IMMORTAL": new Secret("Notes of Slaughter 11", "Secrets/Content/18.js"),
-    "WHEN ALL HAD ABANDONED HOPE": new Secret("Notes of Slaughter 12", "Secrets/Content/19.js"),
+    "NO RESTRAINT": new Secret("Confessionals 5", "Secrets/Content/5.js"),
     "POWER CORRUPTS": new Secret("Jumbled Mess", "Secrets/Content/20.js"),
     "KNOWLEDGE IS POWER": new Secret("Jumbled Mess: Explanation", "Secrets/Content/21.js"),
     "LEAVE YOUR MARK": new Secret("Do you remember the first time you killed someone?", "Secrets/Content/22.js"),
@@ -7796,10 +7757,7 @@ exports.passwords = {
     "INFINITE AMOUNT OF PAIN": new Secret("Do you remember the first time you killed someone?", "Secrets/Content/27.js"),
     "PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH": new Secret("Hostage's Lament", "Secrets/Content/28.js"),
     "ELIAS SMITH": new Secret("JR Ramble", "Secrets/Content/29.js"),
-    "TELLBRAK3700": new Secret("Notes of Slaughter 13", "Secrets/Content/30.js"),
-    "PENNY WICKNER": new Secret("Notes of Slaughter 14", "Secrets/Content/31.js"),
     "ONCE YOU OPEN THE CURTAINS ALL THAT'S LEFT TO DO IS GO TO THE OTHER SIDE AND CLOSE THEM AGAIN": new Secret("Notes of Slaughter 15", "Secrets/Content/35.js"),
-    "EXPERIMENTALMUSIC": new Secret("Notes of Slaughter 16: ExperimentalMusic", "Secrets/Content/36.js"),
     "PARADISE AND PARASITE": new Secret("ARM2: LOOP ???", "Secrets/Content/38.js"),
     "WIDOWS WEAVE": new Secret("BLAME THE SPIDERS FOR THIS", "", "", "http://farragofiction.com/ZampanioHotlink/Films/spiders.mp4") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bone because its so obscure
     ,
@@ -7811,6 +7769,26 @@ exports.passwords = {
     "EARWORM HUMMING IN A DREAM": new Secret("24/7 ABSOLUTE BULLSHIT", "", `<iframe class="fuckedup" width="560" height="315" src="https://www.youtube.com/embed/16WNvL8Gtt0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`),
     "LS": new Secret("FILE LIST (UNIX)", "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", "Secrets/PasswordStorage.ts")
+};
+//note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
+exports.docSlaughtersFiles = {
+    "PLACE YOUR TRUST IN ME": new Slaughter("Notes of Slaughter: Prelude", "Secrets/Content/6.js", "I wanted to make sure I Did Not Forget, so I Wrote It All Down."),
+    "RAISE YOU FROM THE END OF THE WORLD": new Slaughter("Notes of Slaughter 0", "Secrets/Content/7.js", "Child, do you Understand?"),
+    "SERENE AND CALM": new Slaughter("Notes of Slaughter 1", "Secrets/Content/8.js"),
+    "BEWARE OBLIVION IS AT HAND": new Slaughter("Notes of Slaughter 2", "Secrets/Content/9.js"),
+    "I AM HERE TO TREAT DISEASE": new Slaughter("Notes of Slaughter 3", "Secrets/Content/10.js"),
+    "FLESH IS BOUND TO THE FLOW OF TIME": new Slaughter("Notes of Slaughter 4", "Secrets/Content/11.js"),
+    "TIME IS DEAD": new Slaughter("Notes of Slaughter 5", "Secrets/Content/12.js"),
+    "SAVE YOUR LIFE FROM DESTRUCTION": new Slaughter("Notes of Slaughter 6", "Secrets/Content/13.js"),
+    "GENTLE CROONING VOICE": new Slaughter("Notes of Slaughter 7", "Secrets/Content/14.js"),
+    "LOOKS AFTER THE BROKEN": new Slaughter("Notes of Slaughter 8", "Secrets/Content/15.js"),
+    "TAKE CARE OF OTHERS": new Slaughter("Notes of Slaughter 9", "Secrets/Content/16.js"),
+    "IT WAS DAWN": new Slaughter("Notes of Slaughter 10", "Secrets/Content/17.js"),
+    "THE SOUL IS IMMORTAL": new Slaughter("Notes of Slaughter 11", "Secrets/Content/18.js"),
+    "WHEN ALL HAD ABANDONED HOPE": new Slaughter("Notes of Slaughter 12", "Secrets/Content/19.js"),
+    "TELLBRAK3700": new Slaughter("Notes of Slaughter 13", "Secrets/Content/30.js"),
+    "PENNY WICKNER": new Slaughter("Notes of Slaughter 14", "Secrets/Content/31.js"),
+    "EXPERIMENTALMUSIC": new Slaughter("Notes of Slaughter 16: ExperimentalMusic", "Secrets/Content/36.js")
 };
 //future me, don't forget https://www.tumblr.com/blog/view/jadedresearcher/688182806608838656?source=share
 exports.text = `${Object.keys(exports.passwords).length} Items:.\n.\n.\n.\n ${Object.keys(exports.passwords).join("\n")}`;
@@ -7978,6 +7956,47 @@ class TranscriptEngine {
     }
 }
 exports.TranscriptEngine = TranscriptEngine;
+
+
+/***/ }),
+
+/***/ 8048:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TypingMiniGame = void 0;
+const misc_1 = __webpack_require__(4079);
+class TypingMiniGame {
+    constructor(parent, original_text, callback) {
+        this.init = () => {
+            console.log("JR NOTE: initing typing mini game");
+            const content = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
+            content.innerHTML = `<p>Word List:</p>
+        ${this.sorted_word_list.join("<li>")}
+        
+        `;
+            console.log("JR NOTE: content is ", content, "parent is", this.parent);
+        };
+        this.original_text = original_text;
+        this.callback = callback;
+        this.parent = parent;
+        const split_words = original_text.split(" ");
+        this.unique_word_map = {};
+        for (let word of split_words) {
+            if (Object.keys(this.unique_word_map).includes(word)) {
+                this.unique_word_map[word] = { word: word, typed: false, times_seen: this.unique_word_map[word].times_seen + 1 };
+            }
+            else {
+                this.unique_word_map[word] = { word: word, typed: false, times_seen: 1 };
+            }
+        }
+        this.sorted_word_list = Object.keys(this.unique_word_map).sort((a, b) => { return a.length - b.length; });
+        this.init();
+    }
+}
+exports.TypingMiniGame = TypingMiniGame;
 
 
 /***/ }),
@@ -8630,6 +8649,7 @@ window.onload = async () => {
     const apocalypse = urlParams.get('apocalypse');
     if (apocalypse === "white") {
         whiteNight();
+        return;
     }
     const ele = document.querySelector("#current-room");
     const storySoFar = document.querySelector(".story-so-far");
@@ -10871,6 +10891,8 @@ var map = {
 	"./Secrets/PasswordStorage.ts": 9867,
 	"./Secrets/Transcript": 8122,
 	"./Secrets/Transcript.ts": 8122,
+	"./Secrets/TypingMinigame": 8048,
+	"./Secrets/TypingMinigame.ts": 8048,
 	"./Utils/ArrayUtils": 3907,
 	"./Utils/ArrayUtils.ts": 3907,
 	"./Utils/LocalStorageUtils": 5565,
