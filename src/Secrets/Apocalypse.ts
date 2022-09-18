@@ -10,9 +10,8 @@ export class ApocalypseEngine {
     parent: HTMLElement;
     speed = defaultSpeed;
     clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
-    text = ""; //what you want to type right now
     //where in the password list are you.
-    current_index = 0;
+    current_index = -1;
     terminal? :HTMLElement;
     minigame?: TypingMiniGame;
 
@@ -53,16 +52,14 @@ export class ApocalypseEngine {
 
         this.parent.append(crt);
         this.transcript("Please practice typing the following words...");
-        this.loadPassword();
+        this.minigame = new TypingMiniGame(this.terminal,"Confession of a Doctor. Please Listen.", this.loadNextPassword);
         //good job: can you go faster?
 
     }
     
-    loadNextPassword = ()=>{
+    loadNextPassword = (text: string)=>{
         const secret = Object.values(docSlaughtersFiles)[this.current_index];
-        if(secret.completion_comment){
-            this.transcript(secret.completion_comment);
-        }
+        this.transcript(text);
         this.current_index ++;
         this.loadPassword();
     }
@@ -72,19 +69,17 @@ export class ApocalypseEngine {
             this.transcript("What did you do?");
             return;
         }
+        this.terminal.innerHTML = "";
         if(Object.values(docSlaughtersFiles).length <= this.current_index){
             this.transcript("Thank you for practicing your typing. Do you Understand what you have learned? Please tell me you Understand...");
 
         }
         const secret = Object.values(docSlaughtersFiles)[this.current_index];
 
-        this.text = "Please Practice typing the following words:";
+        this.transcript("Please practice typing the following, entirely random, words, in order of difficulty:");
         if(secret.text.trim() != ""){
-         
-         this.minigame = new TypingMiniGame(this.terminal,loadSecretText(secret.text), this.loadNextPassword);
-
+            this.minigame?.parseText(secret.text);
         }
-        this.transcript(this.text);
     }
 
     transcript = async (linesUnedited: string) => {
@@ -94,9 +89,26 @@ export class ApocalypseEngine {
         const lines = linesUnedited.split("\n");
 
         for (let line of lines) {
-            const element = document.createElement("p");
-            this.terminal.append(element);
-            element.innerHTML = line;
+            const element = createElementWithIdAndParent("p",this.terminal);
+            this.typeWrite(element,line);
+        }
+    }
+
+    typeWrite = async (element: HTMLElement, text: string) => {
+        this.typing = true;
+        let skipping = false;
+        for (let i = 0; i < text.length; i++) {
+
+            if (!skipping) {
+                await sleep(this.speed);
+
+                this.clickAudio.play();
+                element.innerHTML += text.charAt(i);
+            }
+            skipping = false;
+            if (!this.typing) {
+                break;
+            }
         }
     }
 

@@ -7470,7 +7470,6 @@ exports.initThemes = initThemes;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ApocalypseEngine = void 0;
-const __1 = __webpack_require__(3607);
 const misc_1 = __webpack_require__(4079);
 const PasswordStorage_1 = __webpack_require__(9867);
 const TypingMinigame_1 = __webpack_require__(8048);
@@ -7481,9 +7480,8 @@ class ApocalypseEngine {
         this.passwords = [];
         this.speed = defaultSpeed;
         this.clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
-        this.text = ""; //what you want to type right now
         //where in the password list are you.
-        this.current_index = 0;
+        this.current_index = -1;
         this.init = () => {
             if (!this.parent) {
                 return;
@@ -7511,14 +7509,12 @@ class ApocalypseEngine {
             this.terminal = (0, misc_1.createElementWithIdAndParent)("div", crt, "terminal");
             this.parent.append(crt);
             this.transcript("Please practice typing the following words...");
-            this.loadPassword();
+            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, "Confession of a Doctor. Please Listen.", this.loadNextPassword);
             //good job: can you go faster?
         };
-        this.loadNextPassword = () => {
+        this.loadNextPassword = (text) => {
             const secret = Object.values(PasswordStorage_1.docSlaughtersFiles)[this.current_index];
-            if (secret.completion_comment) {
-                this.transcript(secret.completion_comment);
-            }
+            this.transcript(text);
             this.current_index++;
             this.loadPassword();
         };
@@ -7527,15 +7523,15 @@ class ApocalypseEngine {
                 this.transcript("What did you do?");
                 return;
             }
+            this.terminal.innerHTML = "";
             if (Object.values(PasswordStorage_1.docSlaughtersFiles).length <= this.current_index) {
                 this.transcript("Thank you for practicing your typing. Do you Understand what you have learned? Please tell me you Understand...");
             }
             const secret = Object.values(PasswordStorage_1.docSlaughtersFiles)[this.current_index];
-            this.text = "Please Practice typing the following words:";
+            this.transcript("Please practice typing the following, entirely random, words, in order of difficulty:");
             if (secret.text.trim() != "") {
-                this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, (0, __1.loadSecretText)(secret.text), this.loadNextPassword);
+                this.minigame?.parseText(secret.text);
             }
-            this.transcript(this.text);
         };
         this.transcript = async (linesUnedited) => {
             if (!this.terminal) {
@@ -7543,9 +7539,23 @@ class ApocalypseEngine {
             }
             const lines = linesUnedited.split("\n");
             for (let line of lines) {
-                const element = document.createElement("p");
-                this.terminal.append(element);
-                element.innerHTML = line;
+                const element = (0, misc_1.createElementWithIdAndParent)("p", this.terminal);
+                this.typeWrite(element, line);
+            }
+        };
+        this.typeWrite = async (element, text) => {
+            this.typing = true;
+            let skipping = false;
+            for (let i = 0; i < text.length; i++) {
+                if (!skipping) {
+                    await (0, misc_1.sleep)(this.speed);
+                    this.clickAudio.play();
+                    element.innerHTML += text.charAt(i);
+                }
+                skipping = false;
+                if (!this.typing) {
+                    break;
+                }
             }
         };
         this.parent = parent;
@@ -7970,30 +7980,36 @@ exports.TypingMiniGame = void 0;
 const misc_1 = __webpack_require__(4079);
 class TypingMiniGame {
     constructor(parent, original_text, callback) {
+        this.parseText = (text) => {
+            text = text.replaceAll(/\n/g, " ");
+            this.sentences = text.split(/[.?!]/g);
+            const split_words = text.split(" ");
+            for (let w of split_words) {
+                let word = w.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase();
+                if (Object.keys(this.unique_word_map).includes(word.toLowerCase())) {
+                    this.unique_word_map[word] = { word: word, typed: false, times_seen: this.unique_word_map[word].times_seen + 1 };
+                }
+                else {
+                    this.unique_word_map[word] = { word: word, typed: false, times_seen: 1 };
+                }
+            }
+            this.sorted_word_list = Object.keys(this.unique_word_map).sort((a, b) => { return a.length - b.length; });
+            this.init();
+        };
         this.init = () => {
             console.log("JR NOTE: initing typing mini game");
             const content = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
-            content.innerHTML = `<p>Word List:</p>
+            content.innerHTML = `<p>Word List: <b>${this.sorted_word_list.length}</b></p>
         ${this.sorted_word_list.join("<li>")}
-        
+        <p>Sentences: ${this.sentences}</p>
         `;
-            console.log("JR NOTE: content is ", content, "parent is", this.parent);
         };
-        this.original_text = original_text;
         this.callback = callback;
         this.parent = parent;
-        const split_words = original_text.split(" ");
         this.unique_word_map = {};
-        for (let word of split_words) {
-            if (Object.keys(this.unique_word_map).includes(word)) {
-                this.unique_word_map[word] = { word: word, typed: false, times_seen: this.unique_word_map[word].times_seen + 1 };
-            }
-            else {
-                this.unique_word_map[word] = { word: word, typed: false, times_seen: 1 };
-            }
-        }
-        this.sorted_word_list = Object.keys(this.unique_word_map).sort((a, b) => { return a.length - b.length; });
-        this.init();
+        this.sentences = [];
+        this.sorted_word_list = [];
+        this.parseText(original_text);
     }
 }
 exports.TypingMiniGame = TypingMiniGame;
