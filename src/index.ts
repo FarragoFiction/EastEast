@@ -7,6 +7,7 @@ import SeededRandom from "./Utils/SeededRandom";
 import { Maze } from "./Objects/RoomEngine/Maze";
 import { createElementWithIdAndParent } from "./Utils/misc";
 import { visitFunctionBody } from "typescript";
+import { ApocalypseEngine } from "./Secrets/Apocalypse";
 
 
 let maze: Maze;
@@ -36,6 +37,15 @@ const itsFriday = ()=>{
     }
 }
 
+const whiteNight = ()=>{
+    const body = document.querySelector("body");
+    if(body){
+        body.innerHTML = "";
+        const apocalypse = new ApocalypseEngine(body);
+    }
+
+}
+
 window.onload = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -45,6 +55,11 @@ window.onload = async () => {
         itsFriday();
         return;
     }
+    const apocalypse = urlParams.get('apocalypse');
+    if(apocalypse === "white"){
+        whiteNight();
+    }
+
     const ele = document.querySelector("#current-room") as HTMLElement;
     const storySoFar = document.querySelector(".story-so-far") as HTMLElement;
     storySoFar.innerHTML = "";

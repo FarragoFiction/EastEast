@@ -8469,7 +8469,7 @@ const handleClick = () => {
         const button = document.querySelector("#startbutton");
         if (button) {
             button.remove();
-            maze.begin();
+            //maze.begin();
         }
         window.removeEventListener("click", handleClick);
     }
@@ -8485,6 +8485,12 @@ const itsFriday = () => {
         `;
     }
 };
+const whiteNight = () => {
+    const body = document.querySelector("body");
+    if (body) {
+        body.innerHTML = "";
+    }
+};
 window.onload = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -8493,6 +8499,10 @@ window.onload = async () => {
     if ((new Date().getDay() === 5 && friday !== "false") || friday === "true") {
         itsFriday();
         return;
+    }
+    const apocalypse = urlParams.get('apocalypse');
+    if (apocalypse === "white") {
+        whiteNight();
     }
     const ele = document.querySelector("#current-room");
     const storySoFar = document.querySelector(".story-so-far");
