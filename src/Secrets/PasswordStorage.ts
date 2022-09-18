@@ -197,6 +197,8 @@ Bits of my personal truth stashed in corners and corners of corners and so on un
     All you need to do is survive.
 */
 
+
+
 //http://farragofiction.com/AThirdTranscript/
 export const passwords: PasswordMap = {
     "STANDARD EXPECTOPATRONUM": new Secret("Confessionals 0", "Secrets/Content/0.js")
@@ -205,21 +207,6 @@ export const passwords: PasswordMap = {
     , "YOU CAN GET BETTER": new Secret("Confessionals 3", "Secrets/Content/3.js")
     , "KNOW RESTRAINT": new Secret("Confessionals 4", "Secrets/Content/4.js")
     , "NO RESTRAINT": new Secret("Confessionals 5", "Secrets/Content/5.js")
-    //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
-    , "PLACE YOUR TRUST IN ME": new Secret("Notes of Slaughter: Prelude", "Secrets/Content/6.js")
-    , "RAISE YOU FROM THE END OF THE WORLD": new Secret("Notes of Slaughter 0", "Secrets/Content/7.js")
-    , "SERENE AND CALM": new Secret("Notes of Slaughter 1", "Secrets/Content/8.js")
-    , "BEWARE OBLIVION IS AT HAND": new Secret("Notes of Slaughter 2", "Secrets/Content/9.js")
-    , "I AM HERE TO TREAT DISEASE": new Secret("Notes of Slaughter 3", "Secrets/Content/10.js")
-    , "FLESH IS BOUND TO THE FLOW OF TIME": new Secret("Notes of Slaughter 4", "Secrets/Content/11.js")
-    , "TIME IS DEAD": new Secret("Notes of Slaughter 5", "Secrets/Content/12.js")
-    , "SAVE YOUR LIFE FROM DESTRUCTION": new Secret("Notes of Slaughter 6", "Secrets/Content/13.js")
-    , "GENTLE CROONING VOICE": new Secret("Notes of Slaughter 7", "Secrets/Content/14.js")
-    , "LOOKS AFTER THE BROKEN": new Secret("Notes of Slaughter 8", "Secrets/Content/15.js")
-    , "TAKE CARE OF OTHERS": new Secret("Notes of Slaughter 9", "Secrets/Content/16.js")
-    , "IT WAS DAWN": new Secret("Notes of Slaughter 10", "Secrets/Content/17.js")
-    , "THE SOUL IS IMMORTAL": new Secret("Notes of Slaughter 11", "Secrets/Content/18.js")
-    , "WHEN ALL HAD ABANDONED HOPE": new Secret("Notes of Slaughter 12", "Secrets/Content/19.js")
     , "POWER CORRUPTS": new Secret("Jumbled Mess", "Secrets/Content/20.js")
     , "KNOWLEDGE IS POWER": new Secret("Jumbled Mess: Explanation", "Secrets/Content/21.js")
     , "LEAVE YOUR MARK": new Secret("Do you remember the first time you killed someone?", "Secrets/Content/22.js")
@@ -230,10 +217,7 @@ export const passwords: PasswordMap = {
     , "INFINITE AMOUNT OF PAIN": new Secret("Do you remember the first time you killed someone?", "Secrets/Content/27.js")
     , "PEER INTO THE ABYSS AND SEE WHAT LIES BENEATH": new Secret("Hostage's Lament", "Secrets/Content/28.js")
     , "ELIAS SMITH": new Secret("JR Ramble", "Secrets/Content/29.js")
-    , "TELLBRAK3700": new Secret("Notes of Slaughter 13", "Secrets/Content/30.js")
-    , "PENNY WICKNER": new Secret("Notes of Slaughter 14", "Secrets/Content/31.js")
-    , "ONCE YOU OPEN THE CURTAINS ALL THAT'S LEFT TO DO IS GO TO THE OTHER SIDE AND CLOSE THEM AGAIN": new Secret("Notes of Slaughter 15", "Secrets/Content/35.js")
-    , "EXPERIMENTALMUSIC": new Secret("Notes of Slaughter 16: ExperimentalMusic", "Secrets/Content/36.js")
+   , "ONCE YOU OPEN THE CURTAINS ALL THAT'S LEFT TO DO IS GO TO THE OTHER SIDE AND CLOSE THEM AGAIN": new Secret("Notes of Slaughter 15", "Secrets/Content/35.js")
     , "PARADISE AND PARASITE": new Secret("ARM2: LOOP ???", "Secrets/Content/38.js")
     , "WIDOWS WEAVE": new Secret("BLAME THE SPIDERS FOR THIS", "", "", "http://farragofiction.com/ZampanioHotlink/Films/spiders.mp4") //widows weave was a famous Web aligned cursed video in the magnus archives, figured i'd throw yall a bone because its so obscure
     , "NO NEED TO ASK WHY": new Secret("Herald Made MY JAM", "", "", "http://farragofiction.com/ZampanioHotlink/Films/heraldstacos.mp4")
@@ -248,5 +232,30 @@ export const passwords: PasswordMap = {
 
 
 };
+
+//note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
+export const docSlaughtersFiles: PasswordMap = {
+     "PLACE YOUR TRUST IN ME": new Secret("Notes of Slaughter: Prelude", "Secrets/Content/6.js")
+    , "RAISE YOU FROM THE END OF THE WORLD": new Secret("Notes of Slaughter 0", "Secrets/Content/7.js")
+    , "SERENE AND CALM": new Secret("Notes of Slaughter 1", "Secrets/Content/8.js")
+    , "BEWARE OBLIVION IS AT HAND": new Secret("Notes of Slaughter 2", "Secrets/Content/9.js")
+    , "I AM HERE TO TREAT DISEASE": new Secret("Notes of Slaughter 3", "Secrets/Content/10.js")
+    , "FLESH IS BOUND TO THE FLOW OF TIME": new Secret("Notes of Slaughter 4", "Secrets/Content/11.js")
+    , "TIME IS DEAD": new Secret("Notes of Slaughter 5", "Secrets/Content/12.js")
+    , "SAVE YOUR LIFE FROM DESTRUCTION": new Secret("Notes of Slaughter 6", "Secrets/Content/13.js")
+    , "GENTLE CROONING VOICE": new Secret("Notes of Slaughter 7", "Secrets/Content/14.js")
+    , "LOOKS AFTER THE BROKEN": new Secret("Notes of Slaughter 8", "Secrets/Content/15.js")
+    , "TAKE CARE OF OTHERS": new Secret("Notes of Slaughter 9", "Secrets/Content/16.js")
+    , "IT WAS DAWN": new Secret("Notes of Slaughter 10", "Secrets/Content/17.js")
+    , "THE SOUL IS IMMORTAL": new Secret("Notes of Slaughter 11", "Secrets/Content/18.js")
+    , "WHEN ALL HAD ABANDONED HOPE": new Secret("Notes of Slaughter 12", "Secrets/Content/19.js")
+    , "TELLBRAK3700": new Secret("Notes of Slaughter 13", "Secrets/Content/30.js")
+    , "PENNY WICKNER": new Secret("Notes of Slaughter 14", "Secrets/Content/31.js")
+    , "EXPERIMENTALMUSIC": new Secret("Notes of Slaughter 16: ExperimentalMusic", "Secrets/Content/36.js")
+
+    
+}
+
+
 //future me, don't forget https://www.tumblr.com/blog/view/jadedresearcher/688182806608838656?source=share
 export const text = `${Object.keys(passwords).length} Items:.\n.\n.\n.\n ${Object.keys(passwords).join("\n")}`;

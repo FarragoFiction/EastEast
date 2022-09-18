@@ -7463,6 +7463,131 @@ exports.initThemes = initThemes;
 
 /***/ }),
 
+/***/ 3790:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ApocalypseEngine = void 0;
+const misc_1 = __webpack_require__(4079);
+const defaultSpeed = 166;
+class ApocalypseEngine {
+    constructor(parent) {
+        this.typing = false;
+        this.speed = defaultSpeed;
+        this.clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
+        this.text = "";
+        this.init = () => {
+            if (!this.parent) {
+                return;
+            }
+            window.onmousedown = () => {
+                this.speed = 0;
+            };
+            window.onmouseup = () => {
+                this.speed = defaultSpeed;
+            };
+            window.ontouchstart = () => {
+                this.speed = 0;
+            };
+            window.ontouchend = () => {
+                this.speed = defaultSpeed;
+            };
+            this.parent.style.cssText =
+                `font-family: gamer;
+        color: #00ff00;
+        font-size: 18px;
+        background:black;`;
+            const crt = (0, misc_1.createElementWithId)("div", "crt");
+            const scanline = (0, misc_1.createElementWithIdAndParent)("div", crt, undefined, "scanline");
+            const lines = (0, misc_1.createElementWithIdAndParent)("div", crt, undefined, "lines");
+            const terminal = (0, misc_1.createElementWithIdAndParent)("div", crt, "terminal");
+            this.parent.append(crt);
+            this.transcript("Please type the following words...");
+        };
+        this.transcript = async (linesUnedited) => {
+            const lines = linesUnedited.split("\n");
+            const terminal = document.querySelector("#terminal");
+            if (!terminal) {
+                return;
+            }
+            terminal.innerHTML = "";
+            if (this.video) {
+                const video_ele = (0, misc_1.createElementWithIdAndParent)("video", terminal);
+                video_ele.src = this.video;
+                video_ele.controls = false;
+                video_ele.autoplay = true;
+            }
+            if (this.bonusHtml) {
+                const ele = (0, misc_1.createElementWithIdAndParent)("div", terminal);
+                ele.innerHTML = this.bonusHtml;
+            }
+            for (let line of lines) {
+                const element = document.createElement("p");
+                terminal.append(element);
+                await this.typeWrite(terminal, element, line);
+                await (0, misc_1.sleep)(this.speed * 10);
+            }
+        };
+        //this version of typeWrite skips certain tags but does them all at once
+        //(necessary to capture html)
+        //v1 just skips lines that start with [
+        //and v2 doesn't play a sound or sleep between [ and ] tags
+        //but neither is sufficient to handle html, so v3 is born
+        //i will, of course, forget where v3 is.
+        //v2, btw, is in SecurityLog
+        //and v1 is in ATranscript and ASecondTranscript
+        //because YES the code is intentionally a shitty maze for my future self
+        //and i guess any future Heirs
+        this.typeWrite = async (scroll_element, element, text) => {
+            this.typing = true;
+            let skipping = false;
+            for (let i = 0; i < text.length; i++) {
+                if (text.charAt(i) === "[" || text.charAt(i) === "<") {
+                    skipping = true;
+                    i = this.doChunkAllAtOnce(element, i, text);
+                }
+                if (!skipping) {
+                    await (0, misc_1.sleep)(this.speed);
+                    this.clickAudio.play();
+                    element.innerHTML += text.charAt(i);
+                }
+                scroll_element.scrollTop = scroll_element.scrollHeight;
+                skipping = false;
+                if (!this.typing) {
+                    break;
+                }
+            }
+        };
+        this.doChunkAllAtOnce = (ele, start_index, text) => {
+            const offset = 0;
+            //look for ending offset
+            //create new span element
+            //have its inner html be the chunk
+            //return the new stop index
+            //ignore any tag stuff before this point (it was already processed)
+            const subtext = text.substring(start_index);
+            const starting_char = text[start_index];
+            let charsTillEnd = 0;
+            if (starting_char === "<") {
+                charsTillEnd = subtext.indexOf(">") + 1;
+            }
+            else if (starting_char === "[") {
+                charsTillEnd = subtext.indexOf("]") + 1;
+            }
+            ele.innerHTML = text.substring(0, start_index + charsTillEnd);
+            return start_index + charsTillEnd;
+        };
+        this.parent = parent;
+        this.init();
+    }
+}
+exports.ApocalypseEngine = ApocalypseEngine;
+
+
+/***/ }),
+
 /***/ 9867:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -8463,13 +8588,14 @@ const Theme_1 = __webpack_require__(9702);
 const SeededRandom_1 = __importDefault(__webpack_require__(3450));
 const Maze_1 = __webpack_require__(7194);
 const misc_1 = __webpack_require__(4079);
+const Apocalypse_1 = __webpack_require__(3790);
 let maze;
 const handleClick = () => {
     if (maze) {
         const button = document.querySelector("#startbutton");
         if (button) {
             button.remove();
-            //maze.begin();
+            maze.begin();
         }
         window.removeEventListener("click", handleClick);
     }
@@ -8489,6 +8615,7 @@ const whiteNight = () => {
     const body = document.querySelector("body");
     if (body) {
         body.innerHTML = "";
+        const apocalypse = new Apocalypse_1.ApocalypseEngine(body);
     }
 };
 window.onload = async () => {
@@ -10654,6 +10781,8 @@ var map = {
 	"./Objects/Theme.ts": 9702,
 	"./Objects/ThemeStorage": 1288,
 	"./Objects/ThemeStorage.ts": 1288,
+	"./Secrets/Apocalypse": 3790,
+	"./Secrets/Apocalypse.ts": 3790,
 	"./Secrets/Content/0": 6243,
 	"./Secrets/Content/0.js": 6243,
 	"./Secrets/Content/1": 6489,

@@ -1,17 +1,16 @@
 import { loadSecretText } from "..";
 import { createElementWithId, createElementWithIdAndParent, sleep } from "../Utils/misc";
 
-const defaultSpeed = 166;
+const defaultSpeed = 200;
 export class ApocalypseEngine {
     typing = false;
+    passwords = [];
 
     speed = defaultSpeed;
     clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
     text = "";
-    video?: string; 
-    bonusHtml?: string;
+
     parent: HTMLElement;
-    form?: HTMLElement;
     constructor(parent: HTMLElement) {
         this.parent = parent;
         this.init();
@@ -48,7 +47,8 @@ export class ApocalypseEngine {
 
 
         this.parent.append(crt);
-        this.transcript("Please type the following words...");
+        this.transcript("Please practice typing the following words...");
+        //good job: can you go faster?
 
     }
 
@@ -62,16 +62,7 @@ export class ApocalypseEngine {
             return;
         }
         terminal.innerHTML = "";
-        if(this.video){
-            const video_ele = createElementWithIdAndParent("video", terminal) as HTMLVideoElement;
-            video_ele.src = this.video;
-            video_ele.controls = false;
-            video_ele.autoplay = true;
-        }
-        if(this.bonusHtml){
-            const ele = createElementWithIdAndParent("div", terminal) as HTMLDivElement;
-            ele.innerHTML = this.bonusHtml;
-        }
+
         for (let line of lines) {
             const element = document.createElement("p");
             terminal.append(element);
