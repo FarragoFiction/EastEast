@@ -59,6 +59,7 @@ export class TypingMiniGame {
     }
 
     parseText = (text: string) => {
+        this.original_text = `${text}`;
         this.content.remove();
         this.sentenceEle.remove();
         this.sentenceListEle.remove();
