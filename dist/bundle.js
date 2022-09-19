@@ -7989,14 +7989,26 @@ exports.TypingMiniGame = void 0;
 const misc_1 = __webpack_require__(4079);
 class TypingMiniGame {
     constructor(parent, original_text, callback) {
+        this.audio = new Audio("audio/511397__pjhedman__se2-ding.mp3");
         //what word are you typing
         this.current_index = 0;
+        this.wordsRemaining = () => {
+            let ret = 0;
+            for (let word of Object.values(this.unique_word_map)) {
+                if (!word.typed) {
+                    ret++;
+                }
+            }
+            return ret;
+        };
         this.parseText = (text) => {
             this.content.remove();
             this.sentenceEle.remove();
+            this.wordsLeft.remove();
+            this.wordsLeft = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
             this.content = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
             this.sentenceEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
-            this.sentenceEle.innerHTML = "<hr><p>The words you've typed could, in theory, make a sentence:</p>";
+            this.sentenceEle.innerHTML = "<hr><p>The words you've typed could, in theory, make a sentence such as these:</p>";
             this.content.style.fontSize = "42px";
             this.current_index = 0;
             text = text.replaceAll(/\n/g, " ");
@@ -8042,9 +8054,8 @@ class TypingMiniGame {
                         }
                     }
                     if (readyToDisplay) {
-                        console.log("JR NOTE: ready to display");
+                        this.audio.play();
                         this.sentenceEle.innerHTML += `<li>${sentence.text}</li>`;
-                        console.log("JR NOTE: ready to display", this.sentenceEle.innerHTML);
                         sentence.displayed = true;
                     }
                 }
@@ -8057,11 +8068,25 @@ class TypingMiniGame {
         this.nextWord = () => {
             const current_word = this.sorted_word_list[this.current_index];
             this.unique_word_map[current_word].typed = true;
+            this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level`;
             this.current_index++;
             this.checkForSentences();
             //TODO handle checking if theres any sentences, and if so , showcase it
             if (this.current_index >= this.sorted_word_list.length) {
-                this.callback("", true);
+                const helpfulHint = (0, misc_1.createElementWithIdAndParent)("div", this.content);
+                helpfulHint.innerHTML = `<p>Since you typed up this story yourself, I suppose theres no reason not to show you. Obviously you already know it. How could it be Confidential?</p>`;
+                helpfulHint.style.fontSize = "18px";
+                const story = (0, misc_1.createElementWithIdAndParent)("div", this.content, undefined, "storyOfSlaughter");
+                let lines = this.original_text.split("\n");
+                for (let line of lines) {
+                    story.innerHTML += `<p>${line}</p>`;
+                }
+                const button = (0, misc_1.createElementWithIdAndParent)("button", this.content);
+                button.onclick = () => {
+                    this.callback("", true);
+                };
+                this.audio.play();
+                button.innerText = "Load Next Level For Practice";
                 return;
             }
             const next_word = this.sorted_word_list[this.current_index];
@@ -8086,12 +8111,15 @@ class TypingMiniGame {
         this.displayGame = () => {
             this.findFirstIndex();
             this.content.innerHTML = ("");
+            this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level`;
             new WordToType(this.content, this.sorted_word_list[this.current_index], this.nextWord);
         };
         this.callback = callback;
         this.parent = parent;
+        this.original_text = `${original_text}`; //being lazy and avoiding having a reference to this get put here if im gonna mutate it
         this.content = (0, misc_1.createElementWithIdAndParent)("div", parent);
         this.sentenceEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
+        this.wordsLeft = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
         this.content.style.fontSize = "42px";
         this.unique_word_map = {};
         this.sentences = [];
