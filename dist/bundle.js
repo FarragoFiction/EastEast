@@ -7483,6 +7483,7 @@ class ApocalypseEngine {
         this.clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
         //where in the password list are you.
         this.current_index = -1;
+        this.levelTimes = [];
         this.init = () => {
             if (!this.parent) {
                 return;
@@ -7513,9 +7514,12 @@ class ApocalypseEngine {
             this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, "True confessions of a Doctor. Please Listen. I am. Trying.", this.handleCallback);
             //good job: can you go faster?
         };
-        this.handleCallback = (text, loadNext = false) => {
+        this.handleCallback = (text, loadNext = false, time) => {
             this.transcript(text);
             if (loadNext) {
+                if (time) {
+                    this.levelTimes.push(time);
+                }
                 this.loadNextPassword();
             }
         };
@@ -7536,7 +7540,9 @@ class ApocalypseEngine {
             }
             const secret = Object.values(PasswordStorage_1.docSlaughtersFiles)[this.current_index];
             console.log("JR NOTE: loading next password secret is", secret);
-            this.transcript("Please practice typing the following, entirely random, words, in order of difficulty:");
+            this.transcript(`
+            Level Times: ${this.levelTimes.map((time, level) => `Level${level + 1}:${time}`).join(", ")}
+        Please practice typing the following, entirely random, words, in order of difficulty:`);
             const text = (0, __1.loadSecretText)(secret.text);
             if (text.trim() != "") {
                 this.minigame?.parseText(text);
@@ -7987,6 +7993,7 @@ exports.TranscriptEngine = TranscriptEngine;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TypingMiniGame = void 0;
 const misc_1 = __webpack_require__(4079);
+const StringUtils_1 = __webpack_require__(7036);
 class TypingMiniGame {
     constructor(parent, original_text, callback) {
         this.audio = new Audio("audio/511397__pjhedman__se2-ding.mp3");
@@ -8002,11 +8009,14 @@ class TypingMiniGame {
             return ret;
         };
         this.parseText = (text) => {
+            this.original_text = `${text}`;
             this.content.remove();
+            this.timerEle.remove();
             this.sentenceEle.remove();
             this.sentenceListEle.remove();
             this.wordsLeft.remove();
             this.wordsLeft = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
+            this.timerEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
             this.content = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
             this.sentenceEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
             this.sentenceListEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
@@ -8034,6 +8044,8 @@ class TypingMiniGame {
                 }
             }
             this.sorted_word_list = Object.keys(this.unique_word_map).sort((a, b) => { return a.length - b.length; });
+            this.startTime = new Date();
+            this.timer = setInterval(this.timerFunction, 50);
             this.displayGame();
         };
         this.checkForSentences = () => {
@@ -8076,6 +8088,8 @@ class TypingMiniGame {
             this.checkForSentences();
             //TODO handle checking if theres any sentences, and if so , showcase it
             if (this.current_index >= this.sorted_word_list.length) {
+                const time = this.getTimeString();
+                clearInterval(this.timer);
                 const helpfulHint = (0, misc_1.createElementWithIdAndParent)("div", this.content);
                 helpfulHint.innerHTML = `<p>Since you typed up this story yourself, I suppose theres no reason not to show you. Obviously you already know it. How could it be Confidential?</p>`;
                 helpfulHint.style.fontSize = "18px";
@@ -8086,7 +8100,7 @@ class TypingMiniGame {
                 }
                 const button = (0, misc_1.createElementWithIdAndParent)("button", this.content);
                 button.onclick = () => {
-                    this.callback("", true);
+                    this.callback("", true, time);
                 };
                 this.audio.play();
                 button.innerText = "Load Next Level For Practice";
@@ -8111,6 +8125,12 @@ class TypingMiniGame {
                 return;
             }
         };
+        this.getTimeString = () => {
+            return (0, StringUtils_1.getTimeStringBuff)(new Date(new Date() - this.startTime));
+        };
+        this.timerFunction = () => {
+            this.timerEle.innerHTML = `${this.getTimeString()}`;
+        };
         this.displayGame = () => {
             this.findFirstIndex();
             this.content.innerHTML = ("");
@@ -8122,11 +8142,14 @@ class TypingMiniGame {
         this.original_text = `${original_text}`; //being lazy and avoiding having a reference to this get put here if im gonna mutate it
         this.content = (0, misc_1.createElementWithIdAndParent)("div", parent);
         this.sentenceEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
+        this.timerEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
+        this.sentenceEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
         this.sentenceListEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
         this.wordsLeft = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
         this.content.style.fontSize = "42px";
         this.unique_word_map = {};
         this.sentences = [];
+        this.startTime = new Date();
         this.sorted_word_list = [];
         this.parseText(original_text);
     }
@@ -8339,7 +8362,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Zalgo = exports.isNumeric = exports.getTimeString = exports.checkTime = exports.domWordMeaningFuckery = exports.stringtoseed = exports.replaceStringAt = exports.sentenceCase = exports.titleCase = void 0;
+exports.Zalgo = exports.isNumeric = exports.getTimeStringBuff = exports.getTimeString = exports.checkTimeMS = exports.checkTime = exports.domWordMeaningFuckery = exports.stringtoseed = exports.replaceStringAt = exports.sentenceCase = exports.titleCase = void 0;
 const NonSeededRandUtils_1 = __webpack_require__(8258);
 const SeededRandom_1 = __importDefault(__webpack_require__(3450));
 const titleCase = (input) => {
@@ -8401,6 +8424,17 @@ function checkTime(i) {
     return ret;
 }
 exports.checkTime = checkTime;
+function checkTimeMS(i) {
+    let ret = `${i}`;
+    if (i < 10) {
+        ret = "00" + i;
+    }
+    else if (i < 100) {
+        ret = "0" + i;
+    }
+    return ret;
+}
+exports.checkTimeMS = checkTimeMS;
 function getTimeString(date) {
     let h = `${date.getHours()}`;
     let m = `${date.getMinutes()}`;
@@ -8411,6 +8445,17 @@ function getTimeString(date) {
     return h + ":" + m + ":" + s;
 }
 exports.getTimeString = getTimeString;
+function getTimeStringBuff(date) {
+    let m = `${date.getMinutes()}`;
+    let s = `${date.getSeconds()}`;
+    let ms = `${date.getMilliseconds()}`;
+    // add a zero in front of numbers<10
+    m = checkTime(date.getMinutes());
+    s = checkTime(date.getSeconds());
+    ms = checkTimeMS(date.getMilliseconds());
+    return +m + ":" + s + ":" + ms;
+}
+exports.getTimeStringBuff = getTimeStringBuff;
 function gaslightWordMeanings(sentence, seed_multiplier) {
     const words = sentence.split(" ");
     for (let i = 0; i < words.length; i++) {

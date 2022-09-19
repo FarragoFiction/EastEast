@@ -43,7 +43,7 @@ export function domWordMeaningFuckery() {
         for (let child of children) {
             const subchildren = child.querySelectorAll("*");
             if (subchildren.length === 0) {
-                if(child.textContent){
+                if (child.textContent) {
                     child.textContent = gaslightWordMeanings(child.textContent, seed_multiplier);
                 }
             }
@@ -61,6 +61,15 @@ export function checkTime(i: number) {
     return ret;
 }
 
+export function checkTimeMS(i: number) {
+    let ret = `${i}`;
+    if (i < 10) {
+        ret = "00" + i;
+    } else if (i < 100) {
+        ret = "0" + i;
+    }
+    return ret;
+}
 export function getTimeString(date: Date) {
     let h = `${date.getHours()}`;
     let m = `${date.getMinutes()}`;
@@ -69,6 +78,19 @@ export function getTimeString(date: Date) {
     m = checkTime(date.getMinutes());
     s = checkTime(date.getSeconds());
     return h + ":" + m + ":" + s;
+}
+
+export function getTimeStringBuff(date: Date) {
+    let m = `${date.getMinutes()}`;
+    let s = `${date.getSeconds()}`;
+    let ms = `${date.getMilliseconds()}`;
+
+    // add a zero in front of numbers<10
+    m = checkTime(date.getMinutes());
+    s = checkTime(date.getSeconds());
+    ms = checkTimeMS(date.getMilliseconds());
+
+    return + m + ":" + s + ":" + ms;
 }
 
 function gaslightWordMeanings(sentence: string, seed_multiplier: number) {
@@ -114,7 +136,7 @@ export function isNumeric(str: number) {
 export //http://jsfiddle.net/JKirchartz/wwckP/    horrorterror html stuff
     var Zalgo = {
         chars: [
-             [ /* up */
+            [ /* up */
                 '\u030d', /*     ̍     */
                 '\u030e', /*     ̎     */
                 '\u0304', /*     ̄     */
@@ -166,7 +188,7 @@ export //http://jsfiddle.net/JKirchartz/wwckP/    horrorterror html stuff
                 '\u0346', /*     ͆     */
                 '\u031a'  /*     ̚     */
             ],
-             [ /* down */
+            [ /* down */
                 '\u0316', /*     ̖     */
                 '\u0317', /*     ̗     */
                 '\u0318', /*     ̘     */
@@ -208,7 +230,7 @@ export //http://jsfiddle.net/JKirchartz/wwckP/    horrorterror html stuff
                 '\u035a', /*     ͚     */
                 '\u0323'  /*     ̣     */
             ],
-             [ /* mid */
+            [ /* mid */
                 '\u0315', /*     ̕     */
                 '\u031b', /*     ̛     */
                 '\u0340', /*     ̀     */

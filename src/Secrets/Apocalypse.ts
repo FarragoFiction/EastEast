@@ -14,6 +14,7 @@ export class ApocalypseEngine {
     current_index = -1;
     terminal? :HTMLElement;
     minigame?: TypingMiniGame;
+    levelTimes:string[] = [];
 
     constructor(parent: HTMLElement) {
         this.parent = parent;
@@ -57,9 +58,12 @@ export class ApocalypseEngine {
 
     }
 
-    handleCallback = (text: string, loadNext= false)=>{
+    handleCallback = (text: string, loadNext= false, time?:string)=>{
         this.transcript(text);
         if(loadNext){
+            if(time){
+                this.levelTimes.push(time);
+            }
             this.loadNextPassword();
         }
     }
@@ -87,7 +91,9 @@ export class ApocalypseEngine {
 
 
 
-        this.transcript("Please practice typing the following, entirely random, words, in order of difficulty:");
+        this.transcript(`
+            Level Times: ${this.levelTimes.map((time,level)=>`Level${level+1}:${time}`).join(", ")}
+        Please practice typing the following, entirely random, words, in order of difficulty:`);
         const text = loadSecretText(secret.text);
         if(text.trim() != ""){
             this.minigame?.parseText(text);

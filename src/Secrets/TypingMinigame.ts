@@ -1,5 +1,6 @@
 import { initThemes } from "../Objects/Theme";
 import { createElementWithIdAndParent } from "../Utils/misc";
+import { getTimeStringBuff } from "../Utils/StringUtils";
 
 type WordListObject = {
     [key: string]: {
@@ -25,10 +26,12 @@ export class TypingMiniGame {
     //what word are you typing
     current_index = 0;
     sentenceListEle: HTMLElement;
+    timerEle: HTMLElement;
     sentenceEle: HTMLElement;
-    original_text:string;
-
+    original_text: string;
+    timer?: NodeJS.Timer;//id of the timer
     sorted_word_list: string[]; //sorted by length
+    startTime: Date;
 
     constructor(parent: HTMLElement, original_text: string, callback: Function) {
         this.callback = callback;
@@ -36,6 +39,10 @@ export class TypingMiniGame {
         this.original_text = `${original_text}`;//being lazy and avoiding having a reference to this get put here if im gonna mutate it
         this.content = createElementWithIdAndParent("div", parent);
         this.sentenceEle = createElementWithIdAndParent("div", this.parent);
+        this.timerEle = createElementWithIdAndParent("div", this.parent);
+
+        this.sentenceEle = createElementWithIdAndParent("div", this.parent);
+
         this.sentenceListEle = createElementWithIdAndParent("div", this.parent);
 
         this.wordsLeft = createElementWithIdAndParent("div", this.parent);
@@ -43,16 +50,17 @@ export class TypingMiniGame {
         this.content.style.fontSize = "42px";
         this.unique_word_map = {};
         this.sentences = [];
+        this.startTime = new Date();
         this.sorted_word_list = [];
         this.parseText(original_text);
 
     }
 
-    wordsRemaining = ()=>{
+    wordsRemaining = () => {
         let ret = 0;
-        for(let word of Object.values(this.unique_word_map)){
-            if(!word.typed){
-                ret ++;
+        for (let word of Object.values(this.unique_word_map)) {
+            if (!word.typed) {
+                ret++;
             }
         }
         return ret;
@@ -61,12 +69,15 @@ export class TypingMiniGame {
     parseText = (text: string) => {
         this.original_text = `${text}`;
         this.content.remove();
+        this.timerEle.remove();
         this.sentenceEle.remove();
         this.sentenceListEle.remove();
         this.wordsLeft.remove();
         this.wordsLeft = createElementWithIdAndParent("div", this.parent);
+        this.timerEle = createElementWithIdAndParent("div", this.parent);
 
         this.content = createElementWithIdAndParent("div", this.parent);
+
         this.sentenceEle = createElementWithIdAndParent("div", this.parent);
         this.sentenceListEle = createElementWithIdAndParent("div", this.parent);
 
@@ -97,6 +108,8 @@ export class TypingMiniGame {
         }
 
         this.sorted_word_list = Object.keys(this.unique_word_map).sort((a: string, b: string) => { return a.length - b.length });
+        this.startTime = new Date();
+        this.timer = setInterval(this.timerFunction, 50);
         this.displayGame();
 
     }
@@ -111,21 +124,21 @@ export class TypingMiniGame {
 
                 let readyToDisplay = true;
                 for (let w of split_words) {
-                    console.log(`JR NOTE: is word typed yet?`,w)
+                    console.log(`JR NOTE: is word typed yet?`, w)
 
                     let word = w.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase();
-                    if(word.trim() !== ""){
+                    if (word.trim() !== "") {
                         if (Object.keys(this.unique_word_map).includes(word) && !this.unique_word_map[word].typed) {
                             console.log(`JR NOTE: w ${w} was not yet typed`)
-    
+
                             readyToDisplay = false;
                             break;
                         }
                     }
-       
+
                 }
 
-                if(readyToDisplay){
+                if (readyToDisplay) {
                     this.audio.play();
                     //display in reverse order so you can always see your newest Unlock
                     this.sentenceListEle.innerHTML = `<li>${sentence.text}</li>${this.sentenceListEle.innerHTML}`;
@@ -135,70 +148,80 @@ export class TypingMiniGame {
         }
     }
 
-        //set the current word as typed, check if the next word has been typed yet
-        //if it has, go to the next word
-        //if it hasn't, display the typing minigame
-        //and if there ISN"T a next word, callback to your parent
-        nextWord = () => {
-            const current_word = this.sorted_word_list[this.current_index];
-            this.unique_word_map[current_word].typed = true;
-            this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level.`;
+    //set the current word as typed, check if the next word has been typed yet
+    //if it has, go to the next word
+    //if it hasn't, display the typing minigame
+    //and if there ISN"T a next word, callback to your parent
+    nextWord = () => {
+        const current_word = this.sorted_word_list[this.current_index];
+        this.unique_word_map[current_word].typed = true;
+        this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level.`;
 
+        this.current_index++;
+
+        this.checkForSentences();
+        //TODO handle checking if theres any sentences, and if so , showcase it
+        if (this.current_index >= this.sorted_word_list.length) {
+            const time = this.getTimeString();
+            clearInterval(this.timer);
+
+            const helpfulHint = createElementWithIdAndParent("div", this.content);
+            helpfulHint.innerHTML = `<p>Since you typed up this story yourself, I suppose theres no reason not to show you. Obviously you already know it. How could it be Confidential?</p>`;
+            helpfulHint.style.fontSize = "18px";
+            const story = createElementWithIdAndParent("div", this.content, undefined, "storyOfSlaughter");
+
+            let lines = this.original_text.split("\n");
+            for (let line of lines) {
+                story.innerHTML += `<p>${line}</p>`;
+            }
+            const button = createElementWithIdAndParent("button", this.content);
+            button.onclick = () => {
+                this.callback("", true,time);
+            }
+            this.audio.play();
+
+            button.innerText = "Load Next Level For Practice";
+            return;
+        }
+        const next_word = this.sorted_word_list[this.current_index];
+
+        //keep 
+        if (this.unique_word_map[next_word].typed) {
+            this.nextWord();
+        } else {
+            this.displayGame();
+        }
+    }
+
+    findFirstIndex = () => {
+        const current_word = this.sorted_word_list[this.current_index];
+        if (this.unique_word_map[current_word].typed) {
             this.current_index++;
-
-            this.checkForSentences();
-            //TODO handle checking if theres any sentences, and if so , showcase it
-            if (this.current_index >= this.sorted_word_list.length) {
-                const helpfulHint = createElementWithIdAndParent("div",this.content);
-                helpfulHint.innerHTML = `<p>Since you typed up this story yourself, I suppose theres no reason not to show you. Obviously you already know it. How could it be Confidential?</p>`;
-                helpfulHint.style.fontSize = "18px";
-                const story = createElementWithIdAndParent("div",this.content, undefined, "storyOfSlaughter");
-
-                let lines = this.original_text.split("\n");
-                for(let line of lines){
-                    story.innerHTML += `<p>${line}</p>`;
-                }
-                const button = createElementWithIdAndParent("button", this.content);
-                button.onclick = ()=>{
-                    this.callback("", true);
-                }
-                this.audio.play();
-
-                button.innerText = "Load Next Level For Practice";
-                return;
-            }
-            const next_word = this.sorted_word_list[this.current_index];
-
-            //keep 
-            if (this.unique_word_map[next_word].typed) {
-                this.nextWord();
-            } else {
-                this.displayGame();
-            }
-        }
-
-        findFirstIndex = () => {
-            const current_word = this.sorted_word_list[this.current_index];
-            if (this.unique_word_map[current_word].typed) {
-                this.current_index++;
-                this.findFirstIndex();
-            } else {
-                return;
-            }
-        }
-
-        displayGame = () => {
             this.findFirstIndex();
-            
-
-            this.content.innerHTML = ("");
-            this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level.`;
-            new WordToType(this.content, this.sorted_word_list[this.current_index], this.nextWord);
-
+        } else {
+            return;
         }
+    }
 
+
+    getTimeString = () => {
+        return getTimeStringBuff(new Date((new Date() as any) - (this.startTime as any)))
+    }
+
+    timerFunction = () => {
+        this.timerEle.innerHTML = `${this.getTimeString()}`;
+    }
+
+    displayGame = () => {
+        this.findFirstIndex();
+        this.content.innerHTML = ("");
+        this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level.`;
+        new WordToType(this.content, this.sorted_word_list[this.current_index], this.nextWord);
 
     }
+
+
+}
 
 class WordToType {
     stringTypedSoFar = "";
