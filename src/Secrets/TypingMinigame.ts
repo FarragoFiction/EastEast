@@ -18,6 +18,7 @@ export class TypingMiniGame {
     unique_word_map: WordListObject;
     callback: Function;
     content: HTMLElement
+    parent: HTMLElement;
     sentences: SentenceObject[];
     //what word are you typing
     current_index = 0;
@@ -26,6 +27,7 @@ export class TypingMiniGame {
 
     constructor(parent: HTMLElement, original_text: string, callback: Function) {
         this.callback = callback;
+        this.parent = parent;
         this.content = createElementWithIdAndParent("div", parent);
         this.content.style.fontSize = "42px";
         this.unique_word_map = {};
@@ -37,6 +39,11 @@ export class TypingMiniGame {
 
     parseText = (text: string) => {
         console.log("JR NOTE: parsing text", text);
+        this.content.remove();
+        this.content = createElementWithIdAndParent("div", this.parent);
+        this.content.style.fontSize = "42px";
+
+        this.current_index = 0;
         text = text.replaceAll(/\n/g, " ");
         this.sentences = text.split(/[.?!]/g).map((sentence) => { return { text: sentence, typed: false } })
         const split_words = text.split(" ");
@@ -45,7 +52,7 @@ export class TypingMiniGame {
             let word = w.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase();
             if (word.trim() !== "") {
                 if (Object.keys(this.unique_word_map).includes(word.toLowerCase())) {
-                    this.unique_word_map[word] = { word: word, typed: false, times_seen: this.unique_word_map[word].times_seen + 1 }
+                    this.unique_word_map[word] = { word: word, typed: this.unique_word_map[word].typed, times_seen: this.unique_word_map[word].times_seen + 1 }
                 } else {
                     this.unique_word_map[word] = { word: word, typed: false, times_seen: 1 }
                 }
@@ -65,25 +72,40 @@ export class TypingMiniGame {
     nextWord = () => {
         const current_word = this.sorted_word_list[this.current_index];
         this.unique_word_map[current_word].typed = true;
+        console.log(`JR NOTE: ${current_word} is already typed`)
         this.current_index++;
-        const next_word = this.sorted_word_list[this.current_index];
 
 
         //TODO handle checking if theres any sentences, and if so , showcase it
         if (this.current_index >= this.sorted_word_list.length) {
             this.callback("", true);
+            return;
         }
+        const next_word = this.sorted_word_list[this.current_index];
 
         //keep 
-        if (this.unique_word_map[current_word].typed) {
+        if (this.unique_word_map[next_word].typed) {
             this.nextWord();
         } else {
             this.displayGame();
         }
     }
 
+    findFirstIndex = ()=>{
+        const current_word = this.sorted_word_list[this.current_index];
+        console.log("JR NOTE: is this first word typed?", current_word, this.unique_word_map)
+        if (this.unique_word_map[current_word].typed) {
+            this.current_index ++;
+            this.findFirstIndex();
+        } else {
+            return;
+        }
+    }
+
     displayGame = () => {
-        console.log("JR NOTE: initing typing mini game, list is", this.sorted_word_list)
+        this.findFirstIndex();
+        console.log("JR NOTE: initing typing mini game, sub list is", this.sorted_word_list.slice(this.current_index))
+
         this.content.innerHTML = ("");
         new WordToType(this.content, this.sorted_word_list[this.current_index], this.nextWord);
 
@@ -134,6 +156,7 @@ class WordToType {
 
 
     render = () => {
+        console.log("JR NOTE; trying to render", this.stringRemaining)
         this.element.innerHTML = `<span style="color:white">${this.stringTypedSoFar}</span><span>${this.stringRemaining}</span>`;
     }
 }
