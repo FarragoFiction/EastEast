@@ -7792,12 +7792,12 @@ exports.passwords = {
     "YOU IS NEEDED": new Secret("Quotidian", "", `<video class='fuckedup' src="http://farragofiction.com/ZampanioHotlink/Films/michael_from_vsauce_says_quotidian.mp4" loop="true" controls="true" autoplay="true"></video>`),
     "ZAMPANIOBROKEN": new Secret("The Watcher of Threads is right: Wanda would love these:", "", `<iframe class="fuckedup" width="560" height="315" src="https://www.youtube.com/embed/cTspoOpLgfc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`),
     "EARWORM HUMMING IN A DREAM": new Secret("24/7 ABSOLUTE BULLSHIT", "", `<iframe class="fuckedup" width="560" height="315" src="https://www.youtube.com/embed/16WNvL8Gtt0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`),
+    "PLACE YOUR TRUST IN ME": new Secret("Notes of Slaughter: Prelude", "Secrets/Content/6.js"),
     "LS": new Secret("FILE LIST (UNIX)", "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", "Secrets/PasswordStorage.ts")
 };
 //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
 exports.docSlaughtersFiles = {
-    "PLACE YOUR TRUST IN ME": new Slaughter("Notes of Slaughter: Prelude", "Secrets/Content/6.js", "I wanted to make sure I Did Not Forget, so I Wrote It All Down."),
     "RAISE YOU FROM THE END OF THE WORLD": new Slaughter("Notes of Slaughter 0", "Secrets/Content/7.js", "Child, do you Understand?"),
     "SERENE AND CALM": new Slaughter("Notes of Slaughter 1", "Secrets/Content/8.js"),
     "BEWARE OBLIVION IS AT HAND": new Slaughter("Notes of Slaughter 2", "Secrets/Content/9.js"),
@@ -8033,7 +8033,7 @@ class TypingMiniGame {
             }
             const split_words = text.split(" ");
             for (let w of split_words) {
-                let word = w.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase();
+                let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()]/g, "").toLowerCase();
                 if (word.trim() !== "") {
                     if (Object.keys(this.unique_word_map).includes(word.toLowerCase())) {
                         this.unique_word_map[word] = { word: word, typed: this.unique_word_map[word].typed, times_seen: this.unique_word_map[word].times_seen + 1 };
@@ -8058,7 +8058,7 @@ class TypingMiniGame {
                     let readyToDisplay = true;
                     for (let w of split_words) {
                         console.log(`JR NOTE: is word typed yet?`, w);
-                        let word = w.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase();
+                        let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()]/g, "").toLowerCase();
                         if (word.trim() !== "") {
                             if (Object.keys(this.unique_word_map).includes(word) && !this.unique_word_map[word].typed) {
                                 console.log(`JR NOTE: w ${w} was not yet typed`);

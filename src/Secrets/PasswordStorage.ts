@@ -244,6 +244,7 @@ export const passwords: PasswordMap = {
     , "YOU IS NEEDED": new Secret("Quotidian", "", `<video class='fuckedup' src="http://farragofiction.com/ZampanioHotlink/Films/michael_from_vsauce_says_quotidian.mp4" loop="true" controls="true" autoplay="true"></video>`)
     , "ZAMPANIOBROKEN": new Secret("The Watcher of Threads is right: Wanda would love these:", "", `<iframe class="fuckedup" width="560" height="315" src="https://www.youtube.com/embed/cTspoOpLgfc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
     , "EARWORM HUMMING IN A DREAM": new Secret("24/7 ABSOLUTE BULLSHIT", "", `<iframe class="fuckedup" width="560" height="315" src="https://www.youtube.com/embed/16WNvL8Gtt0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
+    ,"PLACE YOUR TRUST IN ME": new Secret("Notes of Slaughter: Prelude", "Secrets/Content/6.js")
 
     , "LS": new Secret("FILE LIST (UNIX)", "Secrets/PasswordStorage.ts")
     , "DIR": new Secret("FILE LIST (DOS)", "Secrets/PasswordStorage.ts")
@@ -253,8 +254,7 @@ export const passwords: PasswordMap = {
 
 //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
 export const docSlaughtersFiles: SlaughterMap = {
-     "PLACE YOUR TRUST IN ME": new Slaughter("Notes of Slaughter: Prelude", "Secrets/Content/6.js","I wanted to make sure I Did Not Forget, so I Wrote It All Down.")
-    , "RAISE YOU FROM THE END OF THE WORLD": new Slaughter("Notes of Slaughter 0", "Secrets/Content/7.js","Child, do you Understand?")
+     "RAISE YOU FROM THE END OF THE WORLD": new Slaughter("Notes of Slaughter 0", "Secrets/Content/7.js","Child, do you Understand?")
     , "SERENE AND CALM": new Slaughter("Notes of Slaughter 1", "Secrets/Content/8.js")
     , "BEWARE OBLIVION IS AT HAND": new Slaughter("Notes of Slaughter 2", "Secrets/Content/9.js")
     , "I AM HERE TO TREAT DISEASE": new Slaughter("Notes of Slaughter 3", "Secrets/Content/10.js")
