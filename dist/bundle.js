@@ -7511,7 +7511,7 @@ class ApocalypseEngine {
             this.terminal = (0, misc_1.createElementWithIdAndParent)("div", crt, "terminal");
             this.parent.append(crt);
             this.transcript("Please practice typing the following words...");
-            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, "True confessions of a Doctor. Please Listen. I am. Trying.", this.handleCallback);
+            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, "True confessions of a Doctor. Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Clensed. I do not Know how much Longer I can Hold Out.", this.handleCallback);
             //good job: can you go faster?
         };
         this.handleCallback = (text, loadNext = false, time) => {
@@ -7541,7 +7541,7 @@ class ApocalypseEngine {
             const secret = Object.values(PasswordStorage_1.docSlaughtersFiles)[this.current_index];
             console.log("JR NOTE: loading next password secret is", secret);
             this.transcript(`
-            Level Times: ${this.levelTimes.map((time, level) => `Level${level + 1}:${time}`).join(", ")}
+            Level Times: ${this.levelTimes.map((time, level) => `Level_${level + 1}:${time}`).join(", ")}
         Please practice typing the following, entirely random, words, in order of difficulty:`);
             const text = (0, __1.loadSecretText)(secret.text);
             if (text.trim() != "") {
