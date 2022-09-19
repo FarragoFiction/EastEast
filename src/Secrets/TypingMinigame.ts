@@ -24,6 +24,7 @@ export class TypingMiniGame {
     sentences: SentenceObject[];
     //what word are you typing
     current_index = 0;
+    sentenceListEle: HTMLElement;
     sentenceEle: HTMLElement;
     original_text:string;
 
@@ -35,6 +36,8 @@ export class TypingMiniGame {
         this.original_text = `${original_text}`;//being lazy and avoiding having a reference to this get put here if im gonna mutate it
         this.content = createElementWithIdAndParent("div", parent);
         this.sentenceEle = createElementWithIdAndParent("div", this.parent);
+        this.sentenceListEle = createElementWithIdAndParent("div", this.parent);
+
         this.wordsLeft = createElementWithIdAndParent("div", this.parent);
 
         this.content.style.fontSize = "42px";
@@ -58,11 +61,14 @@ export class TypingMiniGame {
     parseText = (text: string) => {
         this.content.remove();
         this.sentenceEle.remove();
+        this.sentenceListEle.remove();
         this.wordsLeft.remove();
         this.wordsLeft = createElementWithIdAndParent("div", this.parent);
 
         this.content = createElementWithIdAndParent("div", this.parent);
         this.sentenceEle = createElementWithIdAndParent("div", this.parent);
+        this.sentenceListEle = createElementWithIdAndParent("div", this.parent);
+
         this.sentenceEle.innerHTML = "<hr><p>The words you've typed could, in theory, make a sentence such as these:</p>";
         this.content.style.fontSize = "42px";
 
@@ -120,7 +126,8 @@ export class TypingMiniGame {
 
                 if(readyToDisplay){
                     this.audio.play();
-                    this.sentenceEle.innerHTML += `<li>${sentence.text}</li>`;
+                    //display in reverse order so you can always see your newest Unlock
+                    this.sentenceListEle.innerHTML = `<li>${sentence.text}</li>${this.sentenceListEle.innerHTML}`;
                     sentence.displayed = true;
                 }
             }
@@ -134,7 +141,7 @@ export class TypingMiniGame {
         nextWord = () => {
             const current_word = this.sorted_word_list[this.current_index];
             this.unique_word_map[current_word].typed = true;
-            this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level`;
+            this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level.`;
 
             this.current_index++;
 
@@ -184,7 +191,7 @@ export class TypingMiniGame {
             
 
             this.content.innerHTML = ("");
-            this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level`;
+            this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level.`;
             new WordToType(this.content, this.sorted_word_list[this.current_index], this.nextWord);
 
         }

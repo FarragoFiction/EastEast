@@ -8004,10 +8004,12 @@ class TypingMiniGame {
         this.parseText = (text) => {
             this.content.remove();
             this.sentenceEle.remove();
+            this.sentenceListEle.remove();
             this.wordsLeft.remove();
             this.wordsLeft = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
             this.content = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
             this.sentenceEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
+            this.sentenceListEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
             this.sentenceEle.innerHTML = "<hr><p>The words you've typed could, in theory, make a sentence such as these:</p>";
             this.content.style.fontSize = "42px";
             this.current_index = 0;
@@ -8055,7 +8057,8 @@ class TypingMiniGame {
                     }
                     if (readyToDisplay) {
                         this.audio.play();
-                        this.sentenceEle.innerHTML += `<li>${sentence.text}</li>`;
+                        //display in reverse order so you can always see your newest Unlock
+                        this.sentenceListEle.innerHTML = `<li>${sentence.text}</li>${this.sentenceListEle.innerHTML}`;
                         sentence.displayed = true;
                     }
                 }
@@ -8068,7 +8071,7 @@ class TypingMiniGame {
         this.nextWord = () => {
             const current_word = this.sorted_word_list[this.current_index];
             this.unique_word_map[current_word].typed = true;
-            this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level`;
+            this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level.`;
             this.current_index++;
             this.checkForSentences();
             //TODO handle checking if theres any sentences, and if so , showcase it
@@ -8111,7 +8114,7 @@ class TypingMiniGame {
         this.displayGame = () => {
             this.findFirstIndex();
             this.content.innerHTML = ("");
-            this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level`;
+            this.wordsLeft.innerHTML = `${this.wordsRemaining()} words remaining in this Practice Level.`;
             new WordToType(this.content, this.sorted_word_list[this.current_index], this.nextWord);
         };
         this.callback = callback;
@@ -8119,6 +8122,7 @@ class TypingMiniGame {
         this.original_text = `${original_text}`; //being lazy and avoiding having a reference to this get put here if im gonna mutate it
         this.content = (0, misc_1.createElementWithIdAndParent)("div", parent);
         this.sentenceEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
+        this.sentenceListEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
         this.wordsLeft = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
         this.content.style.fontSize = "42px";
         this.unique_word_map = {};
