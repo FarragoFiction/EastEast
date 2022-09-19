@@ -52,7 +52,7 @@ export class ApocalypseEngine {
 
         this.parent.append(crt);
         this.transcript("Please practice typing the following words...");
-        this.minigame = new TypingMiniGame(this.terminal,"Confession of a Doctor. Please Listen.", this.handleCallback);
+        this.minigame = new TypingMiniGame(this.terminal,"True confessions of a Doctor. Please Listen. I am. Trying.", this.handleCallback);
         //good job: can you go faster?
 
     }

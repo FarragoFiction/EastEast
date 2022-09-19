@@ -7510,7 +7510,7 @@ class ApocalypseEngine {
             this.terminal = (0, misc_1.createElementWithIdAndParent)("div", crt, "terminal");
             this.parent.append(crt);
             this.transcript("Please practice typing the following words...");
-            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, "Confession of a Doctor. Please Listen.", this.handleCallback);
+            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, "True confessions of a Doctor. Please Listen. I am. Trying.", this.handleCallback);
             //good job: can you go faster?
         };
         this.handleCallback = (text, loadNext = false) => {
@@ -7992,13 +7992,21 @@ class TypingMiniGame {
         //what word are you typing
         this.current_index = 0;
         this.parseText = (text) => {
-            console.log("JR NOTE: parsing text", text);
             this.content.remove();
+            this.sentenceEle.remove();
             this.content = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
+            this.sentenceEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
+            this.sentenceEle.innerHTML = "<hr><p>The words you've typed could, in theory, make a sentence:</p>";
             this.content.style.fontSize = "42px";
             this.current_index = 0;
             text = text.replaceAll(/\n/g, " ");
-            this.sentences = text.split(/[.?!]/g).map((sentence) => { return { text: sentence, typed: false }; });
+            const probable_sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
+            if (probable_sentences) {
+                this.sentences = probable_sentences.map((sentence) => { return { text: sentence, displayed: false }; });
+            }
+            else {
+                this.sentences = [];
+            }
             const split_words = text.split(" ");
             for (let w of split_words) {
                 let word = w.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase();
@@ -8014,6 +8022,34 @@ class TypingMiniGame {
             this.sorted_word_list = Object.keys(this.unique_word_map).sort((a, b) => { return a.length - b.length; });
             this.displayGame();
         };
+        this.checkForSentences = () => {
+            console.log("JR NOTE: checking for sentences.");
+            for (let sentence of this.sentences) {
+                if (!sentence.displayed) {
+                    console.log(`JR NOTE: ${sentence.text} is not yet displaed. `);
+                    const split_words = sentence.text.split(" ");
+                    console.log(`JR NOTE: split words is ${split_words}`);
+                    let readyToDisplay = true;
+                    for (let w of split_words) {
+                        console.log(`JR NOTE: is word typed yet?`, w);
+                        let word = w.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase();
+                        if (word.trim() !== "") {
+                            if (Object.keys(this.unique_word_map).includes(word) && !this.unique_word_map[word].typed) {
+                                console.log(`JR NOTE: w ${w} was not yet typed`);
+                                readyToDisplay = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (readyToDisplay) {
+                        console.log("JR NOTE: ready to display");
+                        this.sentenceEle.innerHTML += `<li>${sentence.text}</li>`;
+                        console.log("JR NOTE: ready to display", this.sentenceEle.innerHTML);
+                        sentence.displayed = true;
+                    }
+                }
+            }
+        };
         //set the current word as typed, check if the next word has been typed yet
         //if it has, go to the next word
         //if it hasn't, display the typing minigame
@@ -8021,8 +8057,8 @@ class TypingMiniGame {
         this.nextWord = () => {
             const current_word = this.sorted_word_list[this.current_index];
             this.unique_word_map[current_word].typed = true;
-            console.log(`JR NOTE: ${current_word} is already typed`);
             this.current_index++;
+            this.checkForSentences();
             //TODO handle checking if theres any sentences, and if so , showcase it
             if (this.current_index >= this.sorted_word_list.length) {
                 this.callback("", true);
@@ -8039,7 +8075,6 @@ class TypingMiniGame {
         };
         this.findFirstIndex = () => {
             const current_word = this.sorted_word_list[this.current_index];
-            console.log("JR NOTE: is this first word typed?", current_word, this.unique_word_map);
             if (this.unique_word_map[current_word].typed) {
                 this.current_index++;
                 this.findFirstIndex();
@@ -8050,13 +8085,13 @@ class TypingMiniGame {
         };
         this.displayGame = () => {
             this.findFirstIndex();
-            console.log("JR NOTE: initing typing mini game, sub list is", this.sorted_word_list.slice(this.current_index));
             this.content.innerHTML = ("");
             new WordToType(this.content, this.sorted_word_list[this.current_index], this.nextWord);
         };
         this.callback = callback;
         this.parent = parent;
         this.content = (0, misc_1.createElementWithIdAndParent)("div", parent);
+        this.sentenceEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
         this.content.style.fontSize = "42px";
         this.unique_word_map = {};
         this.sentences = [];
@@ -8069,13 +8104,11 @@ class WordToType {
     constructor(parent, text, callback) {
         this.stringTypedSoFar = "";
         this.listen = (event) => {
-            console.log("JR NOTE: got event", event);
             if (event.key.toLowerCase() === this.stringRemaining[0]) {
                 this.stringTypedSoFar += event.key.toLowerCase();
                 this.stringRemaining = this.stringRemaining.substring(1);
                 this.render();
             }
-            console.log("JR NOTE: stringRemaining is: ", this.stringRemaining);
             if (this.stringRemaining.trim() === "") {
                 this.teardown();
             }
@@ -8092,7 +8125,6 @@ class WordToType {
             console.log("JR NOTE; trying to render", this.stringRemaining);
             this.element.innerHTML = `<span style="color:white">${this.stringTypedSoFar}</span><span>${this.stringRemaining}</span>`;
         };
-        console.log("JR NOTE: the word to type is", text);
         this.stringRemaining = text.toLowerCase();
         this.callback = callback;
         this.element = (0, misc_1.createElementWithIdAndParent)("p", parent);
