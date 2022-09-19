@@ -7511,7 +7511,7 @@ class ApocalypseEngine {
             this.terminal = (0, misc_1.createElementWithIdAndParent)("div", crt, "terminal");
             this.parent.append(crt);
             this.transcript("Please practice typing the following words...");
-            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, "True confessions of a Doctor. Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Clensed. I do not Know how much Longer I can Hold Out.", this.handleCallback);
+            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, "True confessions of a Doctor. Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Clensed. I do not Know how much Longer I can Hold Out. L-0-17 was right.", this.handleCallback);
             //good job: can you go faster?
         };
         this.handleCallback = (text, loadNext = false, time) => {
@@ -8178,7 +8178,7 @@ class WordToType {
         };
         this.render = () => {
             console.log("JR NOTE; trying to render", this.stringRemaining);
-            this.element.innerHTML = `<span style="color:white">${this.stringTypedSoFar}</span><span>${this.stringRemaining}</span>`;
+            this.element.innerHTML = `<span style="color:white">${this.stringTypedSoFar.toUpperCase()}</span><span>${this.stringRemaining.toUpperCase()}</span>`;
         };
         this.stringRemaining = text.toLowerCase();
         this.callback = callback;

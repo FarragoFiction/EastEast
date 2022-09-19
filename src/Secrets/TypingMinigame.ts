@@ -263,6 +263,6 @@ class WordToType {
 
     render = () => {
         console.log("JR NOTE; trying to render", this.stringRemaining)
-        this.element.innerHTML = `<span style="color:white">${this.stringTypedSoFar}</span><span>${this.stringRemaining}</span>`;
+        this.element.innerHTML = `<span style="color:white">${this.stringTypedSoFar.toUpperCase()}</span><span>${this.stringRemaining.toUpperCase()}</span>`;
     }
 }
