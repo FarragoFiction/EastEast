@@ -52,14 +52,20 @@ export class ApocalypseEngine {
 
         this.parent.append(crt);
         this.transcript("Please practice typing the following words...");
-        this.minigame = new TypingMiniGame(this.terminal,"Confession of a Doctor. Please Listen.", this.loadNextPassword);
+        this.minigame = new TypingMiniGame(this.terminal,"Confession of a Doctor. Please Listen.", this.handleCallback);
         //good job: can you go faster?
 
     }
-    
-    loadNextPassword = (text: string)=>{
-        const secret = Object.values(docSlaughtersFiles)[this.current_index];
+
+    handleCallback = (text: string, loadNext= false)=>{
         this.transcript(text);
+        if(loadNext){
+            this.loadNextPassword();
+        }
+    }
+    
+    loadNextPassword = ()=>{
+        console.log("JR NOTE: loading next password")
         this.current_index ++;
         this.loadPassword();
     }
@@ -70,15 +76,21 @@ export class ApocalypseEngine {
             return;
         }
         this.terminal.innerHTML = "";
+        console.log("JR NOTE: loading password")
+
         if(Object.values(docSlaughtersFiles).length <= this.current_index){
             this.transcript("Thank you for practicing your typing. Do you Understand what you have learned? Please tell me you Understand...");
 
         }
         const secret = Object.values(docSlaughtersFiles)[this.current_index];
+        console.log("JR NOTE: loading next password secret is", secret)
+
+
 
         this.transcript("Please practice typing the following, entirely random, words, in order of difficulty:");
-        if(secret.text.trim() != ""){
-            this.minigame?.parseText(secret.text);
+        const text = loadSecretText(secret.text);
+        if(text.trim() != ""){
+            this.minigame?.parseText(text);
         }
     }
 

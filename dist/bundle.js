@@ -7470,6 +7470,7 @@ exports.initThemes = initThemes;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ApocalypseEngine = void 0;
+const __1 = __webpack_require__(3607);
 const misc_1 = __webpack_require__(4079);
 const PasswordStorage_1 = __webpack_require__(9867);
 const TypingMinigame_1 = __webpack_require__(8048);
@@ -7509,12 +7510,17 @@ class ApocalypseEngine {
             this.terminal = (0, misc_1.createElementWithIdAndParent)("div", crt, "terminal");
             this.parent.append(crt);
             this.transcript("Please practice typing the following words...");
-            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, "Confession of a Doctor. Please Listen.", this.loadNextPassword);
+            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, "Confession of a Doctor. Please Listen.", this.handleCallback);
             //good job: can you go faster?
         };
-        this.loadNextPassword = (text) => {
-            const secret = Object.values(PasswordStorage_1.docSlaughtersFiles)[this.current_index];
+        this.handleCallback = (text, loadNext = false) => {
             this.transcript(text);
+            if (loadNext) {
+                this.loadNextPassword();
+            }
+        };
+        this.loadNextPassword = () => {
+            console.log("JR NOTE: loading next password");
             this.current_index++;
             this.loadPassword();
         };
@@ -7524,13 +7530,16 @@ class ApocalypseEngine {
                 return;
             }
             this.terminal.innerHTML = "";
+            console.log("JR NOTE: loading password");
             if (Object.values(PasswordStorage_1.docSlaughtersFiles).length <= this.current_index) {
                 this.transcript("Thank you for practicing your typing. Do you Understand what you have learned? Please tell me you Understand...");
             }
             const secret = Object.values(PasswordStorage_1.docSlaughtersFiles)[this.current_index];
+            console.log("JR NOTE: loading next password secret is", secret);
             this.transcript("Please practice typing the following, entirely random, words, in order of difficulty:");
-            if (secret.text.trim() != "") {
-                this.minigame?.parseText(secret.text);
+            const text = (0, __1.loadSecretText)(secret.text);
+            if (text.trim() != "") {
+                this.minigame?.parseText(text);
             }
         };
         this.transcript = async (linesUnedited) => {
@@ -7980,32 +7989,43 @@ exports.TypingMiniGame = void 0;
 const misc_1 = __webpack_require__(4079);
 class TypingMiniGame {
     constructor(parent, original_text, callback) {
+        //what word are you typing
+        this.current_index = 0;
         this.parseText = (text) => {
+            console.log("JR NOTE: parsing text", text);
             text = text.replaceAll(/\n/g, " ");
-            this.sentences = text.split(/[.?!]/g);
+            this.sentences = text.split(/[.?!]/g).map((sentence) => { return { text: sentence, typed: false }; });
             const split_words = text.split(" ");
             for (let w of split_words) {
                 let word = w.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").toLowerCase();
-                if (Object.keys(this.unique_word_map).includes(word.toLowerCase())) {
-                    this.unique_word_map[word] = { word: word, typed: false, times_seen: this.unique_word_map[word].times_seen + 1 };
-                }
-                else {
-                    this.unique_word_map[word] = { word: word, typed: false, times_seen: 1 };
+                if (word.trim() !== "") {
+                    if (Object.keys(this.unique_word_map).includes(word.toLowerCase())) {
+                        this.unique_word_map[word] = { word: word, typed: false, times_seen: this.unique_word_map[word].times_seen + 1 };
+                    }
+                    else {
+                        this.unique_word_map[word] = { word: word, typed: false, times_seen: 1 };
+                    }
                 }
             }
             this.sorted_word_list = Object.keys(this.unique_word_map).sort((a, b) => { return a.length - b.length; });
-            this.init();
+            this.displayGame();
         };
-        this.init = () => {
+        this.nextWord = () => {
+            this.current_index++;
+            //TODO handle checking if theres any sentences, and if so , showcase it
+            if (this.current_index >= this.sorted_word_list.length) {
+                this.callback("", true);
+            }
+            this.displayGame();
+        };
+        this.displayGame = () => {
             console.log("JR NOTE: initing typing mini game");
-            const content = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
-            content.innerHTML = `<p>Word List: <b>${this.sorted_word_list.length}</b></p>
-        ${this.sorted_word_list.join("<li>")}
-        <p>Sentences: ${this.sentences}</p>
-        `;
+            this.content.innerHTML = ("");
+            new WordToType(this.content, this.sorted_word_list[this.current_index], this.nextWord);
         };
         this.callback = callback;
-        this.parent = parent;
+        this.content = (0, misc_1.createElementWithIdAndParent)("div", parent);
+        this.content.style.fontSize = "42px";
         this.unique_word_map = {};
         this.sentences = [];
         this.sorted_word_list = [];
@@ -8013,6 +8033,40 @@ class TypingMiniGame {
     }
 }
 exports.TypingMiniGame = TypingMiniGame;
+class WordToType {
+    constructor(parent, text, callback) {
+        this.stringTypedSoFar = "";
+        this.listen = (event) => {
+            console.log("JR NOTE: got event", event);
+            if (event.key.toLowerCase() === this.stringRemaining[0]) {
+                this.stringTypedSoFar += event.key.toLowerCase();
+                this.stringRemaining = this.stringRemaining.substring(1);
+                this.render();
+            }
+            console.log("JR NOTE: stringRemaining is: ", this.stringRemaining);
+            if (this.stringRemaining.trim() === "") {
+                this.teardown();
+            }
+        };
+        this.setup = () => {
+            window.addEventListener('keydown', this.listen);
+        };
+        this.teardown = () => {
+            console.log("JR NOTE: calling teardown");
+            window.removeEventListener('keydown', this.listen);
+            this.callback();
+        };
+        this.render = () => {
+            this.element.innerHTML = `<span style="color:white">${this.stringTypedSoFar}</span><span>${this.stringRemaining}</span>`;
+        };
+        console.log("JR NOTE: the word to type is", text);
+        this.stringRemaining = text.toLowerCase();
+        this.callback = callback;
+        this.element = (0, misc_1.createElementWithIdAndParent)("p", parent);
+        this.setup();
+        this.render();
+    }
+}
 
 
 /***/ }),
