@@ -92,7 +92,7 @@ export class ApocalypseEngine {
 
 
         this.transcript(`
-            Level Times: ${this.levelTimes.map((time,level)=>`Level${level+1}:${time}`).join(", ")}
+            Level Times: ${this.levelTimes.map((time,level)=>`Level_${level+1}:${time}`).join(", ")}
         Please practice typing the following, entirely random, words, in order of difficulty:`);
         const text = loadSecretText(secret.text);
         if(text.trim() != ""){
