@@ -11,7 +11,7 @@ Quick Summary:
 
 The first thing I noticed about Ria was her bright eyes, constantly searching my office, missing not a single detail. She is intelligent and passionate, and a very hard worker.
 
-Overall, the biggest thing Ria wants to work on is her struggles with Addiction, both in the sense of substance abuse and in her own words, 'an addiction to connecting the facts'.  I struggle to maintain appropriate Professional Distance as I confess the idea that this could be unhealthy is a Foreign one to me.
+Overall, the biggest thing Ria wants to work on is her struggles with Addiction, both in the sense of substance abuse and in her own words, "an addiction to connecting the facts".  I struggle to maintain appropriate Professional Distance as I confess the idea that this could be unhealthy is a Foreign one to me.
 
 Ria is an optimist in a Universe of disappointments. Each fresh disappointment creates a new crack in her smile, and given sufficient pain she can lose herself to a frantic attempt to make sure she is Never Hurt Like This Again.
 
