@@ -13,7 +13,7 @@ Camille has a warm smile, mischievous eyes and a desire to love and be loved.
 
 She felt isolated as a child, both larger and more intimidating than her peers and has difficulty predicting how others view her.  This has lead to her having an insecure attachment style natively, preferring to cling and fawn over loved ones in the fear of losing them.
 
-Prior employment lead to her developing a 'curse', either preventing her directly from speaking or strongly discouraging it. As a result, her attachment style has evolved to be more avoidant overall.
+Prior employment lead to her developing a "curse", either preventing her directly from speaking or strongly discouraging it. As a result, her attachment style has evolved to be more avoidant overall.
 
 I'm working with her to untangle how much is actually supernatural in nature and how much is her own desire to set harsh Personal Rules in order to make up for how bewildering she finds Societal ones. 
 

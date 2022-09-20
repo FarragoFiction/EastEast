@@ -7511,7 +7511,8 @@ class ApocalypseEngine {
             this.terminal = (0, misc_1.createElementWithIdAndParent)("div", crt, "terminal");
             this.parent.append(crt);
             this.transcript("Please practice typing the following words...");
-            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, `True confessions of a Doctor. "Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Cleansed. I do not Know how much Longer I can Hold Out. L-0-17 was right."`, this.handleCallback);
+            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, `True confessions of a Doctor: 
+        "Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Cleansed. I do not Know how much Longer I can Hold Out. L-0-17 was right."`, this.handleCallback);
             //good job: can you go faster?
         };
         this.handleCallback = (text, loadNext = false, time) => {
@@ -10783,7 +10784,7 @@ Camille has a warm smile, mischievous eyes and a desire to love and be loved.
 
 She felt isolated as a child, both larger and more intimidating than her peers and has difficulty predicting how others view her.  This has lead to her having an insecure attachment style natively, preferring to cling and fawn over loved ones in the fear of losing them.
 
-Prior employment lead to her developing a 'curse', either preventing her directly from speaking or strongly discouraging it. As a result, her attachment style has evolved to be more avoidant overall.
+Prior employment lead to her developing a "curse", either preventing her directly from speaking or strongly discouraging it. As a result, her attachment style has evolved to be more avoidant overall.
 
 I'm working with her to untangle how much is actually supernatural in nature and how much is her own desire to set harsh Personal Rules in order to make up for how bewildering she finds Societal ones. 
 

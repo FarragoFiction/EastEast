@@ -179,6 +179,10 @@ color: red;
   height: 600px;
 }
 
+#terminal li{
+  padding-bottom: 20px;
+}
+
 video{
   width: 400px;
   margin-left: auto;
