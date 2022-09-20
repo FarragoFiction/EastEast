@@ -36,3 +36,30 @@ export const valueAsArray = (key: string)=>{
     return initEmptyArrayAtKey(key);
   }
 }
+
+const TIME_KEY = "PlzHackToMakeThemAll_Zampanio";
+
+export const saveTime = (index: number, timeNumber: number)=>{
+  console.log(`JR NOTE: i want to save time ${timeNumber} to index ${index}`)
+  const storedValues = localStorage.getItem(TIME_KEY);
+  console.log("JR NOTE: stored values is", storedValues)
+  if(storedValues){
+    const parsedValues = valueAsArray(TIME_KEY);
+    //only save it if its smaller plz
+    if(parsedValues[index]){
+      if(timeNumber < parsedValues[index]){
+        parsedValues[index] = timeNumber;
+      }
+    }else{
+      parsedValues[index] = timeNumber;
+    }
+    console.log("JR NOTE: new parsedValues is", parsedValues)
+
+    localStorage[TIME_KEY]  = parsedValues;
+  }else{
+    console.log("JR NOTE: initing empty array and adding something to it")
+    initEmptyArrayAtKey(TIME_KEY);
+    addNumToArrayWithKey(TIME_KEY, timeNumber);
+    console.log("JR NOTE: localStorage.getItem(TIME_KEY) is", localStorage.getItem(TIME_KEY))
+  }
+}

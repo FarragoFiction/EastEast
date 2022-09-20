@@ -7471,7 +7471,9 @@ exports.initThemes = initThemes;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ApocalypseEngine = void 0;
 const __1 = __webpack_require__(3607);
+const LocalStorageUtils_1 = __webpack_require__(5565);
 const misc_1 = __webpack_require__(4079);
+const StringUtils_1 = __webpack_require__(7036);
 const PasswordStorage_1 = __webpack_require__(9867);
 const TypingMinigame_1 = __webpack_require__(8048);
 const defaultSpeed = 0;
@@ -7523,13 +7525,14 @@ Dr. Fiona Slaughter`, this.handleCallback);
             this.transcript(text);
             if (loadNext) {
                 if (time) {
-                    this.levelTimes.push(time);
+                    this.levelTimes.push((0, StringUtils_1.getTimeStringBuff)(new Date(time)));
+                    console.log("JR NOTE: trying to save time");
+                    (0, LocalStorageUtils_1.saveTime)(this.levelTimes.length - 1, time);
                 }
                 this.loadNextPassword();
             }
         };
         this.loadNextPassword = () => {
-            console.log("JR NOTE: loading next password");
             this.current_index++;
             this.loadPassword();
         };
@@ -7539,12 +7542,10 @@ Dr. Fiona Slaughter`, this.handleCallback);
                 return;
             }
             this.terminal.innerHTML = "";
-            console.log("JR NOTE: loading password");
             if (Object.values(PasswordStorage_1.docSlaughtersFiles).length <= this.current_index) {
                 this.transcript("Thank you for practicing your typing. Do you Understand what you have learned? Please tell me you Understand...");
             }
             const secret = Object.values(PasswordStorage_1.docSlaughtersFiles)[this.current_index];
-            console.log("JR NOTE: loading next password secret is", secret);
             this.transcript(`
             Level Times: ${this.levelTimes.map((time, level) => `Level_${level + 1}:${time}`).join(", ")}
         Please practice typing the following, entirely random, words, in order of difficulty:`);
@@ -8029,15 +8030,12 @@ class TypingMiniGame {
             this.content.style.fontSize = "42px";
             this.current_index = 0;
             const first_pass_sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
-            console.log("JR NOTE:first_pass_sentences is ", first_pass_sentences);
             let probable_sentences = [];
             if (first_pass_sentences) {
                 for (let sentence of first_pass_sentences) {
-                    console.log(`JR NOTE seeing if ${sentence} can be split `);
                     probable_sentences = probable_sentences.concat(sentence.split("\n"));
                 }
             }
-            console.log("JR NOTE: probable_sentences is ", probable_sentences, "from text: ", text);
             if (probable_sentences) {
                 this.sentences = probable_sentences.filter((item) => item.trim() !== "" && item.trim() !== '"').map((sentence) => { return { text: sentence.trim(), displayed: false }; });
             }
@@ -8063,20 +8061,15 @@ class TypingMiniGame {
             this.displayGame();
         };
         this.checkForSentences = () => {
-            console.log("JR NOTE: checking for sentences.");
             for (let sentence of this.sentences) {
                 if (!sentence.displayed) {
-                    console.log(`JR NOTE: ${sentence.text} is not yet displaed. `);
                     const split_words = sentence.text.split(" ");
-                    console.log(`JR NOTE: split words is ${split_words}`);
                     let readyToDisplay = true;
                     for (let w of split_words) {
-                        console.log(`JR NOTE: is word typed yet?`, w);
                         w = w.replaceAll(/\n/g, " ");
                         let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()"]/g, "").toLowerCase().trim();
                         if (word.trim() !== "") {
                             if (Object.keys(this.unique_word_map).includes(word) && !this.unique_word_map[word].typed) {
-                                console.log(`JR NOTE: w ${w} was not yet typed`);
                                 readyToDisplay = false;
                                 break;
                             }
@@ -8103,7 +8096,7 @@ class TypingMiniGame {
             this.checkForSentences();
             //TODO handle checking if theres any sentences, and if so , showcase it
             if (this.current_index >= this.sorted_word_list.length) {
-                const time = this.getTimeString();
+                const time = this.getTimeNumber();
                 clearInterval(this.timer);
                 const helpfulHint = (0, misc_1.createElementWithIdAndParent)("div", this.content);
                 helpfulHint.innerHTML = `<p>Since you typed up this story yourself, I suppose theres no reason not to show you. Obviously you already know it. How could it be Confidential?</p>`;
@@ -8139,6 +8132,9 @@ class TypingMiniGame {
             else {
                 return;
             }
+        };
+        this.getTimeNumber = () => {
+            return (new Date(new Date() - this.startTime).valueOf());
         };
         this.getTimeString = () => {
             return (0, StringUtils_1.getTimeStringBuff)(new Date(new Date() - this.startTime));
@@ -8187,12 +8183,10 @@ class WordToType {
             window.addEventListener('keydown', this.listen);
         };
         this.teardown = () => {
-            console.log("JR NOTE: calling teardown");
             window.removeEventListener('keydown', this.listen);
             this.callback();
         };
         this.render = () => {
-            console.log("JR NOTE; trying to render", this.stringRemaining);
             this.element.innerHTML = `<span style="color:white">${this.stringTypedSoFar.toUpperCase()}</span><span>${this.stringRemaining.toUpperCase()}</span>`;
         };
         this.stringRemaining = text.toLowerCase();
@@ -8241,7 +8235,7 @@ exports.turnArrayIntoHumanSentence = turnArrayIntoHumanSentence;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.valueAsArray = exports.initEmptyArrayAtKey = exports.removeStringFromArrayWithKey = exports.addNumToArrayWithKey = exports.addStringToArrayWithKey = exports.isStringInArrayWithKey = void 0;
+exports.saveTime = exports.valueAsArray = exports.initEmptyArrayAtKey = exports.removeStringFromArrayWithKey = exports.addNumToArrayWithKey = exports.addStringToArrayWithKey = exports.isStringInArrayWithKey = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const isStringInArrayWithKey = (key, target) => {
     return (0, exports.valueAsArray)(key).includes(target);
@@ -8280,6 +8274,33 @@ const valueAsArray = (key) => {
     }
 };
 exports.valueAsArray = valueAsArray;
+const TIME_KEY = "PlzHackToMakeThemAll_Zampanio";
+const saveTime = (index, timeNumber) => {
+    console.log(`JR NOTE: i want to save time ${timeNumber} to index ${index}`);
+    const storedValues = localStorage.getItem(TIME_KEY);
+    console.log("JR NOTE: stored values is", storedValues);
+    if (storedValues) {
+        const parsedValues = (0, exports.valueAsArray)(TIME_KEY);
+        //only save it if its smaller plz
+        if (parsedValues[index]) {
+            if (timeNumber < parsedValues[index]) {
+                parsedValues[index] = timeNumber;
+            }
+        }
+        else {
+            parsedValues[index] = timeNumber;
+        }
+        console.log("JR NOTE: new parsedValues is", parsedValues);
+        localStorage[TIME_KEY] = parsedValues;
+    }
+    else {
+        console.log("JR NOTE: initing empty array and adding something to it");
+        (0, exports.initEmptyArrayAtKey)(TIME_KEY);
+        (0, exports.addNumToArrayWithKey)(TIME_KEY, timeNumber);
+        console.log("JR NOTE: localStorage.getItem(TIME_KEY) is", localStorage.getItem(TIME_KEY));
+    }
+};
+exports.saveTime = saveTime;
 
 
 /***/ }),

@@ -1,5 +1,7 @@
 import { loadSecretText } from "..";
+import { saveTime } from "../Utils/LocalStorageUtils";
 import { createElementWithId, createElementWithIdAndParent, sleep } from "../Utils/misc";
+import { getTimeStringBuff } from "../Utils/StringUtils";
 import { docSlaughtersFiles } from "./PasswordStorage";
 import { TypingMiniGame } from "./TypingMinigame";
 
@@ -12,9 +14,9 @@ export class ApocalypseEngine {
     clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
     //where in the password list are you.
     current_index = -1;
-    terminal? :HTMLElement;
+    terminal?: HTMLElement;
     minigame?: TypingMiniGame;
-    levelTimes:string[] = [];
+    levelTimes: string[] = [];
 
     constructor(parent: HTMLElement) {
         this.parent = parent;
@@ -53,7 +55,7 @@ export class ApocalypseEngine {
 
         this.parent.append(crt);
         this.transcript("Please practice typing the following words...");
-        this.minigame = new TypingMiniGame(this.terminal,`True confessions of a Doctor: 
+        this.minigame = new TypingMiniGame(this.terminal, `True confessions of a Doctor: 
         "Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Cleansed. I do not Know how much Longer I can Hold Out. L-0-17 was right."
         
         Thank you,
@@ -63,57 +65,60 @@ Dr. Fiona Slaughter`, this.handleCallback);
 
     }
 
-    handleCallback = (text: string, loadNext= false, time?:string)=>{
-        this.transcript(text);
-        if(loadNext){
-            if(time){
-                this.levelTimes.push(time);
-            }
+    //display text, load the next bit or handle time stuff, yes this is gross and ugly so sue me
+    handleCallback = (text: string, loadNext = false, time?: number) => {
+        if (text.trim() !== "") {
+            this.transcript(text);
+        }
+        if (time) {
+            this.levelTimes.push(getTimeStringBuff(new Date(time)));
+            console.log("JR NOTE: trying to save time")
+            saveTime(this.levelTimes.length - 1, time);
+        }
+        if (loadNext) {
+
             this.loadNextPassword();
         }
     }
-    
-    loadNextPassword = ()=>{
-        console.log("JR NOTE: loading next password")
-        this.current_index ++;
+
+    loadNextPassword = () => {
+        this.current_index++;
         this.loadPassword();
     }
 
     loadPassword = () => {
-        if(!this.terminal){
+        if (!this.terminal) {
             this.transcript("What did you do?");
             return;
         }
         this.terminal.innerHTML = "";
-        console.log("JR NOTE: loading password")
 
-        if(Object.values(docSlaughtersFiles).length <= this.current_index){
+        if (Object.values(docSlaughtersFiles).length <= this.current_index) {
             this.transcript("Thank you for practicing your typing. Do you Understand what you have learned? Please tell me you Understand...");
 
         }
         const secret = Object.values(docSlaughtersFiles)[this.current_index];
-        console.log("JR NOTE: loading next password secret is", secret)
 
 
 
         this.transcript(`
-            Level Times: ${this.levelTimes.map((time,level)=>`Level_${level+1}:${time}`).join(", ")}
+            Level Times: ${this.levelTimes.map((time, level) => `Level_${level + 1}:${time}`).join(", ")}
         Please practice typing the following, entirely random, words, in order of difficulty:`);
         const text = loadSecretText(secret.text);
-        if(text.trim() != ""){
+        if (text.trim() != "") {
             this.minigame?.parseText(text);
         }
     }
 
     transcript = async (linesUnedited: string) => {
-        if(!this.terminal){
+        if (!this.terminal) {
             return;
         }
         const lines = linesUnedited.split("\n");
 
         for (let line of lines) {
-            const element = createElementWithIdAndParent("p",this.terminal);
-            this.typeWrite(element,line);
+            const element = createElementWithIdAndParent("p", this.terminal);
+            this.typeWrite(element, line);
         }
     }
 

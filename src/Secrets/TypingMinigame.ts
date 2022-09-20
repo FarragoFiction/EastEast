@@ -86,16 +86,13 @@ export class TypingMiniGame {
 
         this.current_index = 0;
         const first_pass_sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
-        console.log("JR NOTE:first_pass_sentences is ",first_pass_sentences)
         let probable_sentences: string[] = [];
         if(first_pass_sentences){
             for(let sentence of first_pass_sentences){
-                console.log(`JR NOTE seeing if ${sentence} can be split `)
                 probable_sentences = probable_sentences.concat(sentence.split("\n"));
             }
         }
 
-        console.log("JR NOTE: probable_sentences is ", probable_sentences, "from text: ", text)
 
         if (probable_sentences) {
             this.sentences = probable_sentences.filter((item)=>item.trim()!=="" && item.trim() !== '"').map((sentence) => { return { text: sentence.trim(), displayed: false } })
@@ -130,22 +127,17 @@ export class TypingMiniGame {
     }
 
     checkForSentences = () => {
-        console.log("JR NOTE: checking for sentences.")
         for (let sentence of this.sentences) {
             if (!sentence.displayed) {
-                console.log(`JR NOTE: ${sentence.text} is not yet displaed. `)
                 const split_words = sentence.text.split(" ");
-                console.log(`JR NOTE: split words is ${split_words}`)
 
                 let readyToDisplay = true;
                 for (let w of split_words) {
-                    console.log(`JR NOTE: is word typed yet?`, w)
                     w = w.replaceAll(/\n/g, " ");
 
                     let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()"]/g, "").toLowerCase().trim();
                     if (word.trim() !== "") {
                         if (Object.keys(this.unique_word_map).includes(word) && !this.unique_word_map[word].typed) {
-                            console.log(`JR NOTE: w ${w} was not yet typed`)
 
                             readyToDisplay = false;
                             break;
@@ -178,7 +170,9 @@ export class TypingMiniGame {
         this.checkForSentences();
         //TODO handle checking if theres any sentences, and if so , showcase it
         if (this.current_index >= this.sorted_word_list.length) {
-            const time = this.getTimeString();
+            const time = this.getTimeNumber();
+            this.callback("", false, time);
+
             clearInterval(this.timer);
 
             const helpfulHint = createElementWithIdAndParent("div", this.content);
@@ -192,7 +186,7 @@ export class TypingMiniGame {
             }
             const button = createElementWithIdAndParent("button", this.content);
             button.onclick = () => {
-                this.callback("", true,time);
+                this.callback("", true);
             }
             this.audio.play();
 
@@ -219,6 +213,10 @@ export class TypingMiniGame {
         }
     }
 
+    getTimeNumber = ()=>{
+        return (new Date((new Date() as any) - (this.startTime as any)).valueOf())
+
+    }
 
     getTimeString = () => {
         return getTimeStringBuff(new Date((new Date() as any) - (this.startTime as any)))
@@ -271,14 +269,12 @@ class WordToType {
     }
 
     teardown = () => {
-        console.log("JR NOTE: calling teardown")
         window.removeEventListener('keydown', this.listen);
         this.callback();
     }
 
 
     render = () => {
-        console.log("JR NOTE; trying to render", this.stringRemaining)
         this.element.innerHTML = `<span style="color:white">${this.stringTypedSoFar.toUpperCase()}</span><span>${this.stringRemaining.toUpperCase()}</span>`;
     }
 }
