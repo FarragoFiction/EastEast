@@ -8028,10 +8028,18 @@ class TypingMiniGame {
             this.sentenceEle.innerHTML = "<hr><p>The words you've typed could, in theory, make a sentence such as these:</p>";
             this.content.style.fontSize = "42px";
             this.current_index = 0;
-            const probable_sentences = text.match(/[^\n\.!\?]+[\n\.!\?]+/g);
+            const first_pass_sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
+            console.log("JR NOTE:first_pass_sentences is ", first_pass_sentences);
+            let probable_sentences = [];
+            if (first_pass_sentences) {
+                for (let sentence of first_pass_sentences) {
+                    console.log(`JR NOTE seeing if ${sentence} can be split `);
+                    probable_sentences = probable_sentences.concat(sentence.split("\n"));
+                }
+            }
             console.log("JR NOTE: probable_sentences is ", probable_sentences, "from text: ", text);
             if (probable_sentences) {
-                this.sentences = probable_sentences.filter((item) => item.trim() !== "").map((sentence) => { return { text: sentence.trim(), displayed: false }; });
+                this.sentences = probable_sentences.filter((item) => item.trim() !== "" && item.trim() !== '"').map((sentence) => { return { text: sentence.trim(), displayed: false }; });
             }
             else {
                 this.sentences = [];
@@ -9992,7 +10000,7 @@ const text = `
 * JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
 
 
-Name: Yongki(updated)
+Name: Yongki (updated)
 Aliases:  The Reflection, L-0-I1-alpha
 Coping Strategy: Avoidance
 Attachment Style: Secure

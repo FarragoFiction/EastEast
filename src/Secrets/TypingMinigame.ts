@@ -85,14 +85,25 @@ export class TypingMiniGame {
         this.content.style.fontSize = "42px";
 
         this.current_index = 0;
-        const probable_sentences = text.match(/[^\n\.!\?]+[\n\.!\?]+/g);
+        const first_pass_sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
+        console.log("JR NOTE:first_pass_sentences is ",first_pass_sentences)
+        let probable_sentences: string[] = [];
+        if(first_pass_sentences){
+            for(let sentence of first_pass_sentences){
+                console.log(`JR NOTE seeing if ${sentence} can be split `)
+                probable_sentences = probable_sentences.concat(sentence.split("\n"));
+            }
+        }
+
         console.log("JR NOTE: probable_sentences is ", probable_sentences, "from text: ", text)
+
         if (probable_sentences) {
-            
-            this.sentences = probable_sentences.filter((item)=>item.trim()!=="").map((sentence) => { return { text: sentence.trim(), displayed: false } })
+            this.sentences = probable_sentences.filter((item)=>item.trim()!=="" && item.trim() !== '"').map((sentence) => { return { text: sentence.trim(), displayed: false } })
         } else {
             this.sentences = [];
         }
+
+        
 
         text = text.replaceAll(/\n/g, " ");
 

@@ -2,7 +2,7 @@ export const text = `
 * JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
 
 
-Name: Yongki(updated)
+Name: Yongki (updated)
 Aliases:  The Reflection, L-0-I1-alpha
 Coping Strategy: Avoidance
 Attachment Style: Secure
