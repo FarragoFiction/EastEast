@@ -29,6 +29,10 @@ export const initEmptyArrayAtKey =(key:string)=>{
   return tmp;
 }
 
+export const initArrayWithInitialValuesAtKey =(key:string, values:any[])=>{
+  localStorage[key] = JSON.stringify(values);
+}
+
 export const valueAsArray = (key: string)=>{
   if(localStorage[key]){
     return JSON.parse(localStorage[key]) as any[];
@@ -45,9 +49,11 @@ export const saveTime = (index: number, timeNumber: number)=>{
   console.log("JR NOTE: stored values is", storedValues)
   if(storedValues){
     const parsedValues = valueAsArray(TIME_KEY);
+    console.log("JR NOTE: parsed values is", parsedValues)
     //only save it if its smaller plz
     if(parsedValues[index]){
       if(timeNumber < parsedValues[index]){
+        console.log("JR NOTE: Congrats on beating your personal best :) :) :)")
         parsedValues[index] = timeNumber;
       }
     }else{
@@ -58,8 +64,7 @@ export const saveTime = (index: number, timeNumber: number)=>{
     localStorage[TIME_KEY]  = parsedValues;
   }else{
     console.log("JR NOTE: initing empty array and adding something to it")
-    initEmptyArrayAtKey(TIME_KEY);
-    addNumToArrayWithKey(TIME_KEY, timeNumber);
+    initArrayWithInitialValuesAtKey(TIME_KEY, [timeNumber]);
     console.log("JR NOTE: localStorage.getItem(TIME_KEY) is", localStorage.getItem(TIME_KEY))
   }
 }

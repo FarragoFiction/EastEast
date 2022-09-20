@@ -7521,14 +7521,17 @@ class ApocalypseEngine {
 Dr. Fiona Slaughter`, this.handleCallback);
             //good job: can you go faster?
         };
+        //display text, load the next bit or handle time stuff, yes this is gross and ugly so sue me
         this.handleCallback = (text, loadNext = false, time) => {
-            this.transcript(text);
+            if (text.trim() !== "") {
+                this.transcript(text);
+            }
+            if (time) {
+                this.levelTimes.push((0, StringUtils_1.getTimeStringBuff)(new Date(time)));
+                console.log("JR NOTE: trying to save time");
+                (0, LocalStorageUtils_1.saveTime)(this.levelTimes.length - 1, time);
+            }
             if (loadNext) {
-                if (time) {
-                    this.levelTimes.push((0, StringUtils_1.getTimeStringBuff)(new Date(time)));
-                    console.log("JR NOTE: trying to save time");
-                    (0, LocalStorageUtils_1.saveTime)(this.levelTimes.length - 1, time);
-                }
                 this.loadNextPassword();
             }
         };
@@ -8097,6 +8100,7 @@ class TypingMiniGame {
             //TODO handle checking if theres any sentences, and if so , showcase it
             if (this.current_index >= this.sorted_word_list.length) {
                 const time = this.getTimeNumber();
+                this.callback("", false, time);
                 clearInterval(this.timer);
                 const helpfulHint = (0, misc_1.createElementWithIdAndParent)("div", this.content);
                 helpfulHint.innerHTML = `<p>Since you typed up this story yourself, I suppose theres no reason not to show you. Obviously you already know it. How could it be Confidential?</p>`;
@@ -8108,7 +8112,7 @@ class TypingMiniGame {
                 }
                 const button = (0, misc_1.createElementWithIdAndParent)("button", this.content);
                 button.onclick = () => {
-                    this.callback("", true, time);
+                    this.callback("", true);
                 };
                 this.audio.play();
                 button.innerText = "Load Next Level For Practice";
@@ -8235,7 +8239,7 @@ exports.turnArrayIntoHumanSentence = turnArrayIntoHumanSentence;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.saveTime = exports.valueAsArray = exports.initEmptyArrayAtKey = exports.removeStringFromArrayWithKey = exports.addNumToArrayWithKey = exports.addStringToArrayWithKey = exports.isStringInArrayWithKey = void 0;
+exports.saveTime = exports.valueAsArray = exports.initArrayWithInitialValuesAtKey = exports.initEmptyArrayAtKey = exports.removeStringFromArrayWithKey = exports.addNumToArrayWithKey = exports.addStringToArrayWithKey = exports.isStringInArrayWithKey = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const isStringInArrayWithKey = (key, target) => {
     return (0, exports.valueAsArray)(key).includes(target);
@@ -8265,6 +8269,10 @@ const initEmptyArrayAtKey = (key) => {
     return tmp;
 };
 exports.initEmptyArrayAtKey = initEmptyArrayAtKey;
+const initArrayWithInitialValuesAtKey = (key, values) => {
+    localStorage[key] = JSON.stringify(values);
+};
+exports.initArrayWithInitialValuesAtKey = initArrayWithInitialValuesAtKey;
 const valueAsArray = (key) => {
     if (localStorage[key]) {
         return JSON.parse(localStorage[key]);
@@ -8281,9 +8289,11 @@ const saveTime = (index, timeNumber) => {
     console.log("JR NOTE: stored values is", storedValues);
     if (storedValues) {
         const parsedValues = (0, exports.valueAsArray)(TIME_KEY);
+        console.log("JR NOTE: parsed values is", parsedValues);
         //only save it if its smaller plz
         if (parsedValues[index]) {
             if (timeNumber < parsedValues[index]) {
+                console.log("JR NOTE: Congrats on beating your personal best :) :) :)");
                 parsedValues[index] = timeNumber;
             }
         }
@@ -8295,8 +8305,7 @@ const saveTime = (index, timeNumber) => {
     }
     else {
         console.log("JR NOTE: initing empty array and adding something to it");
-        (0, exports.initEmptyArrayAtKey)(TIME_KEY);
-        (0, exports.addNumToArrayWithKey)(TIME_KEY, timeNumber);
+        (0, exports.initArrayWithInitialValuesAtKey)(TIME_KEY, [timeNumber]);
         console.log("JR NOTE: localStorage.getItem(TIME_KEY) is", localStorage.getItem(TIME_KEY));
     }
 };
