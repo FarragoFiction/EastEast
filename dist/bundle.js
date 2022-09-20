@@ -7512,7 +7512,11 @@ class ApocalypseEngine {
             this.parent.append(crt);
             this.transcript("Please practice typing the following words...");
             this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, `True confessions of a Doctor: 
-        "Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Cleansed. I do not Know how much Longer I can Hold Out. L-0-17 was right."`, this.handleCallback);
+        "Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Cleansed. I do not Know how much Longer I can Hold Out. L-0-17 was right."
+        
+        Thank you,
+
+Dr. Fiona Slaughter`, this.handleCallback);
             //good job: can you go faster?
         };
         this.handleCallback = (text, loadNext = false, time) => {
@@ -8032,9 +8036,9 @@ class TypingMiniGame {
             else {
                 this.sentences = [];
             }
+            text = text.replaceAll(/\n/g, " ");
             const split_words = text.split(" ");
             for (let w of split_words) {
-                w = w.replaceAll(/\n/g, " ");
                 let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()"]/g, "").toLowerCase().trim();
                 if (word.trim() !== "") {
                     if (Object.keys(this.unique_word_map).includes(word.toLowerCase())) {

@@ -94,10 +94,11 @@ export class TypingMiniGame {
             this.sentences = [];
         }
 
+        text = text.replaceAll(/\n/g, " ");
+
         const split_words = text.split(" ");
 
         for (let w of split_words) {
-            w = w.replaceAll(/\n/g, " ");
 
             let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()"]/g, "").toLowerCase().trim();
             if (word.trim() !== "") {
