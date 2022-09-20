@@ -8024,8 +8024,9 @@ class TypingMiniGame {
             this.sentenceEle.innerHTML = "<hr><p>The words you've typed could, in theory, make a sentence such as these:</p>";
             this.content.style.fontSize = "42px";
             this.current_index = 0;
-            text = text.replaceAll(/\n/g, " ");
-            const probable_sentences = text.match(/[^\.!\?]+[\.!\?\n]+/g);
+            //text = text.replaceAll(/\n/g, " ");
+            const probable_sentences = text.match(/[^\n\.!\?]+[\n\.!\?]+/g);
+            console.log("JR NOTE: probable_sentences is ", probable_sentences, "from text: ", text);
             if (probable_sentences) {
                 this.sentences = probable_sentences.map((sentence) => { return { text: sentence, displayed: false }; });
             }
