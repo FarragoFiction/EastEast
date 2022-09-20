@@ -89,7 +89,8 @@ export class TypingMiniGame {
         const probable_sentences = text.match(/[^\n\.!\?]+[\n\.!\?]+/g);
         console.log("JR NOTE: probable_sentences is ", probable_sentences, "from text: ", text)
         if (probable_sentences) {
-            this.sentences = probable_sentences.map((sentence) => { return { text: sentence, displayed: false } })
+            
+            this.sentences = probable_sentences.filter((item)=>item.trim()==="").map((sentence) => { return { text: sentence.trim(), displayed: false } })
         } else {
             this.sentences = [];
         }
