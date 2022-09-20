@@ -7511,7 +7511,7 @@ class ApocalypseEngine {
             this.terminal = (0, misc_1.createElementWithIdAndParent)("div", crt, "terminal");
             this.parent.append(crt);
             this.transcript("Please practice typing the following words...");
-            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, "True confessions of a Doctor. Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Cleansed. I do not Know how much Longer I can Hold Out. L-0-17 was right.", this.handleCallback);
+            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, `True confessions of a Doctor. "Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Cleansed. I do not Know how much Longer I can Hold Out. L-0-17 was right."`, this.handleCallback);
             //good job: can you go faster?
         };
         this.handleCallback = (text, loadNext = false, time) => {
@@ -8024,7 +8024,7 @@ class TypingMiniGame {
             this.content.style.fontSize = "42px";
             this.current_index = 0;
             text = text.replaceAll(/\n/g, " ");
-            const probable_sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
+            const probable_sentences = text.match(/[^\.!\?]+[\.!\?\n]+/g);
             if (probable_sentences) {
                 this.sentences = probable_sentences.map((sentence) => { return { text: sentence, displayed: false }; });
             }
@@ -8033,7 +8033,7 @@ class TypingMiniGame {
             }
             const split_words = text.split(" ");
             for (let w of split_words) {
-                let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()]/g, "").toLowerCase();
+                let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()"]/g, "").toLowerCase();
                 if (word.trim() !== "") {
                     if (Object.keys(this.unique_word_map).includes(word.toLowerCase())) {
                         this.unique_word_map[word] = { word: word, typed: this.unique_word_map[word].typed, times_seen: this.unique_word_map[word].times_seen + 1 };
@@ -8058,7 +8058,7 @@ class TypingMiniGame {
                     let readyToDisplay = true;
                     for (let w of split_words) {
                         console.log(`JR NOTE: is word typed yet?`, w);
-                        let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()]/g, "").toLowerCase();
+                        let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()"]/g, "").toLowerCase();
                         if (word.trim() !== "") {
                             if (Object.keys(this.unique_word_map).includes(word) && !this.unique_word_map[word].typed) {
                                 console.log(`JR NOTE: w ${w} was not yet typed`);
@@ -9032,7 +9032,7 @@ It has been impressed upon me by my primary employer that should I interact with
 
 While I do miss my homeland, I am under no Illusion that I will be neatly returned there should I violate this contract.
 
-Still..one can't help but notice certain commonalities in accounts of him, and I will collate these fragments of impressions here.
+Still... one can't help but notice certain commonalities in accounts of him, and I will collate these fragments of impressions here.
 
 is the only one of the training team who files taxes
 is standoffish and cold
@@ -9137,7 +9137,7 @@ Attachment Style: Chaotic (See Summary, Detail Notes 1-46)
 
 Quick Summary:
 
-Yongk ican not be summarized. Each time his Reflection resets him, all his memory (and thus personality) is lost. Each time he builds himself anew, he is, to greater and lesser extents, a different person.
+Yongki can not be summarized. Each time his Reflection resets him, all his memory (and thus personality) is lost. Each time he builds himself anew, he is, to greater and lesser extents, a different person.
 
 This Heresy that has befallen him may yet have a cure, but in the mean time I work with the Yongki I am given to try to focus on recognizing situations that may have a Mirror and how to avoid it.
 
@@ -9237,7 +9237,7 @@ It is my Belief that the Horror was the result of  the Duo Mask being used Inapp
 
 The Horror yearns for two things and two things only:  To Torment those around him with the Knowledge that he fits in better to Morgan's Hill than they do, and to slowly supplant (violently) the Citizen whose face he wears.  As far as the former goes, he is unparalleled in skill. He will ALWAYS be perfectly acceptable and expected wherever you find him, and just a shade better than anyone could reasonably be by society's Values, causing anywhere from mild to significant mental distress in targets.  As Lesser Horrors do NOT have this ability, further Research is required, but is not recommended for risk of violating Safety Protocols.  
 
-As for the Latter? Should I choose it, I could shatter him with the slightest of words. For now, I do not so choose. The Horror remains docile and appears to not be a physical danger to those around him. I... grudgingly admit that he may actively be a stabilizing element to his platonic partner, Tyrfing.   (Note: the Horror's actual romantic cycle thankfully precludes any such attachments outside of his 'soulmate'). 
+As for the Latter? Should I choose it, I could shatter him with the slightest of words. For now, I do not so choose. The Horror remains docile and appears to not be a physical danger to those around him. I... grudgingly admit that he may actively be a stabilizing element to his platonic partner, Tyrfing.   (Note: the Horror's actual romantic cycle thankfully precludes any such attachments outside of his "soulmate"). 
 
 `;
 
@@ -9255,7 +9255,7 @@ const text = `
 * JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
 
 Name: Tyrfing
-Aliases:  That Guy With The Sword, That Guy With the Worm Babies,L-C-003
+Aliases:  That Guy With The Sword, That Guy With the Worm Babies, L-C-003
 Coping Strategy: Denial
 Attachment Style: Secure
 
@@ -10816,7 +10816,7 @@ Quick Summary:
 
 The first thing I noticed about Ria was her bright eyes, constantly searching my office, missing not a single detail. She is intelligent and passionate, and a very hard worker.
 
-Overall, the biggest thing Ria wants to work on is her struggles with Addiction, both in the sense of substance abuse and in her own words, 'an addiction to connecting the facts'.  I struggle to maintain appropriate Professional Distance as I confess the idea that this could be unhealthy is a Foreign one to me.
+Overall, the biggest thing Ria wants to work on is her struggles with Addiction, both in the sense of substance abuse and in her own words, "an addiction to connecting the facts".  I struggle to maintain appropriate Professional Distance as I confess the idea that this could be unhealthy is a Foreign one to me.
 
 Ria is an optimist in a Universe of disappointments. Each fresh disappointment creates a new crack in her smile, and given sufficient pain she can lose herself to a frantic attempt to make sure she is Never Hurt Like This Again.
 

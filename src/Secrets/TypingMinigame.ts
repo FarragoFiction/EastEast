@@ -86,7 +86,7 @@ export class TypingMiniGame {
 
         this.current_index = 0;
         text = text.replaceAll(/\n/g, " ");
-        const probable_sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
+        const probable_sentences = text.match(/[^\.!\?]+[\.!\?\n]+/g);
         if (probable_sentences) {
             this.sentences = probable_sentences.map((sentence) => { return { text: sentence, displayed: false } })
         } else {
@@ -96,7 +96,7 @@ export class TypingMiniGame {
         const split_words = text.split(" ");
 
         for (let w of split_words) {
-            let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()]/g, "").toLowerCase();
+            let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()"]/g, "").toLowerCase();
             if (word.trim() !== "") {
                 if (Object.keys(this.unique_word_map).includes(word.toLowerCase())) {
                     this.unique_word_map[word] = { word: word, typed: this.unique_word_map[word].typed, times_seen: this.unique_word_map[word].times_seen + 1 }
@@ -126,7 +126,7 @@ export class TypingMiniGame {
                 for (let w of split_words) {
                     console.log(`JR NOTE: is word typed yet?`, w)
 
-                    let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()]/g, "").toLowerCase();
+                    let word = w.replace(/[.,\/#!?$%\^&\*;:{}=_`~()"]/g, "").toLowerCase();
                     if (word.trim() !== "") {
                         if (Object.keys(this.unique_word_map).includes(word) && !this.unique_word_map[word].typed) {
                             console.log(`JR NOTE: w ${w} was not yet typed`)
