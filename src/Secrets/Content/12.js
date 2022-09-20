@@ -13,7 +13,7 @@ It has been impressed upon me by my primary employer that should I interact with
 
 While I do miss my homeland, I am under no Illusion that I will be neatly returned there should I violate this contract.
 
-Still..one can't help but notice certain commonalities in accounts of him, and I will collate these fragments of impressions here.
+Still... one can't help but notice certain commonalities in accounts of him, and I will collate these fragments of impressions here.
 
 is the only one of the training team who files taxes
 is standoffish and cold

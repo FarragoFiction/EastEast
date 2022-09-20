@@ -15,6 +15,6 @@ It is my Belief that the Horror was the result of  the Duo Mask being used Inapp
 
 The Horror yearns for two things and two things only:  To Torment those around him with the Knowledge that he fits in better to Morgan's Hill than they do, and to slowly supplant (violently) the Citizen whose face he wears.  As far as the former goes, he is unparalleled in skill. He will ALWAYS be perfectly acceptable and expected wherever you find him, and just a shade better than anyone could reasonably be by society's Values, causing anywhere from mild to significant mental distress in targets.  As Lesser Horrors do NOT have this ability, further Research is required, but is not recommended for risk of violating Safety Protocols.  
 
-As for the Latter? Should I choose it, I could shatter him with the slightest of words. For now, I do not so choose. The Horror remains docile and appears to not be a physical danger to those around him. I... grudgingly admit that he may actively be a stabilizing element to his platonic partner, Tyrfing.   (Note: the Horror's actual romantic cycle thankfully precludes any such attachments outside of his 'soulmate'). 
+As for the Latter? Should I choose it, I could shatter him with the slightest of words. For now, I do not so choose. The Horror remains docile and appears to not be a physical danger to those around him. I... grudgingly admit that he may actively be a stabilizing element to his platonic partner, Tyrfing.   (Note: the Horror's actual romantic cycle thankfully precludes any such attachments outside of his "soulmate"). 
 
 `;

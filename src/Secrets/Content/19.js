@@ -2,7 +2,7 @@ export const text = `
 * JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
 
 Name: Tyrfing
-Aliases:  That Guy With The Sword, That Guy With the Worm Babies,L-C-003
+Aliases:  That Guy With The Sword, That Guy With the Worm Babies, L-C-003
 Coping Strategy: Denial
 Attachment Style: Secure
 

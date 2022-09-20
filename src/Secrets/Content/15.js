@@ -8,7 +8,7 @@ Attachment Style: Chaotic (See Summary, Detail Notes 1-46)
 
 Quick Summary:
 
-Yongk ican not be summarized. Each time his Reflection resets him, all his memory (and thus personality) is lost. Each time he builds himself anew, he is, to greater and lesser extents, a different person.
+Yongki can not be summarized. Each time his Reflection resets him, all his memory (and thus personality) is lost. Each time he builds himself anew, he is, to greater and lesser extents, a different person.
 
 This Heresy that has befallen him may yet have a cure, but in the mean time I work with the Yongki I am given to try to focus on recognizing situations that may have a Mirror and how to avoid it.
 
