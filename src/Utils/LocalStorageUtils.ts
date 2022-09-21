@@ -1,4 +1,5 @@
 import { removeItemOnce } from "./ArrayUtils";
+import { TIME_KEY } from "./constants";
 
 export const isStringInArrayWithKey =(key:string,target:string)=>{
   return valueAsArray(key).includes(target);
@@ -41,7 +42,6 @@ export const valueAsArray = (key: string)=>{
   }
 }
 
-const TIME_KEY = "PlzHackToMakeThemAll_Zampanio";
 
 export const saveTime = (index: number, timeNumber: number)=>{
   console.log(`JR NOTE: i want to save time ${timeNumber} to index ${index}`)

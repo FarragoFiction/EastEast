@@ -1,5 +1,6 @@
 import { loadSecretText } from "..";
-import { saveTime } from "../Utils/LocalStorageUtils";
+import { TIME_KEY } from "../Utils/constants";
+import { saveTime, valueAsArray } from "../Utils/LocalStorageUtils";
 import { createElementWithId, createElementWithIdAndParent, sleep } from "../Utils/misc";
 import { getTimeStringBuff } from "../Utils/StringUtils";
 import { docSlaughtersFiles } from "./PasswordStorage";
@@ -54,15 +55,76 @@ export class ApocalypseEngine {
 
 
         this.parent.append(crt);
-        this.transcript("Please practice typing the following words...");
-        this.minigame = new TypingMiniGame(this.terminal, `True confessions of a Doctor: 
-        "Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Cleansed. I do not Know how much Longer I can Hold Out. L-0-17 was right."
-        
-        Thank you,
-
-Dr. Fiona Slaughter`, this.handleCallback);
+        this.miniGameOrLevelSelect()
         //good job: can you go faster?
 
+    }
+
+    miniGameOrLevelSelect = () => {
+        const storedValues = localStorage.getItem(TIME_KEY);
+        if (storedValues) {
+            if(storedValues?.toUpperCase()?.includes("ZAMPANIO")){
+                this.loadJRBullshit();
+            }else{
+                this.levelSelect();
+            }
+        } else {
+            this.loadPassword();
+        }
+    }
+
+    levelSelect = ()=>{
+        if (!this.terminal) {
+            return;
+        }
+        this.transcript("You have completed the following levels:");
+        const parsedValues = valueAsArray(TIME_KEY);
+
+        const div = createElementWithIdAndParent("div",this.terminal);
+        div.innerHTML = `
+        
+         <p>${parsedValues.length} out of ${Object.values(docSlaughtersFiles).length} Levels Unlocked! Click one to resume gameplay from it!</p>
+
+    
+        `;
+
+        const parent =  createElementWithIdAndParent("ol", this.terminal);
+        for (let value of parsedValues){
+            const ele = createElementWithIdAndParent("li", parent);
+            ele.innerHTML = `${getTimeStringBuff(new Date(value))}`;
+            ele.onclick = ()=>{
+                this.current_index = parsedValues.indexOf(value);
+                this.loadPassword();
+            }
+        }
+
+
+    }
+
+    loadJRBullshit = ()=>{
+        if (!this.terminal) {
+            return;
+        }
+        localStorage.removeItem(TIME_KEY);
+        this.transcript("Hi yes hello , JR here! :) :) :)");
+        this.minigame = new TypingMiniGame(this.terminal, `
+        Oh! Look at you! Look at you go! Holy shit! I'm so, so proud! Here you are, not only did you find this secret area. (How DID you find it, by the way? Was it too obvious? Collecting all 9 Artifacts DOES always cause the apocalypse. It seems a univeral constant of Zampanio.)
+        
+        But I'm getting distracted! You realized you could outright hack your local storage! (Mind Powers!) (I added that previous lil bit cuz i find it so fucking funny that the typing mini game says "this area does hack your" and adding "mind" after is just choice) But that wasn't enough for you, now was it. You had to see how far you could push it.  Now, GRANTED, I DID ask you to do this, now didn't I?
+
+        Oh right, I'll need to undo your hacking or you'll kinda never see the full text of this. Thems the breaks!
+
+        But I'm so hella excited! You did it! You really did it!!!  Actually...  I'm not sure what over punctuating would do to this???
+
+        Lets find out together.
+
+        But yeah, how are you liking East East so far?  Or my humble lil branch of Zampanio in general? Does it Inspire anything in you? Do you want to create?  I'd love seeing any and all fan works. Teach yourself how A03 works. Or programming! Write! Draw! Record what you've seen for Those Who Come After!
+
+        Zampanio feeds on our attention. It colonizes our minds. 
+
+        Feed it.
+        
+        `, this.handleCallback);
     }
 
     //display text, load the next bit or handle time stuff, yes this is gross and ugly so sue me
@@ -91,6 +153,9 @@ Dr. Fiona Slaughter`, this.handleCallback);
             this.transcript("What did you do?");
             return;
         }
+        if(!this.minigame){
+            this.minigame = new TypingMiniGame(this.terminal, "", this.handleCallback);
+        }
         this.terminal.innerHTML = "";
 
         if (Object.values(docSlaughtersFiles).length <= this.current_index) {
@@ -106,7 +171,7 @@ Dr. Fiona Slaughter`, this.handleCallback);
         Please practice typing the following, entirely random, words, in order of difficulty:`);
         const text = loadSecretText(secret.text);
         if (text.trim() != "") {
-            this.minigame?.parseText(text);
+            this.minigame.parseText(text);
         }
     }
 

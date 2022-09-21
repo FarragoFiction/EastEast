@@ -7471,6 +7471,7 @@ exports.initThemes = initThemes;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ApocalypseEngine = void 0;
 const __1 = __webpack_require__(3607);
+const constants_1 = __webpack_require__(8817);
 const LocalStorageUtils_1 = __webpack_require__(5565);
 const misc_1 = __webpack_require__(4079);
 const StringUtils_1 = __webpack_require__(7036);
@@ -7512,6 +7513,74 @@ class ApocalypseEngine {
             const lines = (0, misc_1.createElementWithIdAndParent)("div", crt, undefined, "lines");
             this.terminal = (0, misc_1.createElementWithIdAndParent)("div", crt, "terminal");
             this.parent.append(crt);
+            this.miniGameOrLevelSelect();
+            //good job: can you go faster?
+        };
+        this.miniGameOrLevelSelect = () => {
+            const storedValues = localStorage.getItem(constants_1.TIME_KEY);
+            if (storedValues) {
+                if (storedValues?.toUpperCase()?.includes("ZAMPANIO")) {
+                    this.loadJRBullshit();
+                }
+                else {
+                    this.levelSelect();
+                }
+            }
+            else {
+                this.loadFirstLevel();
+            }
+        };
+        this.levelSelect = () => {
+            if (!this.terminal) {
+                return;
+            }
+            this.transcript("You have completed the following levels:");
+            const parsedValues = (0, LocalStorageUtils_1.valueAsArray)(constants_1.TIME_KEY);
+            const div = (0, misc_1.createElementWithIdAndParent)("div", this.terminal);
+            div.innerHTML = `
+        
+         <p>${parsedValues.length} out of ${Object.values(PasswordStorage_1.docSlaughtersFiles).length} Levels Unlocked! Click one to resume gameplay from it!</p>
+
+    
+        `;
+            const parent = (0, misc_1.createElementWithIdAndParent)("ol", this.terminal);
+            for (let value of parsedValues) {
+                const ele = (0, misc_1.createElementWithIdAndParent)("li", parent);
+                ele.innerHTML = `${(0, StringUtils_1.getTimeStringBuff)(new Date(value))}`;
+                ele.onclick = () => {
+                    alert("please load this level and everything before it");
+                };
+            }
+        };
+        this.loadJRBullshit = () => {
+            if (!this.terminal) {
+                return;
+            }
+            localStorage.removeItem(constants_1.TIME_KEY);
+            this.transcript("Hi yes hello , JR here! :) :) :)");
+            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, `
+        Oh! Look at you! Look at you go! Holy shit! I'm so, so proud! Here you are, not only did you find this secret area. (How DID you find it, by the way? Was it too obvious? Collecting all 9 Artifacts DOES always cause the apocalypse. It seems a univeral constant of Zampanio.)
+        
+        But I'm getting distracted! You realized you could outright hack your local storage! (Mind Powers!) (I added that previous lil bit cuz i find it so fucking funny that the typing mini game says "this area does hack your" and adding "mind" after is just choice) But that wasn't enough for you, now was it. You had to see how far you could push it.  Now, GRANTED, I DID ask you to do this, now didn't I?
+
+        Oh right, I'll need to undo your hacking or you'll kinda never see the full text of this. Thems the breaks!
+
+        But I'm so hella excited! You did it! You really did it!!!  Actually...  I'm not sure what over punctuating would do to this???
+
+        Lets find out together.
+
+        But yeah, how are you liking East East so far?  Or my humble lil branch of Zampanio in general? Does it Inspire anything in you? Do you want to create?  I'd love seeing any and all fan works. Teach yourself how A03 works. Or programming! Write! Draw! Record what you've seen for Those Who Come After!
+
+        Zampanio feeds on our attention. It colonizes our minds. 
+
+        Feed it.
+        
+        `, this.handleCallback);
+        };
+        this.loadFirstLevel = () => {
+            if (!this.terminal) {
+                return;
+            }
             this.transcript("Please practice typing the following words...");
             this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, `True confessions of a Doctor: 
         "Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Cleansed. I do not Know how much Longer I can Hold Out. L-0-17 was right."
@@ -7519,7 +7588,6 @@ class ApocalypseEngine {
         Thank you,
 
 Dr. Fiona Slaughter`, this.handleCallback);
-            //good job: can you go faster?
         };
         //display text, load the next bit or handle time stuff, yes this is gross and ugly so sue me
         this.handleCallback = (text, loadNext = false, time) => {
@@ -8241,6 +8309,7 @@ exports.turnArrayIntoHumanSentence = turnArrayIntoHumanSentence;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.saveTime = exports.valueAsArray = exports.initArrayWithInitialValuesAtKey = exports.initEmptyArrayAtKey = exports.removeStringFromArrayWithKey = exports.addNumToArrayWithKey = exports.addStringToArrayWithKey = exports.isStringInArrayWithKey = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
+const constants_1 = __webpack_require__(8817);
 const isStringInArrayWithKey = (key, target) => {
     return (0, exports.valueAsArray)(key).includes(target);
 };
@@ -8282,13 +8351,12 @@ const valueAsArray = (key) => {
     }
 };
 exports.valueAsArray = valueAsArray;
-const TIME_KEY = "PlzHackToMakeThemAll_Zampanio";
 const saveTime = (index, timeNumber) => {
     console.log(`JR NOTE: i want to save time ${timeNumber} to index ${index}`);
-    const storedValues = localStorage.getItem(TIME_KEY);
+    const storedValues = localStorage.getItem(constants_1.TIME_KEY);
     console.log("JR NOTE: stored values is", storedValues);
     if (storedValues) {
-        const parsedValues = (0, exports.valueAsArray)(TIME_KEY);
+        const parsedValues = (0, exports.valueAsArray)(constants_1.TIME_KEY);
         console.log("JR NOTE: parsed values is", parsedValues);
         //only save it if its smaller plz
         if (parsedValues[index]) {
@@ -8301,12 +8369,12 @@ const saveTime = (index, timeNumber) => {
             parsedValues[index] = timeNumber;
         }
         console.log("JR NOTE: new parsedValues is", parsedValues);
-        localStorage[TIME_KEY] = parsedValues;
+        localStorage[constants_1.TIME_KEY] = parsedValues;
     }
     else {
         console.log("JR NOTE: initing empty array and adding something to it");
-        (0, exports.initArrayWithInitialValuesAtKey)(TIME_KEY, [timeNumber]);
-        console.log("JR NOTE: localStorage.getItem(TIME_KEY) is", localStorage.getItem(TIME_KEY));
+        (0, exports.initArrayWithInitialValuesAtKey)(constants_1.TIME_KEY, [timeNumber]);
+        console.log("JR NOTE: localStorage.getItem(TIME_KEY) is", localStorage.getItem(constants_1.TIME_KEY));
     }
 };
 exports.saveTime = saveTime;
@@ -8723,23 +8791,10 @@ exports.addImageProcess = addImageProcess;
 
 "use strict";
 
-/*
-do i want a menu item thats just a mini game, like an idle thing?
-
-or a text based adventure stuck in JUST TRUTH mode?
-*/
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.max_values_for_menus = exports.TRUTH = exports.CODE = exports.WARROOM = exports.RESISTANCES = exports.BACKSTORY = exports.LORE = exports.INVENTORY = exports.CITYBUILDING = exports.GODS = exports.COMPANIONS = exports.QUESTS = exports.OPTIONS = exports.ACHIEVEMENTS = exports.STATISTICS = exports.STATUS = exports.LOADING = exports.ACTUAL_GAME = exports.SKILLGRAPH = exports.THE_END_IS_NEVER = exports.HORROR_KEY = void 0;
-//LORE, BACKSTORY and QUESTS should grab from theme  mix and match templates that have things to fill
-// in mad lib style (noun, adj, object, etc) and then have little frame parts that make things work
-//like "long long ago".
-/*
-To make a new menu you need to tie it in two places in the MENU, make its typescript file ,
-make its observerbot level
-and also wire the first time you go there into the achievement system
-(and also possibly the levels of the menu);
-*/
+exports.max_values_for_menus = exports.TRUTH = exports.CODE = exports.WARROOM = exports.RESISTANCES = exports.BACKSTORY = exports.LORE = exports.INVENTORY = exports.CITYBUILDING = exports.GODS = exports.COMPANIONS = exports.QUESTS = exports.OPTIONS = exports.ACHIEVEMENTS = exports.STATISTICS = exports.STATUS = exports.LOADING = exports.ACTUAL_GAME = exports.SKILLGRAPH = exports.THE_END_IS_NEVER = exports.HORROR_KEY = exports.TIME_KEY = void 0;
 //:) :) :)
+exports.TIME_KEY = "PlzHackToMakeThemAll_Zampanio";
 exports.HORROR_KEY = "zampanio_horror";
 exports.THE_END_IS_NEVER = "01010100 01001000 01000101 00100000 01000101 01001110 01000100 00100000 01001001 01010011 00100000 01001110 01000101 01010110 01000101 01010010 00100000 01010100 01001000 01000101 00100000 01000101 01001110 01000100 00100000 01001001 01010011 00100000 01001110 01000101 01010110 01000101 01010010";
 exports.SKILLGRAPH = "SKILLGRAPH"; //???
@@ -9215,7 +9270,7 @@ Parker is a positive JOY to work with. His eyes are an open book to his inner wo
 
 According to him his impulse control was "stolen by some anime girl" one, or possibly two Universes ago.  Regardless of why, this results in quite a fascinating case. Quite ironically, given his proclivity towards deep tunnels into the earth, his problems are entirely kept on the surface, with no knowledge needed of his history.
 
-Our focus has been on giving him more tools to make sure his first impulse in a situation is one he won't later regret. He has taken well to flashcards, post it notes and various other reminders of the options he has in any stressful situation.   While this HAS contributed to the overall...shall we say complex nature of his living environment, it has clearly lead to him feeling more in control and capable in his day to day life.
+Our focus has been on giving him more tools to make sure his first impulse in a situation is one he won't later regret. He has taken well to flashcards, post it notes and various other reminders of the options he has in any stressful situation.   While this HAS contributed to the overall... shall we say complex nature of his living environment, it has clearly lead to him feeling more in control and capable in his day to day life.
 
 Examples of flashcards that have worked especially well include "BAN THEM", "CALL THEM ON THE PHONE", "ASK VIK IF THIS IS OKAY" and "SEND THEM A MESSAGE".  It is surprising how many disparate situations these cards can apply to.
 

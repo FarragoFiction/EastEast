@@ -1,19 +1,7 @@
-/*
-do i want a menu item thats just a mini game, like an idle thing?
 
-or a text based adventure stuck in JUST TRUTH mode?
-*/
-
-//LORE, BACKSTORY and QUESTS should grab from theme  mix and match templates that have things to fill
-// in mad lib style (noun, adj, object, etc) and then have little frame parts that make things work
-//like "long long ago".
-/*
-To make a new menu you need to tie it in two places in the MENU, make its typescript file ,
-make its observerbot level
-and also wire the first time you go there into the achievement system
-(and also possibly the levels of the menu);
-*/
 //:) :) :)
+export const TIME_KEY = "PlzHackToMakeThemAll_Zampanio";
+
 export const HORROR_KEY = "zampanio_horror";
 export const THE_END_IS_NEVER = "01010100 01001000 01000101 00100000 01000101 01001110 01000100 00100000 01001001 01010011 00100000 01001110 01000101 01010110 01000101 01010010 00100000 01010100 01001000 01000101 00100000 01000101 01001110 01000100 00100000 01001001 01010011 00100000 01001110 01000101 01010110 01000101 01010010";
 export const SKILLGRAPH = "SKILLGRAPH"; //???
