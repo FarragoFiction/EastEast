@@ -83,7 +83,7 @@ export class TypingMiniGame {
         this.sentenceEle = createElementWithIdAndParent("div", this.parent);
         this.sentenceListEle = createElementWithIdAndParent("div", this.parent);
 
-        this.sentenceEle.innerHTML = "<hr><p>The words you've typed could, in theory, make a sentence such as these:</p>";
+        this.sentenceEle.innerHTML = "<hr><p><i>The words you've typed could, in theory, make a sentence such as these:</i></p>";
         this.content.style.fontSize = "42px";
 
         this.current_index = 0;

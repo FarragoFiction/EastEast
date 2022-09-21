@@ -45,24 +45,31 @@ export const valueAsArray = (key: string)=>{
 
 export const saveTime = (index: number, timeNumber: number)=>{
   const storedValues = localStorage.getItem(TIME_KEY);
+  console.log(`JR NOTE: trying to store ${timeNumber} at ${index}`)
+  let ret = false;
   if(storedValues){
     const parsedValues = valueAsArray(TIME_KEY);
     //only save it if its smaller plz
     if(parsedValues[index]){
+      console.log(`JR NOTE: parsed value is ${parsedValues[index]}`)
+
       if(timeNumber < parsedValues[index]){
         console.log("JR NOTE: Congrats on beating your personal best :) :) :)")
         parsedValues[index] = timeNumber;
-        return true;
+        ret = true;
       }
     }else{
+      console.log("JR NOTE: Congrats on beating this level for the first time!")
       parsedValues[index] = timeNumber;
-      return true;
+      ret =  true;
     }
-    localStorage[TIME_KEY]  = parsedValues;
+
+    console.log("JR NOTE: about to store the value like so: ", parsedValues)
+    localStorage.setItem(TIME_KEY, JSON.stringify(parsedValues));
   }else{
-    console.log("JR NOTE: initing empty array and adding something to it")
+    console.log("JR NOTE: Congrats for starting this journey!")
     initArrayWithInitialValuesAtKey(TIME_KEY, [timeNumber]);
-  return true
+    ret = true;
   }
-  return false;
+  return ret;
 }

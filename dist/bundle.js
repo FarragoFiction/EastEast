@@ -7527,7 +7527,7 @@ class ApocalypseEngine {
                 }
             }
             else {
-                this.loadPassword();
+                this.levelSelect();
             }
         };
         this.levelSelect = () => {
@@ -7539,7 +7539,7 @@ class ApocalypseEngine {
             const div = (0, misc_1.createElementWithIdAndParent)("div", this.terminal);
             div.innerHTML = `
         
-         <p>${parsedValues.length} out of ${Object.values(PasswordStorage_1.docSlaughtersFiles).length} Levels Unlocked! Click one to resume gameplay from it!</p>
+         <p>${parsedValues.length} out of ${Object.values(PasswordStorage_1.docSlaughtersFiles).length} Levels Unlocked! Click one to resume gameplay from it! Don't worry about trying to do all of them in one sitting, your level progress will be saved!</p>
 
     
         `;
@@ -7549,7 +7549,7 @@ class ApocalypseEngine {
                 ele.innerHTML = `<a href = '#'>${(0, StringUtils_1.getTimeStringBuff)(new Date(value))}</a>`;
                 ele.onclick = () => {
                     this.current_index = parsedValues.indexOf(value);
-                    this.loadPassword();
+                    this.loadPassword(true);
                 };
             }
             if (parsedValues.length !== Object.values(PasswordStorage_1.docSlaughtersFiles).length) {
@@ -7557,7 +7557,7 @@ class ApocalypseEngine {
                 ele.innerHTML = `<a href = '#'>TBD</a>`;
                 ele.onclick = () => {
                     this.current_index = parsedValues.length;
-                    this.loadPassword();
+                    this.loadPassword(true);
                 };
             }
         };
@@ -7594,7 +7594,7 @@ class ApocalypseEngine {
             if (time) {
                 this.levelTimes.push((0, StringUtils_1.getTimeStringBuff)(new Date(time)));
                 console.log("JR NOTE: trying to save time");
-                const best = (0, LocalStorageUtils_1.saveTime)(this.levelTimes.length - 1, time);
+                const best = (0, LocalStorageUtils_1.saveTime)(this.current_index, time);
                 best && this.transcript("Personal Best!");
             }
             if (loadNext) {
@@ -7605,7 +7605,20 @@ class ApocalypseEngine {
             this.current_index++;
             this.loadPassword();
         };
-        this.loadPassword = () => {
+        this.loadVocabularyFromPreviousLevels = () => {
+            if (!this.terminal) {
+                return;
+            }
+            if (!this.minigame) {
+                this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, null, this.handleCallback);
+            }
+            for (let i = 0; i < this.current_index; i++) {
+                const secret = Object.values(PasswordStorage_1.docSlaughtersFiles)[i];
+                const text = (0, __1.loadSecretText)(secret.text);
+                this.minigame.parseText(text, false); //make sure it doesn't try to start the game, just loading the text so i don't have to keep typing common words
+            }
+        };
+        this.loadPassword = (loadVocab = false) => {
             console.log("JR NOTE: loading password");
             if (!this.terminal) {
                 this.transcript("What did you do?");
@@ -7613,6 +7626,9 @@ class ApocalypseEngine {
             }
             if (!this.minigame) {
                 this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, null, this.handleCallback);
+            }
+            if (loadVocab) {
+                this.loadVocabularyFromPreviousLevels();
             }
             this.terminal.innerHTML = "";
             if (Object.values(PasswordStorage_1.docSlaughtersFiles).length <= this.current_index) {
@@ -8089,7 +8105,7 @@ class TypingMiniGame {
             }
             return ret;
         };
-        this.parseText = (text) => {
+        this.parseText = (text, start = true) => {
             this.original_text = `${text}`;
             this.content.remove();
             this.timerEle.remove();
@@ -8101,7 +8117,7 @@ class TypingMiniGame {
             this.content = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
             this.sentenceEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
             this.sentenceListEle = (0, misc_1.createElementWithIdAndParent)("div", this.parent);
-            this.sentenceEle.innerHTML = "<hr><p>The words you've typed could, in theory, make a sentence such as these:</p>";
+            this.sentenceEle.innerHTML = "<hr><p><i>The words you've typed could, in theory, make a sentence such as these:</i></p>";
             this.content.style.fontSize = "42px";
             this.current_index = 0;
             const first_pass_sentences = text.match(/[^\.!\?]+[\.!\?]+/g);
@@ -8126,14 +8142,17 @@ class TypingMiniGame {
                         this.unique_word_map[word] = { word: word, typed: this.unique_word_map[word].typed, times_seen: this.unique_word_map[word].times_seen + 1 };
                     }
                     else {
-                        this.unique_word_map[word] = { word: word, typed: false, times_seen: 1 };
+                        //if start is false, then assume these were typed already adn are being loaded from a save file
+                        this.unique_word_map[word] = { word: word, typed: !start, times_seen: 1 };
                     }
                 }
             }
             this.sorted_word_list = Object.keys(this.unique_word_map).sort((a, b) => { return a.length - b.length; });
-            this.startTime = new Date();
-            this.timer = setInterval(this.timerFunction, 50);
-            this.displayGame();
+            if (start) {
+                this.startTime = new Date();
+                this.timer = setInterval(this.timerFunction, 50);
+                this.displayGame();
+            }
         };
         this.checkForSentences = () => {
             for (let sentence of this.sentences) {
@@ -8359,10 +8378,12 @@ const valueAsArray = (key) => {
 exports.valueAsArray = valueAsArray;
 const saveTime = (index, timeNumber) => {
     const storedValues = localStorage.getItem(constants_1.TIME_KEY);
+    console.log(`JR NOTE: trying to store ${timeNumber} at ${index}`);
     if (storedValues) {
         const parsedValues = (0, exports.valueAsArray)(constants_1.TIME_KEY);
         //only save it if its smaller plz
         if (parsedValues[index]) {
+            console.log(`JR NOTE: parsed value is ${parsedValues[index]}`);
             if (timeNumber < parsedValues[index]) {
                 console.log("JR NOTE: Congrats on beating your personal best :) :) :)");
                 parsedValues[index] = timeNumber;
@@ -8370,13 +8391,14 @@ const saveTime = (index, timeNumber) => {
             }
         }
         else {
+            console.log("JR NOTE: Congrats on beating this level for the first time!");
             parsedValues[index] = timeNumber;
             return true;
         }
-        localStorage[constants_1.TIME_KEY] = parsedValues;
+        localStorage[constants_1.TIME_KEY] = JSON.stringify(parsedValues);
     }
     else {
-        console.log("JR NOTE: initing empty array and adding something to it");
+        console.log("JR NOTE: Congrats for starting this journey!");
         (0, exports.initArrayWithInitialValuesAtKey)(constants_1.TIME_KEY, [timeNumber]);
         return true;
     }

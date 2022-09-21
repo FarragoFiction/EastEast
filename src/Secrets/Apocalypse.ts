@@ -69,7 +69,7 @@ export class ApocalypseEngine {
                 this.levelSelect();
             }
         } else {
-            this.loadPassword();
+            this.levelSelect();
         }
     }
 
@@ -83,7 +83,7 @@ export class ApocalypseEngine {
         const div = createElementWithIdAndParent("div",this.terminal);
         div.innerHTML = `
         
-         <p>${parsedValues.length} out of ${Object.values(docSlaughtersFiles).length} Levels Unlocked! Click one to resume gameplay from it!</p>
+         <p>${parsedValues.length} out of ${Object.values(docSlaughtersFiles).length} Levels Unlocked! Click one to resume gameplay from it! Don't worry about trying to do all of them in one sitting, your level progress will be saved!</p>
 
     
         `;
@@ -144,7 +144,7 @@ export class ApocalypseEngine {
         if (time) {
             this.levelTimes.push(getTimeStringBuff(new Date(time)));
             console.log("JR NOTE: trying to save time")
-            const best = saveTime(this.levelTimes.length - 1, time);
+            const best = saveTime(this.current_index, time);
             best && this.transcript("Personal Best!");
         }
         if (loadNext) {
@@ -181,6 +181,9 @@ export class ApocalypseEngine {
         }
         if(!this.minigame){
             this.minigame = new TypingMiniGame(this.terminal, null, this.handleCallback);
+        }
+        if(loadVocab){
+            this.loadVocabularyFromPreviousLevels();
         }
         this.terminal.innerHTML = "";
 
