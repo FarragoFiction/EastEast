@@ -254,7 +254,8 @@ export const passwords: PasswordMap = {
 
 //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
 export const docSlaughtersFiles: SlaughterMap = {
-     "RAISE YOU FROM THE END OF THE WORLD": new Slaughter("Notes of Slaughter 0", "Secrets/Content/7.js","Child, do you Understand?")
+    "ETERNAL DARKNESS": new Slaughter("Notes of Slaughter 0", "Secrets/Content/45.js","Child, do you Understand?")
+    , "RAISE YOU FROM THE END OF THE WORLD": new Slaughter("Notes of Slaughter 0", "Secrets/Content/7.js","Child, do you Understand?")
     , "SERENE AND CALM": new Slaughter("Notes of Slaughter 1", "Secrets/Content/8.js")
     , "BEWARE OBLIVION IS AT HAND": new Slaughter("Notes of Slaughter 2", "Secrets/Content/9.js")
     , "I AM HERE TO TREAT DISEASE": new Slaughter("Notes of Slaughter 3", "Secrets/Content/10.js")

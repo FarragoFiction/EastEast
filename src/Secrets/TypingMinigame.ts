@@ -33,7 +33,7 @@ export class TypingMiniGame {
     sorted_word_list: string[]; //sorted by length
     startTime: Date;
 
-    constructor(parent: HTMLElement, original_text: string, callback: Function) {
+    constructor(parent: HTMLElement, original_text: string | null, callback: Function) {
         this.callback = callback;
         this.parent = parent;
         this.original_text = `${original_text}`;//being lazy and avoiding having a reference to this get put here if im gonna mutate it
@@ -52,7 +52,9 @@ export class TypingMiniGame {
         this.sentences = [];
         this.startTime = new Date();
         this.sorted_word_list = [];
-        this.parseText(original_text);
+        if(original_text){
+         this.parseText(original_text);
+        }
 
     }
 
@@ -66,7 +68,7 @@ export class TypingMiniGame {
         return ret;
     }
 
-    parseText = (text: string) => {
+    parseText = (text: string, start = true) => {
         this.original_text = `${text}`;
         this.content.remove();
         this.timerEle.remove();
@@ -113,16 +115,20 @@ export class TypingMiniGame {
                 if (Object.keys(this.unique_word_map).includes(word.toLowerCase())) {
                     this.unique_word_map[word] = { word: word, typed: this.unique_word_map[word].typed, times_seen: this.unique_word_map[word].times_seen + 1 }
                 } else {
-                    this.unique_word_map[word] = { word: word, typed: false, times_seen: 1 }
+                    //if start is false, then assume these were typed already adn are being loaded from a save file
+                    this.unique_word_map[word] = { word: word, typed: !start, times_seen: 1 }
                 }
             }
 
         }
 
         this.sorted_word_list = Object.keys(this.unique_word_map).sort((a: string, b: string) => { return a.length - b.length });
+       
+       if(start){
         this.startTime = new Date();
         this.timer = setInterval(this.timerFunction, 50);
         this.displayGame();
+       } 
 
     }
 

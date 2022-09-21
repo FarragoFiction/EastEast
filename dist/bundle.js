@@ -7485,7 +7485,7 @@ class ApocalypseEngine {
         this.speed = defaultSpeed;
         this.clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
         //where in the password list are you.
-        this.current_index = -1;
+        this.current_index = 0;
         this.levelTimes = [];
         this.init = () => {
             if (!this.parent) {
@@ -7527,7 +7527,7 @@ class ApocalypseEngine {
                 }
             }
             else {
-                this.loadFirstLevel();
+                this.loadPassword();
             }
         };
         this.levelSelect = () => {
@@ -7546,9 +7546,18 @@ class ApocalypseEngine {
             const parent = (0, misc_1.createElementWithIdAndParent)("ol", this.terminal);
             for (let value of parsedValues) {
                 const ele = (0, misc_1.createElementWithIdAndParent)("li", parent);
-                ele.innerHTML = `${(0, StringUtils_1.getTimeStringBuff)(new Date(value))}`;
+                ele.innerHTML = `<a href = '#'>${(0, StringUtils_1.getTimeStringBuff)(new Date(value))}</a>`;
                 ele.onclick = () => {
-                    alert("please load this level and everything before it");
+                    this.current_index = parsedValues.indexOf(value);
+                    this.loadPassword();
+                };
+            }
+            if (parsedValues.length !== Object.values(PasswordStorage_1.docSlaughtersFiles).length) {
+                const ele = (0, misc_1.createElementWithIdAndParent)("li", parent);
+                ele.innerHTML = `<a href = '#'>TBD</a>`;
+                ele.onclick = () => {
+                    this.current_index = parsedValues.length;
+                    this.loadPassword();
                 };
             }
         };
@@ -7577,18 +7586,6 @@ class ApocalypseEngine {
         
         `, this.handleCallback);
         };
-        this.loadFirstLevel = () => {
-            if (!this.terminal) {
-                return;
-            }
-            this.transcript("Please practice typing the following words...");
-            this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, `True confessions of a Doctor: 
-        "Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Cleansed. I do not Know how much Longer I can Hold Out. L-0-17 was right."
-        
-        Thank you,
-
-Dr. Fiona Slaughter`, this.handleCallback);
-        };
         //display text, load the next bit or handle time stuff, yes this is gross and ugly so sue me
         this.handleCallback = (text, loadNext = false, time) => {
             if (text.trim() !== "") {
@@ -7597,7 +7594,8 @@ Dr. Fiona Slaughter`, this.handleCallback);
             if (time) {
                 this.levelTimes.push((0, StringUtils_1.getTimeStringBuff)(new Date(time)));
                 console.log("JR NOTE: trying to save time");
-                (0, LocalStorageUtils_1.saveTime)(this.levelTimes.length - 1, time);
+                const best = (0, LocalStorageUtils_1.saveTime)(this.levelTimes.length - 1, time);
+                best && this.transcript("Personal Best!");
             }
             if (loadNext) {
                 this.loadNextPassword();
@@ -7608,21 +7606,26 @@ Dr. Fiona Slaughter`, this.handleCallback);
             this.loadPassword();
         };
         this.loadPassword = () => {
+            console.log("JR NOTE: loading password");
             if (!this.terminal) {
                 this.transcript("What did you do?");
                 return;
+            }
+            if (!this.minigame) {
+                this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, null, this.handleCallback);
             }
             this.terminal.innerHTML = "";
             if (Object.values(PasswordStorage_1.docSlaughtersFiles).length <= this.current_index) {
                 this.transcript("Thank you for practicing your typing. Do you Understand what you have learned? Please tell me you Understand...");
             }
             const secret = Object.values(PasswordStorage_1.docSlaughtersFiles)[this.current_index];
+            console.log("JR NOTE: loading password secret is", secret, "index was", this.current_index);
             this.transcript(`
             Level Times: ${this.levelTimes.map((time, level) => `Level_${level + 1}:${time}`).join(", ")}
         Please practice typing the following, entirely random, words, in order of difficulty:`);
             const text = (0, __1.loadSecretText)(secret.text);
             if (text.trim() != "") {
-                this.minigame?.parseText(text);
+                this.minigame.parseText(text);
             }
         };
         this.transcript = async (linesUnedited) => {
@@ -7875,6 +7878,7 @@ exports.passwords = {
 };
 //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
 exports.docSlaughtersFiles = {
+    "ETERNAL DARKNESS": new Slaughter("Notes of Slaughter 0", "Secrets/Content/45.js", "Child, do you Understand?"),
     "RAISE YOU FROM THE END OF THE WORLD": new Slaughter("Notes of Slaughter 0", "Secrets/Content/7.js", "Child, do you Understand?"),
     "SERENE AND CALM": new Slaughter("Notes of Slaughter 1", "Secrets/Content/8.js"),
     "BEWARE OBLIVION IS AT HAND": new Slaughter("Notes of Slaughter 2", "Secrets/Content/9.js"),
@@ -8234,7 +8238,9 @@ class TypingMiniGame {
         this.sentences = [];
         this.startTime = new Date();
         this.sorted_word_list = [];
-        this.parseText(original_text);
+        if (original_text) {
+            this.parseText(original_text);
+        }
     }
 }
 exports.TypingMiniGame = TypingMiniGame;
@@ -8352,30 +8358,29 @@ const valueAsArray = (key) => {
 };
 exports.valueAsArray = valueAsArray;
 const saveTime = (index, timeNumber) => {
-    console.log(`JR NOTE: i want to save time ${timeNumber} to index ${index}`);
     const storedValues = localStorage.getItem(constants_1.TIME_KEY);
-    console.log("JR NOTE: stored values is", storedValues);
     if (storedValues) {
         const parsedValues = (0, exports.valueAsArray)(constants_1.TIME_KEY);
-        console.log("JR NOTE: parsed values is", parsedValues);
         //only save it if its smaller plz
         if (parsedValues[index]) {
             if (timeNumber < parsedValues[index]) {
                 console.log("JR NOTE: Congrats on beating your personal best :) :) :)");
                 parsedValues[index] = timeNumber;
+                return true;
             }
         }
         else {
             parsedValues[index] = timeNumber;
+            return true;
         }
-        console.log("JR NOTE: new parsedValues is", parsedValues);
         localStorage[constants_1.TIME_KEY] = parsedValues;
     }
     else {
         console.log("JR NOTE: initing empty array and adding something to it");
         (0, exports.initArrayWithInitialValuesAtKey)(constants_1.TIME_KEY, [timeNumber]);
-        console.log("JR NOTE: localStorage.getItem(TIME_KEY) is", localStorage.getItem(constants_1.TIME_KEY));
+        return true;
     }
+    return false;
 };
 exports.saveTime = saveTime;
 
@@ -10770,6 +10775,26 @@ const text = `
 
 /***/ }),
 
+/***/ 3704:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+True confessions of a Doctor: 
+        "Please Listen. I am. Trying. The 12 Call To Me. The Sins Must Be Cleansed. I do not Know how much Longer I can Hold Out. L-0-17 was right."
+        
+        Thank you,
+
+Dr. Fiona Slaughter`
+;
+
+
+/***/ }),
+
 /***/ 1952:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -11189,6 +11214,8 @@ var map = {
 	"./Secrets/Content/43.js": 6904,
 	"./Secrets/Content/44": 6645,
 	"./Secrets/Content/44.js": 6645,
+	"./Secrets/Content/45": 3704,
+	"./Secrets/Content/45.js": 3704,
 	"./Secrets/Content/5": 1952,
 	"./Secrets/Content/5.js": 1952,
 	"./Secrets/Content/6": 1178,

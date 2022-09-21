@@ -14,7 +14,7 @@ export class ApocalypseEngine {
     speed = defaultSpeed;
     clickAudio = new Audio("audio/web_SoundFX_254286__jagadamba__mechanical-switch.mp3");
     //where in the password list are you.
-    current_index = -1;
+    current_index = 0;
     terminal?: HTMLElement;
     minigame?: TypingMiniGame;
     levelTimes: string[] = [];
@@ -91,10 +91,19 @@ export class ApocalypseEngine {
         const parent =  createElementWithIdAndParent("ol", this.terminal);
         for (let value of parsedValues){
             const ele = createElementWithIdAndParent("li", parent);
-            ele.innerHTML = `${getTimeStringBuff(new Date(value))}`;
+            ele.innerHTML = `<a href = '#'>${getTimeStringBuff(new Date(value))}</a>`;
             ele.onclick = ()=>{
                 this.current_index = parsedValues.indexOf(value);
-                this.loadPassword();
+                this.loadPassword(true);
+            }
+        }
+
+        if(parsedValues.length !==Object.values(docSlaughtersFiles).length){
+            const ele = createElementWithIdAndParent("li", parent);
+            ele.innerHTML = `<a href = '#'>TBD</a>`;
+            ele.onclick = ()=>{
+                this.current_index = parsedValues.length;
+                this.loadPassword(true);
             }
         }
 
@@ -135,7 +144,8 @@ export class ApocalypseEngine {
         if (time) {
             this.levelTimes.push(getTimeStringBuff(new Date(time)));
             console.log("JR NOTE: trying to save time")
-            saveTime(this.levelTimes.length - 1, time);
+            const best = saveTime(this.levelTimes.length - 1, time);
+            best && this.transcript("Personal Best!");
         }
         if (loadNext) {
 
@@ -148,13 +158,29 @@ export class ApocalypseEngine {
         this.loadPassword();
     }
 
-    loadPassword = () => {
+    loadVocabularyFromPreviousLevels = ()=>{
+        if (!this.terminal) {
+            return;
+        }
+        if(!this.minigame){
+            this.minigame = new TypingMiniGame(this.terminal, null, this.handleCallback);
+        }
+        for(let i = 0; i<this.current_index; i++){
+            const secret = Object.values(docSlaughtersFiles)[i];
+            const text = loadSecretText(secret.text);
+            this.minigame.parseText(text, false); //make sure it doesn't try to start the game, just loading the text so i don't have to keep typing common words
+        }
+    }
+
+    loadPassword = (loadVocab = false) => {
+        console.log("JR NOTE: loading password")
+
         if (!this.terminal) {
             this.transcript("What did you do?");
             return;
         }
         if(!this.minigame){
-            this.minigame = new TypingMiniGame(this.terminal, "", this.handleCallback);
+            this.minigame = new TypingMiniGame(this.terminal, null, this.handleCallback);
         }
         this.terminal.innerHTML = "";
 
@@ -164,6 +190,7 @@ export class ApocalypseEngine {
         }
         const secret = Object.values(docSlaughtersFiles)[this.current_index];
 
+        console.log("JR NOTE: loading password secret is", secret, "index was", this.current_index)
 
 
         this.transcript(`
