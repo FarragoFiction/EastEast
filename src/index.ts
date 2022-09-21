@@ -8,6 +8,7 @@ import { Maze } from "./Objects/RoomEngine/Maze";
 import { createElementWithIdAndParent } from "./Utils/misc";
 import { visitFunctionBody } from "typescript";
 import { ApocalypseEngine } from "./Secrets/Apocalypse";
+import { isItFriday } from "./Utils/URLUtils";
 
 
 let maze: Maze;
@@ -49,15 +50,14 @@ const whiteNight = ()=>{
 window.onload = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const friday = urlParams.get('friday'); //you can escape friday if you say its not friday
-    console.log("JR NOTE: am i trying to override friday?", friday)
-    if((new Date().getDay() === 5 && friday !== "false") ||friday ==="true" ){
-        itsFriday();
-        return;
-    }
     const apocalypse = urlParams.get('apocalypse');
+
+    //the apocalypse overrides friday (but has its own special hell for it)
     if(apocalypse === "white"){
         whiteNight();
+        return;
+    }else if(isItFriday()){
+        itsFriday();
         return;
     }
 

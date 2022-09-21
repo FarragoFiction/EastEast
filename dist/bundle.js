@@ -7517,6 +7517,97 @@ class ApocalypseEngine {
             //good job: can you go faster?
         };
         this.miniGameOrLevelSelect = () => {
+            if (!this.terminal) {
+                return;
+            }
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const friday = urlParams.get('friday'); //you can escape friday if you say its not friday
+            const apocaylpse = urlParams.get('apocalypse'); //you can escape friday if you say its not friday
+            //utter sin, friday haunts you
+            if ((!apocaylpse && (new Date().getDay() === 5 && friday !== "false") || friday === "true")) {
+                this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, `
+            Oo-ooh-ooh, hoo yeah, yeah
+Yeah, yeah
+Yeah-ah-ah
+Yeah-ah-ah
+Yeah-ah-ah
+Yeah-ah-ah
+Yeah, yeah, yeah
+Seven a.m., waking up in the morning
+Gotta be fresh, gotta go downstairs
+Gotta have my bowl, gotta have cereal
+Seein' everything, the time is goin'
+Tickin' on and on, everybody's rushin'
+Gotta get down to the bus stop
+Gotta catch my bus, I see my friends (My friends)
+Kickin' in the front seat
+Sittin' in the back seat
+Gotta make my mind up
+Which seat can I take?
+It's Friday, Friday
+Gotta get down on Friday
+Everybody's lookin' forward to the weekend, weekend
+Friday, Friday
+Gettin' down on Friday
+Everybody's lookin' forward to the weekend
+Partyin', partyin' (Yeah)
+Partyin', partyin' (Yeah)
+Fun, fun, fun, fun
+Lookin' forward to the weekend
+7: 45, we're drivin' on the highway
+Cruisin' so fast, I want time to fly
+Fun, fun, think about fun
+You know what it is
+I got this, you got this
+My friend is by my right, ay
+I got this, you got this
+Now you know it
+Kickin' in the front seat
+Sittin' in the back seat
+Gotta make my mind up
+Which seat can I take?
+It's Friday, Friday
+Gotta get down on Friday
+Everybody's lookin' forward to the weekend, weekend
+Friday, Friday
+Gettin' down on Friday
+Everybody's lookin' forward to the weekend
+Partyin', partyin' (Yeah)
+Partyin', partyin' (Yeah)
+Fun, fun, fun, fun
+Lookin' forward to the weekend
+Yesterday was Thursday, Thursday
+Today i-is Friday, Friday (Partyin')
+We-we-we so excited
+We so excited
+We gonna have a ball today
+Tomorrow is Saturday
+And Sunday comes after wards
+I don't want this weekend to end
+It's Friday, Friday
+Gotta get down on Friday
+Everybody's lookin' forward to the weekend, weekend
+Friday, Friday
+Gettin' down on Friday
+Everybody's lookin' forward to the weekend
+Partyin', partyin' (Yeah)
+Partyin', partyin' (Yeah)
+Fun, fun, fun, fun
+Lookin' forward to the weekend
+It's Friday, Friday
+Gotta get down on Friday
+Everybody's lookin' forward to the weekend, weekend
+Friday, Friday
+Gettin' down on Friday
+Everybody's lookin' forward to the weekend
+Partyin', partyin' (Yeah)
+Partyin', partyin' (Yeah)
+Fun, fun, fun, fun
+Lookin' forward to the weekend
+            `, this.handleCallback);
+                return;
+            }
             const storedValues = localStorage.getItem(constants_1.TIME_KEY);
             if (storedValues) {
                 if (storedValues?.toUpperCase()?.includes("ZAMPANIO")) {
@@ -8379,6 +8470,7 @@ exports.valueAsArray = valueAsArray;
 const saveTime = (index, timeNumber) => {
     const storedValues = localStorage.getItem(constants_1.TIME_KEY);
     console.log(`JR NOTE: trying to store ${timeNumber} at ${index}`);
+    let ret = false;
     if (storedValues) {
         const parsedValues = (0, exports.valueAsArray)(constants_1.TIME_KEY);
         //only save it if its smaller plz
@@ -8387,22 +8479,23 @@ const saveTime = (index, timeNumber) => {
             if (timeNumber < parsedValues[index]) {
                 console.log("JR NOTE: Congrats on beating your personal best :) :) :)");
                 parsedValues[index] = timeNumber;
-                return true;
+                ret = true;
             }
         }
         else {
             console.log("JR NOTE: Congrats on beating this level for the first time!");
             parsedValues[index] = timeNumber;
-            return true;
+            ret = true;
         }
-        localStorage[constants_1.TIME_KEY] = JSON.stringify(parsedValues);
+        console.log("JR NOTE: about to store the value like so: ", parsedValues);
+        localStorage.setItem(constants_1.TIME_KEY, JSON.stringify(parsedValues));
     }
     else {
         console.log("JR NOTE: Congrats for starting this journey!");
         (0, exports.initArrayWithInitialValuesAtKey)(constants_1.TIME_KEY, [timeNumber]);
-        return true;
+        ret = true;
     }
-    return false;
+    return ret;
 };
 exports.saveTime = saveTime;
 
@@ -8785,7 +8878,7 @@ exports.Zalgo = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.addImageProcess = exports.getParameterByName = void 0;
+exports.isItFriday = exports.addImageProcess = exports.getParameterByName = void 0;
 //http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
 function getParameterByName(name, url) {
     if (!url) {
@@ -8809,6 +8902,16 @@ const addImageProcess = (src) => {
     });
 };
 exports.addImageProcess = addImageProcess;
+const isItFriday = () => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const friday = urlParams.get('friday'); //you can escape friday if you say its not friday
+    if (((new Date().getDay() === 5 && friday !== "false") || friday === "true")) {
+        return true;
+    }
+    return false;
+};
+exports.isItFriday = isItFriday;
 
 
 /***/ }),
@@ -8947,6 +9050,7 @@ const SeededRandom_1 = __importDefault(__webpack_require__(3450));
 const Maze_1 = __webpack_require__(7194);
 const misc_1 = __webpack_require__(4079);
 const Apocalypse_1 = __webpack_require__(3790);
+const URLUtils_1 = __webpack_require__(389);
 let maze;
 const handleClick = () => {
     if (maze) {
@@ -8979,15 +9083,14 @@ const whiteNight = () => {
 window.onload = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const friday = urlParams.get('friday'); //you can escape friday if you say its not friday
-    console.log("JR NOTE: am i trying to override friday?", friday);
-    if ((new Date().getDay() === 5 && friday !== "false") || friday === "true") {
-        itsFriday();
-        return;
-    }
     const apocalypse = urlParams.get('apocalypse');
+    //the apocalypse overrides friday (but has its own special hell for it)
     if (apocalypse === "white") {
         whiteNight();
+        return;
+    }
+    else if ((0, URLUtils_1.isItFriday)()) {
+        itsFriday();
         return;
     }
     const ele = document.querySelector("#current-room");

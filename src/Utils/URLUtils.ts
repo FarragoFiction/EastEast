@@ -18,3 +18,15 @@ export const addImageProcess =(src: string)=>{
     img.src = src
   })
 }
+
+export const isItFriday = ()=>{
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const friday = urlParams.get('friday'); //you can escape friday if you say its not friday
+
+  if(((new Date().getDay() === 5 && friday !== "false") ||friday ==="true" )){
+    return true;
+  }
+  return false;
+
+}

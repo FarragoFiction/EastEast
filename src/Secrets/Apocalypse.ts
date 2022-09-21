@@ -61,6 +61,100 @@ export class ApocalypseEngine {
     }
 
     miniGameOrLevelSelect = () => {
+        if (!this.terminal) {
+            return;
+        }
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const friday = urlParams.get('friday'); //you can escape friday if you say its not friday
+        const apocaylpse = urlParams.get('apocalypse'); //you can escape friday if you say its not friday
+
+        //utter sin, friday haunts you
+        if((!apocaylpse && (new Date().getDay() === 5 && friday !== "false") ||friday ==="true" )){
+            this.minigame = new TypingMiniGame(this.terminal, `
+            Oo-ooh-ooh, hoo yeah, yeah
+Yeah, yeah
+Yeah-ah-ah
+Yeah-ah-ah
+Yeah-ah-ah
+Yeah-ah-ah
+Yeah, yeah, yeah
+Seven a.m., waking up in the morning
+Gotta be fresh, gotta go downstairs
+Gotta have my bowl, gotta have cereal
+Seein' everything, the time is goin'
+Tickin' on and on, everybody's rushin'
+Gotta get down to the bus stop
+Gotta catch my bus, I see my friends (My friends)
+Kickin' in the front seat
+Sittin' in the back seat
+Gotta make my mind up
+Which seat can I take?
+It's Friday, Friday
+Gotta get down on Friday
+Everybody's lookin' forward to the weekend, weekend
+Friday, Friday
+Gettin' down on Friday
+Everybody's lookin' forward to the weekend
+Partyin', partyin' (Yeah)
+Partyin', partyin' (Yeah)
+Fun, fun, fun, fun
+Lookin' forward to the weekend
+7: 45, we're drivin' on the highway
+Cruisin' so fast, I want time to fly
+Fun, fun, think about fun
+You know what it is
+I got this, you got this
+My friend is by my right, ay
+I got this, you got this
+Now you know it
+Kickin' in the front seat
+Sittin' in the back seat
+Gotta make my mind up
+Which seat can I take?
+It's Friday, Friday
+Gotta get down on Friday
+Everybody's lookin' forward to the weekend, weekend
+Friday, Friday
+Gettin' down on Friday
+Everybody's lookin' forward to the weekend
+Partyin', partyin' (Yeah)
+Partyin', partyin' (Yeah)
+Fun, fun, fun, fun
+Lookin' forward to the weekend
+Yesterday was Thursday, Thursday
+Today i-is Friday, Friday (Partyin')
+We-we-we so excited
+We so excited
+We gonna have a ball today
+Tomorrow is Saturday
+And Sunday comes after wards
+I don't want this weekend to end
+It's Friday, Friday
+Gotta get down on Friday
+Everybody's lookin' forward to the weekend, weekend
+Friday, Friday
+Gettin' down on Friday
+Everybody's lookin' forward to the weekend
+Partyin', partyin' (Yeah)
+Partyin', partyin' (Yeah)
+Fun, fun, fun, fun
+Lookin' forward to the weekend
+It's Friday, Friday
+Gotta get down on Friday
+Everybody's lookin' forward to the weekend, weekend
+Friday, Friday
+Gettin' down on Friday
+Everybody's lookin' forward to the weekend
+Partyin', partyin' (Yeah)
+Partyin', partyin' (Yeah)
+Fun, fun, fun, fun
+Lookin' forward to the weekend
+            `, this.handleCallback);
+            return;
+        }
+
+
         const storedValues = localStorage.getItem(TIME_KEY);
         if (storedValues) {
             if(storedValues?.toUpperCase()?.includes("ZAMPANIO")){
