@@ -184,18 +184,20 @@ Lookin' forward to the weekend
 
         const parent =  createElementWithIdAndParent("ol", this.terminal);
         if(this.isBonus(parsedValues)){
-            const ele = createElementWithIdAndParent("li", parent);
+            const ele = createElementWithIdAndParent("p", this.terminal);
             ele.innerHTML = `<a href = '#'>BONUS LEVEL UNLOCKED</a>`;
             ele.onclick = ()=>{
                 this.current_index = -1;
                 this.loadPassword(true);
             }
         }
-        for (let value of parsedValues){
+        for (let index = 0; index<parsedValues.length; index ++){
+            let value = parsedValues[index];
             const ele = createElementWithIdAndParent("li", parent);
             ele.innerHTML = `<a href = '#'>${getTimeStringBuff(new Date(value))}</a>`;
             ele.onclick = ()=>{
-                this.current_index = parsedValues.indexOf(value);
+                this.current_index = index;
+                index ++;
                 this.loadPassword(true);
             }
         }
@@ -284,7 +286,7 @@ Lookin' forward to the weekend
     }
 
     loadPassword = (loadVocab = false) => {
-        console.log("JR NOTE: loading password")
+        console.log("JR NOTE: loading password", this.current_index)
 
         if (!this.terminal) {
             this.transcript("What did you do?");
