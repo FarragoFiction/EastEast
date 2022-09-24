@@ -3,7 +3,8 @@ import { TIME_KEY } from "../Utils/constants";
 import { saveTime, valueAsArray } from "../Utils/LocalStorageUtils";
 import { createElementWithId, createElementWithIdAndParent, sleep } from "../Utils/misc";
 import { getTimeStringBuff } from "../Utils/StringUtils";
-import { docSlaughtersFiles } from "./PasswordStorage";
+import { isItFriday } from "../Utils/URLUtils";
+import { docSlaughtersFiles, Secret } from "./PasswordStorage";
 import { TypingMiniGame } from "./TypingMinigame";
 
 const defaultSpeed = 0;
@@ -61,16 +62,13 @@ export class ApocalypseEngine {
     }
 
     miniGameOrLevelSelect = () => {
+        console.log("JR NOTE: miniGameOrLevelSelect ")
         if (!this.terminal) {
             return;
         }
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const friday = urlParams.get('friday'); //you can escape friday if you say its not friday
-        const apocaylpse = urlParams.get('apocalypse'); //you can escape friday if you say its not friday
 
         //utter sin, friday haunts you
-        if((!apocaylpse && (new Date().getDay() === 5 && friday !== "false") ||friday ==="true" )){
+        if((isItFriday() )){
             this.minigame = new TypingMiniGame(this.terminal, `
             Oo-ooh-ooh, hoo yeah, yeah
 Yeah, yeah
@@ -171,7 +169,7 @@ Lookin' forward to the weekend
         if (!this.terminal) {
             return;
         }
-        this.transcript("You have completed the following levels:");
+        this.transcript("You have completed the following levels: (I wonder how you could hack your times in a way that matters?)");
         const parsedValues = valueAsArray(TIME_KEY);
 
         const div = createElementWithIdAndParent("div",this.terminal);
@@ -182,7 +180,17 @@ Lookin' forward to the weekend
     
         `;
 
+
+
         const parent =  createElementWithIdAndParent("ol", this.terminal);
+        if(this.isBonus(parsedValues)){
+            const ele = createElementWithIdAndParent("li", parent);
+            ele.innerHTML = `<a href = '#'>BONUS LEVEL UNLOCKED</a>`;
+            ele.onclick = ()=>{
+                this.current_index = -1;
+                this.loadPassword(true);
+            }
+        }
         for (let value of parsedValues){
             const ele = createElementWithIdAndParent("li", parent);
             ele.innerHTML = `<a href = '#'>${getTimeStringBuff(new Date(value))}</a>`;
@@ -201,6 +209,15 @@ Lookin' forward to the weekend
             }
         }
 
+
+    }
+
+     isBonus = (parsedValues: number[])=>{
+         const sum = parsedValues.reduce((partialSum, a) => partialSum + a, 0);
+         const completed_levels = Object.values(docSlaughtersFiles).length;
+         
+         return parsedValues.length >= completed_levels && sum < 191919* completed_levels;
+        
 
     }
 
@@ -285,7 +302,14 @@ Lookin' forward to the weekend
             this.transcript("Thank you for practicing your typing. Do you Understand what you have learned? Please tell me you Understand...");
 
         }
-        const secret = Object.values(docSlaughtersFiles)[this.current_index];
+        let secret;
+        if(this.current_index <0){
+            secret =   new Secret("Chant", "Secrets/Content/35.js") //its a red herring. being fast at typing doesn't get you anything True. It's just north. More nonsense for you to distract yourself with as you engage with what you are given on a surface level. You have to dig deeper for something True.
+
+        }else{
+            secret = Object.values(docSlaughtersFiles)[this.current_index];
+
+        }
 
         console.log("JR NOTE: loading password secret is", secret, "index was", this.current_index)
 

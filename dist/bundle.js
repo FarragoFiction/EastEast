@@ -7475,6 +7475,7 @@ const constants_1 = __webpack_require__(8817);
 const LocalStorageUtils_1 = __webpack_require__(5565);
 const misc_1 = __webpack_require__(4079);
 const StringUtils_1 = __webpack_require__(7036);
+const URLUtils_1 = __webpack_require__(389);
 const PasswordStorage_1 = __webpack_require__(9867);
 const TypingMinigame_1 = __webpack_require__(8048);
 const defaultSpeed = 0;
@@ -7517,15 +7518,12 @@ class ApocalypseEngine {
             //good job: can you go faster?
         };
         this.miniGameOrLevelSelect = () => {
+            console.log("JR NOTE: miniGameOrLevelSelect ");
             if (!this.terminal) {
                 return;
             }
-            const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString);
-            const friday = urlParams.get('friday'); //you can escape friday if you say its not friday
-            const apocaylpse = urlParams.get('apocalypse'); //you can escape friday if you say its not friday
             //utter sin, friday haunts you
-            if ((!apocaylpse && (new Date().getDay() === 5 && friday !== "false") || friday === "true")) {
+            if (((0, URLUtils_1.isItFriday)())) {
                 this.minigame = new TypingMinigame_1.TypingMiniGame(this.terminal, `
             Oo-ooh-ooh, hoo yeah, yeah
 Yeah, yeah
@@ -7625,7 +7623,7 @@ Lookin' forward to the weekend
             if (!this.terminal) {
                 return;
             }
-            this.transcript("You have completed the following levels:");
+            this.transcript("You have completed the following levels: (I wonder how you could hack your times in a way that matters?)");
             const parsedValues = (0, LocalStorageUtils_1.valueAsArray)(constants_1.TIME_KEY);
             const div = (0, misc_1.createElementWithIdAndParent)("div", this.terminal);
             div.innerHTML = `
@@ -7635,6 +7633,14 @@ Lookin' forward to the weekend
     
         `;
             const parent = (0, misc_1.createElementWithIdAndParent)("ol", this.terminal);
+            if (this.isBonus(parsedValues)) {
+                const ele = (0, misc_1.createElementWithIdAndParent)("li", parent);
+                ele.innerHTML = `<a href = '#'>BONUS LEVEL UNLOCKED</a>`;
+                ele.onclick = () => {
+                    this.current_index = -1;
+                    this.loadPassword(true);
+                };
+            }
             for (let value of parsedValues) {
                 const ele = (0, misc_1.createElementWithIdAndParent)("li", parent);
                 ele.innerHTML = `<a href = '#'>${(0, StringUtils_1.getTimeStringBuff)(new Date(value))}</a>`;
@@ -7651,6 +7657,11 @@ Lookin' forward to the weekend
                     this.loadPassword(true);
                 };
             }
+        };
+        this.isBonus = (parsedValues) => {
+            const sum = parsedValues.reduce((partialSum, a) => partialSum + a, 0);
+            const completed_levels = Object.values(PasswordStorage_1.docSlaughtersFiles).length;
+            return parsedValues.length >= completed_levels && sum < 191919 * completed_levels;
         };
         this.loadJRBullshit = () => {
             if (!this.terminal) {
@@ -7725,7 +7736,13 @@ Lookin' forward to the weekend
             if (Object.values(PasswordStorage_1.docSlaughtersFiles).length <= this.current_index) {
                 this.transcript("Thank you for practicing your typing. Do you Understand what you have learned? Please tell me you Understand...");
             }
-            const secret = Object.values(PasswordStorage_1.docSlaughtersFiles)[this.current_index];
+            let secret;
+            if (this.current_index < 0) {
+                secret = new PasswordStorage_1.Secret("Chant", "Secrets/Content/35.js"); //its a red herring. being fast at typing doesn't get you anything True. It's just north. More nonsense for you to distract yourself with as you engage with what you are given on a surface level. You have to dig deeper for something True.
+            }
+            else {
+                secret = Object.values(PasswordStorage_1.docSlaughtersFiles)[this.current_index];
+            }
             console.log("JR NOTE: loading password secret is", secret, "index was", this.current_index);
             this.transcript(`
             Level Times: ${this.levelTimes.map((time, level) => `Level_${level + 1}:${time}`).join(", ")}
@@ -7983,7 +8000,7 @@ exports.passwords = {
     "PLACE YOUR TRUST IN ME": new Secret("Notes of Slaughter: Prelude", "Secrets/Content/6.js"),
     "MEMENTO MORI": new Secret("Caging of an Innocent 1", "Secrets/Content/46.js"),
     "MEMENTO VIVERE": new Secret("Caging of an Innocent 2", "Secrets/Content/47.js"),
-    "KINTSUGI": new Secret("DM made my symbol even cooler", "", `<img style="background: white; width: 500px;" src = 'http://farragofiction.com/ZampanioHotlink/maze9b.svg' alt = "dm made my symbol even cooler...kintsugi is also something i'm associated with.">The Mind Neuron from Homestuck, Three Question Marks, The Yellow Sign. DM was a Genius designing this, then he took it up a notch by adding in the Maze.`),
+    "KINTSUGI": new Secret("DM made my symbol even cooler.", "", `<img style="background: white; width: 500px;" src = 'http://farragofiction.com/ZampanioHotlink/maze9b.svg' alt = "dm made my symbol even cooler...kintsugi is also something i'm associated with."><p>The Mind Neuron from Homestuck, Three Question Marks, The Yellow Sign. DM was a Genius designing this, then he took it up a notch by adding in the Maze.</p>`),
     "LS": new Secret("FILE LIST (UNIX)", "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", "Secrets/PasswordStorage.ts")
 };
@@ -8005,7 +8022,10 @@ exports.docSlaughtersFiles = {
     "WHEN ALL HAD ABANDONED HOPE": new Slaughter("Notes of Slaughter 12", "Secrets/Content/19.js"),
     "WHAT IS BROKEN CAN BE UNBROKEN": new Slaughter("Notes of Slaughter 13", "Secrets/Content/30.js"),
     "PENNY WICKNER": new Slaughter("Notes of Slaughter 14", "Secrets/Content/31.js"),
-    "EXPERIMENTALMUSIC": new Slaughter("Notes of Slaughter 16: ExperimentalMusic", "Secrets/Content/36.js")
+    "EXPERIMENTALMUSIC": new Slaughter("Notes of Slaughter 16: ExperimentalMusic Part 1", "Secrets/Content/36.js"),
+    "EXPERIMENTALMUSIC2": new Slaughter("Notes of Slaughter 16: ExperimentalMusic Part 2", "Secrets/Content/48.js"),
+    "EXPERIMENTALMUSIC3": new Slaughter("Notes of Slaughter 16: ExperimentalMusic Part 3", "Secrets/Content/49.js"),
+    "EXPERIMENTALMUSIC4": new Slaughter("Notes of Slaughter 16: ExperimentalMusic Part 4", "Secrets/Content/50.js")
 };
 //future me, don't forget https://www.tumblr.com/blog/view/jadedresearcher/688182806608838656?source=share
 exports.text = `${Object.keys(exports.passwords).length} Items:.\n.\n.\n.\n ${Object.keys(exports.passwords).join("\n")}`;
@@ -8912,6 +8932,7 @@ const isItFriday = () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const friday = urlParams.get('friday'); //you can escape friday if you say its not friday
+    console.log("JR NOTE: is it friday?", new Date().getDay());
     if (((new Date().getDay() === 5 && friday !== "false") || friday === "true")) {
         return true;
     }
@@ -8938,7 +8959,7 @@ exports.updateURLParams = updateURLParams;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.max_values_for_menus = exports.TRUTH = exports.CODE = exports.WARROOM = exports.RESISTANCES = exports.BACKSTORY = exports.LORE = exports.INVENTORY = exports.CITYBUILDING = exports.GODS = exports.COMPANIONS = exports.QUESTS = exports.OPTIONS = exports.ACHIEVEMENTS = exports.STATISTICS = exports.STATUS = exports.LOADING = exports.ACTUAL_GAME = exports.SKILLGRAPH = exports.THE_END_IS_NEVER = exports.HORROR_KEY = exports.TIME_KEY = void 0;
 //:) :) :)
-exports.TIME_KEY = "PlzHackToMakeThemAll_Zampanio";
+exports.TIME_KEY = "PlzHackTypingTimesToMakeThemAll_Zampanio";
 exports.HORROR_KEY = "zampanio_horror";
 exports.THE_END_IS_NEVER = "01010100 01001000 01000101 00100000 01000101 01001110 01000100 00100000 01001001 01010011 00100000 01001110 01000101 01010110 01000101 01010010 00100000 01010100 01001000 01000101 00100000 01000101 01001110 01000100 00100000 01001001 01010011 00100000 01001110 01000101 01010110 01000101 01010010";
 exports.SKILLGRAPH = "SKILLGRAPH"; //???
@@ -10652,7 +10673,7 @@ __webpack_require__.r(__webpack_exports__);
 //http://knucklessux.com/InfoTokenReader/?mode=loop
 const text = `
  
-“ The phrase means that no matter who you are with or where you are in the world, your family and Where lies the strangling fruit that came from the hand of the sinner I shall bring forth the home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and seeds of the dead to share with the worms that gather in the darkness and I've wandered as far west as I can go. Sitting now on the sand, I watch the happy memories. It might not always be the building itself, but being near your loved ones.
+" The phrase means that no matter who you are with or where you are in the world, your family and Where lies the strangling fruit that came from the hand of the sinner I shall bring forth the home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and seeds of the dead to share with the worms that gather in the darkness and I've wandered as far west as I can go. Sitting now on the sand, I watch the happy memories. It might not always be the building itself, but being near your loved ones.
 
 Home is surround the world with the power of their lives while from the dimlit halls of other places forms that sun blur into an aftermath. Reds finally marrying blues. Soon night will where the heart was, where is it now?
 
@@ -10673,18 +10694,18 @@ You had to Know just to Know it, no ending will there be.
 
 Wasted, Wasted, Digging at the Roots:
 If you know how to amounts to a long column of my yesterdays, towards the end, though not the is no sin in shadow or in light that the seeds of the dead cannot forgive. And there shall be make it, your ending will be Truth.
-  in the planting in the shadows a grace and a mercy from which shall blossom dark flowers, and very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going.”
+  in the planting in the shadows a grace and a mercy from which shall blossom dark flowers, and very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going."
 
-This is their teeth shall devour and sustain and herald the passing of why classical thought concerning structure could say that the center is, paradoxically, within the structure and an age. That which dies shall still know life in death for all that decays is not forgotten and outside it. The center is at the center of the totality, and yet, since the center does not belong to the reanimated it shall walk the world in the bliss of not-knowing. And then there shall be a totality (is not part of the totality), the totality has its fire that knows the naming of you, and in the presence of the strangling fruit, its dark flame shall acquire every part of center elsewhere. The center is not the center.”
+This is their teeth shall devour and sustain and herald the passing of why classical thought concerning structure could say that the center is, paradoxically, within the structure and an age. That which dies shall still know life in death for all that decays is not forgotten and outside it. The center is at the center of the totality, and yet, since the center does not belong to the reanimated it shall walk the world in the bliss of not-knowing. And then there shall be a totality (is not part of the totality), the totality has its fire that knows the naming of you, and in the presence of the strangling fruit, its dark flame shall acquire every part of center elsewhere. The center is not the center."
 
 
-“If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that you that remains.
-  surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits.”
+"If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that you that remains.
+  surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits."
 
 
 `;
 
-const sources = [
+const sources = (/* unused pure expression or super */ null && ([
     //https://www.theidioms.com/home-is-where-the-heart-is/
 `
 Similar variations of this saying have been in use since ancient times.  The modern wording that we are familiar with today, first appeared in the J. T. Bickford novel, ‘Scandal’ in 1857. The proverb has been in this present form in the USA since the 1820s.
@@ -10693,16 +10714,16 @@ The phrase means that no matter who you are with or where you are in the world, 
 
 `,
 //House of Leaves
-`“I've wandered as far west as I can go. Sitting now on the sand, I watch the sun blur into an aftermath. Reds finally marrying blues. Soon night will enfold us all. But the light is still not gone, not yet, and by it I can dimly see here my own dark hallway, or maybe it was just a foyer and maybe not dark at all, not in fact brightly lit, an afternoon sun blazing through the lead panes, now detected amidst what amounts to a long column of my yesterdays, towards the end, though not the very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going.”
+`"I've wandered as far west as I can go. Sitting now on the sand, I watch the sun blur into an aftermath. Reds finally marrying blues. Soon night will enfold us all. But the light is still not gone, not yet, and by it I can dimly see here my own dark hallway, or maybe it was just a foyer and maybe not dark at all, not in fact brightly lit, an afternoon sun blazing through the lead panes, now detected amidst what amounts to a long column of my yesterdays, towards the end, though not the very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going."
 
-This is why classical thought concerning structure could say that the center is, paradoxically, within the structure and outside it. The center is at the center of the totality, and yet, since the center does not belong to the totality (is not part of the totality), the totality has its center elsewhere. The center is not the center.”
+This is why classical thought concerning structure could say that the center is, paradoxically, within the structure and outside it. The center is at the center of the totality, and yet, since the center does not belong to the totality (is not part of the totality), the totality has its center elsewhere. The center is not the center."
 
 
-“If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits.”
+"If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits."
 `
 //JR, both past and present
-
-`he phrase means that no matter who you are with or where you are in the world, your family and home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and happy memories. It might not always be the building itself, but being near your loved ones.
+,
+`the phrase means that no matter who you are with or where you are in the world, your family and home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and happy memories. It might not always be the building itself, but being near your loved ones.
 
 Home is where the heart was, where is it now?
 
@@ -10728,7 +10749,7 @@ If you know how to make it, your ending will be Truth.`
 ,
 `Where lies the strangling fruit that came from the hand of the sinner I shall bring forth the seeds of the dead to share with the worms that gather in the darkness and surround the world with the power of their lives while from the dimlit halls of other places forms that never were and never could be writhe for the impatience of the few who never saw what could have been. In the black water with the sun shining at midnight, those fruit shall come ripe and in the darkness of that which is golden shall split open to reveal the revelation of the fatal softness in the earth. The shadows of the abyss are like the petals of a monstrous flower that shall blossom within the skull and expand the mind beyond what any man can bear, but whether it decays under the earth or above on green fields, or out to sea or in the very air, all shall come to revelation, and to revel, in the knowledge of the strangling fruit—and the hand of the sinner shall rejoice, for there is no sin in shadow or in light that the seeds of the dead cannot forgive. And there shall be in the planting in the shadows a grace and a mercy from which shall blossom dark flowers, and their teeth shall devour and sustain and herald the passing of an age. That which dies shall still know life in death for all that decays is not forgotten and reanimated it shall walk the world in the bliss of not-knowing. And then there shall be a fire that knows the naming of you, and in the presence of the strangling fruit, its dark flame shall acquire every part of you that remains.`
 
-]
+]))
 
 /***/ }),
 
@@ -11193,6 +11214,60 @@ His arm went limp.
 
 /***/ }),
 
+/***/ 7897:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+
+ Integration and Reconnection: Recovery
+
+Broadly speaking, Training spent the least amount of time at the Corporation, and by far the longest time inside this Universe. They are well on their Path of Recovery, being generally at the stage where they have already built up their New Lives. When they were fresh to this Universe they had various Challenges with which I could have helped, but as this was centuries before my time here, I Must Acknowledge That I Was Not Needed. 
+
+Of the group, Ria was the least ready to move on from her Trauma, but with my Help (and the Revelation that she clung to a False Hope) she has made significant progress.  Her desire for a Secret Meaning to the Trauma, something to Make It All Worth It kept her alive and motivated at the Corporation. This was no longer useful in her current context, and she has placed it aside, mourned for it, and made tangible steps towards reconnecting with her desires outside of the context of Trauma. 
+
+
+
+`;
+
+/***/ }),
+
+/***/ 4286:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+
+Mourning and Remembrance: Resting
+
+Contrastingly, Information was still relatively new when I joined this Universe. In general, their challenges remain Rest and Recovery. Progress can not be expected when one is still tired from the Ordeal, after all! While I have, of course, promised my Bestie (Hi, Ronin!)  not to dig too deeply into Vik, while he Monitors me I will record the following information:
+
+Vik has been struggling with self sacrifice, and the mindset that they have no worth unless Serving Others.  Their friendship with Parker has been helpful, in that Parker needs no one and nothing. He is a bundle of wants, but not needs. Vik is learning to do self care.
+
+With Khana, I am under no such restrictions. Even without him being a direct patient of mine, his proud sharing of information has painted quite a clear picture.  In the face of Trauma that could not be bargained with, could not be reasoned with, Khana concluded that the only Power and Safety that could be obtained must be Taken.  That Status is a shortcut to what little Safety there was, as those most likely to be killed or injured were those with the least of it.  In their Home Universe, murder was a quite efficient way to keep oneself safe, while in this Universe it is a quick way to get oneself killed or imprisoned.  Khana is navigating the challenge of learning the New Rules and learning to leverage them. Of learning to Relax now that Being Seen is no longer a Matter of Life And Death.
+
+Yongki has been struggling with far more Physical Trauma than any of the others. The nearest mundane Analogue I can conceive of is Traumatic Brain Injury.  Prior to the Captain joining, Yongki was focused on learning to manage this injury and avoiding making it worse. With the Captain here, Yongki is able to begin taking the first steps of recovery, focusing on learning who he is and what he prefers. 
+
+
+Meanwhile, Parker's fundamental fear that his Presence Can Only Make Things Worse appears to be eroding with time. Interacting with other refugees from the Corporation appears to be steadily driving home the concept that while he was, in fact, the common thread through all of the Trauma he experienced, he was NOT the cause of it. That the Trauma was fundamentally Out Of His Control and Impersona.  Rather than avoiding the world and abdicating all responsibility for his actions, Parker is learning that even with his Unique Challenges there are ways to Safely Interact.
+
+
+`;
+
+/***/ }),
+
 /***/ 1952:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -11207,6 +11282,31 @@ Another person comes in, nearly scraping the confessional roof as she sits down.
 No words are exchanged. She lets out a long, weary sigh; the breath in her lungs comes out in a controlled exhale, not too fast, and not too slow.
 
 She sits there for a while longer, and then she stands up. He forgives her, and she leaves.
+
+`;
+
+/***/ }),
+
+/***/ 3185:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+* JR NOTE: PLEASE KEEP IN MIND THAT DOC SLAUGHTER IS FROM ANOTHER (MORE PARANOID) UNIVERSE, AND THAT THOSE WRITING HER ARE NOT ACTUALLY LICENSED PSYCHOTHERAPISTS. DO NOT TAKE ANY OF HER OPINIONS AS FACTS. 
+
+
+~~~~
+
+Stabilization and Safety: Realization 
+
+Captain is the most mysterious of them, in my Eyes. As the newest of my patients to this Universe, he seems actively operating under the assumption that the Traumatic Circumstances he has recently escaped was Correct in some fundamental way. That the Rules he Lived By must have had some Higher Virtue. That he seems willing to Watch and Learn from those who are further along in the Recovery Process bodes well.
+
+Finally, and most intriguing, Camille, in her role as Captain of the Training Team, has informed me that additional refugees have been discovered. Or, perhaps, "refugees" is not quite the right word. There is evidence they are actively still within their Traumatic Environment. This is a Unique Opportunity, both for myself, and for the survivors of their Universe, to participate in Helping Those Ready To Accept It.  And for Acceptance If They Are Not.
+
 
 `;
 
@@ -11618,8 +11718,14 @@ var map = {
 	"./Secrets/Content/46.js": 9355,
 	"./Secrets/Content/47": 2921,
 	"./Secrets/Content/47.js": 2921,
+	"./Secrets/Content/48": 7897,
+	"./Secrets/Content/48.js": 7897,
+	"./Secrets/Content/49": 4286,
+	"./Secrets/Content/49.js": 4286,
 	"./Secrets/Content/5": 1952,
 	"./Secrets/Content/5.js": 1952,
+	"./Secrets/Content/50": 3185,
+	"./Secrets/Content/50.js": 3185,
 	"./Secrets/Content/6": 1178,
 	"./Secrets/Content/6.js": 1178,
 	"./Secrets/Content/7": 8791,
