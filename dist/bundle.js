@@ -7901,6 +7901,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 */
 /*
 99 Rooms
+kINTSUGI
 eternal darkness
 chimps don't dance for bastards
 mutations on mutations on mutations :)
@@ -7980,6 +7981,9 @@ exports.passwords = {
     "ZAMPANIOBROKEN": new Secret("The Watcher of Threads is right: Wanda would love these:", "", `<iframe class="fuckedup" width="560" height="315" src="https://www.youtube.com/embed/cTspoOpLgfc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`),
     "EARWORM HUMMING IN A DREAM": new Secret("24/7 ABSOLUTE BULLSHIT", "", `<iframe class="fuckedup" width="560" height="315" src="https://www.youtube.com/embed/16WNvL8Gtt0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`),
     "PLACE YOUR TRUST IN ME": new Secret("Notes of Slaughter: Prelude", "Secrets/Content/6.js"),
+    "MEMENTO MORI": new Secret("Caging of an Innocent 1", "Secrets/Content/46.js"),
+    "MEMENTO VIVERE": new Secret("Caging of an Innocent 2", "Secrets/Content/47.js"),
+    "KINTSUGI": new Secret("DM made my symbol even cooler", "", `<img style="background: white; width: 500px;" src = 'http://farragofiction.com/ZampanioHotlink/maze9b.svg' alt = "dm made my symbol even cooler...kintsugi is also something i'm associated with.">The Mind Neuron from Homestuck, Three Question Marks, The Yellow Sign. DM was a Genius designing this, then he took it up a notch by adding in the Maze.`),
     "LS": new Secret("FILE LIST (UNIX)", "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", "Secrets/PasswordStorage.ts")
 };
@@ -7999,7 +8003,7 @@ exports.docSlaughtersFiles = {
     "IT WAS DAWN": new Slaughter("Notes of Slaughter 10", "Secrets/Content/17.js"),
     "THE SOUL IS IMMORTAL": new Slaughter("Notes of Slaughter 11", "Secrets/Content/18.js"),
     "WHEN ALL HAD ABANDONED HOPE": new Slaughter("Notes of Slaughter 12", "Secrets/Content/19.js"),
-    "TELLBRAK3700": new Slaughter("Notes of Slaughter 13", "Secrets/Content/30.js"),
+    "WHAT IS BROKEN CAN BE UNBROKEN": new Slaughter("Notes of Slaughter 13", "Secrets/Content/30.js"),
     "PENNY WICKNER": new Slaughter("Notes of Slaughter 14", "Secrets/Content/31.js"),
     "EXPERIMENTALMUSIC": new Slaughter("Notes of Slaughter 16: ExperimentalMusic", "Secrets/Content/36.js")
 };
@@ -8018,6 +8022,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TranscriptEngine = void 0;
 const __1 = __webpack_require__(3607);
 const misc_1 = __webpack_require__(4079);
+const URLUtils_1 = __webpack_require__(389);
 const PasswordStorage_1 = __webpack_require__(9867);
 const defaultSpeed = 66;
 class TranscriptEngine {
@@ -8081,6 +8086,7 @@ class TranscriptEngine {
         this.handlePW = (text) => {
             //if good, load the right file
             //if bad, albhed time baby
+            (0, URLUtils_1.updateURLParams)(`password=${text}`);
             if (PasswordStorage_1.passwords[text.toUpperCase()]) {
                 this.handleGoodPW(text);
             }
@@ -8878,7 +8884,7 @@ exports.Zalgo = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.isItFriday = exports.addImageProcess = exports.getParameterByName = void 0;
+exports.updateURLParams = exports.isItFriday = exports.addImageProcess = exports.getParameterByName = void 0;
 //http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
 function getParameterByName(name, url) {
     if (!url) {
@@ -8912,6 +8918,14 @@ const isItFriday = () => {
     return false;
 };
 exports.isItFriday = isItFriday;
+const updateURLParams = (params) => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    params += `&${urlParams.toString()}`;
+    var pageUrl = '?' + `${params}`;
+    window.history.pushState('', '', pageUrl);
+};
+exports.updateURLParams = updateURLParams;
 
 
 /***/ }),
@@ -9030,6 +9044,175 @@ const pointWithinBoundingBox = (myX, myY, objectX, objectY, objectWidth, objectH
     return (0, exports.withinX)(myX, objectX, objectWidth) && (0, exports.withinY)(myY, objectY, objectHeight);
 };
 exports.pointWithinBoundingBox = pointWithinBoundingBox;
+/***
+ * TODO
+ *
+ * Do you accept everything that will happen from now on?
+Yes
+Yes
+Yes
+Yes
+Yes
+Yes
+Why are you stuck here?
+To find out why
+To prove them wrong
+To make them proud
+I’ve always been here
+I don’t have anywhere else to go
+I thought it would be funny
+Pick a color
+Red
+Yellow
+White
+Black
+Green
+Orange
+Purple
+Pick a place to be in.
+A soft cloud, overlooking the world below. A s
+Pick a place to be.
+A dour swamp, overgrown with flora. Everything dies within you. When it does, you will die as well.
+An endless expanse, with pillars as tall as mountains looming all around you. They contain unspeakable knowledge for those who dare to read. They are your gift to them.
+An unassuming office building in the metropolis. People clock in to work inside you. They never clock out again. You will live forever.
+A dark forest, illuminated only by the gaze of the moon. The deeper they go, the stranger you become.
+A dizzying vortex, where past, present, and future blend into noise. You stare lovingly at them, hoping they’ll stare back.
+Pick something to leave behind.
+My memories. It all hurts so much.
+My purpose. It doesn’t matter anymore.
+My friends.
+My family. They can't find me now.
+Which of these song lyrics speak to you?
+You know you used to shine so bright// Was that all reflected light? //Were you just a satellite?
+Aristocrat, tip your hat and break your mother's heart // And when the sun comes up // You'll find a brand new god
+And knowing we created time and this grand theory of an end // Well, then it's really just a theory, maybe things have always been
+We're all just skeletons // Just joining the fight for the adrenaline
+At first, I had bragged and boasted a lot, but now // Saying "no" is also an expression of fondness
+I thought that you were a rose and let you lay in my bed // But you made a home beneath my skin
+Pick one of these words:
+Obfuscation
+Vestige
+Intransigent
+Extricate
+Parlay
+Misbegotten
+Do you still hear them?
+
+
+Do you still go on?
+Yes
+No
+What do you want out of it all?
+You find a package on your doorstep from a friend who has gone missing. It has their diary on it. You have no way to confirm who sent this to you. Do you still read it?
+Do you like Zampanio??? :) :) :)
+Say, you get your title. Do you deserve it?
+Pick a limb:
+Arms
+Legs
+Wandering the maze, you find a room full of photographs of people. Who are they?
+What is a minotaur?
+What is the purpose of a maze?
+Pick a cryptid:
+Do you still go on?
+What do you think makes something valuable?
+Have you remembered to hydrate?
+You have a chance- just one- to leave the world you reside in. You will forget everything that has ever happened to you, but you know that you will be given a grand purpose for it. Do you still do it?
+You receive a call from an unknown number. The caller ID says ‘An Exciting Opportunity’. Do you answer it?
+What is your life worth?
+What do you think of your family?
+What are you, really?
+What do you hear when the world is silent?
+Do you consider yourself a good person?
+Do you still go on?
+What do you believe in?
+What are your preferred eating utensils?
+Do you think of yourself as good with children?
+Would you prefer to be right, good, or just?
+Do you create, or do you destroy?
+If you could live forever, would you?
+Do you think something is missing from you?
+Is there anyone you miss?
+You are a guardsman in front of the castle of your liege. The enemy is approaching, and the peasants are asking for shelter inside the inner walls. However, if you let them in, there is a chance the enemy will infiltrate the castle. Do you open the gate, or push them out?
+Do you still go on?
+Is the soul real?
+Have you hydrated recently?
+Do you think the inanimate can feel?
+Do you believe in ghosts?
+You are a scientist. The android you have made has just killed someone, and you must represent them in court. If you say they’re a person, they must serve whatever sentence they are given. If you say they’re property, you will bear the burden, but you will get to keep them. What do you choose?
+Pick a body of water:
+You are alone. Do you feel it?
+Does love hurt?
+What does it feel like to live?
+Do you still go on?
+You are deep inside the maze. How do you feel?
+You will be presented with two paths. You must choose one. You must be quick. Are you ready?
+Skin or bone?
+Night or day?
+Audio or Video?
+Sky or sea?
+Tea or coffee?
+Red or green?
+Sword or pen?
+Do you still go on?
+Have you hydrated recently?
+Do you do things for others, or for yourself?
+Pick a flower:
+Is life an illusion?
+What will you be remembered for?
+Your friends would describe you as:
+It’s been a while. Do you miss them?
+What kind of games do you like to play?
+Nice.
+Do you still go on?
+Are you the watcher, or the watched?
+You see fire consume what you once called home. How do you feel?
+The person you hate the most is at your mercy. Nobody will ever know. What will you do?
+You are given the power to end the world. How do you do it?
+Is gender real?
+Do you prefer fiction, or nonfiction?
+Do you think other worlds are real?
+What is a story for?
+Inside you is a terrible monster. What does it look like?
+Do you still go on?
+Choose a calling card:
+How far would you go to stay alive?
+Everyone’s an artist. What are you?
+Your hands are bloody. Are you guilty?
+They betrayed you. Do you hate them?
+You can’t feel hungry anymore; at least not physiologically. Pick a type of hunger.
+Hunger of the soul. You’re a flame now, shaped by forward momentum. It doesn’t matter why you are hungry, now. It only matters that you don’t stop.
+Hunger of the mind. There is so much more to experience. There is so much more. You can’t help but salivate. You will know it all.
+Hunger of the heart. There are so many people in this world. What are their stories? And with the right strings, what will they become? You can’t wait to unravel them.
+Hunger. Beyond concept, beyond words. You still eat, but not because you starve. You must consume it all.
+Do you regret what you’ve done?
+No. They were in my way, and I dealt with them. No more, no less.
+No. They were never real, anyway.
+A little. It’s like tossing out good food.
+Yes. They could’ve been so much more.
+Yes. More than anything else.
+Do you remember their faces?
+Do you remember the reflection of the liquid in your drink? The shape of your food?
+They didn’t have any.
+He was screaming, mouth agape, his eyes shot open in terror. It came to me, for a second, that I sculpted this. I made him what he was. And it was beautiful.
+What is that behind you?
+Do you still go on?
+It’s almost over. How do you feel?
+The end is never the end.
+Their echoes came through, for a minute. What are they?
+What is the purpose of a title?
+Your title will change you. Do you understand that?
+We love you. Do you accept it?
+What is the purpose of Zampanio?
+What is your purpose?
+Your body and mind will change to become it. Will you accept this?
+Do you understand what you must do now?
+It’s over now. What have you become? Be honest, now. They are watching, and they are hungry. If things go as planned, you will understand.
+Would you waste your own mind?
+Do you transverse mazes clockwise?
+
+ *
+ *
+ */ 
 
 
 /***/ }),
@@ -10920,6 +11103,96 @@ Dr. Fiona Slaughter`
 
 /***/ }),
 
+/***/ 9355:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+A gasp escapes her as the gag around her mouth is torn off. It's still pitch black- the leathery fabric around her eyes won't let her see any further than her nose. 
+
+She wails. A glove forces her mouth shut. She whines in pain as she bites her tongue. 
+
+Some other voice, a male one, mutters an oh my god. Is it someone else? She kicks her legs, fighting out of the grip, albeit furtively. There is nothing she can do to break out of the ropes she's been tied with. 
+
+“Oh my god,” echoes the voice. “Please just-- um-- put her down?”
+
+There's a shift in her hold. Then gravity sets in: she hits the ground with a thud face-first. Fuck! She bounces back from the pain, flipping over. Her nose feels wet with blood. 
+
+“Woah! O-okay!”Another set of hands run over her body, a finger wiping what she thinks is blood off her top lip. “I'll-- I'll take care of it, alright?”
+
+The other presence stills, and then she hears their footsteps, not for the last time, as they exit the room. 
+
+What are they going to do to her?
+----
+004
+
+Apparently, keep her as a trophy.
+
+By now, they've cut off her restraints. The cabin she's been locked into is not a pretty sight. The wood is rotten, presumably from abandonment. There are lights, but none of them work; most have burst by now. The weird man tasked with taking care of her tries to keep everything else in a salvageable condition. All the windows are covered in planks.
+
+She's still not sure what they want with her. But he flashes a smile, one that is maybe a little apologetic, every time he comes to bring her eggs. 
+
+Scrambled eggs. Sunny-side eggs. Poached eggs and boiled eggs. Over-easy. Baked. Day in and day out, all he ever seems to cook are eggs. When she dares to ask why, he only ever musters something about how she seemed to like them, and she's never liked anything else. She tries listing anything else: bread, beans, fruit, veggies, meat. His eyebrows furrow and it's an emotion that she's come to know well; it's guilt.
+
+
+`
+;
+
+
+/***/ }),
+
+/***/ 2921:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+Coming back to that old cabin was weird as hell.
+
+He thought he was done with it. Why wouldn't he be? The bad guy got caught, after all. Tried on national television. Yeah, the world's only reigning quadrillionaire appeared out of nowhere and greased the hands of the judicial system to get her out, which is a problem in and of itself, but in the grand scheme of things, it was a solid eight out of ten.
+
+So why the fuck was he back here?
+
+Well, there were a couple of reasons. His mind had taken time to enumerate them in a numbered list.
+
+After hearing the trial, allowing the Eye Killer to seclude herself again along with her hostages was a bad idea.
+
+His hand went to knock on the door, beginning with a rhythmic pattern: knock, knock, knock knock--
+
+Fuck.
+
+He hiccuped on the last beat, punching a clean hole through the door. He stared at his arm, a good meter into the house now. Sigh. So much for a normal approach, he guessed.
+
+Additional note: Consult an operator in removing obsolete features. 
+
+It didn't take long for his entrance to be noticed; a repeated _clink_ could be heard from right behind him. He turned around, and sure enough, there she was: the Eye Killer, fresh out of court, trying to stab into him with a small razor.
+
+It was not working. 
+
+Ronin looked down at her. A smirk escaped him. “What, already antsy out of prison?”
+
+Her eye shone dangerously in response, along with some sort of guttural snarl. Her motions went to scratching at the absence of any progress in stabbing, the razor tearing through his clothes and thin layer of faux-muscle, and leaving dents in the metal layer underneath.
+
+“Mhm.” She raised her arm again-- he found purchase on her forearm, stopping the blow mid-swing. Her strength was formidable for a woman her size, but it simply wasn't enough to overpower the mechanical prowess of his late father. His arm shook under the pressure. “Listen, I wasn't trying to tear up your door,” he said, both sets of eyes looking back at it. A glimpse of the bedroom was not too far in. “Barely knew you lived here, to begin with. I'll patch up the door, alright? Just give me a hammer and something to work with.”
+
+The killer twitched under his grip, the thick trench coat unable to slip away from the hold. They look at each other. 
+
+His arm went limp. 
+
+
+`
+;
+
+
+/***/ }),
+
 /***/ 1952:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -11341,6 +11614,10 @@ var map = {
 	"./Secrets/Content/44.js": 6645,
 	"./Secrets/Content/45": 3704,
 	"./Secrets/Content/45.js": 3704,
+	"./Secrets/Content/46": 9355,
+	"./Secrets/Content/46.js": 9355,
+	"./Secrets/Content/47": 2921,
+	"./Secrets/Content/47.js": 2921,
 	"./Secrets/Content/5": 1952,
 	"./Secrets/Content/5.js": 1952,
 	"./Secrets/Content/6": 1178,

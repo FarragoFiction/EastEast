@@ -159,6 +159,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 */
 /*
 99 Rooms
+kINTSUGI
 eternal darkness
 chimps don't dance for bastards
 mutations on mutations on mutations :)
@@ -245,6 +246,9 @@ export const passwords: PasswordMap = {
     , "ZAMPANIOBROKEN": new Secret("The Watcher of Threads is right: Wanda would love these:", "", `<iframe class="fuckedup" width="560" height="315" src="https://www.youtube.com/embed/cTspoOpLgfc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
     , "EARWORM HUMMING IN A DREAM": new Secret("24/7 ABSOLUTE BULLSHIT", "", `<iframe class="fuckedup" width="560" height="315" src="https://www.youtube.com/embed/16WNvL8Gtt0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`)
     ,"PLACE YOUR TRUST IN ME": new Secret("Notes of Slaughter: Prelude", "Secrets/Content/6.js")
+    ,"MEMENTO MORI": new Secret("Caging of an Innocent 1", "Secrets/Content/46.js")
+    ,"MEMENTO VIVERE": new Secret("Caging of an Innocent 2", "Secrets/Content/47.js")
+    ,"KINTSUGI": new Secret("DM made my symbol even cooler", "",`<img style="background: white; width: 500px;" src = 'http://farragofiction.com/ZampanioHotlink/maze9b.svg' alt = "dm made my symbol even cooler...kintsugi is also something i'm associated with.">The Mind Neuron from Homestuck, Three Question Marks, The Yellow Sign. DM was a Genius designing this, then he took it up a notch by adding in the Maze.`)
 
     , "LS": new Secret("FILE LIST (UNIX)", "Secrets/PasswordStorage.ts")
     , "DIR": new Secret("FILE LIST (DOS)", "Secrets/PasswordStorage.ts")
@@ -268,7 +272,7 @@ export const docSlaughtersFiles: SlaughterMap = {
     , "IT WAS DAWN": new Slaughter("Notes of Slaughter 10", "Secrets/Content/17.js")
     , "THE SOUL IS IMMORTAL": new Slaughter("Notes of Slaughter 11", "Secrets/Content/18.js")
     , "WHEN ALL HAD ABANDONED HOPE": new Slaughter("Notes of Slaughter 12", "Secrets/Content/19.js")
-    , "TELLBRAK3700": new Slaughter("Notes of Slaughter 13", "Secrets/Content/30.js")
+    , "WHAT IS BROKEN CAN BE UNBROKEN": new Slaughter("Notes of Slaughter 13", "Secrets/Content/30.js")
     , "PENNY WICKNER": new Slaughter("Notes of Slaughter 14", "Secrets/Content/31.js")
     , "EXPERIMENTALMUSIC": new Slaughter("Notes of Slaughter 16: ExperimentalMusic", "Secrets/Content/36.js")
 

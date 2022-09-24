@@ -30,3 +30,11 @@ export const isItFriday = ()=>{
   return false;
 
 }
+
+export const updateURLParams=(params: string)=>{
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  params += `&${urlParams.toString()}`;
+  var pageUrl = '?' + `${params}`;
+  window.history.pushState('', '', pageUrl);
+}

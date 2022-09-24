@@ -1,5 +1,6 @@
 import { loadSecretText } from "..";
 import { createElementWithId, createElementWithIdAndParent, sleep } from "../Utils/misc";
+import { updateURLParams } from "../Utils/URLUtils";
 import { passwords, translate } from "./PasswordStorage";
 
 const defaultSpeed = 66;
@@ -82,6 +83,7 @@ export class TranscriptEngine {
     handlePW = (text: string) => {
         //if good, load the right file
         //if bad, albhed time baby
+        updateURLParams(`password=${text}`);
         if (passwords[text.toUpperCase()]) {
             this.handleGoodPW(text);
         } else {
