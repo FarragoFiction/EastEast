@@ -158,6 +158,7 @@ export interface SlaughterMap {
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
 /*
+WHAT WILL YOU CREATE
 99 Rooms
 kINTSUGI
 eternal darkness
@@ -259,13 +260,28 @@ export const passwords: PasswordMap = {
 //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
 export const docSlaughtersFiles: SlaughterMap = {
     "ETERNAL DARKNESS": new Slaughter("Notes of Slaughter 0", "Secrets/Content/45.js","Child, do you Understand?")
+    , "TELEGRAM1": new Slaughter("Morgan's Hill Telegram 1", "Secrets/Content/51.js")
     , "RAISE YOU FROM THE END OF THE WORLD": new Slaughter("Notes of Slaughter 0", "Secrets/Content/7.js","Child, do you Understand?")
+    , "TELEGRAM2": new Slaughter("Morgan's Hill Telegram 2", "Secrets/Content/52.js")
+
     , "SERENE AND CALM": new Slaughter("Notes of Slaughter 1", "Secrets/Content/8.js")
+    , "TELEGRAM3": new Slaughter("Morgan's Hill Telegram 3", "Secrets/Content/53.js")
+
     , "BEWARE OBLIVION IS AT HAND": new Slaughter("Notes of Slaughter 2", "Secrets/Content/9.js")
+    , "TELEGRAM4": new Slaughter("Morgan's Hill Telegram 4", "Secrets/Content/54.js")
+
     , "I AM HERE TO TREAT DISEASE": new Slaughter("Notes of Slaughter 3", "Secrets/Content/10.js")
+    , "TELEGRAM5": new Slaughter("Morgan's Hill Telegram 5", "Secrets/Content/55.js")
+
     , "FLESH IS BOUND TO THE FLOW OF TIME": new Slaughter("Notes of Slaughter 4", "Secrets/Content/11.js")
+    , "TELEGRAM6": new Slaughter("Morgan's Hill Telegram 6", "Secrets/Content/56.js")
+
     , "TIME IS DEAD": new Slaughter("Notes of Slaughter 5", "Secrets/Content/12.js")
+    , "TELEGRAM7": new Slaughter("Morgan's Hill Telegram 7", "Secrets/Content/57.js")
+
     , "SAVE YOUR LIFE FROM DESTRUCTION": new Slaughter("Notes of Slaughter 6", "Secrets/Content/13.js")
+    , "TELEGRAM8": new Slaughter("Morgan's Hill Telegram 8", "Secrets/Content/58.js")
+
     , "GENTLE CROONING VOICE": new Slaughter("Notes of Slaughter 7", "Secrets/Content/14.js")
     , "LOOKS AFTER THE BROKEN": new Slaughter("Notes of Slaughter 8", "Secrets/Content/15.js")
     , "TAKE CARE OF OTHERS": new Slaughter("Notes of Slaughter 9", "Secrets/Content/16.js")
@@ -278,6 +294,8 @@ export const docSlaughtersFiles: SlaughterMap = {
     , "EXPERIMENTALMUSIC2": new Slaughter("Notes of Slaughter 16: ExperimentalMusic Part 2", "Secrets/Content/48.js")
     , "EXPERIMENTALMUSIC3": new Slaughter("Notes of Slaughter 16: ExperimentalMusic Part 3", "Secrets/Content/49.js")
     , "EXPERIMENTALMUSIC4": new Slaughter("Notes of Slaughter 16: ExperimentalMusic Part 4", "Secrets/Content/50.js")
+    , "TELEGRAM9": new Slaughter("Morgan's Hill Telegram 8", "Secrets/Content/59.js")
+
 
     
 }
