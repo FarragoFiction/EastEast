@@ -13,6 +13,9 @@ import { Camille, End } from "../Entities/Blorbos/End";
 import { Peewee } from "../Entities/Blorbos/Peewee";
 import { Quotidian } from "../Entities/Blorbos/Quotidian";
 
+const artifact_rate = 0.1;//lower is more artifacts
+
+
 
 export class Room {
     themes: Theme[];
@@ -25,7 +28,7 @@ export class Room {
     width = 400;
     height = 600;
     //a room has a source if they are inside of something
-    totemObject? :PhysicalObject;
+    totemObject?: PhysicalObject;
 
     timesVisited = 0;
     blorbos: Quotidian[] = [];
@@ -37,6 +40,7 @@ export class Room {
     name = "???";
     pendingStoryBeats: StoryBeat[] = [];
     timer?: NodeJS.Timeout;
+  
 
 
     //objects
@@ -60,7 +64,7 @@ export class Room {
 
     stopTicking = () => {
         this.ticking = false;
-        if(this.timer){
+        if (this.timer) {
             clearTimeout(this.timer);
         }
     }
@@ -82,7 +86,7 @@ export class Room {
 
     pause = () => {
         this.ticking = false;
-        if(this.timer){
+        if (this.timer) {
             clearTimeout(this.timer);
         }
         this.maze.chantingEngine.pause();
@@ -95,6 +99,8 @@ export class Room {
     }
 
     render = async () => {
+        console.log("JR NOTE: I am rendering a room", this.name)
+        this.apocalypseTime();
         this.timesVisited++;
         await this.spawnChildrenIfNeeded();
         this.element.innerHTML = "";
@@ -104,10 +110,10 @@ export class Room {
         const name = createElementWithIdAndParent("div", this.element, undefined, "roomName");
         name.innerText = `${this.name}: ${this.timesVisited}`;
 
-        if(this.totemObject){
+        if (this.totemObject) {
             wall.style.backgroundImage = `url(${this.totemObject.src})`;
             this.element.style.backgroundImage = `url(${this.totemObject.src})`;
-        }else{
+        } else {
             wall.style.backgroundImage = `url(images/Walkabout/wall/${this.wall})`;
             this.element.style.backgroundImage = `url(images/Walkabout/floor/${this.floor})`;
         }
@@ -143,12 +149,12 @@ export class Room {
         const door = this.getNorth();
         if (door) {
             const image = createElementWithIdAndParent("img", this.element, "northDoor") as HTMLImageElement;
-  
+
             image.src = "images/Walkabout/door.png";
             image.title = door.name;
             const rug = createElementWithIdAndParent("img", this.element, "northDoorRug") as HTMLImageElement;
             rug.src = "images/Walkabout/rug.png";
-            if(this.totemObject){
+            if (this.totemObject) {
                 image.src = this.totemObject.src;
                 rug.src = this.totemObject.src;
             }
@@ -162,7 +168,7 @@ export class Room {
             const rug = createElementWithIdAndParent("img", this.element, "eastDoor") as HTMLImageElement;
             rug.src = "images/Walkabout/rug.png";
             rug.title = door.name;
-            if(this.totemObject){
+            if (this.totemObject) {
                 rug.src = this.totemObject.src;
             }
         }
@@ -174,7 +180,7 @@ export class Room {
             const rug = createElementWithIdAndParent("img", this.element, "southDoor") as HTMLImageElement;
             rug.src = "images/Walkabout/rug.png";
             rug.title = door.name;
-            if(this.totemObject){
+            if (this.totemObject) {
                 rug.src = this.totemObject.src;
             }
         }
@@ -207,7 +213,7 @@ export class Room {
 
     teardown = () => {
         this.ticking = false;
-        if(this.timer){
+        if (this.timer) {
             clearTimeout(this.timer);
         }
         if (this.peewee) {
@@ -240,7 +246,7 @@ export class Room {
                 this.maze.playDoorSound();
                 if (blorbo.name !== "Peewee") {
                     this.removeBlorbo(blorbo);
-                    this.maze.addStorybeat(new StoryBeat(`${blorbo.name} Leave`,`${blorbo.name} leaves out the NORTH DOOR.`))
+                    this.maze.addStorybeat(new StoryBeat(`${blorbo.name} Leave`, `${blorbo.name} leaves out the NORTH DOOR.`))
 
                 } else {
                     const room = this.getNorth();
@@ -262,7 +268,7 @@ export class Room {
                 this.maze.playDoorSound();
                 if (blorbo.name !== "Peewee") {
                     this.removeBlorbo(blorbo);
-                    this.maze.addStorybeat(new StoryBeat(`${blorbo.name} Leave`,`${blorbo.name} leaves out the SOUTH DOOR.`))
+                    this.maze.addStorybeat(new StoryBeat(`${blorbo.name} Leave`, `${blorbo.name} leaves out the SOUTH DOOR.`))
                 } else {
                     const room = this.getSouth();
                     room && this.maze.changeRoom(room);
@@ -283,7 +289,7 @@ export class Room {
                 this.maze.playDoorSound();
                 if (blorbo.name !== "Peewee") {
                     this.removeBlorbo(blorbo);
-                    this.maze.addStorybeat(new StoryBeat(`${blorbo.name} Leave`,`${blorbo.name} leaves out the EAST DOOR.`))
+                    this.maze.addStorybeat(new StoryBeat(`${blorbo.name} Leave`, `${blorbo.name} leaves out the EAST DOOR.`))
 
                 } else {
                     const room = this.getEast();
@@ -293,18 +299,18 @@ export class Room {
         }
     }
 
-    createRoomToSuckYouInFromObject = async (obj: PhysicalObject)=>{
+    createRoomToSuckYouInFromObject = async (obj: PhysicalObject) => {
         /*
         * make a new room, room has the themes of the object, and the src of the object
 * room has only one exit, exit leads to the room you were in . prevent room you were in from leading to the item
         */
-       //always the same room from the same item, is what matters.
-       const room = await randomRoomWithThemes(this.maze,this.element,[...obj.themes],new SeededRandom(obj.processedName().length));
-       room.totemObject = obj;
-       console.log("JR NOTE: what is the object I'm being sucked into?", obj)
-       room.name = `${obj.processedName()}'s Innerworld`;
-       room.children = [this,this,this];//do NOT trigger the auto leadback;
-       return room;
+        //always the same room from the same item, is what matters.
+        const room = await randomRoomWithThemes(this.maze, this.element, [...obj.themes], new SeededRandom(obj.processedName().length));
+        room.totemObject = obj;
+        console.log("JR NOTE: what is the object I'm being sucked into?", obj)
+        room.name = `${obj.processedName()}'s Innerworld`;
+        room.children = [this, this, this];//do NOT trigger the auto leadback;
+        return room;
 
     }
 
@@ -320,8 +326,8 @@ export class Room {
     }
 
     hasEnd = () => {
-        for(let blorbo of this.blorbos){
-            if(blorbo instanceof End || blorbo instanceof Camille){
+        for (let blorbo of this.blorbos) {
+            if (blorbo instanceof End || blorbo instanceof Camille) {
                 return true;
             }
         }
@@ -329,6 +335,7 @@ export class Room {
     }
 
     tick = () => {
+        //console.log("JR NOTE: trying to tick room: ", this.name)
         if (!this.ticking) {
             return;
         }
@@ -347,7 +354,42 @@ export class Room {
             this.checkForDoors(blorbo);
         }
 
-        this.timer =  setTimeout(this.tick, this.tickRate);
+        this.timer = setTimeout(this.tick, this.tickRate);
+    }
+
+    //if all artifacts are in the same room, its apocalypse time.
+    apocalypseTime = () => {
+        let missingAny = false;
+        for (let artifact of this.maze.artifacts) {
+            let object_found = false;
+            for (let item of this.items) {
+                if (artifact.name === item.name) {
+                    object_found = true;
+                    this.maze.truthConsole(`${artifact.name.toUpperCase()} FOUND!`,`${artifact.name} found inside this room. Be cautious.`)
+                }
+            }
+            if (!object_found) {
+                for (let blorbo of this.blorbos) {
+                    for (let item of blorbo.inventory) {
+                        if (artifact.name === item.name) {
+                            object_found = true;
+                            this.maze.truthConsole(`${artifact.name.toUpperCase()} FOUND!`,`${artifact.name} found inside ${blorbo.processedName()}'s inventory. Be cautious.`)
+                        }
+                    }
+                }
+            }
+            if (!object_found) {
+                missingAny = true;
+            }
+        }
+        if(!missingAny){
+            this.maze.truthConsole(`All 9 Artifacts Found!`,`You were warned. No matter. Begining Apocalypse.`)
+            this.maze.apocalypse();
+            this.stopTicking();
+    
+            return true;
+        }
+
     }
 
     init = () => {
@@ -356,8 +398,8 @@ export class Room {
         this.initWall();
     }
 
-    clearBlorbos = ()=>{
-        this.blorbos= [];
+    clearBlorbos = () => {
+        this.blorbos = [];
     }
 
     initFloor = () => {
@@ -434,9 +476,9 @@ export class Room {
 export const randomRoomWithThemes = async (maze: Maze, ele: HTMLElement, themes: Theme[], seededRandom: SeededRandom) => {
     const room = new Room(maze, themes, ele, seededRandom);
     const items1: RenderedItem[] = await spawnWallObjects(room.width, room.height, 0, WALLBACKGROUND, "BackWallObjects", seededRandom, themes);
-    const items3: RenderedItem[] = await spawnFloorObjects(room.width, room.height, 0, FLOORBACKGROUND, "UnderFloorObjects", seededRandom, themes);
+    const items3: RenderedItem[] = await spawnFloorObjects(maze,room.width, room.height, 0, FLOORBACKGROUND, "UnderFloorObjects", seededRandom, themes);
     const items2: RenderedItem[] = await spawnWallObjects(room.width, room.height, 1, WALLFOREGROUND, "FrontWallObjects", seededRandom, themes);
-    const items4: RenderedItem[] = await spawnFloorObjects(room.width, room.height, 1, FLOORFOREGROUND, "TopFloorObjects", seededRandom, themes);
+    const items4: RenderedItem[] = await spawnFloorObjects(maze,room.width, room.height, 1, FLOORFOREGROUND, "TopFloorObjects", seededRandom, themes);
     const items = items3.concat(items2.concat(items4));
     for (let item of items) {
         room.addItem(new PhysicalObject(room, item.name, item.x, item.y, item.width, item.height, item.themes, item.layer, item.src, item.flavorText))
@@ -473,7 +515,7 @@ export const spawnWallObjects = async (width: number, height: number, layer: num
 
 
 //has to be async because it checks the image size for positioning
-const spawnFloorObjects = async (width: number, height: number, layer: number, key: string, folder: string, seededRandom: SeededRandom, themes: Theme[]) => {
+const spawnFloorObjects = async (maze:Maze,width: number, height: number, layer: number, key: string, folder: string, seededRandom: SeededRandom, themes: Theme[]) => {
     let current_x = 0;
     const floor_bottom = 140;
     let current_y = floor_bottom;
@@ -483,25 +525,15 @@ const spawnFloorObjects = async (width: number, height: number, layer: number, k
     const debug = false;
     const baseLocation = "images/Walkabout/Objects/";
     const clutter_rate = seededRandom.nextDouble(0.75, 0.99); //smaller is more cluttered
-    const artifacts = [
-        { name: "Unos Artifact Book", layer: layer, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [all_themes[SOUL], all_themes[OBFUSCATION]], desc: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." }
-        , { name: "Duo Mask", layer: layer, src: `Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [all_themes[CLOWNS], all_themes[OBFUSCATION]], desc: "A faceless theater mask with a 2 on the inside of the forehead." }
-        , { name: "Tres Bottle", layer: layer, src: `Artifacts/Zampanio_Artifact_03_Bottle.png`, themes: [all_themes[OBFUSCATION]], desc: "A simple glass milk bottle with a 3 emblazoned on it." }
-        , { name: "Quatro Blade", layer: layer, src: `Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [all_themes[KILLING], all_themes[OBFUSCATION]], desc: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade." }
-        , { name: "Quinque Cloak", layer: layer, src: `Artifacts/Zampanio_Artifact_05_Cloak.png`, themes: [all_themes[OBFUSCATION]], desc: " A simple matte blue cloak with a 5 embroidered on the back in shiny red thread. " }
-        , { name: "Sextant", layer: layer, src: `Artifacts/Zampanio_Artifact_06_Sextant.png`, themes: [all_themes[OBFUSCATION]], desc: "A highly polished brass sextant. There is a 6 carved onto the main knob." }
-        , { name: "Septum Coin", layer: layer, src: `Artifacts/Zampanio_Artifact_07_Coin_Bronze.png`, themes: [all_themes[OBFUSCATION]], desc: "An old bronze coin. There is a theater mask on one side, and a 7 on the other." }
-        , { name: "Octome", layer: layer, src: `Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [all_themes[KNOWING], all_themes[OBFUSCATION]], desc: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back." }
-        , { name: "Novum Mirror", layer: layer, src: `Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [all_themes[OBFUSCATION]], desc: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces." }
-    ];
+
     while (current_y + padding < height) {
         current_x = padding;
         while (current_x < width) {
             let chosen_theme: Theme[] = [seededRandom.pickFrom(themes)];
             let scale = 1.5;
             let item = chosen_theme[0].pickPossibilityFor(seededRandom, key);
-            if (layer === 1 && seededRandom.nextDouble() > 0.95) {
-                item = seededRandom.pickFrom(artifacts);
+            if (layer === 1 && seededRandom.nextDouble() > artifact_rate) {
+                item = seededRandom.pickFrom(maze.artifacts);
                 chosen_theme = item.themes;
                 scale = 1.0;
             }

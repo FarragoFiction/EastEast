@@ -28,7 +28,7 @@ export class TargetNameIncludesAnyOfTheseWords extends TargetFilter {
                 targetLocked = true;
             }
             for(let state of target.states){
-                console.log("JR NOTE: in state", state, "checking word", word)
+                //console.log("JR NOTE: in state", state, "checking word", word)
                 if (state.processedName().toUpperCase().includes(word.toUpperCase())) {
                     targetLocked = true;
                 }

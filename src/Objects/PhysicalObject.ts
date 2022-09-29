@@ -5,8 +5,8 @@ import { getElementCenterPoint } from "../Utils/misc";
 import SeededRandom from "../Utils/SeededRandom";
 import { Quotidian } from "./Entities/Blorbos/Quotidian";
 import { Room } from "./RoomEngine/Room";
-import { Theme } from "./Theme";
-import { PHILOSOPHY } from "./ThemeStorage";
+import { all_themes, Theme } from "./Theme";
+import { OBFUSCATION, PHILOSOPHY } from "./ThemeStorage";
 
 
 //from East
@@ -130,7 +130,7 @@ export class PhysicalObject {
         if (this.themes.length === 0) {
             return `[ERROR: NO THEME FOUND FOR ${this.name.toUpperCase()}]`;
         }
-        const theme = this.rand.pickFrom(this.themes);
+        const theme = this.themes.length > 0 ?this.rand.pickFrom(this.themes) : all_themes[OBFUSCATION];
         return theme.pickPossibilityFor(this.rand, concept);
     }
 

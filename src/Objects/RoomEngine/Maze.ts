@@ -3,7 +3,7 @@ import { createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 
 import { all_themes } from "../Theme";
-import { ENDINGS, WEB, SPYING, TECHNOLOGY, OBFUSCATION, KILLING, FIRE, LONELY } from "../ThemeStorage";
+import { ENDINGS, WEB, SPYING, TECHNOLOGY, OBFUSCATION, KILLING, FIRE, LONELY, SOUL, CLOWNS, KNOWING } from "../ThemeStorage";
 import { ChantingEngine } from "./ChantingEngine";
 import { randomRoomWithThemes, Room } from "./Room";
 import { StoryBeat } from "./StoryBeat";
@@ -21,6 +21,8 @@ import { Devona } from "../Entities/Blorbos/Devona";
 import { Neville } from "../Entities/Blorbos/Neville";
 import { Chicken } from "../Entities/Blorbos/ChickenFriend";
 import { Yongki } from "../Entities/Blorbos/Yongki";
+import { updateURLParams } from "../../Utils/URLUtils";
+import { whiteNight } from "../..";
 export class Maze {
 
     rand: SeededRandom;
@@ -33,6 +35,17 @@ export class Maze {
     doorAudio = new Audio("audio/close_door_1.mp3")
     chantingEngine = new ChantingEngine();
     blorbos: Quotidian[] = [];//list of all possible blorbos that can spawn.
+    artifacts = [
+        { name: "Unos Artifact Book", layer: 1, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [all_themes[SOUL], all_themes[OBFUSCATION]], desc: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it. It is said that if all 9 Artifacts are united, the Apocalypse will begin." }
+        , { name: "Duo Mask", layer: 1, src: `Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [all_themes[CLOWNS], all_themes[OBFUSCATION]], desc: "A faceless theater mask with a 2 on the inside of the forehead. It is said that if all 9 Artifacts are united, the Apocalypse will begin." }
+        , { name: "Tres Bottle", layer: 1, src: `Artifacts/Zampanio_Artifact_03_Bottle.png`, themes: [all_themes[OBFUSCATION]], desc: "A simple glass milk bottle with a 3 emblazoned on it. It is said that if all 9 Artifacts are united, the Apocalypse will begin." }
+        , { name: "Quatro Blade", layer: 1, src: `Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [all_themes[KILLING], all_themes[OBFUSCATION]], desc: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade. It is said that if all 9 Artifacts are united, the Apocalypse will begin." }
+        , { name: "Quinque Cloak", layer: 1, src: `Artifacts/Zampanio_Artifact_05_Cloak.png`, themes: [all_themes[OBFUSCATION]], desc: " A simple matte blue cloak with a 5 embroidered on the back in shiny red thread. It is said that if all 9 Artifacts are united, the Apocalypse will begin." }
+        , { name: "Sextant", layer: 1, src: `Artifacts/Zampanio_Artifact_06_Sextant.png`, themes: [all_themes[OBFUSCATION]], desc: "A highly polished brass sextant. There is a 6 carved onto the main knob. It is said that if all 9 Artifacts are united, the Apocalypse will begin." }
+        , { name: "Septum Coin", layer: 1, src: `Artifacts/Zampanio_Artifact_07_Coin_Bronze.png`, themes: [all_themes[OBFUSCATION]], desc: "An old bronze coin. There is a theater mask on one side, and a 7 on the other. It is said that if all 9 Artifacts are united, the Apocalypse will begin." }
+        , { name: "Octome", layer: 1, src: `Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [all_themes[KNOWING], all_themes[OBFUSCATION]], desc: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back. It is said that if all 9 Artifacts are united, the Apocalypse will begin." }
+        , { name: "Novum Mirror", layer: 1, src: `Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [all_themes[OBFUSCATION]], desc: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces. It is said that if all 9 Artifacts are united, the Apocalypse will begin." }
+    ];
 
     constructor(ele: HTMLElement, storySoFar: HTMLElement, rand: SeededRandom,) {
         this.rand = rand;
@@ -70,6 +83,7 @@ export class Maze {
     }
 
     begin = () => {
+        console.log("JR NOTE: begining")
         this.handleCommands();
         this.room?.render();
         this.chantingEngine.start();
@@ -138,6 +152,7 @@ export class Maze {
         }
         this.spawnBlorbos();
         if (render) {
+            console.log("JR NOTE: rendering the new room, because i think this is true:", render)
             this.room.render();
         }
     }
@@ -201,6 +216,12 @@ export class Maze {
             this.truthConsole(beat.command,beat.truthfulComment)
         }
         this.storySoFar.scrollTo(0, this.storySoFar.scrollHeight);
+    }
+
+    apocalypse = ()=>{
+        updateURLParams("apocalypse=night")
+        whiteNight();
+        this.chantingEngine.listen();
     }
 
     handleCommands = () => {

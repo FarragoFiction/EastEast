@@ -283,6 +283,7 @@ export class Quotidian extends PhysicalObject {
     }
 
     tick = () => {
+        //console.log("JR NOTE: trying to tick: ", this.name);
         if (this.dead) {
             return;
         }

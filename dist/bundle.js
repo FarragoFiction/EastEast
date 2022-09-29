@@ -2540,6 +2540,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             }
         };
         this.tick = () => {
+            //console.log("JR NOTE: trying to tick: ", this.name);
             if (this.dead) {
                 return;
             }
@@ -3517,7 +3518,7 @@ class TargetNameIncludesAnyOfTheseWords extends baseFilter_1.TargetFilter {
                     targetLocked = true;
                 }
                 for (let state of target.states) {
-                    console.log("JR NOTE: in state", state, "checking word", word);
+                    //console.log("JR NOTE: in state", state, "checking word", word)
                     if (state.processedName().toUpperCase().includes(word.toUpperCase())) {
                         targetLocked = true;
                     }
@@ -4172,6 +4173,7 @@ exports.PhysicalObject = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const misc_1 = __webpack_require__(4079);
 const Quotidian_1 = __webpack_require__(6387);
+const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 class PhysicalObject {
     constructor(room, name, x, y, width, height, themes, layer, src, flavorText, states) {
@@ -4235,7 +4237,7 @@ class PhysicalObject {
             if (this.themes.length === 0) {
                 return `[ERROR: NO THEME FOUND FOR ${this.name.toUpperCase()}]`;
             }
-            const theme = this.rand.pickFrom(this.themes);
+            const theme = this.themes.length > 0 ? this.rand.pickFrom(this.themes) : Theme_1.all_themes[ThemeStorage_1.OBFUSCATION];
             return theme.pickPossibilityFor(this.rand, concept);
         };
         //note to avoid recursion does not clone staes
@@ -4627,6 +4629,8 @@ const Devona_1 = __webpack_require__(9621);
 const Neville_1 = __webpack_require__(3668);
 const ChickenFriend_1 = __webpack_require__(5095);
 const Yongki_1 = __webpack_require__(3908);
+const URLUtils_1 = __webpack_require__(389);
+const __1 = __webpack_require__(3607);
 class Maze {
     constructor(ele, storySoFar, rand) {
         this.storybeats = []; //can be added to by peewee and by the ai
@@ -4634,6 +4638,17 @@ class Maze {
         this.doorAudio = new Audio("audio/close_door_1.mp3");
         this.chantingEngine = new ChantingEngine_1.ChantingEngine();
         this.blorbos = []; //list of all possible blorbos that can spawn.
+        this.artifacts = [
+            { name: "Unos Artifact Book", layer: 1, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [Theme_1.all_themes[ThemeStorage_1.SOUL], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it. It is said that if all 9 Artifacts are united, the Apocalypse will begin." },
+            { name: "Duo Mask", layer: 1, src: `Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [Theme_1.all_themes[ThemeStorage_1.CLOWNS], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A faceless theater mask with a 2 on the inside of the forehead. It is said that if all 9 Artifacts are united, the Apocalypse will begin." },
+            { name: "Tres Bottle", layer: 1, src: `Artifacts/Zampanio_Artifact_03_Bottle.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A simple glass milk bottle with a 3 emblazoned on it. It is said that if all 9 Artifacts are united, the Apocalypse will begin." },
+            { name: "Quatro Blade", layer: 1, src: `Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade. It is said that if all 9 Artifacts are united, the Apocalypse will begin." },
+            { name: "Quinque Cloak", layer: 1, src: `Artifacts/Zampanio_Artifact_05_Cloak.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: " A simple matte blue cloak with a 5 embroidered on the back in shiny red thread. It is said that if all 9 Artifacts are united, the Apocalypse will begin." },
+            { name: "Sextant", layer: 1, src: `Artifacts/Zampanio_Artifact_06_Sextant.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A highly polished brass sextant. There is a 6 carved onto the main knob. It is said that if all 9 Artifacts are united, the Apocalypse will begin." },
+            { name: "Septum Coin", layer: 1, src: `Artifacts/Zampanio_Artifact_07_Coin_Bronze.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "An old bronze coin. There is a theater mask on one side, and a 7 on the other. It is said that if all 9 Artifacts are united, the Apocalypse will begin." },
+            { name: "Octome", layer: 1, src: `Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [Theme_1.all_themes[ThemeStorage_1.KNOWING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back. It is said that if all 9 Artifacts are united, the Apocalypse will begin." },
+            { name: "Novum Mirror", layer: 1, src: `Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces. It is said that if all 9 Artifacts are united, the Apocalypse will begin." }
+        ];
         this.initialize = async () => {
             const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY]];
             this.room = await (0, Room_1.randomRoomWithThemes)(this, this.ele, themes, this.rand);
@@ -4659,6 +4674,7 @@ class Maze {
             }
         };
         this.begin = () => {
+            console.log("JR NOTE: begining");
             this.handleCommands();
             this.room?.render();
             this.chantingEngine.start();
@@ -4721,6 +4737,7 @@ class Maze {
             }
             this.spawnBlorbos();
             if (render) {
+                console.log("JR NOTE: rendering the new room, because i think this is true:", render);
                 this.room.render();
             }
         };
@@ -4774,6 +4791,11 @@ class Maze {
             }
             this.storySoFar.scrollTo(0, this.storySoFar.scrollHeight);
         };
+        this.apocalypse = () => {
+            (0, URLUtils_1.updateURLParams)("apocalypse=night");
+            (0, __1.whiteNight)();
+            this.chantingEngine.listen();
+        };
         this.handleCommands = () => {
             const form = document.querySelector("#puppet-command");
             const input = document.querySelector("#puppet-input");
@@ -4818,6 +4840,7 @@ const ArrayUtils_1 = __webpack_require__(3907);
 const StringUtils_1 = __webpack_require__(7036);
 const StoryBeat_1 = __webpack_require__(5504);
 const End_1 = __webpack_require__(8115);
+const artifact_rate = 0.1; //lower is more artifacts
 class Room {
     //objects
     //people
@@ -4877,6 +4900,8 @@ class Room {
             this.tick();
         };
         this.render = async () => {
+            console.log("JR NOTE: I am rendering a room", this.name);
+            this.apocalypseTime();
             this.timesVisited++;
             await this.spawnChildrenIfNeeded();
             this.element.innerHTML = "";
@@ -5084,6 +5109,7 @@ class Room {
             return false;
         };
         this.tick = () => {
+            //console.log("JR NOTE: trying to tick room: ", this.name)
             if (!this.ticking) {
                 return;
             }
@@ -5099,6 +5125,38 @@ class Room {
                 this.checkForDoors(blorbo);
             }
             this.timer = setTimeout(this.tick, this.tickRate);
+        };
+        //if all artifacts are in the same room, its apocalypse time.
+        this.apocalypseTime = () => {
+            let missingAny = false;
+            for (let artifact of this.maze.artifacts) {
+                let object_found = false;
+                for (let item of this.items) {
+                    if (artifact.name === item.name) {
+                        object_found = true;
+                        this.maze.truthConsole(`${artifact.name.toUpperCase()} FOUND!`, `${artifact.name} found inside this room. Be cautious.`);
+                    }
+                }
+                if (!object_found) {
+                    for (let blorbo of this.blorbos) {
+                        for (let item of blorbo.inventory) {
+                            if (artifact.name === item.name) {
+                                object_found = true;
+                                this.maze.truthConsole(`${artifact.name.toUpperCase()} FOUND!`, `${artifact.name} found inside ${blorbo.processedName()}'s inventory. Be cautious.`);
+                            }
+                        }
+                    }
+                }
+                if (!object_found) {
+                    missingAny = true;
+                }
+            }
+            if (!missingAny) {
+                this.maze.truthConsole(`All 9 Artifacts Found!`, `You were warned. No matter. Begining Apocalypse.`);
+                this.maze.apocalypse();
+                this.stopTicking();
+                return true;
+            }
         };
         this.init = () => {
             this.name = `${(0, StringUtils_1.titleCase)(this.getRandomThemeConcept(ThemeStorage_1.ADJ))} ${(0, StringUtils_1.titleCase)(this.getRandomThemeConcept(ThemeStorage_1.LOCATION))}`;
@@ -5180,9 +5238,9 @@ exports.Room = Room;
 const randomRoomWithThemes = async (maze, ele, themes, seededRandom) => {
     const room = new Room(maze, themes, ele, seededRandom);
     const items1 = await (0, exports.spawnWallObjects)(room.width, room.height, 0, ThemeStorage_1.WALLBACKGROUND, "BackWallObjects", seededRandom, themes);
-    const items3 = await spawnFloorObjects(room.width, room.height, 0, ThemeStorage_1.FLOORBACKGROUND, "UnderFloorObjects", seededRandom, themes);
+    const items3 = await spawnFloorObjects(maze, room.width, room.height, 0, ThemeStorage_1.FLOORBACKGROUND, "UnderFloorObjects", seededRandom, themes);
     const items2 = await (0, exports.spawnWallObjects)(room.width, room.height, 1, ThemeStorage_1.WALLFOREGROUND, "FrontWallObjects", seededRandom, themes);
-    const items4 = await spawnFloorObjects(room.width, room.height, 1, ThemeStorage_1.FLOORFOREGROUND, "TopFloorObjects", seededRandom, themes);
+    const items4 = await spawnFloorObjects(maze, room.width, room.height, 1, ThemeStorage_1.FLOORFOREGROUND, "TopFloorObjects", seededRandom, themes);
     const items = items3.concat(items2.concat(items4));
     for (let item of items) {
         room.addItem(new PhysicalObject_1.PhysicalObject(room, item.name, item.x, item.y, item.width, item.height, item.themes, item.layer, item.src, item.flavorText));
@@ -5219,7 +5277,7 @@ const spawnWallObjects = async (width, height, layer, key, folder, seededRandom,
 };
 exports.spawnWallObjects = spawnWallObjects;
 //has to be async because it checks the image size for positioning
-const spawnFloorObjects = async (width, height, layer, key, folder, seededRandom, themes) => {
+const spawnFloorObjects = async (maze, width, height, layer, key, folder, seededRandom, themes) => {
     let current_x = 0;
     const floor_bottom = 140;
     let current_y = floor_bottom;
@@ -5229,25 +5287,14 @@ const spawnFloorObjects = async (width, height, layer, key, folder, seededRandom
     const debug = false;
     const baseLocation = "images/Walkabout/Objects/";
     const clutter_rate = seededRandom.nextDouble(0.75, 0.99); //smaller is more cluttered
-    const artifacts = [
-        { name: "Unos Artifact Book", layer: layer, src: `Artifacts/Zampanio_Artifact_01_Book.png`, themes: [Theme_1.all_themes[ThemeStorage_1.SOUL], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A tattered cardboard book filled with signatures with an ornate serif '1' embossed onto it." },
-        { name: "Duo Mask", layer: layer, src: `Artifacts/Zampanio_Artifact_02_Mask.png`, themes: [Theme_1.all_themes[ThemeStorage_1.CLOWNS], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A faceless theater mask with a 2 on the inside of the forehead." },
-        { name: "Tres Bottle", layer: layer, src: `Artifacts/Zampanio_Artifact_03_Bottle.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A simple glass milk bottle with a 3 emblazoned on it." },
-        { name: "Quatro Blade", layer: layer, src: `Artifacts/Zampanio_Artifact_04_Razor.png`, themes: [Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A dull straight razor stained with blood, a number 4 is etched onto the side of the blade." },
-        { name: "Quinque Cloak", layer: layer, src: `Artifacts/Zampanio_Artifact_05_Cloak.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: " A simple matte blue cloak with a 5 embroidered on the back in shiny red thread. " },
-        { name: "Sextant", layer: layer, src: `Artifacts/Zampanio_Artifact_06_Sextant.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A highly polished brass sextant. There is a 6 carved onto the main knob." },
-        { name: "Septum Coin", layer: layer, src: `Artifacts/Zampanio_Artifact_07_Coin_Bronze.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "An old bronze coin. There is a theater mask on one side, and a 7 on the other." },
-        { name: "Octome", layer: layer, src: `Artifacts/Zampanio_Artifact_08_Tome.png`, themes: [Theme_1.all_themes[ThemeStorage_1.KNOWING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "A crumbling leather book with seemingly latin script, with messily torn pages.  There is an 8 embossed onto the back." },
-        { name: "Novum Mirror", layer: layer, src: `Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces." }
-    ];
     while (current_y + padding < height) {
         current_x = padding;
         while (current_x < width) {
             let chosen_theme = [seededRandom.pickFrom(themes)];
             let scale = 1.5;
             let item = chosen_theme[0].pickPossibilityFor(seededRandom, key);
-            if (layer === 1 && seededRandom.nextDouble() > 0.95) {
-                item = seededRandom.pickFrom(artifacts);
+            if (layer === 1 && seededRandom.nextDouble() > artifact_rate) {
+                item = seededRandom.pickFrom(maze.artifacts);
                 chosen_theme = item.themes;
                 scale = 1.0;
             }
@@ -7922,6 +7969,7 @@ each password has a cctv feed (or at least a list of animation frames loaders (s
 WHAT WILL YOU CREATE
 99 Rooms
 kINTSUGI
+you do not recognize the bodies in the water
 eternal darkness
 chimps don't dance for bastards
 mutations on mutations on mutations :)
@@ -8007,6 +8055,10 @@ exports.passwords = {
     "LS": new Secret("FILE LIST (UNIX)", "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", "Secrets/PasswordStorage.ts")
 };
+/*
+todo:
+*make it more clear (even if just to wastes) that doc is broadly WRONG about the bleedover from the artifacts.  you dont need magic to not be "normal" by Morgans Hill standards. (seriously, closer just is static, and the artifact is incidental)  tho nam is, quiet evidently, actually caused by bleedover BECAUSE he's native to the artifacts universe)
+*/
 //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
 exports.docSlaughtersFiles = {
     "ETERNAL DARKNESS": new Slaughter("Notes of Slaughter 0", "Secrets/Content/45.js", "Child, do you Understand?"),
@@ -9259,7 +9311,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.loadSecretText = void 0;
+exports.loadSecretText = exports.whiteNight = void 0;
 const Stat_1 = __webpack_require__(9137);
 const Theme_1 = __webpack_require__(9702);
 const SeededRandom_1 = __importDefault(__webpack_require__(3450));
@@ -9296,13 +9348,14 @@ const whiteNight = () => {
         const apocalypse = new Apocalypse_1.ApocalypseEngine(body);
     }
 };
+exports.whiteNight = whiteNight;
 window.onload = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const apocalypse = urlParams.get('apocalypse');
     //the apocalypse overrides friday (but has its own special hell for it)
-    if (apocalypse === "white") {
-        whiteNight();
+    if (apocalypse === "night") {
+        (0, exports.whiteNight)();
         return;
     }
     else if ((0, URLUtils_1.isItFriday)()) {

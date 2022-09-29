@@ -38,7 +38,7 @@ const itsFriday = ()=>{
     }
 }
 
-const whiteNight = ()=>{
+export const whiteNight = ()=>{
     const body = document.querySelector("body");
     if(body){
         body.innerHTML = "";
@@ -53,7 +53,7 @@ window.onload = async () => {
     const apocalypse = urlParams.get('apocalypse');
 
     //the apocalypse overrides friday (but has its own special hell for it)
-    if(apocalypse === "white"){
+    if(apocalypse === "night"){
         whiteNight();
         return;
     }else if(isItFriday()){

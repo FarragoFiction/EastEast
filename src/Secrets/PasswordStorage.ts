@@ -258,6 +258,10 @@ export const passwords: PasswordMap = {
 
 };
 
+/*
+todo: 
+*make it more clear (even if just to wastes) that doc is broadly WRONG about the bleedover from the artifacts.  you dont need magic to not be "normal" by Morgans Hill standards. (seriously, closer just is static, and the artifact is incidental)  tho nam is, quiet evidently, actually caused by bleedover BECAUSE he's native to the artifacts universe)
+*/
 //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
 export const docSlaughtersFiles: SlaughterMap = {
     "ETERNAL DARKNESS": new Slaughter("Notes of Slaughter 0", "Secrets/Content/45.js","Child, do you Understand?")
