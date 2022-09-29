@@ -13,7 +13,7 @@ import { Camille, End } from "../Entities/Blorbos/End";
 import { Peewee } from "../Entities/Blorbos/Peewee";
 import { Quotidian } from "../Entities/Blorbos/Quotidian";
 
-const artifact_rate = 0.1;//lower is more artifacts
+const artifact_rate = 0.95;//lower is more artifacts
 
 
 
