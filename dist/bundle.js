@@ -7919,6 +7919,7 @@ exports.Slaughter = Slaughter;
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
 /*
+WHAT WILL YOU CREATE
 99 Rooms
 kINTSUGI
 eternal darkness
@@ -8009,13 +8010,21 @@ exports.passwords = {
 //note: the point of the slaughter notes is to highlight the diffrence between a mindless autonomata and the full, vibrant person
 exports.docSlaughtersFiles = {
     "ETERNAL DARKNESS": new Slaughter("Notes of Slaughter 0", "Secrets/Content/45.js", "Child, do you Understand?"),
+    "TELEGRAM1": new Slaughter("Morgan's Hill Telegram 1", "Secrets/Content/51.js"),
     "RAISE YOU FROM THE END OF THE WORLD": new Slaughter("Notes of Slaughter 0", "Secrets/Content/7.js", "Child, do you Understand?"),
+    "TELEGRAM2": new Slaughter("Morgan's Hill Telegram 2", "Secrets/Content/52.js"),
     "SERENE AND CALM": new Slaughter("Notes of Slaughter 1", "Secrets/Content/8.js"),
+    "TELEGRAM3": new Slaughter("Morgan's Hill Telegram 3", "Secrets/Content/53.js"),
     "BEWARE OBLIVION IS AT HAND": new Slaughter("Notes of Slaughter 2", "Secrets/Content/9.js"),
+    "TELEGRAM4": new Slaughter("Morgan's Hill Telegram 4", "Secrets/Content/54.js"),
     "I AM HERE TO TREAT DISEASE": new Slaughter("Notes of Slaughter 3", "Secrets/Content/10.js"),
+    "TELEGRAM5": new Slaughter("Morgan's Hill Telegram 5", "Secrets/Content/55.js"),
     "FLESH IS BOUND TO THE FLOW OF TIME": new Slaughter("Notes of Slaughter 4", "Secrets/Content/11.js"),
+    "TELEGRAM6": new Slaughter("Morgan's Hill Telegram 6", "Secrets/Content/56.js"),
     "TIME IS DEAD": new Slaughter("Notes of Slaughter 5", "Secrets/Content/12.js"),
+    "TELEGRAM7": new Slaughter("Morgan's Hill Telegram 7", "Secrets/Content/57.js"),
     "SAVE YOUR LIFE FROM DESTRUCTION": new Slaughter("Notes of Slaughter 6", "Secrets/Content/13.js"),
+    "TELEGRAM8": new Slaughter("Morgan's Hill Telegram 8", "Secrets/Content/58.js"),
     "GENTLE CROONING VOICE": new Slaughter("Notes of Slaughter 7", "Secrets/Content/14.js"),
     "LOOKS AFTER THE BROKEN": new Slaughter("Notes of Slaughter 8", "Secrets/Content/15.js"),
     "TAKE CARE OF OTHERS": new Slaughter("Notes of Slaughter 9", "Secrets/Content/16.js"),
@@ -8027,7 +8036,8 @@ exports.docSlaughtersFiles = {
     "EXPERIMENTALMUSIC": new Slaughter("Notes of Slaughter 16: ExperimentalMusic Part 1", "Secrets/Content/36.js"),
     "EXPERIMENTALMUSIC2": new Slaughter("Notes of Slaughter 16: ExperimentalMusic Part 2", "Secrets/Content/48.js"),
     "EXPERIMENTALMUSIC3": new Slaughter("Notes of Slaughter 16: ExperimentalMusic Part 3", "Secrets/Content/49.js"),
-    "EXPERIMENTALMUSIC4": new Slaughter("Notes of Slaughter 16: ExperimentalMusic Part 4", "Secrets/Content/50.js")
+    "EXPERIMENTALMUSIC4": new Slaughter("Notes of Slaughter 16: ExperimentalMusic Part 4", "Secrets/Content/50.js"),
+    "TELEGRAM9": new Slaughter("Morgan's Hill Telegram 8", "Secrets/Content/59.js")
 };
 //future me, don't forget https://www.tumblr.com/blog/view/jadedresearcher/688182806608838656?source=share
 exports.text = `${Object.keys(exports.passwords).length} Items:.\n.\n.\n.\n ${Object.keys(exports.passwords).join("\n")}`;
@@ -11281,6 +11291,205 @@ Finally, and most intriguing, Camille, in her role as Captain of the Training Te
 
 /***/ }),
 
+/***/ 5886:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+Morgans Hill Telegram 1:
+
+Message: Hope all is Well. New Position is Suitable. Providing Therapy for Those In Need. Please feed my Plants.
+
+Update: Both Ms. Closer and Ms. Camille will be paying for same work. Neither mind.
+
+Message: Tomorrow will begin Providing Therapy. Today I rest.
+
+NOTICE: Artifacts exist here. Parallel evolution? More information pending Discoveries. Shadowed Book Definitely In Play. Very few Important People have Names. Role Based Titles are Common.
+
+Message: I Hope you are getting these Messages. If I Must Be Away, at least I can Provide Information.
+
+
+`;
+
+/***/ }),
+
+/***/ 4742:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+Morgans Hill Telegram 2:
+
+
+Update: Clients are clearly Abnormal. Unclear if related to Duskhollow or Morgan's Hill. Details to follow.
+
+Message: Ms Camille is very clearly a Corpse from the Neck Down. She denies this fact. She is very Friendly.
+
+Message: I am not allowed to talk to Witherby. This only Piques my Curiosity. But I shall Prevail.
+
+Message: Devona and Neville seem to be Beasts of Some Kind? They Transform when the other is Harmed.
+
+Message: Ria burns the World To Ash when Stressed. Otherwise very Normal.
+
+Message: No Artifact Presence Among Them
+
+`;
+
+/***/ }),
+
+/***/ 5788:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+Morgans Hill Telegram 3: 
+
+NOTICE: Ms Closer has the Shadowed Cloak. 
+
+Message: Sources say Ms Closer can become Shapeless and Formless. 
+
+Message: Tied to Shadowed Artifact possession?
+
+Message: Please tell my Exercise Class I will be Absent. 
+
+`;
+
+/***/ }),
+
+/***/ 6695:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+Morgans Hill Telegram 4: 
+
+NOTICE: Ms Flower has the Shadowed Sextant.
+
+Message: She was my Source on Ms Closer. She seems very Cheerful and Open.
+
+Message: She says Reality is an Illusion. Mind-Set from bleed-over from the Shadowed Artifact?
+
+Message:  How is the Day of Knowing going?
+
+
+`;
+
+/***/ }),
+
+/***/ 4274:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+Morgans Hill Telegram 5: 
+
+NOTICE: Target referred to as the "Killer" has the Shadowed Razor.
+
+Message: Killer has selective Mutism.  Extreme Anxiety. Refuses therapy. Fear of being Known.
+
+Message: Is the Killers Fear of Good and Proper Knowing a side-effect of the Shadowed Artifact?
+Message: I Hope you are Receiving these back Home.
+
+
+`;
+
+/***/ }),
+
+/***/ 6087:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+Morgans Hill Telegram 6: 
+
+NOTICE: Wanda [Last Name Unknowable] has the Shadowed Mirror.
+
+Message: She appears to be Wholly Incapable of Communicating Clearly.
+
+Message: At this Point I am Safe in Assuming the Shadowed Artifacts have Effects on their Bearers in this Universe.
+
+Message: I Think It's Important You Know I am Keeping to my Designated Color Scheme.
+
+
+`;
+
+/***/ }),
+
+/***/ 3097:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+Morgans Hill Telegram 7: 
+
+NOTICE: Not-A-Minotaur has the Shadowed Tome. He can Reflect it to its Mirrored State at will.
+
+Message: NAM flickers in and out of Corporality. NAM knows Only Philosophy in Shadowed Form and Only Personal Memories in Mirrored Form.
+
+Message: NAM is very friendly. Very Pro-Social. Anxious, but a Good Head on his Shoulders.
+
+Message: I miss Home.
+
+`;
+
+/***/ }),
+
+/***/ 9831:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+Morgans Hill Telegram 8: 
+
+URGENT NOTICE: THE HIDDEN HORROR IS HERE.
+
+Message: The Horror has Concealed Itself among Good and Proper Folk. The Horror recognizes me.
+
+Message: The Horror goes to Bake Sales and PTA Meetings.
+
+Message: The Horror has both the Shadowed Mask and the Shadowed Coin.
+
+
+Message: The Horror has a Roommate. The Roommate has the Shadowed Bottle.
+
+Message: I no longer Believe these Artifacts are parallels of our own. I Worry that the Artifacts are Missing where you are. I Worry for Your Safety.
+
+`;
+
+/***/ }),
+
 /***/ 1178:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -11318,6 +11527,27 @@ And today she would have her closure. Her catharsis. She would stand before the 
 
 She adjusts her bouncy blond hair in one of the many mirrors, grabs her bag (immaculately coordinating with her white and pink outfit, of course), and steps out to face the day.
 
+
+`;
+
+/***/ }),
+
+/***/ 5593:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+Morgans Hill Telegram 9: 
+
+EDICT: FLESH IS BOUND TO THE FLOW OF TIME. THE SOUL IS IMMORTAL.
+EDICT: I SHALL BRING SALVATION TO THOSE WHO SUFFER ETERNALLY.
+EDICT: ENDLESS LIFE WAS NOT MEANT FOR THIS UNIVERSE.
+EDICT: THE WHISPERS WITHIN HAVE CHOSEN THE APOSTLES.
+EDICT: REST NOW, CHILD.  LET YOUR LOOP END.
 
 `;
 
@@ -11695,8 +11925,26 @@ var map = {
 	"./Secrets/Content/5.js": 1952,
 	"./Secrets/Content/50": 3185,
 	"./Secrets/Content/50.js": 3185,
+	"./Secrets/Content/51": 5886,
+	"./Secrets/Content/51.js": 5886,
+	"./Secrets/Content/52": 4742,
+	"./Secrets/Content/52.js": 4742,
+	"./Secrets/Content/53": 5788,
+	"./Secrets/Content/53.js": 5788,
+	"./Secrets/Content/54": 6695,
+	"./Secrets/Content/54.js": 6695,
+	"./Secrets/Content/55": 4274,
+	"./Secrets/Content/55.js": 4274,
+	"./Secrets/Content/56": 6087,
+	"./Secrets/Content/56.js": 6087,
+	"./Secrets/Content/57": 3097,
+	"./Secrets/Content/57.js": 3097,
+	"./Secrets/Content/58": 9831,
+	"./Secrets/Content/58.js": 9831,
 	"./Secrets/Content/6": 1178,
 	"./Secrets/Content/6.js": 1178,
+	"./Secrets/Content/60": 5593,
+	"./Secrets/Content/60.js": 5593,
 	"./Secrets/Content/7": 8791,
 	"./Secrets/Content/7.js": 8791,
 	"./Secrets/Content/8": 4997,
