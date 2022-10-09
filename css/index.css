@@ -581,6 +581,10 @@ a:active{
   animation: hue-shift 1s steps(8) infinite;
 }
 
+#pause{
+  height: 50px;
+}
+
 .text-flicker{
   animation-duration: 0.01s;
   animation-name: textflicker;

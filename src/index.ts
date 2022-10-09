@@ -70,11 +70,27 @@ window.onload = async () => {
     initThemes();
     const seed = 85;
     if (ele && storySoFar) {
+        console.log("JR NOTE: making maze")
         maze = new Maze(ele, storySoFar, new SeededRandom(seed));
     }
 
     window.addEventListener("click", handleClick);
+    const pauseButton = document.querySelector("#pause") as HTMLElement;
+    pauseButton.addEventListener("click", handlePause);
 
+
+}
+
+const handlePause = (event: MouseEvent)=>{
+        console.log("JR NOTE: pause button was clicked",maze.tickingStatus())
+        if(maze.tickingStatus()){
+            maze.pause();
+        }else{
+            maze.resume();
+        }
+        if(event.target){
+            maze.tickingStatus() ? (event.target as HTMLElement).innerText = "Pause": (event.target as HTMLElement).innerText = "Play";
+        }
 }
 
 

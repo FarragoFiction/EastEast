@@ -4720,6 +4720,24 @@ class Maze {
                 }
             }
         };
+        this.tickingStatus = () => {
+            if (this.room) {
+                return this.room.ticking;
+            }
+            return false;
+        };
+        this.pause = () => {
+            if (this.room) {
+                this.addStorybeat(new StoryBeat_1.StoryBeat("Pause", "The Simulation Pauses."));
+                this.room.stopTicking();
+            }
+        };
+        this.resume = () => {
+            if (this.room) {
+                this.addStorybeat(new StoryBeat_1.StoryBeat("Resume", "The Simulation Resumes."));
+                this.room.resumeTicking();
+            }
+        };
         this.changeRoom = (room, render = true) => {
             if (this.room) {
                 this.room.teardown();
@@ -4840,7 +4858,7 @@ const ArrayUtils_1 = __webpack_require__(3907);
 const StringUtils_1 = __webpack_require__(7036);
 const StoryBeat_1 = __webpack_require__(5504);
 const End_1 = __webpack_require__(8115);
-const artifact_rate = 0.1; //lower is more artifacts
+const artifact_rate = 0.95; //lower is more artifacts
 class Room {
     //objects
     //people
@@ -4871,6 +4889,10 @@ class Room {
             if (this.timer) {
                 clearTimeout(this.timer);
             }
+        };
+        this.resumeTicking = () => {
+            this.ticking = true;
+            this.tick();
         };
         this.spawnChildrenIfNeeded = async () => {
             if (this.children.length === 0) { //don't let anything have NO exits
@@ -9371,9 +9393,24 @@ window.onload = async () => {
     (0, Theme_1.initThemes)();
     const seed = 85;
     if (ele && storySoFar) {
+        console.log("JR NOTE: making maze");
         maze = new Maze_1.Maze(ele, storySoFar, new SeededRandom_1.default(seed));
     }
     window.addEventListener("click", handleClick);
+    const pauseButton = document.querySelector("#pause");
+    pauseButton.addEventListener("click", handlePause);
+};
+const handlePause = (event) => {
+    console.log("JR NOTE: pause button was clicked", maze.tickingStatus());
+    if (maze.tickingStatus()) {
+        maze.pause();
+    }
+    else {
+        maze.resume();
+    }
+    if (event.target) {
+        maze.tickingStatus() ? event.target.innerText = "Pause" : event.target.innerText = "Play";
+    }
 };
 //the text should be a javascript file exporting const text.
 function loadSecretText(location) {

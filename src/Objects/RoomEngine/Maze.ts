@@ -134,6 +134,27 @@ export class Maze {
         }
     }
 
+    tickingStatus = ()=>{
+        if(this.room){
+            return this.room.ticking;
+        }
+        return false;
+    }
+
+    pause = ()=>{
+        if(this.room){
+            this.addStorybeat(new StoryBeat("Pause","The Simulation Pauses."))
+            this.room.stopTicking();
+        }
+    }
+
+    resume = ()=>{
+        if(this.room){
+            this.addStorybeat(new StoryBeat("Resume","The Simulation Resumes."))
+            this.room.resumeTicking();
+        }
+    }
+
     changeRoom = (room: Room, render = true) => {
         if (this.room) {
             this.room.teardown();

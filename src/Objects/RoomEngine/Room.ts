@@ -69,6 +69,11 @@ export class Room {
         }
     }
 
+    resumeTicking = () => {
+        this.ticking = true;
+        this.tick();
+    }
+
     spawnChildrenIfNeeded = async () => {
         if (this.children.length === 0) { //don't let anything have NO exits
             const child = await this.spawnChildRoom();
