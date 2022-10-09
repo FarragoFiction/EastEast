@@ -4779,7 +4779,8 @@ class Maze {
             for (let map of classes) {
                 for (let blorbo of this.blorbos) {
                     if (blorbo.breaching && blorbo.themes.includes(map.theme)) {
-                        beat.checkClass([...blorbo.name, ...(blorbo.states.map((i) => i.name))], map.name);
+                        console.log(`JR NOTE: ${blorbo.name} is breaching, their aliases are ${blorbo.states.map((i) => i.name).join(",")} `);
+                        beat.checkClass([blorbo.name, ...(blorbo.states.map((i) => i.name))], map.name);
                     }
                 }
                 for (let item of this.room?.items) {
@@ -5363,11 +5364,13 @@ class StoryBeat {
         this.commandClass = "'";
         this.responseClass = "";
         this.checkClass = (words, className) => {
+            console.log("JR NOTE: words are", words);
             for (let word of words) {
                 /* if(this.command.toUpperCase().includes(word.toUpperCase())){
                      this.commandClass = `${this.commandClass} ${className}`
                  }*/
                 if (this.response.toUpperCase().includes(word.toUpperCase())) {
+                    console.log(`JR NOTE: ${word} is in ${this.response} `);
                     this.responseClass = `${this.responseClass} ${className}`;
                 }
             }
