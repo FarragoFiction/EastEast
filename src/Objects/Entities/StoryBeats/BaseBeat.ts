@@ -5,7 +5,7 @@ import { Room } from "../../RoomEngine/Room";
 import { StoryBeat } from "../../RoomEngine/StoryBeat";
 import { Action } from "../Actions/BaseAction";
 import { Quotidian } from "../Blorbos/Quotidian";
-import { TargetFilter, TARGETSTRING } from "../TargetFilter/baseFilter";
+import { SUBJECTSTRING, TargetFilter, TARGETSTRING } from "../TargetFilter/baseFilter";
 
 export const ITEMSTRING = "ITEMSTRING";
 export const BONUSSTRING = "BONUSSTRING";
@@ -61,6 +61,10 @@ export class AiBeat {
     processTags = (text: string)=>{
         let ret = text.replaceAll(TARGETSTRING, turnArrayIntoHumanSentence(this.targets.map((t)=>t.name)));
         ret = ret.replaceAll(ITEMSTRING, this.itemName);
+        if(this.owner){
+            ret = ret.replaceAll(SUBJECTSTRING, this.owner.processedName());
+        }
+
         ret = ret.replaceAll(BONUSSTRING, this.bonusString);
 
         return ret;

@@ -9,9 +9,14 @@ import { HUNTING, SPYING, OBFUSCATION, MATH } from "../../ThemeStorage";
 import { DeploySass } from "../Actions/DeploySass";
 import { DestroyRandomObjectInInventoryAndPhilosophize } from "../Actions/DestroyRandomObjectInInventoryAndPhilosophise";
 import { IncrementMyState } from "../Actions/IncrementMyState";
+import { MeleeKill } from "../Actions/MeleeKill";
+import { MoveRandomly } from "../Actions/MoveRandomly";
 import { AiBeat, BONUSSTRING, ITEMSTRING } from "../StoryBeats/BaseBeat";
+import { SUBJECTSTRING, TARGETSTRING } from "../TargetFilter/baseFilter";
 import { IHaveObjectWithName } from "../TargetFilter/IHaveObjectWithName";
+import { RandomTarget } from "../TargetFilter/RandomTarget";
 import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
+import { TargetIsTheKillerOfBlorboNamed } from "../TargetFilter/TargetIstheKillerOfBlorboNamed";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { Quotidian, Direction } from "./Quotidian";
 
@@ -92,18 +97,36 @@ export class FortitudeTwin extends Quotidian{
 
         };
 
+
+        const hunt = new AiBeat(
+            "Fortitudinous Punishing Twin: Hunt for the Killer of Your Twin",
+            [`The ${SUBJECTSTRING} is aimlessly searching for the Killer of Devona. You don't get the impression that it's very good at it. It seems to just kinda be moving around at random and sqwawking in frustration.  It never gets tired though...`],
+            [new RandomTarget(0.5)],
+            [new MoveRandomly(), new DeploySass("!?")],
+            true,
+            1000*60*2
+        );
         
-        const extractMeaningFromObject = new AiBeat(
-            "Neville: Destroy and Extract Knowledge",
-            [`Neville notices he has a(n) ${ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that "${BONUSSTRING}" <p>He seems happy to understand the core of this item. He says ":)  I learned something!"</p>   `],
-            [new IHaveObjectWithName([])],
-            [new DestroyRandomObjectInInventoryAndPhilosophize(), new DeploySass(":)")],
+        const kill = new AiBeat(
+            "Fortitudinous Punishing Twin: Punish the Killer of Your Twin",
+            [`The torso of the ${SUBJECTSTRING} opens with a meaty squelch and crunches down on the ${TARGETSTRING}. Shreds of them are all that remain. The Fortitudinous Punishing Twin appears to be satisfied.`],
+            [new TargetIsTheKillerOfBlorboNamed("Devona")],
+            [new MeleeKill("being eaten by the Fortitudinous Punishing Twin"), new DeploySass(":)")],
+            true,
+            1000*60
+        );
+
+        const unbreach = new AiBeat(
+            "Fortitudinous Punishing Twin: Relax",
+            [`The ${SUBJECTSTRING} withers into itself, and Neville emerges once more. He falls onto his knees, tears streaming down his face. His twin is dead, and nothing will ever bring her back. But at least she is avenged.   `],
+            [new TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive({invert:true})],
+            [new IncrementMyState("no")],
             true,
             1000*60
         );
         
 
-        const beats:AiBeat[] = [];
+        const beats:AiBeat[] = [kill,unbreach];
 
         super(room,"Fortitudinous Punishing Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[MATH]],sprite,
         "The Fortitude Punishing Twin is hunting.", beats);
