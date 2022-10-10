@@ -153,6 +153,7 @@ export class PhysicalObject {
             //console.log(`JR NOTE: moving ${this.x}, ${this.y} which offset is ${this.original_x-this.x}, ${this.original_y-this.y}`)
 
             this.container.style.transform = `translate(${this.x - this.original_x}px,${this.y - this.original_y}px)`;
+            this.container.setAttribute("currentLocation",`${this.x}, ${this.y}`);
             this.customShit();
         })
 
