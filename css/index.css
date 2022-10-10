@@ -142,7 +142,7 @@
 .censored::before {
   font-weight: bold;
   color: red;
-  content: "THE CENSORSHIP IS FOR YOUR PROTECTION";
+  content: "THE CENSORSHIP IS FOR YOUR";
   font-size: 32px;
   filter: blur(1px);
   opacity: 50%;
