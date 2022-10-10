@@ -78,6 +78,8 @@ export class Quotidian extends PhysicalObject {
     currentSpeed = 10;
     friend?: FRIEND;
     killerName? : string;
+    timeOfLastBeat = new Date().getTime();
+
 
     beats: AiBeat[] = [];
     // 0 min, 5 max
@@ -124,6 +126,7 @@ export class Quotidian extends PhysicalObject {
         }
         this.makeBeatsMyOwn(beats);
     }
+    
 
     processedName = () => {
         return `${this.breaching?"Breaching ":""}${this.name}${this.dead ? "'s Grave" : ''}`;
@@ -264,12 +267,19 @@ export class Quotidian extends PhysicalObject {
 
     }
 
-
+    itsBeenAwhileSinceLastBeat = (actionRate: number)=>{
+        return new Date().getTime() - this.timeOfLastBeat > actionRate;
+    }
 
     processAiBeat = () => {
         const toRemove: AiBeat[] = [];
+        let didSomething = false;
         for (let beat of this.beats) {
             if (beat.triggered(this.room)) {
+                didSomething = true;
+                this.timeOfLastBeat = new Date().getTime();
+                this.container.style.zIndex = `${30}`; //stand out
+
                 beat.performActions(this.room);
                 if (!beat.permanent) {
                     toRemove.push(beat);
@@ -278,13 +288,19 @@ export class Quotidian extends PhysicalObject {
             }
         }
 
+        if(!didSomething){
+            //fade into bg
+            this.container.style.zIndex = `${20}`; 
+
+        }
+
         for (let beat of toRemove) {
             removeItemOnce(this.beats, beat);
         }
 
     }
 
-    tick = () => {
+    tick = (actionRate:number) => {
         //console.log("JR NOTE: trying to tick: ", this.name);
         if (this.dead) {
             return;
@@ -293,7 +309,10 @@ export class Quotidian extends PhysicalObject {
         if ((this.friend)) {
             this.friend.tick();
         }
-        this.processAiBeat();
+        //you can move quicker than you can think
+        if(this.itsBeenAwhileSinceLastBeat(actionRate)){
+            this.processAiBeat();
+        }
         this.movement_alg.tick();
         this.syncSpriteToDirection();
         this.updateRendering();

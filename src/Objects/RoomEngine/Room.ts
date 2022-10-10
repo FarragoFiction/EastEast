@@ -36,6 +36,7 @@ export class Room {
     items: PhysicalObject[] = [];
     ticking = false;
     tickRate = 100;
+    actionRate = 500;
     children: Room[] = [];
     name = "???";
     pendingStoryBeats: StoryBeat[] = [];
@@ -354,7 +355,7 @@ export class Room {
         for (let blorbo of this.blorbos) {
 
             if (!blorbo.dead) {
-                blorbo.tick();
+                blorbo.tick(this.actionRate);
             }
             this.checkForDoors(blorbo);
         }

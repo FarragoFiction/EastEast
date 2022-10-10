@@ -139,7 +139,7 @@ export class InsightTwin extends Quotidian{
         const unbreachBecauseYouAreLeTired = new AiBeat(
             "Insightful Punishing Twin: Exhaust yourself",
             [`The Insightful Punishing Twin rages and thrashes around and seems to completely tire itself out.  Devona emerges, unconscious, tears streaming down her sleeping face.`],
-            [new RandomTarget(0.03)],
+            [new RandomTarget(0.003)],
             [new IncrementMyState("no"), new StopMoving()],
             true,
             1000*60*3
@@ -182,9 +182,9 @@ export class InsightTwin extends Quotidian{
         );
         
 
-        const beats:AiBeat[] = [kill,hunt, mourn,unbreachBecauseYouAreLeTired,visitGrave, unbreach];
+        const beats:AiBeat[] = [kill,hunt, mourn,visitGrave, unbreach,unbreachBecauseYouAreLeTired];
 
-        super(room,"Insight Punishing Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[KNOWING]],sprite,
+        super(room,"Insightful Punishing Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[KNOWING]],sprite,
         "The Insightful Punishing Twin is hunting.", beats);
     }
 }   
