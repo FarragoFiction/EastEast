@@ -2,6 +2,7 @@ import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 
 export const TARGETSTRING = "[INSERTTARGETSHERE]"
+export const SUBJECTSTRING = "[INSERTSUBJECTHERE]"
 
 export type TargetingOptionType = {
     invert?: boolean,
