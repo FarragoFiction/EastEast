@@ -3498,6 +3498,7 @@ class TargetIsWithinRadiusOfSelf extends baseFilter_1.TargetFilter {
                 return null;
             }
             if ((0, misc_1.distanceWithinRadius)(this.radius, owner.owner.x, owner.owner.y, target.x, target.y)) {
+                console.log(`JR NOTE: I believe owner(${owner.owner.x}, ${owner.owner.y}) is near target ${target.x}, ${target.y}, where near is defiend as ${this.radius}`);
                 targetLocked = true;
             }
             if (targetLocked) {
@@ -4340,6 +4341,7 @@ class PhysicalObject {
                 */
                 //console.log(`JR NOTE: moving ${this.x}, ${this.y} which offset is ${this.original_x-this.x}, ${this.original_y-this.y}`)
                 this.container.style.transform = `translate(${this.x - this.original_x}px,${this.y - this.original_y}px)`;
+                this.container.setAttribute("currentLocation", `${this.x}, ${this.y}`);
                 this.customShit();
             });
         };

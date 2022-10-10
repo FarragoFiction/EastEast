@@ -31,7 +31,7 @@ export const distance = (x1: number, y1: number, x2: number, y2: number) => {
 }
 
 export const distanceWithinRadius = (radius: number, x1: number, y1: number, x2: number, y2: number) => {
-    return distance(x1, y2, x2, y2) < radius;
+    return distance(x1, y1, x2, y2) < radius;
 }
 
 export const withinY = (myY: number, objectY: number, objectHeight: number) => {

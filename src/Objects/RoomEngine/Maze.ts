@@ -202,7 +202,7 @@ export class Maze {
         for(let map of classes){
             for(let blorbo of this.blorbos){
                 if(blorbo.breaching && blorbo.themes.includes(map.theme)){
-                    console.log(`JR NOTE: ${blorbo.name} is breaching, their aliases are ${blorbo.states.map((i)=>i.name).join(",")} `)
+                    //console.log(`JR NOTE: ${blorbo.name} is breaching, their aliases are ${blorbo.states.map((i)=>i.name).join(",")} `)
                     beat.checkClass([blorbo.name, ...(blorbo.states.map((i)=>i.name))],map.name)
                 }
             }
