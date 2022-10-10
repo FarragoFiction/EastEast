@@ -157,7 +157,7 @@ export class InsightTwin extends Quotidian{
         const visitGrave = new AiBeat(
             "Insightful Punishing Twin: Mourn your Twin",
             [`The ${SUBJECTSTRING} howls with sadness... and begins making a destructive bee line back to the ${TARGETSTRING}`],
-            [new RandomTarget(0.95),new TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsWithinRadiusOfSelf(5, {invert: false})],
+            [new TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsWithinRadiusOfSelf(5, {invert: false}),new RandomTarget(0.5)],
             [new FollowObject()],
             true,
             1000*60
