@@ -2196,6 +2196,7 @@ const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const DeploySass_1 = __webpack_require__(4237);
 const DestroyRandomObjectInInventoryAndPhilosophise_1 = __webpack_require__(4516);
+const FollowObject_1 = __webpack_require__(744);
 const IncrementMyState_1 = __webpack_require__(9211);
 const MeleeKill_1 = __webpack_require__(2900);
 const MoveRandomly_1 = __webpack_require__(4287);
@@ -2243,9 +2244,11 @@ class FortitudeTwin extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
         const hunt = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Hunt for the Killer of Your Twin", [`The ${baseFilter_1.SUBJECTSTRING} is aimlessly searching for the Killer of Devona. You don't get the impression that it's very good at it. It seems to just kinda be moving around at random and sqwawking in frustration.  It never gets tired though...`], [new RandomTarget_1.RandomTarget(0.95)], [new MoveRandomly_1.MoveRandomly(), new DeploySass_1.DeploySass("!?")], true, 1000 * 60);
+        const mourn = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} paws gently at ${baseFilter_1.TARGETSTRING}... It looks so sad...`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+        const visitGrave = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} howls with sadness... and begins making a bee line back to the ${baseFilter_1.TARGETSTRING}`], [new RandomTarget_1.RandomTarget(0.95), new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: false })], [new DeploySass_1.DeploySass(":(")], true, 1000 * 60);
         const kill = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Punish the Killer of Your Twin", [`The torso of the ${baseFilter_1.SUBJECTSTRING} opens with a meaty squelch and crunches down on the ${baseFilter_1.TARGETSTRING}. Shreds of them are all that remain. The Fortitudinous Punishing Twin appears to be satisfied.`], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new MeleeKill_1.MeleeKill("being eaten by the Fortitudinous Punishing Twin"), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
         const unbreach = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Relax", [`The Fortitudinous Punishing Twin withers into itself, and Neville emerges once more. He falls onto his knees, tears streaming down his face. His twin is dead, and nothing will ever bring her back. But at least she is avenged.   `], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60);
-        const beats = [kill, unbreach];
+        const beats = [kill, hunt, visitGrave, mourn, unbreach];
         super(room, "Fortitudinous Punishing Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "The Fortitude Punishing Twin is hunting.", beats);
         this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
         this.maxSpeed = 8;

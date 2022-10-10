@@ -99,6 +99,12 @@ export class FortitudeTwin extends Quotidian{
 
         };
 
+        /*
+            Neville has absolutely no idea where the killer is, but is careful and deliberate while looking for them.
+              He won't kill anyoen except the one who harmed his twin.
+
+              It might take him forever, but he has all the stamina he needs to be patient.
+        */
 
         const hunt = new AiBeat(
             "Fortitudinous Punishing Twin: Hunt for the Killer of Your Twin",
@@ -113,16 +119,16 @@ export class FortitudeTwin extends Quotidian{
             "Fortitudinous Punishing Twin: Mourn your Twin",
             [`The ${SUBJECTSTRING} paws gently at ${TARGETSTRING}... It looks so sad...`],
             [new TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf(5)],
-            [new FollowObject()],
+            [new DeploySass(":(")],
             true,
             1000*60
         );
 
         const visitGrave = new AiBeat(
             "Fortitudinous Punishing Twin: Mourn your Twin",
-            [`The ${SUBJECTSTRING} howls with sadness... and begins making a bee line back to the ${TARGETSTRING}`],
+            [`The ${SUBJECTSTRING} whimpers with sadness... and begins making a bee line back to the ${TARGETSTRING}`],
             [new RandomTarget(0.95),new TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf(5, {invert: false})],
-            [new DeploySass(":(")],
+            [new FollowObject()],
             true,
             1000*60
         );

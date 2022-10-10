@@ -6,14 +6,20 @@ import { RandomMovement } from "../../MovementAlgs/RandomMovement";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { HUNTING, KILLING, FAMILY, DARKNESS, FIRE, ANGELS, WEB, ADDICTION, MUSIC, SPYING, OBFUSCATION, KNOWING } from "../../ThemeStorage";
+import { DeploySass } from "../Actions/DeploySass";
 import { FollowObject } from "../Actions/FollowObject";
 import { GiveRandomObjectToTarget } from "../Actions/GiveRandomObjectToTarget";
 import { IncrementMyState } from "../Actions/IncrementMyState";
+import { MeleeKill } from "../Actions/MeleeKill";
+import { MoveRandomly } from "../Actions/MoveRandomly";
 import { PickupObject } from "../Actions/PickupObject";
+import { StopMoving } from "../Actions/StopMoving";
 import { AiBeat, ITEMSTRING } from "../StoryBeats/BaseBeat";
-import { TARGETSTRING } from "../TargetFilter/baseFilter";
+import { SUBJECTSTRING, TARGETSTRING } from "../TargetFilter/baseFilter";
 import { IHaveObjectWithName } from "../TargetFilter/IHaveObjectWithName";
+import { RandomTarget } from "../TargetFilter/RandomTarget";
 import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
+import { TargetIsTheKillerOfBlorboNamed } from "../TargetFilter/TargetIstheKillerOfBlorboNamed";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { Quotidian, Direction } from "./Quotidian";
@@ -115,11 +121,68 @@ export class InsightTwin extends Quotidian{
         };
 
     
+        /*
+            Devona has high Insight and knows EXACTLY where her target is, and moves towards them. Hhowever, she has no stamina and might just unbreach out of nowhere.  
 
-        const beats:AiBeat[] = [
+            However, she is highly destructive and kills anything in her way.
+              She knows she doesn't have the TIME to go around people or deal with threats.
+        */
 
+        const hunt = new AiBeat(
+            "Insightful Punishing Twin: Hunt for the Killer of Your Twin",
+            [`The ${SUBJECTSTRING} is laser focused on tracking down the one who killed Neville.  It doesn't seem to have much stamina, tho...`],
+            [new TargetIsTheKillerOfBlorboNamed("Neville"), new TargetIsWithinRadiusOfSelf(5, {invert: true})],
+            [new FollowObject(), new DeploySass("!")],
+            true,
+            1000*60
+        );
+        const unbreachBecauseYouAreLeTired = new AiBeat(
+            "Insightful Punishing Twin: Exhaust yourself",
+            [`The Insightful Punishing Twin rages and thrashes around and seems to completely tire itself out.  Devona emerges, unconscious, tears streaming down her sleeping face.`],
+            [new RandomTarget(0.3)],
+            [new IncrementMyState("no"), new StopMoving()],
+            true,
+            1000*60
+        );
 
-        ];
+        const mourn = new AiBeat(
+            "Insightful Punishing Twin: Mourn your Twin",
+            [`The ${SUBJECTSTRING} paws gently at ${TARGETSTRING}... It looks so sad...`],
+            [new TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsWithinRadiusOfSelf(5)],
+            [new DeploySass(":(")],
+            true,
+            1000*60
+        );
+
+        const visitGrave = new AiBeat(
+            "Insightful Punishing Twin: Mourn your Twin",
+            [`The ${SUBJECTSTRING} howls with sadness... and begins making a destructive bee line back to the ${TARGETSTRING}`],
+            [new RandomTarget(0.95),new TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsWithinRadiusOfSelf(5, {invert: false})],
+            [new FollowObject()],
+            true,
+            1000*60
+        );
+        
+        const kill = new AiBeat(
+            "Insightful Punishing Twin: Punish Blindly",
+            [`The ${SUBJECTSTRING} is lashing out blindly. The torso of the ${SUBJECTSTRING} opens with a meaty squelch and crunches down on the ${TARGETSTRING}. Shreds of them are all that remain.`],
+            [new TargetIsWithinRadiusOfSelf(5)],
+            [new MeleeKill("being eaten by the Insightful Punishing Twin"), new DeploySass(":)")],
+            true,
+            1000*60
+        );
+
+        const unbreach = new AiBeat(
+            "Insightful Punishing Twin: Relax",
+            [`The Insightful Punishing Twin withers into itself, and Devona emerges once more. She appears to be unconcious, but there is a slight smile on her blood soaked face. Her brother is avenged.`],
+            [new TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive({invert:true})],
+            [new IncrementMyState("no")],
+            true,
+            1000*60
+        );
+        
+
+        const beats:AiBeat[] = [unbreachBecauseYouAreLeTired,kill,hunt,visitGrave, mourn, unbreach];
 
         super(room,"Insight Punishing Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[KNOWING]],sprite,
         "The Insightful Punishing Twin is hunting.", beats);
