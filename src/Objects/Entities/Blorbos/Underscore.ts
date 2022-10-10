@@ -2,7 +2,7 @@ import { Movement } from "../../MovementAlgs/BaseMovement";
 import { NoMovement } from "../../MovementAlgs/NoMovement";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
-import { OBFUSCATION, DECAY, LOVE, FLESH, DARKNESS } from "../../ThemeStorage";
+import { OBFUSCATION, DECAY, LOVE, FLESH, DARKNESS, CENSORSHIP } from "../../ThemeStorage";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { Quotidian, Direction } from "./Quotidian";
 
@@ -25,6 +25,6 @@ export class Underscore extends Quotidian{
 
         };
         const beats:AiBeat[] = [];
-        super(room,"_", x,y,[all_themes[DARKNESS],all_themes[OBFUSCATION],all_themes[DECAY],all_themes[LOVE],all_themes[FLESH]],sprite,"Being unable to see them is for your protection.", beats);
+        super(room,"_", x,y,[all_themes[DARKNESS],all_themes[CENSORSHIP],all_themes[OBFUSCATION],all_themes[DECAY],all_themes[LOVE],all_themes[FLESH]],sprite,"Being unable to see them is for your protection.", beats);
     }
 }

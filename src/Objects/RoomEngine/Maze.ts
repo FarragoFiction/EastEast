@@ -3,7 +3,7 @@ import { createElementWithIdAndParent } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 
 import { all_themes } from "../Theme";
-import { ENDINGS, WEB, SPYING, TECHNOLOGY, OBFUSCATION, KILLING, FIRE, LONELY, SOUL, CLOWNS, KNOWING } from "../ThemeStorage";
+import { ENDINGS, WEB, SPYING, TECHNOLOGY, OBFUSCATION, KILLING, FIRE, LONELY, SOUL, CLOWNS, KNOWING, CENSORSHIP } from "../ThemeStorage";
 import { ChantingEngine } from "./ChantingEngine";
 import { randomRoomWithThemes, Room } from "./Room";
 import { StoryBeat } from "./StoryBeat";
@@ -195,6 +195,8 @@ export class Maze {
             ,{name: "fire", theme:all_themes[FIRE] }
             ,{name: "lonely", theme:all_themes[LONELY] }
             ,{name: "void", theme:all_themes[OBFUSCATION] }
+
+            ,{name: "censored", theme:all_themes[CENSORSHIP] }
         ]
 
         for(let map of classes){

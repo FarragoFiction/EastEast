@@ -3,6 +3,8 @@ import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { TargetFilter, TargetingOptionType, TARGETSTRING } from "./baseFilter";
 
+//IMPORTANT: THIS NEEDS TO BE THE *LAST* FILTER IN PLACE UNLESS YOU WANT TO "CHECK IF A RANDOM OBJECT IS DEVONA" AS OPPOSED TO
+//DO A THING TO DEVONA A RANDOM CHANCE
 export class RandomTarget extends TargetFilter {
     //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
     odds: number; //between 0 and 1, bigger is better

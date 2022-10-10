@@ -98,8 +98,12 @@
   src: url("fonts/GALLAUDET.ttf");
 }
 
-.void{
+.censored{
   font-size: 1px;
+  color: black;
+}
+
+.void{
   color: black;
 }
 
@@ -135,10 +139,10 @@
   opacity: 85%;
 }
 
-.void::before {
+.censored::before {
   font-weight: bold;
-  color: navy;
-  content: "VOID CANNOT BE SEEN";
+  color: red;
+  content: "THE CENSORSHIP IS FOR YOUR PROTECTION";
   font-size: 32px;
   filter: blur(1px);
   opacity: 50%;

@@ -131,7 +131,7 @@ export class InsightTwin extends Quotidian{
         const hunt = new AiBeat(
             "Insightful Punishing Twin: Hunt for the Killer of Your Twin",
             [`The ${SUBJECTSTRING} is laser focused on tracking down the one who killed Neville.  It doesn't seem to have much stamina, tho...`],
-            [new TargetIsTheKillerOfBlorboNamed("Neville"), new TargetIsWithinRadiusOfSelf(5, {invert: true})],
+            [new TargetIsTheKillerOfBlorboNamed("Neville"), new TargetIsWithinRadiusOfSelf(5, {invert: true}), new TargetIsAlive({invert:false})],
             [new FollowObject(), new DeploySass("!")],
             true,
             1000*60
@@ -139,10 +139,10 @@ export class InsightTwin extends Quotidian{
         const unbreachBecauseYouAreLeTired = new AiBeat(
             "Insightful Punishing Twin: Exhaust yourself",
             [`The Insightful Punishing Twin rages and thrashes around and seems to completely tire itself out.  Devona emerges, unconscious, tears streaming down her sleeping face.`],
-            [new RandomTarget(0.3)],
+            [new RandomTarget(0.03)],
             [new IncrementMyState("no"), new StopMoving()],
             true,
-            1000*60
+            1000*60*3
         );
 
         const mourn = new AiBeat(
@@ -182,7 +182,7 @@ export class InsightTwin extends Quotidian{
         );
         
 
-        const beats:AiBeat[] = [unbreachBecauseYouAreLeTired,kill,hunt,visitGrave, mourn, unbreach];
+        const beats:AiBeat[] = [kill, mourn,unbreachBecauseYouAreLeTired,hunt,visitGrave, unbreach];
 
         super(room,"Insight Punishing Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[KNOWING]],sprite,
         "The Insightful Punishing Twin is hunting.", beats);

@@ -1885,14 +1885,19 @@ const NoMovement_1 = __webpack_require__(4956);
 const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
+const DeploySass_1 = __webpack_require__(4237);
 const FollowObject_1 = __webpack_require__(744);
 const GiveRandomObjectToTarget_1 = __webpack_require__(4009);
 const IncrementMyState_1 = __webpack_require__(9211);
+const MeleeKill_1 = __webpack_require__(2900);
 const PickupObject_1 = __webpack_require__(9936);
+const StopMoving_1 = __webpack_require__(4469);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
 const IHaveObjectWithName_1 = __webpack_require__(6274);
+const RandomTarget_1 = __webpack_require__(9824);
 const TargetIsAlive_1 = __webpack_require__(7064);
+const TargetIstheKillerOfBlorboNamed_1 = __webpack_require__(7082);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const Quotidian_1 = __webpack_require__(6387);
@@ -1929,7 +1934,19 @@ class InsightTwin extends Quotidian_1.Quotidian {
         const sprite = {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
-        const beats = [];
+        /*
+            Devona has high Insight and knows EXACTLY where her target is, and moves towards them. Hhowever, she has no stamina and might just unbreach out of nowhere.
+
+            However, she is highly destructive and kills anything in her way.
+              She knows she doesn't have the TIME to go around people or deal with threats.
+        */
+        const hunt = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Hunt for the Killer of Your Twin", [`The ${baseFilter_1.SUBJECTSTRING} is laser focused on tracking down the one who killed Neville.  It doesn't seem to have much stamina, tho...`], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Neville"), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true }), new TargetIsAlive_1.TargetIsAlive({ invert: false })], [new FollowObject_1.FollowObject(), new DeploySass_1.DeploySass("!")], true, 1000 * 60);
+        const unbreachBecauseYouAreLeTired = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Exhaust yourself", [`The Insightful Punishing Twin rages and thrashes around and seems to completely tire itself out.  Devona emerges, unconscious, tears streaming down her sleeping face.`], [new RandomTarget_1.RandomTarget(0.03)], [new IncrementMyState_1.IncrementMyState("no"), new StopMoving_1.StopMoving()], true, 1000 * 60 * 3);
+        const mourn = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} paws gently at ${baseFilter_1.TARGETSTRING}... It looks so sad...`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass(":(")], true, 1000 * 60);
+        const visitGrave = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} howls with sadness... and begins making a destructive bee line back to the ${baseFilter_1.TARGETSTRING}`], [new RandomTarget_1.RandomTarget(0.95), new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: false })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
+        const kill = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Punish Blindly", [`The ${baseFilter_1.SUBJECTSTRING} is lashing out blindly. The torso of the ${baseFilter_1.SUBJECTSTRING} opens with a meaty squelch and crunches down on the ${baseFilter_1.TARGETSTRING}. Shreds of them are all that remain.`], [new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new MeleeKill_1.MeleeKill("being eaten by the Insightful Punishing Twin"), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
+        const unbreach = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Relax", [`The Insightful Punishing Twin withers into itself, and Devona emerges once more. She appears to be unconcious, but there is a slight smile on her blood soaked face. Her brother is avenged.`], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60);
+        const beats = [kill, mourn, unbreachBecauseYouAreLeTired, hunt, visitGrave, unbreach];
         super(room, "Insight Punishing Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "The Insightful Punishing Twin is hunting.", beats);
         this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
         this.maxSpeed = 8;
@@ -2243,12 +2260,18 @@ class FortitudeTwin extends Quotidian_1.Quotidian {
         const sprite = {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
-        const hunt = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Hunt for the Killer of Your Twin", [`The ${baseFilter_1.SUBJECTSTRING} is aimlessly searching for the Killer of Devona. You don't get the impression that it's very good at it. It seems to just kinda be moving around at random and sqwawking in frustration.  It never gets tired though...`], [new RandomTarget_1.RandomTarget(0.95)], [new MoveRandomly_1.MoveRandomly(), new DeploySass_1.DeploySass("!?")], true, 1000 * 60);
-        const mourn = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} paws gently at ${baseFilter_1.TARGETSTRING}... It looks so sad...`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new FollowObject_1.FollowObject()], true, 1000 * 60);
-        const visitGrave = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} howls with sadness... and begins making a bee line back to the ${baseFilter_1.TARGETSTRING}`], [new RandomTarget_1.RandomTarget(0.95), new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: false })], [new DeploySass_1.DeploySass(":(")], true, 1000 * 60);
+        /*
+            Neville has absolutely no idea where the killer is, but is careful and deliberate while looking for them.
+              He won't kill anyoen except the one who harmed his twin.
+
+              It might take him forever, but he has all the stamina he needs to be patient.
+        */
+        const hunt = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Hunt for the Killer of Your Twin", [`The ${baseFilter_1.SUBJECTSTRING} is aimlessly searching for the Killer of Devona. You don't get the impression that it's very good at it. It seems to just kinda be moving around at random and sqwawking in frustration.  It never gets tired though...`], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive_1.TargetIsAlive({ invert: true }), new RandomTarget_1.RandomTarget(0.5)], [new MoveRandomly_1.MoveRandomly(), new DeploySass_1.DeploySass("!?")], true, 1000 * 60);
+        const mourn = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} paws gently at ${baseFilter_1.TARGETSTRING}... It looks so sad...`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(10)], [new DeploySass_1.DeploySass(":(")], true, 1000 * 60);
+        const visitGrave = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} whimpers with sadness... and begins making a bee line back to the ${baseFilter_1.TARGETSTRING}`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true, invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
         const kill = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Punish the Killer of Your Twin", [`The torso of the ${baseFilter_1.SUBJECTSTRING} opens with a meaty squelch and crunches down on the ${baseFilter_1.TARGETSTRING}. Shreds of them are all that remain. The Fortitudinous Punishing Twin appears to be satisfied.`], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new MeleeKill_1.MeleeKill("being eaten by the Fortitudinous Punishing Twin"), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
         const unbreach = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Relax", [`The Fortitudinous Punishing Twin withers into itself, and Neville emerges once more. He falls onto his knees, tears streaming down his face. His twin is dead, and nothing will ever bring her back. But at least she is avenged.   `], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60);
-        const beats = [kill, hunt, visitGrave, mourn, unbreach];
+        const beats = [kill, mourn, hunt, visitGrave, unbreach];
         super(room, "Fortitudinous Punishing Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "The Fortitude Punishing Twin is hunting.", beats);
         this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
         this.maxSpeed = 8;
@@ -3035,6 +3058,8 @@ exports.IHaveObjectWithTheme = IHaveObjectWithTheme;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RandomTarget = void 0;
 const baseFilter_1 = __webpack_require__(9505);
+//IMPORTANT: THIS NEEDS TO BE THE *LAST* FILTER IN PLACE UNLESS YOU WANT TO "CHECK IF A RANDOM OBJECT IS DEVONA" AS OPPOSED TO
+//DO A THING TO DEVONA A RANDOM CHANCE
 class RandomTarget extends baseFilter_1.TargetFilter {
     constructor(odds, options = { singleTarget: false, invert: false, kMode: false }) {
         super(options);

@@ -109,7 +109,7 @@ export class FortitudeTwin extends Quotidian{
         const hunt = new AiBeat(
             "Fortitudinous Punishing Twin: Hunt for the Killer of Your Twin",
             [`The ${SUBJECTSTRING} is aimlessly searching for the Killer of Devona. You don't get the impression that it's very good at it. It seems to just kinda be moving around at random and sqwawking in frustration.  It never gets tired though...`],
-            [new RandomTarget(0.95)],
+            [new TargetIsTheKillerOfBlorboNamed("Devona"),new TargetIsAlive({invert:true}),new RandomTarget(0.5)],
             [new MoveRandomly(), new DeploySass("!?")],
             true,
             1000*60
@@ -118,7 +118,7 @@ export class FortitudeTwin extends Quotidian{
         const mourn = new AiBeat(
             "Fortitudinous Punishing Twin: Mourn your Twin",
             [`The ${SUBJECTSTRING} paws gently at ${TARGETSTRING}... It looks so sad...`],
-            [new TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf(5)],
+            [new TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf(10)],
             [new DeploySass(":(")],
             true,
             1000*60
@@ -127,7 +127,7 @@ export class FortitudeTwin extends Quotidian{
         const visitGrave = new AiBeat(
             "Fortitudinous Punishing Twin: Mourn your Twin",
             [`The ${SUBJECTSTRING} whimpers with sadness... and begins making a bee line back to the ${TARGETSTRING}`],
-            [new RandomTarget(0.95),new TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf(5, {invert: false})],
+            [new TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf(5,{singleTarget:true, invert: true})],
             [new FollowObject()],
             true,
             1000*60
@@ -152,7 +152,7 @@ export class FortitudeTwin extends Quotidian{
         );
         
 
-        const beats:AiBeat[] = [kill,hunt,visitGrave, mourn, unbreach];
+        const beats:AiBeat[] = [kill,mourn,hunt,visitGrave,  unbreach];
 
         super(room,"Fortitudinous Punishing Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[MATH]],sprite,
         "The Fortitude Punishing Twin is hunting.", beats);

@@ -47,6 +47,8 @@ export const SPYING = "spying";
 export const HEALING = "healing";
 export const DOLLS = "dolls";
 export const OBFUSCATION = "obfuscation";
+export const CENSORSHIP = "censorship";
+
 export const DARKNESS = "darkness";
 export const KILLING = "killing";
 export const MUSIC = "music";
@@ -93,7 +95,7 @@ export const ART = "art";  //JR NOTE TODO
 export const TECHNOLOGY = "technology";  //JR NOTE TODO
 
 
-export const keys = [NULL, TECHNOLOGY, ART, SPACE, TIME, FLESH, BURIED, STEALING, FREEDOM, FIRE, LONELY, OCEAN, SCIENCE, MATH, TWISTING, DEATH, APOCALYPSE, WASTE, SERVICE, FAMILY, MAGIC, ANGELS, LIGHT, HUNTING, CLOWNS, PLANTS, DECAY, CHOICES, ZAP, LOVE, SOUL, ANGER, WEB, ROYALTY, ENDINGS, KNOWING, GUIDING, CRAFTING, ADDICTION, SPYING, HEALING, DOLLS, OBFUSCATION, DARKNESS, KILLING, MUSIC, DEFENSE, QUESTING, BUGS, LANGUAGE];
+export const keys = [NULL, TECHNOLOGY, ART, SPACE, TIME, FLESH, BURIED, STEALING, FREEDOM, FIRE, LONELY, OCEAN, SCIENCE, MATH, TWISTING, DEATH, APOCALYPSE, WASTE, SERVICE, FAMILY, MAGIC, ANGELS, LIGHT, HUNTING, CLOWNS, PLANTS, DECAY, CHOICES, ZAP, LOVE, SOUL, ANGER, WEB, ROYALTY, ENDINGS, KNOWING, GUIDING, CRAFTING, ADDICTION, SPYING, HEALING, DOLLS, OBFUSCATION, CENSORSHIP,DARKNESS, KILLING, MUSIC, DEFENSE, QUESTING, BUGS, LANGUAGE];
 
 
 interface ThemeStatMap {
@@ -305,6 +307,8 @@ const initStatsMap = () => {
     stats_map[CLOWNS] = [Stat.RAGE(1)];
     stats_map[DOLLS] = [Stat.HEART(1)];
     stats_map[OBFUSCATION] = [Stat.VOID(1)];
+    stats_map[CENSORSHIP] = [Stat.VOID(300)];
+
     stats_map[DARKNESS] = [Stat.VOID(1)];
     stats_map[KILLING] = [Stat.RAGE(1)];
     stats_map[MUSIC] = [Stat.HOPE(1)];
@@ -360,6 +364,8 @@ const initPeople = () => {
     person_posibilities[CLOWNS] = ["clown", "mime", "jester", "acrobat", "performer", "harlequin", "ringmaster"];
     person_posibilities[DOLLS] = ["doll", "mannequin", "dressform", "statue", "dummy", "puppet", "marionette", "figure", "figurine", "toy"];
     person_posibilities[OBFUSCATION] = ["hider", "ninja", "censor", "disguise artist"];
+    person_posibilities[CENSORSHIP] = ["hider", "ninja", "censor", "disguise artist"];
+
     person_posibilities[DARKNESS] = ["edgelord", "ninja", "watchman", "nightclerk"];
     person_posibilities[KILLING] = ["murderer", "assassin", "killer", "soldier"];
     person_posibilities[MUSIC] = ["singer", "dancer", "choir", "bard", "musician", "drummer"];
@@ -411,6 +417,8 @@ const initAdjs = () => {
     adj_possibilities[CLOWNS] = ["honking", "funny", "prancing", "tumbling", "joking", "jeering", "dancing", "performing", "jesting"];
     adj_possibilities[DOLLS] = ["delicate", "beautiful", "unsettling", "playing", "dressing", "plastic", "ceramic"];
     adj_possibilities[OBFUSCATION] = ["hiding", "hidden", "obscured", "confusing", "blinding", "secret", "unknowable", "censored"];
+    adj_possibilities[CENSORSHIP] = ["hiding", "hidden", "obscured", "confusing", "blinding", "secret", "unknowable", "censored"];
+
     adj_possibilities[DARKNESS] = ["darkened", "blackened", "midnight", "blinding"];
     adj_possibilities[KILLING] = ["killing", "murderous", "massacred", "bloody", "savage", "blood-stained", "gory", "brutal"];
     adj_possibilities[MUSIC] = ["singing", "dancing", "playing"];
@@ -438,6 +446,8 @@ const initFilters = () => {
     filter_possibilities[FLESH] = [`grayscale(70%) sepia(100%) contrast(100%) saturate(157%) hue-rotate(310deg)`];// tint it pink
     filter_possibilities[OCEAN] = [`grayscale(70%) sepia(100%) contrast(100%) saturate(157%) hue-rotate(178deg)`];// tint it blue
     filter_possibilities[OBFUSCATION] = [`blur(5)`];
+    filter_possibilities[CENSORSHIP] = [`blur(5)`];
+
     filter_possibilities[SPYING] = [`contrast(200%)`];
     filter_possibilities[LONELY] = [`contrast(70%)`,'saturate(30%)','grayscale(70%)','contrast(50%)','grayscale(90%)'];
     filter_possibilities[DARKNESS] = [`brightness(60%)`];
@@ -465,6 +475,8 @@ const initFloorPossibilities = () => {
     floor_possibilities[FIRE] = ["lavafloor.png", "firefloor.png"];
     floor_possibilities[ENDINGS] = ["curtains.png"];
     floor_possibilities[OBFUSCATION] = ["static.png", "voidfloor.png", "weirdfloor.png"];
+    floor_possibilities[CENSORSHIP] = ["static.png", "voidfloor.png", "weirdfloor.png"];
+
     floor_possibilities[STEALING] = ["goldwalls.png"];
     floor_possibilities[MAGIC] = ["arcanefloor2.png", "arcanefloor.png"];
     floor_possibilities[ROYALTY] = ["goldwalls.png"];
@@ -860,6 +872,8 @@ const initSuperNames = () => {
     super_name_possibilities_map[CLOWNS] = ["Ringmaster"];
     super_name_possibilities_map[DOLLS] = ["Automatonophobia "];
     super_name_possibilities_map[OBFUSCATION] = ["Knowledge Forever Lost"];
+    super_name_possibilities_map[CENSORSHIP] = ["Knowledge Forever Lost"];
+
     super_name_possibilities_map[DARKNESS] = ["Night Eternal"];
     super_name_possibilities_map[KILLING] = ["Bloodbath"];
     super_name_possibilities_map[MUSIC] = ["Symphonic Synthesia"];
@@ -911,6 +925,8 @@ const initLocations = () => {
     location_possibilities[CLOWNS] = ["circus", "tent", "carnival"];
     location_possibilities[DOLLS] = ["teahouse", "shop", "toystore"];
     location_possibilities[OBFUSCATION] = ["burning building", "tavern", "park"];
+    location_possibilities[CENSORSHIP] = ["burning building", "tavern", "park"];
+
     location_possibilities[DARKNESS] = ["basement", "attic", "darkroom"];
     location_possibilities[KILLING] = ["battlefield", "slaughterhouse", "butchers", "abattoir"];
     location_possibilities[MUSIC] = ["theatre", "concert hall", "pub"];
@@ -962,6 +978,8 @@ const initObjects = () => {
     object_possibilities[CLOWNS] = ["clown wig", "bicycle horn", "facepaint", "balloon animal", "large pants", "circus tent", "unicycle", "ringmasters jacket"];
     object_possibilities[DOLLS] = ["doll", "mannequin", "statuette"];
     object_possibilities[OBFUSCATION] = ["white-out", "sharpie", "censor bar"];
+    object_possibilities[CENSORSHIP] = ["white-out", "sharpie", "censor bar"];
+
     object_possibilities[DARKNESS] = ["sunglasses", "blinds", "blindfold", "darklight"];
     object_possibilities[KILLING] = ["knife", "machete", "gun", "blood", "bloody bandages", "bayonette"];
     object_possibilities[MUSIC] = ["flute", "guitar", "drum", "piano"];
@@ -1017,6 +1035,8 @@ const initMenuOptions = () => {
     menu_options[CLOWNS] = [LORE];
     menu_options[DOLLS] = [CITYBUILDING];
     menu_options[OBFUSCATION] = [LORE];
+    menu_options[CENSORSHIP] = [LORE];
+
     menu_options[DARKNESS] = [BACKSTORY, INVENTORY];
     menu_options[KILLING] = [BACKSTORY, INVENTORY];
     menu_options[MUSIC] = [INVENTORY];
@@ -1187,6 +1207,8 @@ const createOpinion = (baseline = 0, specificOpinions: ThemePossibilitiesNumberM
         CLOWNS: baseline,
         DOLLS: baseline,
         OBFUSCATION: baseline,
+        CENSORSHIP: baseline,
+
         DARKNESS: baseline,
         KILLING: baseline,
         MUSIC: baseline,
@@ -1268,6 +1290,8 @@ const initThemeOpinions = () => {
     //anything could be in the dark
     theme_opinions[DARKNESS] = createOpinion(0, {LIGHT: -113});
     //hide everything
+    theme_opinions[CENSORSHIP] = createOpinion(-85, {LIGHT:-113,MATH: 113,KNOWING: -113,SCIENCE: -113,SPYING: 113,DARKNESS: 113,LANGUAGE: -113});
+
     theme_opinions[OBFUSCATION] = createOpinion(-85, {LIGHT:-113,MATH: 113,KNOWING: -113,SCIENCE: -113,SPYING: 113,DARKNESS: 113,LANGUAGE: -113});
     theme_opinions[KILLING] = createOpinion(-113, {CRAFTING: 33,ANGER: 85,KILLING: 113, FLESH: 113});
     theme_opinions[MUSIC] = createOpinion(33, {LANGUAGE: 85,ANGELS: 85,MATH: 85,FREEDOM: 85,ART: 85,MUSIC: 113});
@@ -1320,6 +1344,8 @@ const initCompliments = () => {
     compliment_possibilities[CLOWNS] = ["funny"];
     compliment_possibilities[DOLLS] = ["playful "];
     compliment_possibilities[OBFUSCATION] = ["mysterious"];
+    compliment_possibilities[CENSORSHIP] = ["censored"];
+
     compliment_possibilities[DARKNESS] = ["quiet"];
     compliment_possibilities[KILLING] = ["forthright"];
     compliment_possibilities[MUSIC] = ["talented"];
@@ -1371,6 +1397,8 @@ const initMiracles = () => {
     miracles[CLOWNS] = ["resist any attack so long as they can make a pun about it", "gain Legendary Tier Acrobatics", "become unconditionally immortal", "gain cartoon physics"];
     miracles[DOLLS] = ["control any inanimate object that appears to be something living", "summon one Doll Familiar", "transform themselves into a doll", "transform themselves into a mannequin"];
     miracles[OBFUSCATION] = ["permanently hide any object", "remove knowledge of one concept from any target", "cause amnesia in any one target"];
+    miracles[CENSORSHIP] = ["permanently hide any object", "remove knowledge of one concept from any target", "cause amnesia in any one target"];
+
     miracles[DARKNESS] = ["completely block out the sun for one square mile", "teleport between any shadows", "remove all light from any room"];
     miracles[KILLING] = ["summon a tidal wave of blood", "summon any arbitrary amount of knives for five minutes", "mark any target for senseless violence from any witnesses", "summon invisible sentient knives to cut any target"];
     miracles[MUSIC] = ["gain divine knowledge of how to perform any piece of music", "gain divine inspiration to create any musical performance", "gains the ability to divinely influence any who hear their music"];
@@ -1422,6 +1450,8 @@ const initInsults = () => {
     insult_possibilities[CLOWNS] = ["foolish"];
     insult_possibilities[DOLLS] = ["childish"];
     insult_possibilities[OBFUSCATION] = ["mysterious"];
+    insult_possibilities[CENSORSHIP] = ["censored"];
+
     insult_possibilities[DARKNESS] = ["edgy"];
     insult_possibilities[KILLING] = ["murderous"];
     insult_possibilities[MUSIC] = ["tone-deaf"];
@@ -1473,6 +1503,8 @@ const initPhilosophy = () => {
     philosophy[CLOWNS] = ["exigua replaces the tongue, some feed on the host's blood and many others feed on fish mucus. This is the only known case of a parasite assumed to be functionally replacing a host organ. When a host fish dies, C. exigua, after some time, detaches itself from the tongue stub and leaves the fish's mouth cavity.", "Most clowns aren't hiding anything, except maybe a bunch of fake flowers or a balloon animal.", "Then there's the 1892 Italian opera, Pagliacci (Clowns), in which the cuckolded main character, an actor of the Grimaldian clown mold, murders his cheating wife on stage during a performance. Clowns were unsettling—and a great source for drama.", "That Dickens's version of Grimaldi's memoirs was massively popular meant that this perception, of something dark and troubled masked by humor, would stick.", "Grimaldi made the clown the leading character of the pantomime, changing the way he looked and acted. Before him, a clown may have worn make-up, but it was usually just a bit of rouge on the cheeks to heighten the sense of them being florid, funny drunks or rustic yokels. Grimaldi, however, suited up in bizarre, colorful costumes, stark white face paint punctuated by spots of bright red on his cheeks and topped with a blue mohawk. ", "“Mischief” is one thing; homicidal urges is certainly another. What's changed about clowns is how that darkness is manifest", "Clowns, as pranksters, jesters, jokers, harlequins, and mythologized tricksters have been around for ages.", "Most clowns aren't trying to be odd. They're trying to be silly and sweet, fun personified. ", "Very few children like clowns. They are unfamiliar and come from a different era. They don't look funny, they just look odd.", "You aren't alone in your fear of makeup-clad entertainers; people have been frightened by clowns for centuries", "Clowns are treated as a symbol which means that actual professional clowns are left aside from this analysis.", "Clowns will be treated as an embodiment of humour and champions of the peculiar relationship between violence and humour. The main argument is that clowns reveal the inherent violent nature of humour in various ways. ", "How is it possible that clowns, the epitomes of humour and bringers of joy, can do the most horrible deeds?", "To discuss the relationship between humour and violence from a philosophical perspective, it is necessary to analyze different forms of violence and humour to understand in which ways humour can be violent and violence humorous.", "Clown history is not cement that hardens around our feet holding us in place.  It is a foundation forming a launch pad for our future.  However, if our foundation is slanted by bias or misinformation we will be tilted off course.  That is one reason why accurate clown history is important.", "Tramp clowns were not allowed to juggle because it was inconsistent with the slow movement required of them.", "What philosophy can we derive from this history?  First, that clowning is not bound by rigid rules.  The history of clowning is one of creativity and evolution.    Specific clown characters generally start as the stupid victim, gradually become the clever rogue, transform into the authoritarian, and then fade away.", "The appearance of the Whiteface clown has also evolved.  Joseph Grimaldi's costumes in the early nineteenth century were colorful but not elegant.  The very beautiful style of clothing that we associate with the classic Whiteface clown was developed during the twentieth century as the character became more of an authority figure than a prankster.", "The appearance of the characters evolved in correspondence to the evolution of their status.  Originally Harlequin's costume had randomly placed irregular shaped patches.  By the time he turned into a rogue, the patches were formalized into a diamond pattern covering the costume.  As an authoritarian character, Harlequin wore satin clothing trimmed with ribbons.", "In order to have any movement forward in clowning, you have to have a philosophy of clowning.  In order to have a philosophy of clowning, you have to have a history of clowning.", "A clown rarely became rich and noble but he often got clouts. Dressed up in a cap with bells, he was a little tyrant and at the same time, a victim of the crowd. ... A clown adorning your ornaments symbolizes humor, playfulness, talent, carelessness, volatility of life, acting, luck, etc.", "Clowning is about the freedom that comes from a state of total, unconditional acceptance of our most authentic selves, warts and all. It offers us respite from our self-doubts and fears, and opens the door to joy. And the best part is, we are all already our clowns."];
     philosophy[DOLLS] = ["", "Perceptual tension occurs when an individual perceives conflicting cues to category membership, such as when a humanoid figure moves like a robot, or has other visible robot features. This cognitive conflict is experienced as psychological discomfort (i.e., 'eeriness'), much like the discomfort that is experienced with cognitive dissonance.", "The existence of artificial but humanlike entities is viewed by some as a threat to the concept of human identity.", "If an entity looks sufficiently nonhuman, its human characteristics are noticeable, generating empathy. However, if the entity looks almost human, it elicits our model of a human other and its detailed normative expectations. The nonhuman characteristics are noticeable, giving the human viewer a sense of strangeness.", "Stimuli with human and nonhuman traits undermine our sense of human identity by linking qualitatively different categories, human and nonhuman, by a quantitative metric, degree of human likeness.", "Uncanny stimuli may activate a cognitive mechanism that originally evolved to motivate the avoidance of potential sources of pathogens by eliciting a disgust response. ", "Viewing an 'uncanny' robot elicits an innate fear of death and culturally supported defenses for coping with death's inevitability.... ", "If an object is obviously enough non-human, its human characteristics will stand out and be endearing; however, if that object reaches a certain threshold of human-like appearance, its non-human characteristics will stand out, and be disturbing.", "Uncanny feelings arise when there is an intellectual uncertainty about whether an object is alive or not.", "Lifelike or anatomically correct dolls are used by health professionals, medical schools and social workers to train doctors and nurses in various health procedures.", "Since ancient times, dolls have played a central role in magic and religious rituals and have been used as representations of deities.", "Exposure therapy usually starts off small. While your therapist is present, you may view a photograph of a doll and practice relaxation techniques. Later, with your therapist present, you may watch a short video about dolls, again working on breathing and relaxation. Eventually, you may be in the same room with your therapist with an actual doll as you perform your relaxation exercises.", "The fear experienced is out of proportion to the actual danger posed by the object (dolls). If the phobia becomes severe, a person with pediophobia may even re-organize their entire life just to avoid dolls.", "", "When automatonophobia develops because of a traumatic event related to human-like figures, it's known as an experiential phobia. This traumatic event could be a scary movie with human-like figures or an in-person event involving human-like figures.", "Automatonophobia causes an automatic, uncontrollable fear response to human-like figures. The sight or thought of these human-like figures can trigger anxiety for some people. Pediophobia is a fear of dolls and is a related phobia.", "Automatonophobia is a fear of human-like figures, such as mannequins, wax figures, statues, dummies, animatronics, or robots.", "Can you remember what it was like to play as a child?", "Many people associate dolls with fertility, so depending on how the doll appears, it could symbolize a desire to have children or fear of having children. For other people, dolls symbolize a desire to return to the innocence of childhood.", "Though The Stranger is a work of fiction, it contains a strong resonance of Camus's philosophical notion of absurdity. In his essays, Camus asserts that individual lives and human existence in general have no rational meaning or order."];
     philosophy[OBFUSCATION] = ["The psychological term for fear of the unknown is “xenophobia.” In modern usage, the word has evolved to mean the fear of strangers or foreigners — but its original meaning is much broader. It includes anything or anyone that's unfamiliar or unknown.", "Two can keep a secret if one is dead.", "Plato in The Republic advocates censorship in literature to avoid the corruption of youth.", "Even if noumena are unknowable, they are still needed as a limiting concept,[26] Kant tells us. Without them, there would be only phenomena, and since potentially we have complete knowledge of our phenomena, we would in a sense know everything.", "hese unknown somethings are manifested within the noumenon—although we can never know how or why as our perceptions of these unknown somethings via our physical senses are bound by the limitations of the categories of the understanding and we are therefore never able to fully know the 'thing-in-itself'.", "According to Kant, objects of which we are cognizant via the physical senses are merely representations of unknown somethings—what Kant refers to as the transcendental object—as interpreted through the a priori or categories of the understanding.", "By Kant's Critique, our minds may attempt to correlate in useful ways, perhaps even closely accurate ways, with the structure and order of the various aspects of the universe, but cannot know these 'things-in-themselves' (noumena) directly. ", "Humans can make sense out of phenomena in these various ways, but in doing so can never know the 'things-in-themselves', the actual objects and dynamics of the natural world in their noumenal dimension - this being the negative correlate to phenomena and that which escapes the limits of human understanding.", "Immanuel Kant first developed the notion of the noumenon as part of his transcendental idealism, suggesting that while we know the noumenal world to exist because human sensibility is merely receptive, it is not itself sensible and must therefore remain otherwise unknowable to us.", "The sense of philosophical mystery is an intellec tual reaction to what we do not know. It does not come merely from ignoranceȄthat is, the lack of knowledge or evidenceȄor from simply assuming that there is more to reality than we currently know.", "Can there be meaning in mystery, or is wonder––as a state of being lost for words in the face of mystery––rather antithetical to meaning?", "For Dufourmantelle, the secret is a powerful and dynamic thing: deadly if unheard or misused, perhaps, but equally the source of creativity and of ethics. An ethics of the secret, we can hear her say, means listening hard and sensitively, respecting the secret in its secret essence, unafraid of it and open to what it has to say."];
+       philosophy[CENSORSHIP] = ["The psychological term for fear of the unknown is “xenophobia.” In modern usage, the word has evolved to mean the fear of strangers or foreigners — but its original meaning is much broader. It includes anything or anyone that's unfamiliar or unknown.", "Two can keep a secret if one is dead.", "Plato in The Republic advocates censorship in literature to avoid the corruption of youth.", "Even if noumena are unknowable, they are still needed as a limiting concept,[26] Kant tells us. Without them, there would be only phenomena, and since potentially we have complete knowledge of our phenomena, we would in a sense know everything.", "hese unknown somethings are manifested within the noumenon—although we can never know how or why as our perceptions of these unknown somethings via our physical senses are bound by the limitations of the categories of the understanding and we are therefore never able to fully know the 'thing-in-itself'.", "According to Kant, objects of which we are cognizant via the physical senses are merely representations of unknown somethings—what Kant refers to as the transcendental object—as interpreted through the a priori or categories of the understanding.", "By Kant's Critique, our minds may attempt to correlate in useful ways, perhaps even closely accurate ways, with the structure and order of the various aspects of the universe, but cannot know these 'things-in-themselves' (noumena) directly. ", "Humans can make sense out of phenomena in these various ways, but in doing so can never know the 'things-in-themselves', the actual objects and dynamics of the natural world in their noumenal dimension - this being the negative correlate to phenomena and that which escapes the limits of human understanding.", "Immanuel Kant first developed the notion of the noumenon as part of his transcendental idealism, suggesting that while we know the noumenal world to exist because human sensibility is merely receptive, it is not itself sensible and must therefore remain otherwise unknowable to us.", "The sense of philosophical mystery is an intellec tual reaction to what we do not know. It does not come merely from ignoranceȄthat is, the lack of knowledge or evidenceȄor from simply assuming that there is more to reality than we currently know.", "Can there be meaning in mystery, or is wonder––as a state of being lost for words in the face of mystery––rather antithetical to meaning?", "For Dufourmantelle, the secret is a powerful and dynamic thing: deadly if unheard or misused, perhaps, but equally the source of creativity and of ethics. An ethics of the secret, we can hear her say, means listening hard and sensitively, respecting the secret in its secret essence, unafraid of it and open to what it has to say."];
+
     philosophy[DARKNESS] = ["Scotomaphobia is the irrational fear of blindness. Someone suffering from this condition can expect to experience a very high amount of anxiety from merely thinking of blindness, let alone actually experiencing it.", "Darkness is a symbol of evil or mystery or fear. ... The emotional response to an absence of light has inspired metaphor in literature, symbolism in art, and emphasis. The story of the Light versus the Darkness is one that everyone thinks that they know. The Light is good and the Dark is bad.", "Darkness the absence of light, it obscures objects in its veil. It can hide wonders and dangers that lurk. ", "We need darkness to feed our spirit, protect our health and protect the health of our planet. Light at night may be a sign of life on Earth, but the darkness will proclaim our true intelligence.", "Darkness can encompass a primitive chaos, and the powers of that chaos; it is not essentially evil, yet it is largely associated with death and destruction, captivity and spiritual darkness.", "The philosophy of darkness is very simple, it will not let you go towards light and it loves to keep everyone in darkness and at the end make brother fight brother. For this first you need to understand what is light and where it is available. People think they are in light but in fact they are in dark.", "Nyctophobia is an extreme fear of night or darkness that can cause intense symptoms of anxiety and depression. A fear becomes a phobia when it's excessive, irrational, or impacts your day-to-day life. Being afraid of the dark often starts in childhood and is viewed as a normal part of development.", "Some people pulled the lamp-post down because they wanted an electric light; some because they wanted old iron; some because they wanted darkness, because their deeds were evil."];
     philosophy[KILLING] = ["Hoplophobia, (pronounced [ˌhɔpləˈfoʊbiə]), from the Greek hoplon, or weapon, is defined as the 'fear of firearms' or alternatively, a fear of weapons in general, and describes a specific phobia.", "Aichmophobia is a fear of sharp objects like knives, needles, or pencils. ", "Knife goes in. Blood comes out.", "Should we model justified killing in war on justified killing outside of war? Or, in focusing on the justification of killing in war, might we then discover that there are some non-canonical cases of permissible killing outside of war?", "This masks a deeper methodological disagreement: when thinking about the morality of war, should we start by thinking about war, or by thinking about the permissible use of force outside of war?", "The debate between reductivism and exceptionalism is overblown—the concept of “war” is vague, and while typical wars involve properties that are not instantiated in typical conflicts outside of war, we can always come up with far-fetched hypotheticals that don't involve those properties, which we wouldn't call “wars”. ", "Artificial hypotheticals have their place, but any conclusions they support must be tested against the messy reality of war.", "Any normative theory of war should pay attention both to what the laws of war should be, and to what we morally ought to do. These are two distinct but equally important questions. And they entail the importance of a third: what ought we to do all things considered, for example when law and morality conflict? ", "Some reject the very idea of the “morality of war”.[1] Of those, some deny that morality applies at all once the guns strike up; for others, no plausible moral theory could license the exceptional horrors of war."];
     philosophy[MUSIC] = ["Martial music or military music is a specific genre of music intended for use in military settings performed by professional soldiers called field musicians. Much of the military music has been composed to announce military events as with bugle calls and fanfares, or accompany marching formations with drum cadences, or mark special occasions as by military bands.", "It is often thought that music has the ability to affect our emotions, intellect, and psychology; it can assuage our loneliness or incite our passions. ", "There has been a strong tendency in the aesthetics of music to emphasize the paramount importance of compositional structure; however, other issues concerning the aesthetics of music include lyricism, harmony, hypnotism, emotiveness, temporal dynamics, resonance, playfulness, and color (see also musical development).", "In the pre-modern tradition, the aesthetics of music or musical aesthetics explored the mathematical and cosmological dimensions of rhythmic and harmonic organization. In the eighteenth century, focus shifted to the experience of hearing music, and thus to questions about its beauty and human enjoyment (plaisir and jouissance) of music.", "There was intense debate over absolute music versus program music during the late romantic era in the late 19th century.", "Explications of the concept of music usually begin with the idea that music is organized sound. They go on to note that this characterization is too broad, since there are many examples of organized sound that are not music, such as human speech, and the sounds non-human animals and machines make.", "What is meaning in relation to music?", "What is the connection between music and emotions? (in the 19th century a debate began over whether purely instrumental music could convey emotions and depict imaginary scenes)", "What does music history reveal to us about the world?", "What is the relationship between music and language?", "What is the relationship between music and mind?", "What is the definition of music? (what are the necessary and sufficient conditions for classifying something as music?)", "Philosophy of music is the study of 'fundamental questions about the nature of music and our experience of it'.[1] The philosophical study of music has many connections with philosophical questions in metaphysics and aesthetics. "];
@@ -1529,6 +1561,8 @@ const initLocDesc = () => {
     loc_desc[CLOWNS] = ["a lifesized figure of a clown slumped against one wall", "a miniature circus tent barely fitting inside the room", "a book of 1001 jokes that just lists out the last 1001 things you've done in obsessive detail"];
     loc_desc[DOLLS] = ["a tea party set out for a collection of broken dolls", "a faceless mannequin that somehow seems to always be oriented towards you", "eyeless dolls lining the walls"];
     loc_desc[OBFUSCATION] = ["mirrors lining the walls showing only your floating eyeballs and no other part of your body", "books where every word is blacked out", "endless ciphers scribbled onto every surface", "an unnatural blur making it hard to make out the specific details of the room"];
+    loc_desc[CENSORSHIP] = ["mirrors lining the walls showing only your floating eyeballs and no other part of your body", "books where every word is blacked out", "endless ciphers scribbled onto every surface", "an unnatural blur making it hard to make out the specific details of the room"];
+
     loc_desc[DARKNESS] = ["a pool of utter blackness in the center of the room", "every lightbulb in the room has been smashed", "shadows that are darker than seems possible under every object"];
     loc_desc[KILLING] = ["splatters of blood along the wall and floor", "a bloody knife discarded on the floor", "a chalk outline of a figure clearly murdered"];
     loc_desc[MUSIC] = ["an ornate grand piano in the center of the room", "sheet music repurposed as wall paper", ""];
@@ -1633,6 +1667,8 @@ const initSounds = () => {
     sound_possibilities[CLOWNS] = ["a horn being honked", "a calliope playing", "a circus organ playing"];
     sound_possibilities[DOLLS] = ["a teaparty", "plastic creaking", "ceramic breaking"];
     sound_possibilities[OBFUSCATION] = ["pig latin", "morse code", "tap code"];
+    sound_possibilities[CENSORSHIP] = ["pig latin", "morse code", "tap code"];
+
     sound_possibilities[DARKNESS] = ["hushed silence", "a lightbulb breaking", "deep still water"];
     sound_possibilities[KILLING] = ["a knife plunging into flesh", "a gun going off", "a death gurgle"];
     sound_possibilities[MUSIC] = ["beautiful music", "singing", "a drum beating"];
@@ -1684,6 +1720,8 @@ const initFeelings = () => {
     feeling_possibilities[CLOWNS] = ["rubber", "balloons", "hair"];
     feeling_possibilities[DOLLS] = ["porcelain", "plastic", "rubber"];
     feeling_possibilities[OBFUSCATION] = ["nothing at all", "nothingness", "void"];
+    feeling_possibilities[CENSORSHIP] = ["nothing at all", "nothingness", "void"];
+
     feeling_possibilities[DARKNESS] = ["shadows", "darkness", "vantablack"];
     feeling_possibilities[KILLING] = ["blood", "knives", "bullets"];
     feeling_possibilities[MUSIC] = ["sheet-music", "brass", "wood"];
@@ -1735,6 +1773,8 @@ const initTastes = () => {
     taste_possibilities[CLOWNS] = ["cake", "candy", "humor"];
     taste_possibilities[DOLLS] = ["plastic", "ceramic", "adj"];
     taste_possibilities[OBFUSCATION] = ["nothing at all"];
+    taste_possibilities[CENSORSHIP] = ["nothing at all"];
+
     taste_possibilities[DARKNESS] = ["darkness"];
     taste_possibilities[KILLING] = ["blood", "murder", "blades"];
     taste_possibilities[MUSIC] = ["song"];
@@ -1786,6 +1826,8 @@ const initSmells = () => {
     smell_possibilities[CLOWNS] = ["sweat", "sugar", "popcorn"];
     smell_possibilities[DOLLS] = ["plastic", "porcelain", "lavendar"];
     smell_possibilities[OBFUSCATION] = ["nothing at all"];
+    smell_possibilities[CENSORSHIP] = ["nothing at all"];
+
     smell_possibilities[DARKNESS] = ["darkness"];
     smell_possibilities[KILLING] = ["death", "blood", "gunpowder"];
     smell_possibilities[MUSIC] = ["oil", "paper", "leather"];
@@ -1839,6 +1881,8 @@ const initEffectPossibilities = () => {
     effect_possibilities[CLOWNS] = ["calliope music drifts in on the breeze", "balloons twisted into animal shapes and confetti rain down from the sky", "a clown in the distance stares at you"];
     effect_possibilities[DOLLS] = ["blank eyed plastic dolls dance around you", "mannequins jibber and caper around you", "an ornate childs doll with fluffy hair and a porcelain face hovers in front of you"];
     effect_possibilities[OBFUSCATION] = ["you become briefly invisible", "you briefly become completely blind", "all sounds cut off at once"];
+    effect_possibilities[CENSORSHIP] = ["you become briefly invisible", "you briefly become completely blind", "all sounds cut off at once"];
+
     effect_possibilities[DARKNESS] = ["the light's radius gets smaller and smaller as the dark encroaches", "every lightbulb in the room shatters", "your shadow grows and grows and darkens and darkens"];
     effect_possibilities[KILLING] = ["blood begins lapping at your feet in a shallow crimson tide", "knives swirl around you at an alarming pace", "dozens and dozens of guns swirl around you, firing at random"];
     effect_possibilities[MUSIC] = ["indistinct dancers peform a complex number in a ring around you", "visible musical notes swirl and weave through the air", "ephermeral dancers spin in a circle around you", "beautiful music is played by the very air"];
@@ -1890,6 +1934,8 @@ const initGeneralBackstories = () => {
     general_backstories[SPYING] = ["have an extensive information network", "are always on top of the local gossip", "somehow always are aware of what everyone is doing"];
     general_backstories[CLOWNS] = ["are a clown", "have extensive ties to the Circus", "are an accomplished teller of jokes"];
     general_backstories[DOLLS] = ["carry around a small antique doll", "carve faceless wooden figurines in their spare time"];
+    general_backstories[CENSORSHIP] = ["speak only in annoying riddles", "can write in any cipher", "never say what they actually mean", "seem to always be in the background"];
+
     general_backstories[OBFUSCATION] = ["speak only in annoying riddles", "can write in any cipher", "never say what they actually mean", "seem to always be in the background"];
     general_backstories[DARKNESS] = ["wear only black", "prefer moonlight to sunlight", "are more than a little edgy", "can see in the dark"];
     general_backstories[KILLING] = ["once killed a man just to see him die", "are cloaked in killing intent", "seem to always be covered in blood", "have an alarming collection of knives"];
@@ -1941,6 +1987,8 @@ const initChildBackstories = () => {
     child_backstories[SPYING] = ["grew up always watching others", "seemed to always be lurking in the corners as a child", "spied on adults growing up"];
     child_backstories[CLOWNS] = ["grew up in a traveling circus", "always had a joke for the other children growing up", "were a playful, funny child", "were always the class clown growing up"];
     child_backstories[DOLLS] = ["would hold elaborate teaparties with their dolls as a child", "talked through their dolls as a child", "had a favorite doll as a child"];
+    child_backstories[CENSORSHIP] = ["were a mysterious child", "kept a secret diary as a child", "learned to write in ciphers as a child"];
+
     child_backstories[OBFUSCATION] = ["were a mysterious child", "kept a secret diary as a child", "learned to write in ciphers as a child"];
     child_backstories[DARKNESS] = ["never were afraid of the dark as a child", "were weirdly good at seeing in the dark as a child"];
     child_backstories[KILLING] = ["were adangerous child", "have a dark childhood secret", "unsettled the neighbors as a child"];
