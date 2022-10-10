@@ -147,6 +147,8 @@ export class Quotidian extends PhysicalObject {
             this.room.processDeath(this);
             this.dead = true;
             this.killerName=killerName;
+            this.container.style.zIndex = `${12}`; //fade into the background
+
         }
 
     }
