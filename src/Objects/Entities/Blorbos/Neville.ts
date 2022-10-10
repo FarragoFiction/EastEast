@@ -17,6 +17,7 @@ import { IHaveObjectWithName } from "../TargetFilter/IHaveObjectWithName";
 import { RandomTarget } from "../TargetFilter/RandomTarget";
 import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsTheKillerOfBlorboNamed } from "../TargetFilter/TargetIstheKillerOfBlorboNamed";
+import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { Quotidian, Direction } from "./Quotidian";
 
@@ -104,13 +105,13 @@ export class FortitudeTwin extends Quotidian{
             [new RandomTarget(0.5)],
             [new MoveRandomly(), new DeploySass("!?")],
             true,
-            1000*60*2
+            1000*60
         );
         
         const kill = new AiBeat(
             "Fortitudinous Punishing Twin: Punish the Killer of Your Twin",
             [`The torso of the ${SUBJECTSTRING} opens with a meaty squelch and crunches down on the ${TARGETSTRING}. Shreds of them are all that remain. The Fortitudinous Punishing Twin appears to be satisfied.`],
-            [new TargetIsTheKillerOfBlorboNamed("Devona")],
+            [new TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsWithinRadiusOfSelf(5)],
             [new MeleeKill("being eaten by the Fortitudinous Punishing Twin"), new DeploySass(":)")],
             true,
             1000*60
@@ -118,7 +119,7 @@ export class FortitudeTwin extends Quotidian{
 
         const unbreach = new AiBeat(
             "Fortitudinous Punishing Twin: Relax",
-            [`The ${SUBJECTSTRING} withers into itself, and Neville emerges once more. He falls onto his knees, tears streaming down his face. His twin is dead, and nothing will ever bring her back. But at least she is avenged.   `],
+            [`The Fortitudinous Punishing Twin withers into itself, and Neville emerges once more. He falls onto his knees, tears streaming down his face. His twin is dead, and nothing will ever bring her back. But at least she is avenged.   `],
             [new TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive({invert:true})],
             [new IncrementMyState("no")],
             true,

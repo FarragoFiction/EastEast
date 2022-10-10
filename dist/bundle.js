@@ -1288,6 +1288,34 @@ exports.MeleeKill = MeleeKill;
 
 /***/ }),
 
+/***/ 4287:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MoveRandomly = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const RandomMovement_1 = __webpack_require__(5997);
+class MoveRandomly extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["EXPLORE", "WANDER", "WIGGLER"]; //nothing, so its default
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            subject.movement_alg = new RandomMovement_1.RandomMovement(subject);
+            return `${subject.processedName()} starts wandering around.`;
+        };
+    }
+}
+exports.MoveRandomly = MoveRandomly;
+
+
+/***/ }),
+
 /***/ 4359:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2169,9 +2197,14 @@ const ThemeStorage_1 = __webpack_require__(1288);
 const DeploySass_1 = __webpack_require__(4237);
 const DestroyRandomObjectInInventoryAndPhilosophise_1 = __webpack_require__(4516);
 const IncrementMyState_1 = __webpack_require__(9211);
+const MeleeKill_1 = __webpack_require__(2900);
+const MoveRandomly_1 = __webpack_require__(4287);
 const BaseBeat_1 = __webpack_require__(1708);
+const baseFilter_1 = __webpack_require__(9505);
 const IHaveObjectWithName_1 = __webpack_require__(6274);
+const RandomTarget_1 = __webpack_require__(9824);
 const TargetIsAlive_1 = __webpack_require__(7064);
+const TargetIstheKillerOfBlorboNamed_1 = __webpack_require__(7082);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const Quotidian_1 = __webpack_require__(6387);
 class Neville extends Quotidian_1.Quotidian {
@@ -2208,8 +2241,10 @@ class FortitudeTwin extends Quotidian_1.Quotidian {
         const sprite = {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
         };
-        const extractMeaningFromObject = new BaseBeat_1.AiBeat("Neville: Destroy and Extract Knowledge", [`Neville notices he has a(n) ${BaseBeat_1.ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that "${BaseBeat_1.BONUSSTRING}" <p>He seems happy to understand the core of this item. He says ":)  I learned something!"</p>   `], [new IHaveObjectWithName_1.IHaveObjectWithName([])], [new DestroyRandomObjectInInventoryAndPhilosophise_1.DestroyRandomObjectInInventoryAndPhilosophize(), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
-        const beats = [];
+        const hunt = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Hunt for the Killer of Your Twin", [`The ${baseFilter_1.SUBJECTSTRING} is aimlessly searching for the Killer of Devona. You don't get the impression that it's very good at it. It seems to just kinda be moving around at random and sqwawking in frustration.  It never gets tired though...`], [new RandomTarget_1.RandomTarget(0.5)], [new MoveRandomly_1.MoveRandomly(), new DeploySass_1.DeploySass("!?")], true, 1000 * 60 * 2);
+        const kill = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Punish the Killer of Your Twin", [`The torso of the ${baseFilter_1.SUBJECTSTRING} opens with a meaty squelch and crunches down on the ${baseFilter_1.TARGETSTRING}. Shreds of them are all that remain. The Fortitudinous Punishing Twin appears to be satisfied.`], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona")], [new MeleeKill_1.MeleeKill("being eaten by the Fortitudinous Punishing Twin"), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
+        const unbreach = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Relax", [`The ${baseFilter_1.SUBJECTSTRING} withers into itself, and Neville emerges once more. He falls onto his knees, tears streaming down his face. His twin is dead, and nothing will ever bring her back. But at least she is avenged.   `], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60);
+        const beats = [kill, unbreach];
         super(room, "Fortitudinous Punishing Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "The Fortitude Punishing Twin is hunting.", beats);
         this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
         this.maxSpeed = 8;
@@ -2265,6 +2300,7 @@ const CheckInventory_1 = __webpack_require__(1201);
 const EnterObject_1 = __webpack_require__(9722);
 const DropObjectWithName_1 = __webpack_require__(2827);
 const GiveObjectWithNameToTarget_1 = __webpack_require__(6290);
+const MoveRandomly_1 = __webpack_require__(4287);
 //what, did you think any real being could be so formulaic? 
 //regarding the real peewee, wanda is actually quite THRILLED there is a competing parasite in the Echidna distracting the immune system (and tbf, preventing an immune disorder in the form of the eye killer)
 //the universe is AWARE of the dangers to it and endlessly expands its immune system response
@@ -2298,7 +2334,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.minSpeed = 1;
         this.currentSpeed = 10;
         //only for peewee
-        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new GiveObjectWithNameToTarget_1.GiveObjectWithName(""), new DropObjectWithName_1.DropObjectWithName(""), new EnterObject_1.EnterObject(), new CheckInventory_1.CheckInventory(), new FollowObject_1.FollowObject(), new PickupObject_1.PickupObject(), new DropAllObjects_1.DropAllObjects(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
+        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new MoveRandomly_1.MoveRandomly(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new GiveObjectWithNameToTarget_1.GiveObjectWithName(""), new DropObjectWithName_1.DropObjectWithName(""), new EnterObject_1.EnterObject(), new CheckInventory_1.CheckInventory(), new FollowObject_1.FollowObject(), new PickupObject_1.PickupObject(), new DropAllObjects_1.DropAllObjects(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -2787,6 +2823,9 @@ class AiBeat {
         this.processTags = (text) => {
             let ret = text.replaceAll(baseFilter_1.TARGETSTRING, (0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.targets.map((t) => t.name)));
             ret = ret.replaceAll(exports.ITEMSTRING, this.itemName);
+            if (this.owner) {
+                ret = ret.replaceAll(baseFilter_1.SUBJECTSTRING, this.owner.processedName());
+            }
             ret = ret.replaceAll(exports.BONUSSTRING, this.bonusString);
             return ret;
         };
@@ -3545,8 +3584,9 @@ exports.TargetNameIncludesAnyOfTheseWords = TargetNameIncludesAnyOfTheseWords;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TargetFilter = exports.TARGETSTRING = void 0;
+exports.TargetFilter = exports.SUBJECTSTRING = exports.TARGETSTRING = void 0;
 exports.TARGETSTRING = "[INSERTTARGETSHERE]";
+exports.SUBJECTSTRING = "[INSERTSUBJECTHERE]";
 class TargetFilter {
     constructor(options = { singleTarget: false, invert: false, kMode: false }) {
         //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
@@ -11802,6 +11842,8 @@ var map = {
 	"./Objects/Entities/Actions/Look.ts": 2741,
 	"./Objects/Entities/Actions/MeleeKill": 2900,
 	"./Objects/Entities/Actions/MeleeKill.ts": 2900,
+	"./Objects/Entities/Actions/MoveRandomly": 4287,
+	"./Objects/Entities/Actions/MoveRandomly.ts": 4287,
 	"./Objects/Entities/Actions/PauseSimulation": 4359,
 	"./Objects/Entities/Actions/PauseSimulation.ts": 4359,
 	"./Objects/Entities/Actions/PickupObject": 9936,
