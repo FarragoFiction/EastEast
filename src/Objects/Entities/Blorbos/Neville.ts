@@ -8,6 +8,7 @@ import { all_themes } from "../../Theme";
 import { HUNTING, SPYING, OBFUSCATION, MATH } from "../../ThemeStorage";
 import { DeploySass } from "../Actions/DeploySass";
 import { DestroyRandomObjectInInventoryAndPhilosophize } from "../Actions/DestroyRandomObjectInInventoryAndPhilosophise";
+import { FollowObject } from "../Actions/FollowObject";
 import { IncrementMyState } from "../Actions/IncrementMyState";
 import { MeleeKill } from "../Actions/MeleeKill";
 import { MoveRandomly } from "../Actions/MoveRandomly";
@@ -102,8 +103,26 @@ export class FortitudeTwin extends Quotidian{
         const hunt = new AiBeat(
             "Fortitudinous Punishing Twin: Hunt for the Killer of Your Twin",
             [`The ${SUBJECTSTRING} is aimlessly searching for the Killer of Devona. You don't get the impression that it's very good at it. It seems to just kinda be moving around at random and sqwawking in frustration.  It never gets tired though...`],
-            [new RandomTarget(0.5)],
+            [new RandomTarget(0.95)],
             [new MoveRandomly(), new DeploySass("!?")],
+            true,
+            1000*60
+        );
+
+        const mourn = new AiBeat(
+            "Fortitudinous Punishing Twin: Mourn your Twin",
+            [`The ${SUBJECTSTRING} paws gently at ${TARGETSTRING}... It looks so sad...`],
+            [new TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf(5)],
+            [new FollowObject()],
+            true,
+            1000*60
+        );
+
+        const visitGrave = new AiBeat(
+            "Fortitudinous Punishing Twin: Mourn your Twin",
+            [`The ${SUBJECTSTRING} howls with sadness... and begins making a bee line back to the ${TARGETSTRING}`],
+            [new RandomTarget(0.95),new TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf(5, {invert: false})],
+            [new DeploySass(":(")],
             true,
             1000*60
         );
@@ -127,7 +146,7 @@ export class FortitudeTwin extends Quotidian{
         );
         
 
-        const beats:AiBeat[] = [kill,unbreach];
+        const beats:AiBeat[] = [kill,hunt,visitGrave, mourn, unbreach];
 
         super(room,"Fortitudinous Punishing Twin", x,y,[all_themes[HUNTING],all_themes[SPYING],all_themes[OBFUSCATION],all_themes[MATH]],sprite,
         "The Fortitude Punishing Twin is hunting.", beats);
