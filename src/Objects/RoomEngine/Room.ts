@@ -36,7 +36,7 @@ export class Room {
     items: PhysicalObject[] = [];
     ticking = false;
     tickRate = 100;
-    actionRate = 500;
+    actionRate = 200;
     children: Room[] = [];
     name = "???";
     pendingStoryBeats: StoryBeat[] = [];

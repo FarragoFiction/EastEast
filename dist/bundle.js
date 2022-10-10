@@ -1941,12 +1941,12 @@ class InsightTwin extends Quotidian_1.Quotidian {
               She knows she doesn't have the TIME to go around people or deal with threats.
         */
         const hunt = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Hunt for the Killer of Your Twin", [`The ${baseFilter_1.SUBJECTSTRING} is laser focused on tracking down the one who killed Neville.  It doesn't seem to have much stamina, tho...`], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Neville"), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true }), new TargetIsAlive_1.TargetIsAlive({ invert: false })], [new FollowObject_1.FollowObject(), new DeploySass_1.DeploySass("!")], true, 1000 * 60);
-        const unbreachBecauseYouAreLeTired = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Exhaust yourself", [`The Insightful Punishing Twin rages and thrashes around and seems to completely tire itself out.  Devona emerges, unconscious, tears streaming down her sleeping face.`], [new RandomTarget_1.RandomTarget(0.003)], [new IncrementMyState_1.IncrementMyState("no"), new StopMoving_1.StopMoving()], true, 1000 * 60 * 3);
+        const unbreachBecauseYouAreLeTired = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Exhaust yourself", [`The Insightful Punishing Twin rages and thrashes around and seems to completely tire itself out.  Devona emerges, unconscious, tears streaming down her sleeping face.`], [new RandomTarget_1.RandomTarget(0.0003)], [new IncrementMyState_1.IncrementMyState("no"), new StopMoving_1.StopMoving()], true, 1000 * 60 * 3);
         const mourn = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} paws gently at ${baseFilter_1.TARGETSTRING}... It looks so sad...`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass(":(")], true, 1000 * 60);
         const visitGrave = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} howls with sadness... and begins making a destructive bee line back to the ${baseFilter_1.TARGETSTRING}`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: false }), new RandomTarget_1.RandomTarget(0.5)], [new FollowObject_1.FollowObject()], true, 1000 * 60);
         const kill = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Punish Blindly", [`The ${baseFilter_1.SUBJECTSTRING} is lashing out blindly. The torso of the ${baseFilter_1.SUBJECTSTRING} opens with a meaty squelch and crunches down on the ${baseFilter_1.TARGETSTRING}. Shreds of them are all that remain.`], [new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new MeleeKill_1.MeleeKill("being eaten by the Insightful Punishing Twin"), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
         const unbreach = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Relax", [`The Insightful Punishing Twin withers into itself, and Devona emerges once more. She appears to be unconcious, but there is a slight smile on her blood soaked face. Her brother is avenged.`], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60);
-        const beats = [kill, hunt, mourn, unbreachBecauseYouAreLeTired, visitGrave, unbreach];
+        const beats = [kill, hunt, mourn, visitGrave, unbreach, unbreachBecauseYouAreLeTired];
         super(room, "Insightful Punishing Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "The Insightful Punishing Twin is hunting.", beats);
         this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
         this.maxSpeed = 8;
@@ -2468,6 +2468,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
+        this.timeOfLastBeat = new Date().getTime();
         this.beats = [];
         // 0 min, 5 max
         this.fortitude = 0; //how brave are you, how physically fit
@@ -2588,10 +2589,17 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 this.image.style.width = `${chosen.width}px`;
             }
         };
+        this.itsBeenAwhileSinceLastBeat = (actionRate) => {
+            return new Date().getTime() - this.timeOfLastBeat > actionRate;
+        };
         this.processAiBeat = () => {
             const toRemove = [];
+            let didSomething = false;
             for (let beat of this.beats) {
                 if (beat.triggered(this.room)) {
+                    didSomething = true;
+                    this.timeOfLastBeat = new Date().getTime();
+                    this.container.style.zIndex = `${30}`; //stand out
                     beat.performActions(this.room);
                     if (!beat.permanent) {
                         toRemove.push(beat);
@@ -2599,11 +2607,15 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                     break;
                 }
             }
+            if (!didSomething) {
+                //fade into bg
+                this.container.style.zIndex = `${20}`;
+            }
             for (let beat of toRemove) {
                 (0, ArrayUtils_1.removeItemOnce)(this.beats, beat);
             }
         };
-        this.tick = () => {
+        this.tick = (actionRate) => {
             //console.log("JR NOTE: trying to tick: ", this.name);
             if (this.dead) {
                 return;
@@ -2612,7 +2624,10 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             if ((this.friend)) {
                 this.friend.tick();
             }
-            this.processAiBeat();
+            //you can move quicker than you can think
+            if (this.itsBeenAwhileSinceLastBeat(actionRate)) {
+                this.processAiBeat();
+            }
             this.movement_alg.tick();
             this.syncSpriteToDirection();
             this.updateRendering();
@@ -4946,6 +4961,7 @@ class Room {
         this.items = [];
         this.ticking = false;
         this.tickRate = 100;
+        this.actionRate = 200;
         this.children = [];
         this.name = "???";
         this.pendingStoryBeats = [];
@@ -5214,7 +5230,7 @@ class Room {
             this.pendingStoryBeats = [];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.dead) {
-                    blorbo.tick();
+                    blorbo.tick(this.actionRate);
                 }
                 this.checkForDoors(blorbo);
             }

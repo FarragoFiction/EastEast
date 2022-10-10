@@ -139,7 +139,7 @@ export class InsightTwin extends Quotidian{
         const unbreachBecauseYouAreLeTired = new AiBeat(
             "Insightful Punishing Twin: Exhaust yourself",
             [`The Insightful Punishing Twin rages and thrashes around and seems to completely tire itself out.  Devona emerges, unconscious, tears streaming down her sleeping face.`],
-            [new RandomTarget(0.003)],
+            [new RandomTarget(0.0003)],
             [new IncrementMyState("no"), new StopMoving()],
             true,
             1000*60*3
