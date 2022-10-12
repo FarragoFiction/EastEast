@@ -16,6 +16,7 @@ import { AiBeat } from "../StoryBeats/BaseBeat"
 import { TARGETSTRING } from "../TargetFilter/baseFilter"
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf"
 import { Peewee } from "./Peewee"
+import { Relationship } from "./Relationship"
 
 
 //https://stuff.mit.edu/people/dpolicar/writing/prose/text/titleOfTheStory.html  fun story the Theorist showed everyone
@@ -79,6 +80,16 @@ export class Quotidian extends PhysicalObject {
     friend?: FRIEND;
     killerName? : string;
     timeOfLastBeat = new Date().getTime();
+    //default everything to 1.0, everyone is perfectly bi and alloromantic
+    platonicFOdds = 1.0;
+    platonicMOdds = 1.0;
+    platonicNBOdds = 1.0;
+    romanticFOdds = 1.0;
+    romanticMOdds = 1.0;
+    romanticNBOdds = 1.0;
+   likeMultiplier  = 1.0; //(effects how quickly they grow to like people in general)
+    dislikeMultiplier = 1.0; //(effects how quickly they grow to dislike ppl in general)
+    relationshipMap = new Map<string, Relationship>(); //(keyed by array of all known names, csv)
 
 
     beats: AiBeat[] = [];
