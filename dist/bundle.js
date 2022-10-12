@@ -4867,7 +4867,7 @@ class Maze {
             for (let map of classes) {
                 for (let blorbo of this.blorbos) {
                     if (blorbo.breaching && blorbo.themes.includes(map.theme)) {
-                        console.log(`JR NOTE: ${blorbo.name} is breaching, their aliases are ${blorbo.states.map((i) => i.name).join(",")} `);
+                        //console.log(`JR NOTE: ${blorbo.name} is breaching, their aliases are ${blorbo.states.map((i)=>i.name).join(",")} `)
                         beat.checkClass([blorbo.name, ...(blorbo.states.map((i) => i.name))], map.name);
                     }
                 }
@@ -9245,7 +9245,7 @@ const distance = (x1, y1, x2, y2) => {
 };
 exports.distance = distance;
 const distanceWithinRadius = (radius, x1, y1, x2, y2) => {
-    return (0, exports.distance)(x1, y2, x2, y2) < radius;
+    return (0, exports.distance)(x1, y1, x2, y2) < radius;
 };
 exports.distanceWithinRadius = distanceWithinRadius;
 const withinY = (myY, objectY, objectHeight) => {
