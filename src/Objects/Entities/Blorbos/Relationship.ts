@@ -1,6 +1,6 @@
 
 export class Relationship  {
-
+    title: string;
     amount: number;
 
     important= false; //you can be Important but not romantic
@@ -8,8 +8,10 @@ export class Relationship  {
 
     official = false; //do both parties agree that This Is A Thing (whatever flavor it is?)
 
-    constructor(amount: number){
+    constructor(title: string,amount: number){
+        console.log("JR NOTE: making a new relationship", title, amount);
         this.amount = amount;
+        this.title  = title;
     }
 
     //pass in absolute value

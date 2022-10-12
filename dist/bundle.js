@@ -1205,7 +1205,16 @@ class Look extends BaseAction_1.Action {
             }
             const lookcloser = current_room.rand.pickFrom(targets);
             const inventory = lookcloser.inventory.length > 0 ? (0, ArrayUtils_1.turnArrayIntoHumanSentence)(lookcloser.inventory.map((i) => i.processedName())) : "nothing";
-            return `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText} They have ${inventory} in their inventory. Their movement algorithm is ${lookcloser.movement_alg.toString()}`;
+            let retSoFar = `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText} <p>They have ${inventory} in their inventory.</p> <p>Their movement algorithm is ${lookcloser.movement_alg.constructor.name}</p>`;
+            if (lookcloser.relationshipMap.keys().length !== 0) {
+                retSoFar += "<p>The have the following opinions about the other blorbos:</p>";
+                for (let relationshipPair of lookcloser.relationshipMap) {
+                    const relationship = relationshipPair[1];
+                    console.log("JR NOTE: relationship I'm looking at is", relationship);
+                    retSoFar += `<li>${relationship.title}: ${relationship.amount}</li>`;
+                }
+            }
+            return retSoFar;
         };
         this.applyAction = (beat) => {
             const current_room = beat.owner?.room;
@@ -2416,6 +2425,7 @@ const PickupObject_1 = __webpack_require__(9936);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
+const Relationship_1 = __webpack_require__(7739);
 //https://stuff.mit.edu/people/dpolicar/writing/prose/text/titleOfTheStory.html  fun story the Theorist showed everyone
 //https://tvtropes.org/pmwiki/pmwiki.php/Literature/ThisIsTheTitleOfThisStory
 //apparently the story is from  a 1982 story by David Moser and that strange loop guy quoted it, because ofc he did
@@ -2469,6 +2479,16 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.minSpeed = 1;
         this.currentSpeed = 10;
         this.timeOfLastBeat = new Date().getTime();
+        //default everything to 1.0, everyone is perfectly bi and alloromantic
+        this.platonicFOdds = 1.0;
+        this.platonicMOdds = 1.0;
+        this.platonicNBOdds = 1.0;
+        this.romanticFOdds = 1.0;
+        this.romanticMOdds = 1.0;
+        this.romanticNBOdds = 1.0;
+        this.likeMultiplier = 1.0; //(effects how quickly they grow to like people in general)
+        this.dislikeMultiplier = 1.0; //(effects how quickly they grow to dislike ppl in general)
+        this.relationshipMap = new Map(); //(keyed by array of all known names, csv)
         this.beats = [];
         // 0 min, 5 max
         this.fortitude = 0; //how brave are you, how physically fit
@@ -2482,6 +2502,56 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
         this.processedName = () => {
             return `${this.breaching ? "Breaching " : ""}${this.name}${this.dead ? "'s Grave" : ''}`;
+        };
+        this.vibe = (blorbos) => {
+            for (let blorbo of blorbos) {
+                if (blorbo != this) {
+                    this.intensifyFeelingsFor(blorbo, .001);
+                }
+            }
+        };
+        this.likeBlorboMore = (blorbo, amount) => {
+            const key = blorbo.aliases().join(",");
+            const relationship = this.relationshipMap.get(key);
+            if (relationship) {
+                relationship.strengthen(amount, this.likeMultiplier);
+            }
+            else {
+                this.relationshipMap.set(key, new Relationship_1.Relationship(key, amount));
+            }
+        };
+        this.likeBlorboLess = (blorbo, amount) => {
+            const key = blorbo.aliases().join(",");
+            const relationship = this.relationshipMap.get(key);
+            if (relationship) {
+                relationship.weaken(amount, this.dislikeMultiplier);
+            }
+            else {
+                this.relationshipMap.set(key, new Relationship_1.Relationship(key, -1 * amount));
+            }
+        };
+        //if they're already in my relationship matrix, escalate it, else initialize it to zero
+        //make sure you handle your like/dislike modifiers
+        this.intensifyFeelingsFor = (blorbo, amount) => {
+            const key = blorbo.aliases().join(",");
+            const relationship = this.relationshipMap.get(key);
+            //console.log("JR NOTE: trying to intensify feelings for ", key, " by amount ", amount, "relationship is", relationship);
+            if (relationship) {
+                relationship.intensify(amount, this.likeMultiplier, this.dislikeMultiplier);
+            }
+            else {
+                this.relationshipMap.set(key, new Relationship_1.Relationship(key, amount));
+            }
+        };
+        this.de_escalateFeelingsFor = (blorbo, amount) => {
+            const key = blorbo.aliases().join(",");
+            const relationship = this.relationshipMap.get(key);
+            if (relationship) {
+                relationship.de_escalate(amount, this.likeMultiplier, this.dislikeMultiplier);
+            }
+            else {
+                this.relationshipMap.set(key, new Relationship_1.Relationship(key, amount));
+            }
         };
         //NOTE to avoid recursion does not clone states
         this.clone = () => {
@@ -2512,6 +2582,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         };
         this.goStill = () => {
             this.movement_alg = new NoMovement_1.NoMovement(this);
+        };
+        this.aliases = () => {
+            return [this.name, ...(this.states.map((i) => i.name))];
         };
         /*
     
@@ -2645,6 +2718,61 @@ exports.Quotidian = Quotidian;
 
 /***/ }),
 
+/***/ 7739:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Relationship = void 0;
+class Relationship {
+    constructor(title, amount) {
+        this.important = false; //you can be Important but not romantic
+        this.romantic = false; //you can be Romantic but not important
+        this.official = false; //do both parties agree that This Is A Thing (whatever flavor it is?)
+        //pass in absolute value
+        this.strengthen = (value, likeMultiplier) => {
+            this.amount += value * likeMultiplier;
+        };
+        //pass in absolute value
+        this.weaken = (value, dislikeMultiplier) => {
+            this.amount += value * dislikeMultiplier;
+        };
+        //pass in absolute value
+        //takes in a value and then adds it to the amount (if the amount is positive) or subtracts it (if the amount is negative)
+        //so if you pass a postitive number in it'll INCREASE whatever your feelings are, in whatever direction they are trending
+        //and if you pass a negative number in (better to just use de_escalate) it'll DECRASE whatever your feelings are, in the opposite of whatever direction they are trendng
+        this.intensify = (value, likeMultiplier, dislikeMultiplier) => {
+            if (this.amount < 0) { //if you have no opinion about someone, give them the benefit of the doubt
+                this.amount += -1 * value * dislikeMultiplier;
+            }
+            else {
+                this.amount += value * likeMultiplier;
+            }
+        };
+        //pass in absolute value
+        //opposite of intensify, it goes in the OPPOSITE direction its trending int .however, if you're zero currently, no changes
+        this.de_escalate = (value, likeMultiplier, dislikeMultiplier) => {
+            if (this.amount === 0) {
+                return;
+            }
+            if (this.amount < 0) { //if you have no opinion about someone, give them the benefit of the doubt
+                this.amount += value * likeMultiplier;
+            }
+            else {
+                this.amount += -1 * value * dislikeMultiplier;
+            }
+        };
+        console.log("JR NOTE: making a new relationship", title, amount);
+        this.amount = amount;
+        this.title = title;
+    }
+}
+exports.Relationship = Relationship;
+
+
+/***/ }),
+
 /***/ 240:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2725,18 +2853,38 @@ exports.Solemn = Solemn;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Underscore = void 0;
+exports.Underscore = exports.Vik = void 0;
 const NoMovement_1 = __webpack_require__(4956);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const Quotidian_1 = __webpack_require__(6387);
+/*
+    todo: once relationship engine is cmoplete vik picks someone at random to hate, and tehn anyone they hate they insult
+    (if they pick a new person to hate, or otherwise have two people to hate they forgive one)
+*/
+class Vik extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "Placeholders/_.png", width: 56, height: 100 },
+        };
+        const beats = [];
+        super(room, "Vik", x, y, [Theme_1.all_themes[ThemeStorage_1.DARKNESS], Theme_1.all_themes[ThemeStorage_1.CENSORSHIP], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.DECAY], Theme_1.all_themes[ThemeStorage_1.LOVE], Theme_1.all_themes[ThemeStorage_1.FLESH]], sprite, "Their face is lightly censored, but you can still make out most of them.", beats);
+        this.lore = "Their soul has long since rotted off them in viscous chunks, but Parker claims it once was a cat.";
+        this.maxSpeed = 50;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new NoMovement_1.NoMovement(this);
+    }
+}
+exports.Vik = Vik;
 class Underscore extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
             default_src: { src: "error.png", width: 56, height: 100 },
         };
         const beats = [];
-        super(room, "_", x, y, [Theme_1.all_themes[ThemeStorage_1.DARKNESS], Theme_1.all_themes[ThemeStorage_1.CENSORSHIP], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.DECAY], Theme_1.all_themes[ThemeStorage_1.LOVE], Theme_1.all_themes[ThemeStorage_1.FLESH]], sprite, "Being unable to see them is for your protection.", beats);
+        super(room, "_", x, y, [Theme_1.all_themes[ThemeStorage_1.DARKNESS], Theme_1.all_themes[ThemeStorage_1.CENSORSHIP], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.DECAY], Theme_1.all_themes[ThemeStorage_1.LOVE], Theme_1.all_themes[ThemeStorage_1.FLESH]], sprite, "The Censorship is for your protection.", beats);
         this.lore = "Their soul has long since rotted off them in viscous chunks, but Parker claims it once was a cat.";
         this.maxSpeed = 50;
         this.minSpeed = 5;
@@ -4710,6 +4858,7 @@ const EyeKiller_1 = __webpack_require__(2937);
 const Peewee_1 = __webpack_require__(936);
 const Quotidian_1 = __webpack_require__(6387);
 const SnailFriend_1 = __webpack_require__(240);
+const Match_1 = __webpack_require__(7685);
 const Underscore_1 = __webpack_require__(9194);
 const Solemn_1 = __webpack_require__(5322);
 const Devona_1 = __webpack_require__(9621);
@@ -4718,6 +4867,7 @@ const ChickenFriend_1 = __webpack_require__(5095);
 const Yongki_1 = __webpack_require__(3908);
 const URLUtils_1 = __webpack_require__(389);
 const __1 = __webpack_require__(3607);
+const End_1 = __webpack_require__(8115);
 class Maze {
     constructor(ele, storySoFar, rand) {
         this.storybeats = []; //can be added to by peewee and by the ai
@@ -4752,7 +4902,8 @@ class Maze {
                 this.blorbos.push(new ChickenFriend_1.Chicken(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.EyeKiller(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.Innocent(this.room, 150, 150));
-                //this.blorbos.push(new Match(this.room, 150, 150));
+                this.blorbos.push(new Match_1.Match(this.room, 150, 150));
+                this.blorbos.push(new End_1.Camille(this.room, 150, 150));
                 this.blorbos.push(new Solemn_1.Solemn(this.room, 150, 150));
                 this.blorbos.push(new Devona_1.Devona(this.room, 150, 150));
                 this.blorbos.push(new Neville_1.Neville(this.room, 150, 150));
@@ -4791,7 +4942,7 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Devona", "Neville"];
+            const blorbosToTest = ["Camille", "Ria"];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
                     for (let theme of blorbo.themes) {
@@ -4868,7 +5019,7 @@ class Maze {
                 for (let blorbo of this.blorbos) {
                     if (blorbo.breaching && blorbo.themes.includes(map.theme)) {
                         //console.log(`JR NOTE: ${blorbo.name} is breaching, their aliases are ${blorbo.states.map((i)=>i.name).join(",")} `)
-                        beat.checkClass([blorbo.name, ...(blorbo.states.map((i) => i.name))], map.name);
+                        beat.checkClass(blorbo.aliases(), map.name);
                     }
                 }
                 for (let item of this.room?.items) {
@@ -5231,6 +5382,7 @@ class Room {
             }
             this.pendingStoryBeats = [];
             for (let blorbo of this.blorbos) {
+                blorbo.vibe(this.blorbos); //social time baby! everyone in the room is invited!
                 if (!blorbo.dead) {
                     blorbo.tick(this.actionRate);
                 }
@@ -11957,6 +12109,8 @@ var map = {
 	"./Objects/Entities/Blorbos/Peewee.ts": 936,
 	"./Objects/Entities/Blorbos/Quotidian": 6387,
 	"./Objects/Entities/Blorbos/Quotidian.ts": 6387,
+	"./Objects/Entities/Blorbos/Relationship": 7739,
+	"./Objects/Entities/Blorbos/Relationship.ts": 7739,
 	"./Objects/Entities/Blorbos/SnailFriend": 240,
 	"./Objects/Entities/Blorbos/SnailFriend.ts": 240,
 	"./Objects/Entities/Blorbos/Solemn": 5322,

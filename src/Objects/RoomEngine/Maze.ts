@@ -23,6 +23,7 @@ import { Chicken } from "../Entities/Blorbos/ChickenFriend";
 import { Yongki } from "../Entities/Blorbos/Yongki";
 import { updateURLParams } from "../../Utils/URLUtils";
 import { whiteNight } from "../..";
+import { Camille } from "../Entities/Blorbos/End";
 export class Maze {
 
     rand: SeededRandom;
@@ -72,7 +73,8 @@ export class Maze {
             this.blorbos.push(new Chicken(this.room, 150, 150));
             this.blorbos.push(new EyeKiller(this.room, 150, 150));
             this.blorbos.push(new Innocent(this.room, 150, 150));
-            //this.blorbos.push(new Match(this.room, 150, 150));
+            this.blorbos.push(new Match(this.room, 150, 150));
+            this.blorbos.push(new Camille(this.room, 150, 150));
             this.blorbos.push(new Solemn(this.room, 150, 150));
             this.blorbos.push(new Devona(this.room, 150, 150));
             this.blorbos.push(new Neville(this.room, 150, 150));
@@ -115,7 +117,7 @@ export class Maze {
         if (!this.room) {
             return;
         }
-        const blorbosToTest = ["Devona", "Neville"];
+        const blorbosToTest = ["Camille", "Ria"];
         for (let blorbo of this.blorbos) {
             if (!blorbo.owner) {//if you're in someones inventory, no spawning for you
                 for (let theme of blorbo.themes) {

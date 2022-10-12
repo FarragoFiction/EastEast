@@ -146,7 +146,7 @@ export class Quotidian extends PhysicalObject {
     vibe = (blorbos: Quotidian[])=>{
         for(let blorbo of blorbos){
             if(blorbo != this){
-                this.intensifyFeelingsFor(blorbo, 1);
+                this.intensifyFeelingsFor(blorbo, .001);
             }
         }
     }
@@ -158,7 +158,7 @@ export class Quotidian extends PhysicalObject {
         if(relationship){
             relationship.strengthen(amount, this.likeMultiplier);
         }else{
-            this.relationshipMap.set(key, new Relationship(amount));
+            this.relationshipMap.set(key, new Relationship(key, amount));
         }
     }
 
@@ -168,19 +168,23 @@ export class Quotidian extends PhysicalObject {
         if(relationship){
             relationship.weaken(amount, this.dislikeMultiplier);
         }else{
-            this.relationshipMap.set(key, new Relationship(-1* amount));
+            this.relationshipMap.set(key, new Relationship(key, -1* amount));
         }
     }
 
     //if they're already in my relationship matrix, escalate it, else initialize it to zero
     //make sure you handle your like/dislike modifiers
     intensifyFeelingsFor = (blorbo: Quotidian, amount: number)=>{
+
         const key:string = blorbo.aliases().join(",");
+
         const relationship = this.relationshipMap.get(key);
+        //console.log("JR NOTE: trying to intensify feelings for ", key, " by amount ", amount, "relationship is", relationship);
+
         if(relationship){
             relationship.intensify(amount, this.likeMultiplier, this.dislikeMultiplier);
         }else{
-            this.relationshipMap.set(key, new Relationship(amount));
+            this.relationshipMap.set(key, new Relationship(key,amount));
         }
     }
 
@@ -190,7 +194,7 @@ export class Quotidian extends PhysicalObject {
         if(relationship){
             relationship.de_escalate(amount, this.likeMultiplier, this.dislikeMultiplier);
         }else{
-            this.relationshipMap.set(key, new Relationship(amount));
+            this.relationshipMap.set(key, new Relationship(key,amount));
         }
     }
 
