@@ -143,6 +143,57 @@ export class Quotidian extends PhysicalObject {
         return `${this.breaching?"Breaching ":""}${this.name}${this.dead ? "'s Grave" : ''}`;
     }
 
+    vibe = (blorbos: Quotidian[])=>{
+        for(let blorbo of blorbos){
+            if(blorbo != this){
+                this.intensifyFeelingsFor(blorbo, 1);
+            }
+        }
+    }
+
+
+    likeBlorboMore = (blorbo: Quotidian, amount: number)=>{
+        const key:string = blorbo.aliases().join(",");
+        const relationship = this.relationshipMap.get(key);
+        if(relationship){
+            relationship.strengthen(amount, this.likeMultiplier);
+        }else{
+            this.relationshipMap.set(key, new Relationship(amount));
+        }
+    }
+
+    likeBlorboLess = (blorbo: Quotidian, amount: number)=>{
+        const key:string = blorbo.aliases().join(",");
+        const relationship = this.relationshipMap.get(key);
+        if(relationship){
+            relationship.weaken(amount, this.dislikeMultiplier);
+        }else{
+            this.relationshipMap.set(key, new Relationship(-1* amount));
+        }
+    }
+
+    //if they're already in my relationship matrix, escalate it, else initialize it to zero
+    //make sure you handle your like/dislike modifiers
+    intensifyFeelingsFor = (blorbo: Quotidian, amount: number)=>{
+        const key:string = blorbo.aliases().join(",");
+        const relationship = this.relationshipMap.get(key);
+        if(relationship){
+            relationship.intensify(amount, this.likeMultiplier, this.dislikeMultiplier);
+        }else{
+            this.relationshipMap.set(key, new Relationship(amount));
+        }
+    }
+
+    de_escalateFeelingsFor = (blorbo: Quotidian, amount: number)=>{
+        const key:string = blorbo.aliases().join(",");
+        const relationship = this.relationshipMap.get(key);
+        if(relationship){
+            relationship.de_escalate(amount, this.likeMultiplier, this.dislikeMultiplier);
+        }else{
+            this.relationshipMap.set(key, new Relationship(amount));
+        }
+    }
+
 
     //NOTE to avoid recursion does not clone states
     clone = ()=>{
@@ -181,6 +232,10 @@ export class Quotidian extends PhysicalObject {
 
     goStill = () => {
         this.movement_alg = new NoMovement(this);
+    }
+
+    aliases = ()=>{
+       return [this.name, ...(this.states.map((i)=>i.name))];
     }
 
     /*

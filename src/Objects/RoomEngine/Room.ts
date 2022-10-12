@@ -340,6 +340,7 @@ export class Room {
         return false;
     }
 
+
     tick = () => {
         //console.log("JR NOTE: trying to tick room: ", this.name)
         if (!this.ticking) {
@@ -353,7 +354,7 @@ export class Room {
         this.pendingStoryBeats = [];
 
         for (let blorbo of this.blorbos) {
-
+            blorbo.vibe(this.blorbos); //social time baby! everyone in the room is invited!
             if (!blorbo.dead) {
                 blorbo.tick(this.actionRate);
             }
