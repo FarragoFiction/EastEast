@@ -354,6 +354,7 @@ export class Room {
         this.pendingStoryBeats = [];
 
         for (let blorbo of this.blorbos) {
+
             blorbo.vibe(this.blorbos); //social time baby! everyone in the room is invited!
             if (!blorbo.dead) {
                 blorbo.tick(this.actionRate);

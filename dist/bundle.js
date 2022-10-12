@@ -2506,7 +2506,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.vibe = (blorbos) => {
             for (let blorbo of blorbos) {
                 //don't gotta be within mele range but SHOULD matter that you're not as far apart as you can get
-                if (blorbo != this && (0, misc_1.distanceWithinRadius)(25, this.x, this.y, blorbo.x, blorbo.y)) {
+                if (blorbo != this && (0, misc_1.distanceWithinRadius)(50, this.x, this.y, blorbo.x, blorbo.y)) {
                     this.intensifyFeelingsFor(blorbo, 1);
                 }
             }
