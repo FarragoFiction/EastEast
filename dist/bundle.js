@@ -1205,8 +1205,8 @@ class Look extends BaseAction_1.Action {
             }
             const lookcloser = current_room.rand.pickFrom(targets);
             const inventory = lookcloser.inventory.length > 0 ? (0, ArrayUtils_1.turnArrayIntoHumanSentence)(lookcloser.inventory.map((i) => i.processedName())) : "nothing";
-            let retSoFar = `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText} <p>They have ${inventory} in their inventory.</p> <p>Their movement algorithm is ${lookcloser.movement_alg.constructor.name}</p>`;
-            if (lookcloser.relationshipMap.keys().length !== 0) {
+            let retSoFar = `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText} <p>They have ${inventory} in their inventory.</p> <p>Their movement algorithm is ${lookcloser.movement_alg ? lookcloser.movement_alg.constructor.name : "NONE"}</p>`;
+            if (lookcloser.relationshipMap && lookcloser.relationshipMap.keys().length !== 0) {
                 retSoFar += "<p>The have the following opinions about the other blorbos:</p>";
                 for (let relationshipPair of lookcloser.relationshipMap) {
                     const relationship = relationshipPair[1];
@@ -2507,7 +2507,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             for (let blorbo of blorbos) {
                 //don't gotta be within mele range but SHOULD matter that you're not as far apart as you can get
                 if (blorbo != this && (0, misc_1.distanceWithinRadius)(25, this.x, this.y, blorbo.x, blorbo.y)) {
-                    this.intensifyFeelingsFor(blorbo, .001);
+                    this.intensifyFeelingsFor(blorbo, 1);
                 }
             }
         };

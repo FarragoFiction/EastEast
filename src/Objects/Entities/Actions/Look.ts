@@ -83,8 +83,8 @@ export class Look extends Action {
 
         const lookcloser = current_room.rand.pickFrom(targets);
         const inventory = lookcloser.inventory.length > 0? turnArrayIntoHumanSentence( lookcloser.inventory.map((i:PhysicalObject)=>i.processedName())) :"nothing";
-        let retSoFar =  `${subject.processedName()} looks at ${turnArrayIntoHumanSentence(targets.map((e) => e.processedName()))}. He sees an aura of ${turnArrayIntoHumanSentence(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText} <p>They have ${inventory} in their inventory.</p> <p>Their movement algorithm is ${lookcloser.movement_alg.constructor.name}</p>`;
-        if(lookcloser.relationshipMap.keys().length !== 0){
+        let retSoFar =  `${subject.processedName()} looks at ${turnArrayIntoHumanSentence(targets.map((e) => e.processedName()))}. He sees an aura of ${turnArrayIntoHumanSentence(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText} <p>They have ${inventory} in their inventory.</p> <p>Their movement algorithm is ${lookcloser.movement_alg? lookcloser.movement_alg.constructor.name :"NONE"}</p>`;
+        if(lookcloser.relationshipMap && lookcloser.relationshipMap.keys().length !== 0){
             retSoFar += "<p>The have the following opinions about the other blorbos:</p>";
             for(let relationshipPair of lookcloser.relationshipMap){
                 const relationship = relationshipPair[1];
