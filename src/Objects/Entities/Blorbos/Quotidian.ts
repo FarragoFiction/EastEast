@@ -1,7 +1,7 @@
 //base level Entity object. quotidians can turn into anything
 
 import { removeItemOnce } from "../../../Utils/ArrayUtils"
-import { createElementWithIdAndParent } from "../../../Utils/misc"
+import { createElementWithIdAndParent, distanceWithinRadius } from "../../../Utils/misc"
 import { pickFrom } from "../../../Utils/NonSeededRandUtils"
 import { Movement } from "../../MovementAlgs/BaseMovement"
 import { NoMovement } from "../../MovementAlgs/NoMovement"
@@ -145,8 +145,9 @@ export class Quotidian extends PhysicalObject {
 
     vibe = (blorbos: Quotidian[])=>{
         for(let blorbo of blorbos){
-            if(blorbo != this){
-                this.intensifyFeelingsFor(blorbo, .001);
+            //don't gotta be within mele range but SHOULD matter that you're not as far apart as you can get
+            if(blorbo != this && distanceWithinRadius(25,this.x, this.y, blorbo.x, blorbo.y)){
+                this.intensifyFeelingsFor(blorbo, 1);
             }
         }
     }
