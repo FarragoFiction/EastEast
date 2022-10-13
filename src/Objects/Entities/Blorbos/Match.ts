@@ -4,7 +4,7 @@ import { Movement } from "../../MovementAlgs/BaseMovement";
 import { RandomMovement } from "../../MovementAlgs/RandomMovement";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
-import { HUNTING, KILLING, FAMILY, DARKNESS, FIRE, ANGELS, WEB, ADDICTION, MUSIC, ANGER } from "../../ThemeStorage";
+import { KILLING, FIRE, WEB, ADDICTION, MUSIC, ANGER } from "../../ThemeStorage";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { Quotidian, Direction } from "./Quotidian";
 import { Relationship } from "./Relationship";
@@ -72,9 +72,8 @@ export class Match extends Quotidian {
 
         };
         const beats: AiBeat[] = [];
-        const states = [new Match(room, 0, 0)];
 
         super(room, "Match", x, y, [all_themes[FIRE], all_themes[MUSIC], all_themes[WEB], all_themes[ADDICTION], all_themes[ANGER], all_themes[KILLING]], sprite,
-            "The Match is burning...", beats, states);
+            "The Match is burning...", beats);
     }
 }   

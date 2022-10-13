@@ -13,7 +13,7 @@ import { Peewee } from "../Entities/Blorbos/Peewee";
 import { Quotidian } from "../Entities/Blorbos/Quotidian";
 import { Snail } from "../Entities/Blorbos/SnailFriend";
 import { JR } from "../Entities/Blorbos/JR";
-import { Match } from "../Entities/Blorbos/Match";
+import { Ria } from "../Entities/Blorbos/Match";
 import { Underscore } from "../Entities/Blorbos/Underscore";
 import { LIGHT } from "../Stat";
 import { Solemn } from "../Entities/Blorbos/Solemn";
@@ -73,7 +73,7 @@ export class Maze {
             this.blorbos.push(new Chicken(this.room, 150, 150));
             this.blorbos.push(new EyeKiller(this.room, 150, 150));
             this.blorbos.push(new Innocent(this.room, 150, 150));
-            this.blorbos.push(new Match(this.room, 150, 150));
+            this.blorbos.push(new Ria(this.room, 150, 150));
             this.blorbos.push(new Camille(this.room, 150, 150));
             this.blorbos.push(new Solemn(this.room, 150, 150));
             this.blorbos.push(new Devona(this.room, 150, 150));

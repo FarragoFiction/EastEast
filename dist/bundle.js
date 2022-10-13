@@ -1211,7 +1211,7 @@ class Look extends BaseAction_1.Action {
                 for (let relationshipPair of lookcloser.relationshipMap) {
                     const relationship = relationshipPair[1];
                     console.log("JR NOTE: relationship I'm looking at is", relationship);
-                    retSoFar += `<li>${relationship.title}: ${relationship.amount}  ${relationship.toString()}</li>`;
+                    retSoFar += `<li>${relationship.title}: Strength: ${relationship.amount},   ${relationship.toString()}</li>`;
                 }
             }
             return retSoFar;
@@ -1873,6 +1873,7 @@ class Chicken extends Quotidian_1.Quotidian {
         this.maxSpeed = 10;
         this.minSpeed = 5;
         this.currentSpeed = 5;
+        this.gender = Quotidian_1.FEMALE;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new SteadyMovement_1.SteadyMovement(this);
     }
@@ -1930,9 +1931,13 @@ class Devona extends Quotidian_1.Quotidian {
         const states = [new InsightTwin(room, 0, 0)];
         super(room, "Devona", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Devona is staring at you.", beats, states);
         this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
+        this.gender = Quotidian_1.FEMALE;
         this.maxSpeed = 8;
         this.minSpeed = 5;
         this.currentSpeed = 5;
+        this.romanticFOdds = 0.0;
+        this.romanticMOdds = 0.0;
+        this.romanticNBOdds = 0.0;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
     }
@@ -1957,7 +1962,7 @@ class InsightTwin extends Quotidian_1.Quotidian {
         const unbreach = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Relax", [`The Insightful Punishing Twin withers into itself, and Devona emerges once more. She appears to be unconcious, but there is a slight smile on her blood soaked face. Her brother is avenged.`], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60);
         const beats = [kill, hunt, mourn, visitGrave, unbreach, unbreachBecauseYouAreLeTired];
         super(room, "Insightful Punishing Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "The Insightful Punishing Twin is hunting.", beats);
-        this.lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. ";
+        this.lore = "She seeks only retribution for the death of her Twin. It's not her fault she's so scared, so big, so awkward. She causes so many problems.  ";
         this.maxSpeed = 8;
         this.minSpeed = 5;
         this.currentSpeed = 10;
@@ -1991,6 +1996,7 @@ const TargetIsAlive_1 = __webpack_require__(7064);
 const TargetIsBlorboBox_1 = __webpack_require__(4068);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const Quotidian_1 = __webpack_require__(6387);
+const Relationship_1 = __webpack_require__(7739);
 class Camille extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
@@ -2005,6 +2011,13 @@ class Camille extends Quotidian_1.Quotidian {
         const states = [new End(room, 0, 0)];
         super(room, "Camille", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, "The End Comes For Us All", beats, states);
         this.lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
+        this.relationshipMap = new Map([
+            ["Ria,Match", new Relationship_1.Relationship("Ria,Match", 1000000, "I really admire her dedication.", "...", "She's the smartest person I've ever met and just lights up  a room.", "She's so cute when she's really excited about something she's talking about.", "I can't imagine a life without her in some capacity.", true, true, false)]
+        ]); //(keyed by array of all known names, csv)
+        //camille just likes making friends :), absolute shit attachment stat
+        this.likeMultiplier = 13.0; //(effects how quickly they grow to like people in general)
+        this.dislikeMultiplier = 0.3; //(effects how quickly they grow to dislike ppl in general)
+        this.gender = Quotidian_1.FEMALE;
         this.maxSpeed = 50;
         this.minSpeed = 5;
         this.currentSpeed = 5;
@@ -2028,10 +2041,12 @@ class End extends Quotidian_1.Quotidian {
         const ObesssOverBlorbo = new BaseBeat_1.AiBeat("End: Pick Target", [`The shambling corpse of a long dead warrior begins calmly walking towards ${baseFilter_1.TARGETSTRING}.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()]);
         const beats = [ObesssOverBlorbo, KillObject];
         super(room, "End", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, "The End Comes For Us All", beats);
-        this.lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
+        this.lore = "There is nothing left of the smiling girl. Just a husk of a corpse built for one purpose.";
         this.maxSpeed = 50;
         this.minSpeed = 5;
         this.currentSpeed = 5;
+        this.likeMultiplier = 0.0; //(effects how quickly they grow to like people in general)
+        this.dislikeMultiplier = 0.0; //(effects how quickly they grow to dislike ppl in general)
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
         this.die = (causeOfDeath) => {
@@ -2086,6 +2101,9 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.lore = "Parker has said her soul is in the shape of a ram. He says there is a joke in there, about time and sheep. (in the West, sheep are sacrificed to travel in time) But the important point is that the Killer's soul is that of prey, that of something CERTAIN you will KILL it unless she rams her blade deep into your heart first. They say horses live in silent hill, but sheep must, too.";
         this.maxSpeed = 50;
         this.minSpeed = 5;
+        this.gender = Quotidian_1.FEMALE;
+        this.likeMultiplier = 0.5; //(effects how quickly they grow to like people in general)
+        this.dislikeMultiplier = 13.3;
         this.currentSpeed = 5;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -2161,6 +2179,7 @@ class JR extends Quotidian_1.Quotidian {
         const beats = [];
         super(room, "JR", x, y, [Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.WASTE], Theme_1.all_themes[ThemeStorage_1.LONELY], Theme_1.all_themes[ThemeStorage_1.KILLING]], sprite, "Boy this sure is an off brand JR, huh?", beats);
         this.lore = "My creator says that Mind made sense for AUs and choices and artificial intelligence. However, something different was needed for Zampanio. Connecting disparate fandoms, connecting disparate people. The red string of veins or thread connecting us all.";
+        this.gender = Quotidian_1.NB;
         this.maxSpeed = 5;
         this.minSpeed = 5;
         this.currentSpeed = 5;
@@ -2180,12 +2199,13 @@ exports.JR = JR;
 
 //just leave her alone with her egg
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Match = void 0;
+exports.Match = exports.Ria = void 0;
 const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const Quotidian_1 = __webpack_require__(6387);
-class Match extends Quotidian_1.Quotidian {
+const Relationship_1 = __webpack_require__(7739);
+class Ria extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
             default_src: { src: "Placeholders/thematch.png", width: 50, height: 50 },
@@ -2194,8 +2214,39 @@ class Match extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/match2.png", width: 50, height: 50 },
         };
         const beats = [];
-        super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION]], sprite, "Ria sure looks like she's trying to figure something out!", beats);
+        const states = [new Match(room, 0, 0)];
+        super(room, "Ria", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION]], sprite, "Ria sure looks like she's trying to figure something out!", beats, states);
         this.lore = "Parker says her soul has the shape of an Elephant. She feels too big, too loud, too clumsy. She feels she takes up so so much room and her problems are huge and insurmountable and she just wishes she could shrink into herself. She just wishes she could F1X TH1NGS so she could stop burdening the ones she loves.";
+        this.relationshipMap = new Map([
+            ["Camille,End", new Relationship_1.Relationship("Camille,End", 1000000, "She's so smart, she always knows the right thing to say.", "Why isn't she talking to me...", "No one makes me feel as seen and understood as she does and if soul mates were real...", "Oh. Um. Yeah. Wow. She's really good.", "<3", true, true, false)]
+        ]);
+        this.romanticFOdds = 1.0; //likes ladies more than others
+        this.romanticMOdds = 0.1;
+        this.romanticNBOdds = 0.1;
+        this.maxSpeed = 8;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        //ria is passionate
+        this.likeMultiplier = 3.3; //(effects how quickly they grow to like people in general)
+        this.dislikeMultiplier = 3.3; //(effects how quickly they grow to dislike ppl in general)
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+    }
+}
+exports.Ria = Ria;
+class Match extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "Placeholders/match2.png", width: 50, height: 50 },
+        };
+        const beats = [];
+        super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION], Theme_1.all_themes[ThemeStorage_1.ANGER], Theme_1.all_themes[ThemeStorage_1.KILLING]], sprite, "The Match is burning...", beats);
+        this.lore = "She burns because there is no more hope for this Universe. She tried so hard and gave so much and finally there is nothing left at all of her but ashes and heat. There is no hope. Time to give in to Rage and start over from scratch.";
+        this.relationshipMap = new Map([
+            ["Camille,End", new Relationship_1.Relationship("Camille,End", 1000000, "She is so good at killing...", "Why isn't she killing! It's not fair!", "She makes me feel so warm... I'm burning up!", "I'd feel complete if I just had her.", "I'm obsessed with her.", true, true, false)]
+        ]);
+        this.likeMultiplier = 0.0001; //(effects how quickly they grow to like people in general)
+        this.dislikeMultiplier = 13.0; //(effects how quickly they grow to dislike ppl in general)
         this.maxSpeed = 8;
         this.minSpeed = 5;
         this.currentSpeed = 5;
@@ -2259,6 +2310,8 @@ class Neville extends Quotidian_1.Quotidian {
         this.maxSpeed = 8;
         this.minSpeed = 5;
         this.currentSpeed = 5;
+        this.likeMultiplier = 3.3; //(effects how quickly they grow to like people in general)
+        this.dislikeMultiplier = 0.3;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
     }
@@ -2282,7 +2335,7 @@ class FortitudeTwin extends Quotidian_1.Quotidian {
         const unbreach = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Relax", [`The Fortitudinous Punishing Twin withers into itself, and Neville emerges once more. He falls onto his knees, tears streaming down his face. His twin is dead, and nothing will ever bring her back. But at least she is avenged.   `], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60);
         const beats = [kill, mourn, hunt, visitGrave, unbreach];
         super(room, "Fortitudinous Punishing Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "The Fortitude Punishing Twin is hunting.", beats);
-        this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
+        this.lore = "He seeks only retribution for the death of his twin. It's not his fault he's so lost. He's careful and quiet and doing his best. He can't let himself see. He can't let himself think. He can't let himself realize just what he has lost. ";
         this.maxSpeed = 8;
         this.minSpeed = 5;
         this.currentSpeed = 10;
@@ -2374,6 +2427,7 @@ class Peewee extends Quotidian_1.Quotidian {
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
+        this.gender = Quotidian_1.MALE;
         //peewee's ai is user based. you can tell him to do various actions. 
         //there is no trigger. only actions.
         this.processStorybeat = (beat) => {
@@ -2413,7 +2467,7 @@ exports.Peewee = Peewee;
 
 //base level Entity object. quotidians can turn into anything
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Quotidian = exports.Direction = void 0;
+exports.Quotidian = exports.NB = exports.MALE = exports.FEMALE = exports.Direction = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const misc_1 = __webpack_require__(4079);
 const NonSeededRandUtils_1 = __webpack_require__(8258);
@@ -2459,6 +2513,9 @@ var Direction;
     Direction[Direction["RIGHT"] = 4] = "RIGHT";
 })(Direction = exports.Direction || (exports.Direction = {}));
 const baseImageLocation = "images/Walkabout/Sprites/";
+exports.FEMALE = "F";
+exports.MALE = "M";
+exports.NB = "NB";
 //what, did you think the REAL eye killer would be so formulaic? 
 class Quotidian extends PhysicalObject_1.PhysicalObject {
     //TODO have a movement algorithm (effects can shift this)
@@ -2477,6 +2534,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText, states);
         this.lore = "Technically everything alive in this place is a Quotidian, wearing a Mask to Play A Role to entertain you with this farce. Did you forget this was East, Observer? Illusions are forced to be real here, but that does not mean Zampanio stops hating you for it.  The real verisons of all of these people and monsters would behave very differently, would you agree?";
         this.maxSpeed = 20;
+        this.gender = exports.NB;
         this.minSpeed = 1;
         this.currentSpeed = 10;
         this.timeOfLastBeat = new Date().getTime();
@@ -2490,6 +2548,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.likeMultiplier = 1.0; //(effects how quickly they grow to like people in general)
         this.dislikeMultiplier = 1.0; //(effects how quickly they grow to dislike ppl in general)
         this.relationshipMap = new Map(); //(keyed by array of all known names, csv)
+        // relationshipMap = new Map<string, Relationship>([["???", new Relationship("???",100,"I really admire her dedication.","...","She's the smartest person I've ever met and just lights up  a room.","She's so cute when she's really excited about something she's talking about.","I can't imagine a life without her in some capacity.",true,true,false)]  ]);
         this.beats = [];
         // 0 min, 5 max
         this.fortitude = 0; //how brave are you, how physically fit
@@ -2630,6 +2689,16 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 this.breaching = true;
             }
             this.name = chosenState.name;
+            this.lore = chosenState.lore;
+            this.dislikeMultiplier = chosenState.dislikeMultiplier;
+            this.likeMultiplier = chosenState.likeMultiplier;
+            this.relationshipMap = chosenState.relationshipMap;
+            this.platonicFOdds = chosenState.platonicFOdds;
+            this.platonicMOdds = chosenState.platonicMOdds;
+            this.platonicNBOdds = chosenState.platonicNBOdds;
+            this.romanticFOdds = chosenState.romanticFOdds;
+            this.romanticMOdds = chosenState.romanticMOdds;
+            this.romanticNBOdds = chosenState.romanticNBOdds;
             this.movement_alg = chosenState.movement_alg;
             this.movement_alg.entity = this;
             this.currentSpeed = chosenState.currentSpeed;
@@ -2746,7 +2815,7 @@ exports.Quotidian = Quotidian;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Relationship = void 0;
 class Relationship {
-    constructor(title, amount, positiveFlavor, negativeFlavor, importantFlavor, romanticFlavor, officialFlavor) {
+    constructor(title, amount, positiveFlavor, negativeFlavor, importantFlavor, romanticFlavor, officialFlavor, important = false, romantic = false, official = false) {
         this.important = false; //you can be Important but not romantic
         this.romantic = false; //you can be Romantic but not important
         this.official = false; //do both parties agree that This Is A Thing (whatever flavor it is?)
@@ -2798,6 +2867,9 @@ class Relationship {
         this.importantFlavor = importantFlavor;
         this.romanticFlavor = romanticFlavor;
         this.officialFlavor = officialFlavor;
+        this.romantic = romantic;
+        this.important = important;
+        this.official = official;
         this.title = title;
     }
 }
@@ -2838,6 +2910,7 @@ class Snail extends Quotidian_1.Quotidian {
         this.currentSpeed = 1;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new SteadyMovement_1.SteadyMovement(this);
+        this.gender = Quotidian_1.NB;
     }
 }
 exports.Snail = Snail;
@@ -2868,9 +2941,15 @@ class Solemn extends Quotidian_1.Quotidian {
         const beats = [];
         super(room, "Solemn", x, y, [Theme_1.all_themes[ThemeStorage_1.LONELY], Theme_1.all_themes[ThemeStorage_1.ANGELS], Theme_1.all_themes[ThemeStorage_1.SERVICE], Theme_1.all_themes[ThemeStorage_1.STEALING]], sprite, "Witherby looks very friendly!", beats);
         this.lore = "Parker says witherby's soul is a Hare...something that looks like it should be cuddly and social but if you look closer you realize how cold its eyes truly are.";
+        this.gender = Quotidian_1.MALE;
         this.maxSpeed = 8;
         this.minSpeed = 5;
         this.currentSpeed = 5;
+        this.romanticFOdds = 0.0;
+        this.romanticMOdds = 1.0;
+        this.romanticNBOdds = 0.5;
+        this.likeMultiplier = 0.1; //it takes him a long time to warm up to new people
+        this.dislikeMultiplier = 0.1;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
     }
@@ -2903,9 +2982,15 @@ class Vik extends Quotidian_1.Quotidian {
         const beats = [];
         super(room, "Vik", x, y, [Theme_1.all_themes[ThemeStorage_1.DARKNESS], Theme_1.all_themes[ThemeStorage_1.CENSORSHIP], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.DECAY], Theme_1.all_themes[ThemeStorage_1.LOVE], Theme_1.all_themes[ThemeStorage_1.FLESH]], sprite, "Their face is lightly censored, but you can still make out most of them.", beats);
         this.lore = "Their soul has long since rotted off them in viscous chunks, but Parker claims it once was a cat.";
+        this.gender = Quotidian_1.NB;
+        this.romanticFOdds = 0.0;
+        this.romanticMOdds = 0.0;
+        this.romanticNBOdds = 0.0;
         this.maxSpeed = 50;
         this.minSpeed = 5;
         this.currentSpeed = 5;
+        this.likeMultiplier = 0.1; //vik is grouchy, what can i say
+        this.dislikeMultiplier = 3.0;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
     }
@@ -2969,12 +3054,14 @@ class Yongki extends Quotidian_1.Quotidian {
         const beats = [reflectMirror, watchSnail, watchBug, approachBug];
         const states = [new Captain(room, 0, 0)];
         super(room, "Yongki", x, y, [Theme_1.all_themes[ThemeStorage_1.CLOWNS], Theme_1.all_themes[ThemeStorage_1.CHOICES], Theme_1.all_themes[ThemeStorage_1.DEFENSE], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Yongki, everyones favorite himbo!", beats, states);
+        this.gender = Quotidian_1.MALE;
         this.maxSpeed = 100;
         this.minSpeed = 5;
         this.currentSpeed = 25;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
         this.lore = "Parker says that Yongki has the soul of a gorilla. A gentle giant. His body craves so much violence yet he attacks only when attacked.  Captain has stabelized him, given him room to grow and seek enlightenment.";
+        this.likeMultiplier = 10.3; //yongki is so happy
         this.die = (causeOfDeath) => {
             console.log(`JR NOTE: actually, it says right here in the code, Yongki wins. If you think you're going to ${causeOfDeath}, you're wrong. Hope this helps.`);
         };
@@ -4935,7 +5022,7 @@ class Maze {
                 this.blorbos.push(new ChickenFriend_1.Chicken(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.EyeKiller(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.Innocent(this.room, 150, 150));
-                this.blorbos.push(new Match_1.Match(this.room, 150, 150));
+                this.blorbos.push(new Match_1.Ria(this.room, 150, 150));
                 this.blorbos.push(new End_1.Camille(this.room, 150, 150));
                 this.blorbos.push(new Solemn_1.Solemn(this.room, 150, 150));
                 this.blorbos.push(new Devona_1.Devona(this.room, 150, 150));
