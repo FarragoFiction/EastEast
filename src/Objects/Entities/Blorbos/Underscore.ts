@@ -4,7 +4,7 @@ import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { OBFUSCATION, DECAY, LOVE, FLESH, DARKNESS, CENSORSHIP } from "../../ThemeStorage";
 import { AiBeat } from "../StoryBeats/BaseBeat";
-import { Quotidian, Direction } from "./Quotidian";
+import { Quotidian, Direction, NB } from "./Quotidian";
 
 
 /*
@@ -14,7 +14,10 @@ import { Quotidian, Direction } from "./Quotidian";
 
 export class Vik extends Quotidian{
     lore = "Their soul has long since rotted off them in viscous chunks, but Parker claims it once was a cat.";
-
+    gender = NB;
+    romanticFOdds = 0.0;
+    romanticMOdds = 0.0;
+    romanticNBOdds = 0.0;
     maxSpeed = 50;
     minSpeed = 5;
     currentSpeed = 5;

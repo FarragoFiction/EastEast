@@ -13,7 +13,7 @@ export class Relationship  {
 
     official = false; //do both parties agree that This Is A Thing (whatever flavor it is?)
 
-    constructor(title: string,amount: number,positiveFlavor: string, negativeFlavor: string, importantFlavor: string, romanticFlavor:string, officialFlavor:string ){
+    constructor(title: string,amount: number,positiveFlavor: string, negativeFlavor: string, importantFlavor: string, romanticFlavor:string, officialFlavor:string, important=false, romantic=false, official=false ){
         console.log("JR NOTE: making a new relationship", title, amount);
         this.amount = amount;
         this.positiveFlavor = positiveFlavor;
@@ -21,6 +21,9 @@ export class Relationship  {
         this.importantFlavor = importantFlavor;
         this.romanticFlavor = romanticFlavor;
         this.officialFlavor = officialFlavor;
+        this.romantic = romantic;
+        this.important = important;
+        this.official = official;
         this.title  = title;
     }
 

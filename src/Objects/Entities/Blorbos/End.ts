@@ -12,12 +12,19 @@ import { RandomTarget } from "../TargetFilter/RandomTarget";
 import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
-import { Quotidian, Direction } from "./Quotidian";
+import { Quotidian, Direction, FEMALE } from "./Quotidian";
+import { Relationship } from "./Relationship";
 
 
 
 export class Camille extends Quotidian{
     lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
+    relationshipMap = new Map<string, Relationship>([
+        ["Ria,Match", new Relationship("Ria,Match",1000000,"I really admire her dedication.","...","She's the smartest person I've ever met and just lights up  a room.","She's so cute when she's really excited about something she's talking about.","I can't imagine a life without her in some capacity.",true,true,false)]
+    ]); //(keyed by array of all known names, csv)
+    likeMultiplier  = 3.0; //(effects how quickly they grow to like people in general)
+    dislikeMultiplier = 0.3; //(effects how quickly they grow to dislike ppl in general)
+    gender = FEMALE;
 
     maxSpeed = 50;
     minSpeed = 5;
@@ -65,11 +72,14 @@ export class Camille extends Quotidian{
 
 
 export class End extends Quotidian{
-    lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
+    lore = "There is nothing left of the smiling girl. Just a husk of a corpse built for one purpose.";
 
     maxSpeed = 50;
     minSpeed = 5;
     currentSpeed = 5;
+    likeMultiplier  = 0.0; //(effects how quickly they grow to like people in general)
+    dislikeMultiplier = 0.0; //(effects how quickly they grow to dislike ppl in general)
+  
 
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new NoMovement(this);

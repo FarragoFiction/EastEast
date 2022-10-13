@@ -22,12 +22,13 @@ import { TargetNearObjectWithName } from "../TargetFilter/TargetIsNearObjectWith
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 
-import { Quotidian, Direction } from "./Quotidian";
+import { Quotidian, Direction, MALE } from "./Quotidian";
 import { Snail } from "./SnailFriend";
 
 
 
 export class Yongki extends Quotidian{
+    gender = MALE;
 
     maxSpeed = 100;
     minSpeed = 5;

@@ -22,16 +22,19 @@ import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsTheKillerOfBlorboNamed } from "../TargetFilter/TargetIstheKillerOfBlorboNamed";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
-import { Quotidian, Direction } from "./Quotidian";
+import { Quotidian, Direction, FEMALE } from "./Quotidian";
 
 
 
 export class Devona extends Quotidian{
     lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. "
-
+    gender = FEMALE;
     maxSpeed = 8;
     minSpeed = 5;
     currentSpeed = 5;
+    romanticFOdds = 0.0;
+    romanticMOdds = 0.0;
+    romanticNBOdds = 0.0;
 
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new RandomMovement(this);
@@ -104,7 +107,7 @@ export class Devona extends Quotidian{
 }   
 
 export class InsightTwin extends Quotidian{
-    lore = "Parker says her soul is a small grey parrot. Always watching, always repeating, always hiding. "
+    lore = "She seeks only retribution for the death of her Twin. It's not her fault she's so scared, so big, so awkward. She causes so many problems.  "
 
     maxSpeed = 8;
     minSpeed = 5;

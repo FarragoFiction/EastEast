@@ -5,12 +5,13 @@ import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { HUNTING, KILLING, FAMILY, DARKNESS, TWISTING, WEB, WASTE, LONELY } from "../../ThemeStorage";
 import { AiBeat } from "../StoryBeats/BaseBeat";
-import { Quotidian, Direction } from "./Quotidian";
+import { Quotidian, Direction, NB } from "./Quotidian";
 
 
 //something is different about this jr, what could it be
 export class JR extends Quotidian{
     lore = "My creator says that Mind made sense for AUs and choices and artificial intelligence. However, something different was needed for Zampanio. Connecting disparate fandoms, connecting disparate people. The red string of veins or thread connecting us all.";
+    gender = NB;
 
     maxSpeed = 5;
     minSpeed = 5;

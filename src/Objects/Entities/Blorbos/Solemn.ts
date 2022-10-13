@@ -6,17 +6,20 @@ import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { HUNTING, KILLING, FAMILY, DARKNESS, FIRE, ANGELS, WEB, ADDICTION, MUSIC, LONELY, SERVICE, STEALING } from "../../ThemeStorage";
 import { AiBeat } from "../StoryBeats/BaseBeat";
-import { Quotidian, Direction } from "./Quotidian";
+import { Quotidian, Direction, MALE } from "./Quotidian";
 
 
 
 export class Solemn extends Quotidian{
     lore = "Parker says witherby's soul is a Hare...something that looks like it should be cuddly and social but if you look closer you realize how cold its eyes truly are."
+    gender = MALE;
 
     maxSpeed = 8;
     minSpeed = 5;
     currentSpeed = 5;
-
+    romanticFOdds = 0.0;
+    romanticMOdds = 1.0;
+    romanticNBOdds = 0.5;
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new RandomMovement(this);
 

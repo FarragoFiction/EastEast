@@ -19,7 +19,7 @@ import { TARGETSTRING } from "../TargetFilter/baseFilter";
 import { TargetHasObjectWithTheme } from "../TargetFilter/TargetHasObjectWithTheme";
 import { TargetHasTheme } from "../TargetFilter/TargetHasTheme";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
-import { Quotidian, Direction } from "./Quotidian";
+import { Quotidian, Direction, FEMALE } from "./Quotidian";
 
 
 //which came first, the chicken or the egg?
@@ -28,6 +28,8 @@ export class Chicken extends Quotidian{
     maxSpeed = 10;
     minSpeed = 5;
     currentSpeed = 5;
+    gender = FEMALE;
+
 
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new SteadyMovement(this);

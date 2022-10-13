@@ -71,11 +71,15 @@ export interface DirectionalSprite {
 }
 
 const baseImageLocation = "images/Walkabout/Sprites/";
+export const FEMALE = "F";
+export const MALE = "M";
+export const NB = "NB";
 
 //what, did you think the REAL eye killer would be so formulaic? 
 export class Quotidian extends PhysicalObject {
     lore = "Technically everything alive in this place is a Quotidian, wearing a Mask to Play A Role to entertain you with this farce. Did you forget this was East, Observer? Illusions are forced to be real here, but that does not mean Zampanio stops hating you for it.  The real verisons of all of these people and monsters would behave very differently, would you agree?";
     maxSpeed = 20;
+    gender = NB;
     minSpeed = 1;
     currentSpeed = 10;
     friend?: FRIEND;
@@ -91,6 +95,8 @@ export class Quotidian extends PhysicalObject {
    likeMultiplier  = 1.0; //(effects how quickly they grow to like people in general)
     dislikeMultiplier = 1.0; //(effects how quickly they grow to dislike ppl in general)
     relationshipMap = new Map<string, Relationship>(); //(keyed by array of all known names, csv)
+    // relationshipMap = new Map<string, Relationship>([["???", new Relationship("???",100,"I really admire her dedication.","...","She's the smartest person I've ever met and just lights up  a room.","She's so cute when she's really excited about something she's talking about.","I can't imagine a life without her in some capacity.",true,true,false)]  ]);
+   
 
 
     beats: AiBeat[] = [];
@@ -301,6 +307,18 @@ export class Quotidian extends PhysicalObject {
         }
 
         this.name = chosenState.name;
+        this.lore = chosenState.lore;
+        this.dislikeMultiplier = (chosenState as Quotidian).dislikeMultiplier;
+        this.likeMultiplier = (chosenState as Quotidian).likeMultiplier;
+        this.relationshipMap =  (chosenState as Quotidian).relationshipMap;
+        this.platonicFOdds =  (chosenState as Quotidian).platonicFOdds;
+        this.platonicMOdds =  (chosenState as Quotidian).platonicMOdds;
+        this.platonicNBOdds =  (chosenState as Quotidian).platonicNBOdds;
+        this.romanticFOdds =  (chosenState as Quotidian).romanticFOdds;
+        this.romanticMOdds =  (chosenState as Quotidian).romanticMOdds;
+        this.romanticNBOdds =  (chosenState as Quotidian).romanticNBOdds;
+
+
         this.movement_alg = (chosenState as Quotidian).movement_alg;
         this.movement_alg.entity = this;
         this.currentSpeed =  (chosenState as Quotidian).currentSpeed;

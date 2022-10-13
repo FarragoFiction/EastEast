@@ -83,7 +83,7 @@ export class Neville extends Quotidian{
 }   
 
 export class FortitudeTwin extends Quotidian{
-    lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. "
+    lore = "He seeks only retribution for the death of his twin. It's not his fault he's so lost. He's careful and quiet and doing his best. He can't let himself see. He can't let himself think. He can't let himself realize just what he has lost. "
 
     maxSpeed = 8;
     minSpeed = 5;

@@ -27,7 +27,7 @@ import { Taste } from "../Actions/Taste";
 import { Think } from "../Actions/Think";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
-import { Quotidian, Direction } from "./Quotidian";
+import { Quotidian, Direction, MALE } from "./Quotidian";
 import { FRIEND } from "../../RoomEngine/FRIEND/FRIEND";
 import { PickupObject } from "../Actions/PickupObject";
 import { DropAllObjects } from "../Actions/DropAllObjects";
@@ -54,6 +54,8 @@ export class Peewee extends Quotidian {
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
     movement_alg: Movement = new NoMovement(this);
+    gender = MALE;
+
     //TODO have a movement algorithm (effects can shift this)
     /*
     example movement algorithm
@@ -68,6 +70,7 @@ export class Peewee extends Quotidian {
     //TODO have a list of Scenes (trigger, effect, like quest engine from NorthNorth)
 
     constructor(room: Room, x: number, y: number) {
+        
         const sprite = {
             default_src: { src: "Peewee/left.gif", width: 90, height: 90 },
             left_src: { src: "Peewee/left.gif", width: 90, height: 90 },

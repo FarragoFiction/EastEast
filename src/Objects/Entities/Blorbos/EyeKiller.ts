@@ -22,7 +22,7 @@ import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
-import { Quotidian, Direction } from "./Quotidian";
+import { Quotidian, Direction, FEMALE } from "./Quotidian";
 
 
 
@@ -30,6 +30,8 @@ export class EyeKiller extends Quotidian{
     lore = "Parker has said her soul is in the shape of a ram. He says there is a joke in there, about time and sheep. (in the West, sheep are sacrificed to travel in time) But the important point is that the Killer's soul is that of prey, that of something CERTAIN you will KILL it unless she rams her blade deep into your heart first. They say horses live in silent hill, but sheep must, too.";
     maxSpeed = 50;
     minSpeed = 5;
+    gender = FEMALE;
+
     currentSpeed = 5;
 
     direction = Direction.UP; //movement algorithm can change or use this.

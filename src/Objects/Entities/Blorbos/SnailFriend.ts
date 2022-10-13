@@ -10,7 +10,7 @@ import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { BUGS } from "../../ThemeStorage";
 import { AiBeat } from "../StoryBeats/BaseBeat";
-import { Quotidian, Direction } from "./Quotidian";
+import { Quotidian, Direction, NB } from "./Quotidian";
 
 
 
@@ -22,6 +22,8 @@ export class Snail extends Quotidian{
 
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new SteadyMovement(this);
+    gender = NB;
+
 
     constructor(room: Room, x: number, y:number){
         const sprite = {
