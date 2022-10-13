@@ -23,8 +23,9 @@ export class Ria extends Quotidian {
     maxSpeed = 8;
     minSpeed = 5;
     currentSpeed = 5;
-    likeMultiplier = 1.3; //(effects how quickly they grow to like people in general)
-    dislikeMultiplier = 1.3; //(effects how quickly they grow to dislike ppl in general)
+    //ria is passionate
+    likeMultiplier = 3.3; //(effects how quickly they grow to like people in general)
+    dislikeMultiplier = 3.3; //(effects how quickly they grow to dislike ppl in general)
 
 
     direction = Direction.UP; //movement algorithm can change or use this.

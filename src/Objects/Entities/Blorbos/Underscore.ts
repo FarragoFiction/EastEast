@@ -21,6 +21,8 @@ export class Vik extends Quotidian{
     maxSpeed = 50;
     minSpeed = 5;
     currentSpeed = 5;
+    likeMultiplier = 0.1; //vik is grouchy, what can i say
+    dislikeMultiplier = 3.0; 
 
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new NoMovement(this);

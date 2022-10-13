@@ -30,6 +30,8 @@ export class Neville extends Quotidian{
     maxSpeed = 8;
     minSpeed = 5;
     currentSpeed = 5;
+    likeMultiplier = 3.3; //(effects how quickly they grow to like people in general)
+    dislikeMultiplier = 0.3; 
 
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new NoMovement(this);

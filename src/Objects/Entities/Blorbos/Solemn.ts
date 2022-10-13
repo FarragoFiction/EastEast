@@ -20,6 +20,8 @@ export class Solemn extends Quotidian{
     romanticFOdds = 0.0;
     romanticMOdds = 1.0;
     romanticNBOdds = 0.5;
+    likeMultiplier = 0.1; //it takes him a long time to warm up to new people
+    dislikeMultiplier = 0.1; 
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new RandomMovement(this);
 

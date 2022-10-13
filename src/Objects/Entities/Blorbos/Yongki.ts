@@ -37,7 +37,7 @@ export class Yongki extends Quotidian{
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new RandomMovement(this);
     lore = "Parker says that Yongki has the soul of a gorilla. A gentle giant. His body craves so much violence yet he attacks only when attacked.  Captain has stabelized him, given him room to grow and seek enlightenment.";
-
+    likeMultiplier = 10.3; //yongki is so happy
     constructor(room: Room, x: number, y:number){
         const sprite = {
             default_src:{src:"Placeholders/thereflection.png",width:50,height:50},
