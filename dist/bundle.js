@@ -1207,12 +1207,13 @@ class Look extends BaseAction_1.Action {
             const inventory = lookcloser.inventory.length > 0 ? (0, ArrayUtils_1.turnArrayIntoHumanSentence)(lookcloser.inventory.map((i) => i.processedName())) : "nothing";
             let retSoFar = `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText} <p>They have ${inventory} in their inventory.</p> <p>Their movement algorithm is ${lookcloser.movement_alg ? lookcloser.movement_alg.constructor.name : "NONE"}</p>`;
             if (lookcloser.relationshipMap && lookcloser.relationshipMap.keys().length !== 0) {
-                retSoFar += "<p>The have the following opinions about the other blorbos:</p>";
+                retSoFar += "<p>They have the following opinions about the other blorbos:</p> <ul style='padding:10px; border:1px solid pink; width: 500px;'>";
                 for (let relationshipPair of lookcloser.relationshipMap) {
                     const relationship = relationshipPair[1];
                     console.log("JR NOTE: relationship I'm looking at is", relationship);
-                    retSoFar += `<li>${relationship.title}: Strength: ${relationship.amount},   ${relationship.toString()}</li>`;
+                    retSoFar += `<li style="margin-bottom: 10px;"><u>${relationship.title}</u>: Strength: ${Math.round(relationship.amount)},   ${relationship.toString()}</li>`;
                 }
+                retSoFar += "</ul>";
             }
             return retSoFar;
         };
