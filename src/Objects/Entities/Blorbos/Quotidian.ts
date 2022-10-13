@@ -10,6 +10,7 @@ import { PhysicalObject } from "../../PhysicalObject"
 import { FRIEND } from "../../RoomEngine/FRIEND/FRIEND"
 import { Room } from "../../RoomEngine/Room"
 import { Theme } from "../../Theme"
+import { COMPLIMENT, INSULT, OBJECT } from "../../ThemeStorage"
 import { DeploySass } from "../Actions/DeploySass"
 import { PickupObject } from "../Actions/PickupObject"
 import { AiBeat } from "../StoryBeats/BaseBeat"
@@ -152,6 +153,30 @@ export class Quotidian extends PhysicalObject {
         }
     }
 
+    generatePositiveOpinion = (blorbo: Quotidian)=>{
+        return `I really like their ${blorbo.getRandomThemeConcept(COMPLIMENT)} nature.`
+    }
+
+    generateNegativeOpinion = (blorbo: Quotidian)=>{
+        return `I really like their ${blorbo.getRandomThemeConcept(INSULT)} nature.`
+    }
+
+    generateImportantOpinion = (blorbo: Quotidian)=>{
+        return `They are more important to me than any ${this.getRandomThemeConcept(OBJECT)}`;
+    }
+
+    generateRomanticOpinion = (blorbo: Quotidian)=>{
+        return "I think about kissing them a lot."
+    }
+
+    generateOfficialOpinion = (blorbo: Quotidian)=>{
+        return "I hope we can be together forever."
+    }
+
+    initializeRelationship = (key: string, blorbo: Quotidian, amount: number)=>{
+        return new Relationship(key, amount, this.generatePositiveOpinion(blorbo),this.generateNegativeOpinion(blorbo),this.generateImportantOpinion(blorbo),this.generateRomanticOpinion(blorbo),this.generateOfficialOpinion(blorbo));
+    }
+
 
     likeBlorboMore = (blorbo: Quotidian, amount: number)=>{
         const key:string = blorbo.aliases().join(",");
@@ -159,7 +184,7 @@ export class Quotidian extends PhysicalObject {
         if(relationship){
             relationship.strengthen(amount, this.likeMultiplier);
         }else{
-            this.relationshipMap.set(key, new Relationship(key, amount));
+            this.relationshipMap.set(key,this.initializeRelationship(key, blorbo, amount) );
         }
     }
 
@@ -169,7 +194,7 @@ export class Quotidian extends PhysicalObject {
         if(relationship){
             relationship.weaken(amount, this.dislikeMultiplier);
         }else{
-            this.relationshipMap.set(key, new Relationship(key, -1* amount));
+            this.relationshipMap.set(key, this.initializeRelationship(key,blorbo, -1 *amount));
         }
     }
 
@@ -185,7 +210,7 @@ export class Quotidian extends PhysicalObject {
         if(relationship){
             relationship.intensify(amount, this.likeMultiplier, this.dislikeMultiplier);
         }else{
-            this.relationshipMap.set(key, new Relationship(key,amount));
+            this.relationshipMap.set(key, this.initializeRelationship(key,blorbo, amount));
         }
     }
 
@@ -195,7 +220,7 @@ export class Quotidian extends PhysicalObject {
         if(relationship){
             relationship.de_escalate(amount, this.likeMultiplier, this.dislikeMultiplier);
         }else{
-            this.relationshipMap.set(key, new Relationship(key,amount));
+            this.relationshipMap.set(key, this.initializeRelationship(key,blorbo, amount));
         }
     }
 

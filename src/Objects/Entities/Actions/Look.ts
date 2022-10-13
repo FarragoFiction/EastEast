@@ -89,7 +89,7 @@ export class Look extends Action {
             for(let relationshipPair of lookcloser.relationshipMap){
                 const relationship = relationshipPair[1];
                 console.log("JR NOTE: relationship I'm looking at is", relationship)
-                retSoFar += `<li>${relationship.title}: ${relationship.amount}</li>`;
+                retSoFar += `<li>${relationship.title}: Strength: ${relationship.amount},   ${relationship.toString()}</li>`;
 
             }
         }

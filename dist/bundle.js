@@ -1211,7 +1211,7 @@ class Look extends BaseAction_1.Action {
                 for (let relationshipPair of lookcloser.relationshipMap) {
                     const relationship = relationshipPair[1];
                     console.log("JR NOTE: relationship I'm looking at is", relationship);
-                    retSoFar += `<li>${relationship.title}: ${relationship.amount}</li>`;
+                    retSoFar += `<li>${relationship.title}: ${relationship.amount}  ${relationship.toString()}</li>`;
                 }
             }
             return retSoFar;
@@ -2420,6 +2420,7 @@ const NonSeededRandUtils_1 = __webpack_require__(8258);
 const NoMovement_1 = __webpack_require__(4956);
 const RandomMovement_1 = __webpack_require__(5997);
 const PhysicalObject_1 = __webpack_require__(8466);
+const ThemeStorage_1 = __webpack_require__(1288);
 const DeploySass_1 = __webpack_require__(4237);
 const PickupObject_1 = __webpack_require__(9936);
 const BaseBeat_1 = __webpack_require__(1708);
@@ -2511,6 +2512,24 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 }
             }
         };
+        this.generatePositiveOpinion = (blorbo) => {
+            return `I really like their ${blorbo.getRandomThemeConcept(ThemeStorage_1.COMPLIMENT)} nature.`;
+        };
+        this.generateNegativeOpinion = (blorbo) => {
+            return `I really like their ${blorbo.getRandomThemeConcept(ThemeStorage_1.INSULT)} nature.`;
+        };
+        this.generateImportantOpinion = (blorbo) => {
+            return `They are more important to me than any ${this.getRandomThemeConcept(ThemeStorage_1.OBJECT)}`;
+        };
+        this.generateRomanticOpinion = (blorbo) => {
+            return "I think about kissing them a lot.";
+        };
+        this.generateOfficialOpinion = (blorbo) => {
+            return "I hope we can be together forever.";
+        };
+        this.initializeRelationship = (key, blorbo, amount) => {
+            return new Relationship_1.Relationship(key, amount, this.generatePositiveOpinion(blorbo), this.generateNegativeOpinion(blorbo), this.generateImportantOpinion(blorbo), this.generateRomanticOpinion(blorbo), this.generateOfficialOpinion(blorbo));
+        };
         this.likeBlorboMore = (blorbo, amount) => {
             const key = blorbo.aliases().join(",");
             const relationship = this.relationshipMap.get(key);
@@ -2518,7 +2537,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 relationship.strengthen(amount, this.likeMultiplier);
             }
             else {
-                this.relationshipMap.set(key, new Relationship_1.Relationship(key, amount));
+                this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, amount));
             }
         };
         this.likeBlorboLess = (blorbo, amount) => {
@@ -2528,7 +2547,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 relationship.weaken(amount, this.dislikeMultiplier);
             }
             else {
-                this.relationshipMap.set(key, new Relationship_1.Relationship(key, -1 * amount));
+                this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, -1 * amount));
             }
         };
         //if they're already in my relationship matrix, escalate it, else initialize it to zero
@@ -2541,7 +2560,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 relationship.intensify(amount, this.likeMultiplier, this.dislikeMultiplier);
             }
             else {
-                this.relationshipMap.set(key, new Relationship_1.Relationship(key, amount));
+                this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, amount));
             }
         };
         this.de_escalateFeelingsFor = (blorbo, amount) => {
@@ -2551,7 +2570,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 relationship.de_escalate(amount, this.likeMultiplier, this.dislikeMultiplier);
             }
             else {
-                this.relationshipMap.set(key, new Relationship_1.Relationship(key, amount));
+                this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, amount));
             }
         };
         //NOTE to avoid recursion does not clone states
@@ -2727,10 +2746,18 @@ exports.Quotidian = Quotidian;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Relationship = void 0;
 class Relationship {
-    constructor(title, amount) {
+    constructor(title, amount, positiveFlavor, negativeFlavor, importantFlavor, romanticFlavor, officialFlavor) {
         this.important = false; //you can be Important but not romantic
         this.romantic = false; //you can be Romantic but not important
         this.official = false; //do both parties agree that This Is A Thing (whatever flavor it is?)
+        this.toString = () => {
+            let ret = "";
+            this.amount > 0 ? ret += this.positiveFlavor : this.negativeFlavor;
+            this.important ? ret += " " + this.importantFlavor : null;
+            this.romantic ? ret += " " + this.romanticFlavor : null;
+            this.official ? ret += " " + this.official : null;
+            return ret;
+        };
         //pass in absolute value
         this.strengthen = (value, likeMultiplier) => {
             this.amount += value * likeMultiplier;
@@ -2766,6 +2793,11 @@ class Relationship {
         };
         console.log("JR NOTE: making a new relationship", title, amount);
         this.amount = amount;
+        this.positiveFlavor = positiveFlavor;
+        this.negativeFlavor = negativeFlavor;
+        this.importantFlavor = importantFlavor;
+        this.romanticFlavor = romanticFlavor;
+        this.officialFlavor = officialFlavor;
         this.title = title;
     }
 }

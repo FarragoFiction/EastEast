@@ -2,16 +2,36 @@
 export class Relationship  {
     title: string;
     amount: number;
+    positiveFlavor: string;
+    negativeFlavor: string;
+    importantFlavor: string;
+    romanticFlavor: string;
+    officialFlavor: string;
 
     important= false; //you can be Important but not romantic
     romantic  = false; //you can be Romantic but not important
 
     official = false; //do both parties agree that This Is A Thing (whatever flavor it is?)
 
-    constructor(title: string,amount: number){
+    constructor(title: string,amount: number,positiveFlavor: string, negativeFlavor: string, importantFlavor: string, romanticFlavor:string, officialFlavor:string ){
         console.log("JR NOTE: making a new relationship", title, amount);
         this.amount = amount;
+        this.positiveFlavor = positiveFlavor;
+        this.negativeFlavor = negativeFlavor;
+        this.importantFlavor = importantFlavor;
+        this.romanticFlavor = romanticFlavor;
+        this.officialFlavor = officialFlavor;
         this.title  = title;
+    }
+
+    toString = ()=>{
+        let ret = "";
+        this.amount > 0? ret += this.positiveFlavor: this.negativeFlavor;
+        this.important? ret += " " + this.importantFlavor: null;
+        this.romantic? ret += " " + this.romanticFlavor: null;
+        this.official? ret += " " + this.official: null;
+
+        return ret;
     }
 
     //pass in absolute value
