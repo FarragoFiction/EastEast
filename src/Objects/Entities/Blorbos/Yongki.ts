@@ -23,6 +23,7 @@ import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadius
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 
 import { Quotidian, Direction, MALE } from "./Quotidian";
+import { Relationship } from "./Relationship";
 import { Snail } from "./SnailFriend";
 
 
@@ -33,7 +34,9 @@ export class Yongki extends Quotidian{
     maxSpeed = 100;
     minSpeed = 5;
     currentSpeed = 25;
-
+    relationshipMap = new Map<string, Relationship>([
+        ["Snail Friend", new Relationship("Snail Friend",1000,"I really like how viscous it is! That means its having a thick, sticky consistency between solid and liquid; having a high viscosity.","Why must Snail Friends die so easily :(","It even has a little house!","Captain says that romance might happen naturally between people who spend a lot of time together but a snail is not people.","This is the best pet ever!",true,true,false)]
+    ]);
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new RandomMovement(this);
     lore = "Parker says that Yongki has the soul of a gorilla. A gentle giant. His body craves so much violence yet he attacks only when attacked.  Captain has stabelized him, given him room to grow and seek enlightenment.";
