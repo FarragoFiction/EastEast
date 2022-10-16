@@ -4966,14 +4966,18 @@ exports.FRIEND = FRIEND;
 /***/ }),
 
 /***/ 7194:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Maze = void 0;
 const PasswordStorage_1 = __webpack_require__(9867);
 const misc_1 = __webpack_require__(4079);
+const SeededRandom_1 = __importDefault(__webpack_require__(3450));
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const ChantingEngine_1 = __webpack_require__(7936);
@@ -5013,7 +5017,17 @@ class Maze {
             { name: "Novum Mirror", layer: 1, src: `Artifacts/Zampanio_Artifact_09_Mirror.png`, themes: [Theme_1.all_themes[ThemeStorage_1.OBFUSCATION]], desc: "An ornate but tarnished silver mirror, with a 9 carved onto the back. It is said to reflect everything but faces. It is said that if all 9 Artifacts are united, the Apocalypse will begin." }
         ];
         this.initialize = async () => {
-            const themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY]];
+            let themes = [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY]];
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const seed = urlParams.get('seed');
+            const urlThemes = urlParams.get('themes');
+            if (seed) {
+                this.rand = new SeededRandom_1.default(parseInt(seed)); //load seed from url
+            }
+            if (urlThemes) {
+                themes = urlThemes.split(",").map((item) => Theme_1.all_themes[item]);
+            }
             this.room = await (0, Room_1.randomRoomWithThemes)(this, this.ele, themes, this.rand);
             this.initializeBlorbos();
             await this.room.propagateMaze(3);
@@ -9786,6 +9800,7 @@ window.onload = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const apocalypse = urlParams.get('apocalypse');
+    //NOTE, seed and themes will be loaded at the maze level
     //the apocalypse overrides friday (but has its own special hell for it)
     if (apocalypse === "night") {
         (0, exports.whiteNight)();

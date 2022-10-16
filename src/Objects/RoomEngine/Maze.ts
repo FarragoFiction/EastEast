@@ -49,7 +49,7 @@ export class Maze {
     ];
 
     constructor(ele: HTMLElement, storySoFar: HTMLElement, rand: SeededRandom,) {
-        this.rand = rand;
+        this.rand = new SeededRandom(rand.internal_seed);
         this.ele = ele;
         this.storySoFar = storySoFar;
         this.initialize();
@@ -62,7 +62,7 @@ export class Maze {
         const seed = urlParams.get('seed');
         const urlThemes = urlParams.get('themes');
         if(seed){
-            this.rand.internal_seed = parseInt(seed); //load seed from url
+            this.rand = new SeededRandom(parseInt(seed)); //load seed from url
         }
 
         if(urlThemes){
@@ -172,7 +172,7 @@ export class Maze {
         if(!this.room){
             return;
         }
-        var pageUrl = `seed=${this.room.rand.internal_seed}&themes=${this.room.themes.map((item)=>item.key)}`;
+        var pageUrl = `seed=${this.room.rand.initial_seed}&themes=${this.room.themes.map((item)=>item.key)}`;
         updateURLParams(pageUrl);
     }
 
