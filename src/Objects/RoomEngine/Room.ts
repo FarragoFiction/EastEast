@@ -13,11 +13,11 @@ import { Camille, End } from "../Entities/Blorbos/End";
 import { Peewee } from "../Entities/Blorbos/Peewee";
 import { Quotidian } from "../Entities/Blorbos/Quotidian";
 import { AiBeat } from "../Entities/StoryBeats/BaseBeat";
+import { communal_ai } from "../Entities/StoryBeats/CommunalAI";
 
 const artifact_rate = 0.95;//lower is more artifacts
 
 
-const general_purpose_beats: AiBeat[] = [];
 
 export class Room {
     themes: Theme[];
@@ -29,7 +29,7 @@ export class Room {
     element: HTMLElement;
     width = 400;
     height = 600;
-    beats: AiBeat[] = [...general_purpose_beats]; //combo of things like romance that can happen anywhere and specifics based on the rooms themes
+    beats: AiBeat[] = [...communal_ai]; //combo of things like romance that can happen anywhere and specifics based on the rooms themes
 
     //a room has a source if they are inside of something
     totemObject?: PhysicalObject;
