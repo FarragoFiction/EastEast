@@ -1,4 +1,8 @@
 import { ACHIEVEMENTS, BACKSTORY, CITYBUILDING, CODE, COMPANIONS, GODS, INVENTORY, LORE, OPTIONS, QUESTS, RESISTANCES, SKILLGRAPH, STATISTICS, STATUS, WARROOM } from '../Utils/constants';
+import { ChangeMyStabilityLevelByAmount } from './Entities/Actions/ChangeMyStabilityLevelByAmount';
+import { AiBeat } from './Entities/StoryBeats/BaseBeat';
+import { SUBJECTSTRING } from './Entities/TargetFilter/baseFilter';
+import { RandomTarget } from './Entities/TargetFilter/RandomTarget';
 import { Memory } from './Memory';
 import * as Stat from './Stat';
 
@@ -36,6 +40,7 @@ export const WALLFOREGROUND = "WALLFOREGROUND";
 export const FLOORBACKGROUND = "FLOORBACKGROUND";
 export const FLOORFOREGROUND = "FLOORFOREGROUND";
 export const SPRITES = "SPRITES";//birbs
+export const BEATS = "BEATS";//beats
 
 
 
@@ -138,12 +143,18 @@ export interface MemoryMap {
     [details: string]: Memory[];
 }
 
+export interface BeatMap {
+    [details: string]: AiBeat[];
+}
+
+
 //noun_possibility, adj_possibility (glowing, shimmering, walking, ceasing)
 export let wall_foregrounds: ImageWithDescMap = {}
 export let wall_backgrounds: ImageWithDescMap = {}
 export let floor_backgrounds: ImageWithDescMap = {}
 export let floor_foregrounds: ImageWithDescMap = {}
 export let sprite_possibilities: SpriteWithDirectionsMap = {}
+export let beat_list: BeatMap = {}
 
 export let stats_map: ThemeStatMap = {};
 export let person_posibilities: ThemePossibilitiesMap = {};
@@ -569,6 +580,18 @@ const initWallForegrounds = () => {
     wall_foregrounds[MUSIC] =  ["Symphonic Synthesia"] ;
     wall_foregrounds[DEFENSE] =  ["Excalibur"] ;
     wall_foregrounds[QUESTING] = ["Satisfaction"] ;*/
+}
+
+const initBeatList = ()=>{
+    beat_list[TWISTING] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Degrade Stability`,
+            [`${SUBJECTSTRING} clutches their head, their eyes spiralling in every direction. They don't know how to parse what they are experiencing. Their mind cracks open the littlest bit in response. `],
+            [  new RandomTarget(0.1, {singleTarget:true, kMode:true})],
+            [new ChangeMyStabilityLevelByAmount(10)],
+            true,
+            1000*60)
+    ];
 }
 
 //no one said quotidians are locked into only mimicking HUMANS, just sapient things. 
@@ -2030,5 +2053,6 @@ export const initThemes = () => {
     initThemeOpinions();
     initSpritePossibilities();
     initFilters();
+    initBeatList();
 
 }

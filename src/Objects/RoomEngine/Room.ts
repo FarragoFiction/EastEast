@@ -29,7 +29,7 @@ export class Room {
     element: HTMLElement;
     width = 400;
     height = 600;
-    beats: AiBeat[] = [...communal_ai]; //combo of things like romance that can happen anywhere and specifics based on the rooms themes
+    beats: AiBeat[] = []; //combo of things like romance that can happen anywhere and specifics based on the rooms themes
 
     //a room has a source if they are inside of something
     totemObject?: PhysicalObject;
@@ -361,7 +361,7 @@ export class Room {
 
             blorbo.vibe(this.blorbos); //social time baby! everyone in the room is invited!
             if (!blorbo.dead) {
-                blorbo.tick(this.actionRate);
+                blorbo.tick(this.actionRate, beats);
             }
             this.checkForDoors(blorbo);
         }
@@ -404,10 +404,22 @@ export class Room {
 
     }
 
+    //order is theme beats, then communcal ai
+    setupBeats = ()=>{
+        for(let theme of this.themes){
+            if(theme.beats.length > 0){
+                this.beats = [...theme.beats,...this.beats];
+            }
+        }
+        this.beats = [...this.beats, ...communal_ai];
+
+    }
+
     init = () => {
         this.name = `${titleCase(this.getRandomThemeConcept(ADJ))} ${titleCase(this.getRandomThemeConcept(LOCATION))}`;
         this.initFloor();
         this.initWall();
+        this.setupBeats();
     }
 
     clearBlorbos = () => {

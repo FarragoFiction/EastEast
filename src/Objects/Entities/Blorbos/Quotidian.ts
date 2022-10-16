@@ -386,10 +386,12 @@ export class Quotidian extends PhysicalObject {
         return new Date().getTime() - this.timeOfLastBeat > actionRate;
     }
 
-    processAiBeat = () => {
+    processAiBeat = (roomBeats: AiBeat[]) => {
         const toRemove: AiBeat[] = [];
         let didSomething = false;
-        for (let beat of this.beats) {
+        //only does a room beat if all of my own ai does nothing
+        let allPossibilities = [...this.beats, ...roomBeats];
+        for (let beat of allPossibilities) {
             if (beat.triggered(this.room)) {
                 didSomething = true;
                 this.timeOfLastBeat = new Date().getTime();
@@ -415,7 +417,7 @@ export class Quotidian extends PhysicalObject {
 
     }
 
-    tick = (actionRate:number) => {
+    tick = (actionRate:number, roomBeats: AiBeat[]) => {
         //console.log("JR NOTE: trying to tick: ", this.name);
         if (this.dead) {
             return;
@@ -426,7 +428,7 @@ export class Quotidian extends PhysicalObject {
         }
         //you can move quicker than you can think
         if(this.itsBeenAwhileSinceLastBeat(actionRate)){
-            this.processAiBeat();
+            this.processAiBeat(roomBeats);
         }
         this.movement_alg.tick();
         this.syncSpriteToDirection();

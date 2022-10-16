@@ -2,6 +2,7 @@ import SeededRandom from '../Utils/SeededRandom';
 import * as Stat from './Stat';
 import * as ThemeStorage from './ThemeStorage';
 import { Memory } from './Memory';
+import { AiBeat } from './Entities/StoryBeats/BaseBeat';
 
 interface ThemeMap {
     [details: string]: Theme;
@@ -29,13 +30,14 @@ export class Theme {
     etc etc
     */
     string_possibilities: PossibilitiesListMap;
+    beats: AiBeat[];
     memories: Memory[];
     opinions: ThemeStorage.ThemePossibilitiesNumberMap;
 
     tier: number;
 
 
-    constructor(key: string, tier: number, stats: Stat.StatMap, string_possibilities: PossibilitiesListMap, opinions: ThemeStorage.ThemePossibilitiesNumberMap, memories: Memory[]) {
+    constructor(key: string, tier: number, stats: Stat.StatMap, string_possibilities: PossibilitiesListMap, opinions: ThemeStorage.ThemePossibilitiesNumberMap, memories: Memory[], beats: AiBeat[]) {
         this.key = key;
         this.tier = tier;
         this.initStats(stats);
@@ -43,6 +45,7 @@ export class Theme {
         this.memories = memories;
         this.opinions = opinions;
         all_themes[key] = this;
+        this.beats = beats;
     }
 
     getOpinionOfTheme = (key: string) => {
@@ -155,9 +158,10 @@ export function initThemes() {
         string_possibilities[ThemeStorage.FILTERS] = ThemeStorage.filter_possibilities[key];
 
         const opinions = ThemeStorage.theme_opinions[key];
+        const beats =  ThemeStorage.beat_list[key];
 
         const memories = ThemeStorage.memories[key] ? ThemeStorage.memories[key] : [];
-        new Theme(key, 0, Stat.WrapStatsToStatMap(ThemeStorage.stats_map[key]), string_possibilities, opinions, memories);
+        new Theme(key, 0, Stat.WrapStatsToStatMap(ThemeStorage.stats_map[key]), string_possibilities, opinions, memories, beats);
     }
 
 
