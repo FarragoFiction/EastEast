@@ -10,7 +10,7 @@ import { SUBJECTSTRING, TARGETSTRING } from "../TargetFilter/baseFilter";
 
 
 export class ConsiderWhetherTargetIsImportantToYou extends Action {
-
+    importantReturn = true;
 
 
     recognizedCommands: string[] = [];
@@ -36,8 +36,10 @@ export class ConsiderWhetherTargetIsImportantToYou extends Action {
         }
         if(subject.rand.nextDouble() < odds){
             subject.realizeIHaveASquishOnBlorbo(target);
+            return `${subject.processedName()} realizes that ${TARGETSTRING} is important to ${himPronoun(subject.gender)}.`;
+
         }
-        return `${subject.processedName()} realizes that ${TARGETSTRING} is important to ${himPronoun(subject.gender)}.`;
+        return "";
 
     }
 

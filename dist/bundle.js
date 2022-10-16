@@ -75,6 +75,7 @@ exports.Action = void 0;
 const ThemeStorage_1 = __webpack_require__(1288);
 class Action {
     constructor() {
+        this.importantReturn = true; //most returns are for debugging only. This isn't. 
         //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
         this.recognizedCommands = []; //nothing, so its default
         //for all fights, if yongki, yongki win
@@ -200,6 +201,54 @@ class CheckInventory extends BaseAction_1.Action {
     }
 }
 exports.CheckInventory = CheckInventory;
+
+
+/***/ }),
+
+/***/ 6989:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ConsiderWhetherTargetIsImportantToYou = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const BaseAction_1 = __webpack_require__(7042);
+const baseFilter_1 = __webpack_require__(9505);
+class ConsiderWhetherTargetIsImportantToYou extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.importantReturn = true;
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            let target = beat.targets[0];
+            if (!subject || !target || !(target instanceof Quotidian_1.Quotidian)) {
+                return "";
+            }
+            let odds = 0.0;
+            if (target.gender === Quotidian_1.FEMALE) {
+                odds = subject.platonicFOdds;
+            }
+            else if (target.gender === Quotidian_1.MALE) {
+                odds = subject.platonicMOdds;
+            }
+            else {
+                odds = subject.platonicNBOdds;
+            }
+            if (subject.rand.nextDouble() < odds) {
+                subject.realizeIHaveASquishOnBlorbo(target);
+                return `${subject.processedName()} realizes that ${baseFilter_1.TARGETSTRING} is important to ${(0, Quotidian_1.himPronoun)(subject.gender)}.`;
+            }
+            return "";
+        };
+    }
+}
+exports.ConsiderWhetherTargetIsImportantToYou = ConsiderWhetherTargetIsImportantToYou;
 
 
 /***/ }),
@@ -2325,6 +2374,12 @@ const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const Quotidian_1 = __webpack_require__(6387);
 const Relationship_1 = __webpack_require__(7739);
+/*
+"She was not such a tall woman, the Keeper. Skinny thing, no real muscle to her, and though she had vigor it was the feverish kind: burning but not healthy."
+-https://practicalguidetoevil.wordpress.com/2020/04/10/interlude-deadhand/
+
+was reading this chapter of A Practical Guide to Evil and it seemed perfect for ria, doesn't it?
+*/
 class Ria extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
@@ -2616,7 +2671,7 @@ exports.BreachedPeewee = BreachedPeewee;
 
 //base level Entity object. quotidians can turn into anything
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Quotidian = exports.NB = exports.MALE = exports.FEMALE = exports.Direction = void 0;
+exports.Quotidian = exports.himPronoun = exports.heProunon = exports.hisProunon = exports.NB = exports.MALE = exports.FEMALE = exports.Direction = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const misc_1 = __webpack_require__(4079);
 const NonSeededRandUtils_1 = __webpack_require__(8258);
@@ -2665,6 +2720,51 @@ const baseImageLocation = "images/Walkabout/Sprites/";
 exports.FEMALE = "F";
 exports.MALE = "M";
 exports.NB = "NB";
+const hisProunon = (gender) => {
+    const HIS = "his";
+    const HER = "her";
+    const their = "their";
+    if (gender === exports.MALE) {
+        return HIS;
+    }
+    else if (gender === exports.FEMALE) {
+        return HER;
+    }
+    else {
+        return their;
+    }
+};
+exports.hisProunon = hisProunon;
+const heProunon = (gender) => {
+    const HE = "he";
+    const SHE = "she";
+    const they = "they";
+    if (gender === exports.MALE) {
+        return HE;
+    }
+    else if (gender === exports.FEMALE) {
+        return SHE;
+    }
+    else {
+        return they;
+    }
+};
+exports.heProunon = heProunon;
+const himPronoun = (gender) => {
+    const HIM = "him";
+    const HER = "her";
+    const them = "them";
+    if (gender === exports.MALE) {
+        return HIM;
+    }
+    else if (gender === exports.FEMALE) {
+        return HER;
+    }
+    else {
+        return them;
+    }
+};
+exports.himPronoun = himPronoun;
 //what, did you think the REAL eye killer would be so formulaic? 
 class Quotidian extends PhysicalObject_1.PhysicalObject {
     //TODO have a movement algorithm (effects can shift this)
@@ -2738,6 +2838,43 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         };
         this.initializeRelationship = (key, blorbo, amount) => {
             return new Relationship_1.Relationship(key, amount, this.generatePositiveOpinion(blorbo), this.generateNegativeOpinion(blorbo), this.generateImportantOpinion(blorbo), this.generateRomanticOpinion(blorbo), this.generateOfficialOpinion(blorbo));
+        };
+        this.getRelationshipWith = (blorbo) => {
+            const key = blorbo.aliases().join(",");
+            return this.relationshipMap.get(key);
+        };
+        this.realizeIHaveASquishOnBlorbo = (blorbo) => {
+            const key = blorbo.aliases().join(",");
+            let relationship = this.relationshipMap.get(key);
+            if (!relationship) {
+                this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, 113));
+                relationship = this.relationshipMap.get(key);
+            }
+            if (relationship) {
+                relationship.important = true;
+            }
+        };
+        this.realizeIHaveACrushOnBlorbo = (blorbo) => {
+            const key = blorbo.aliases().join(",");
+            let relationship = this.relationshipMap.get(key);
+            if (!relationship) {
+                this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, 113));
+                relationship = this.relationshipMap.get(key);
+            }
+            if (relationship) {
+                relationship.romantic = true;
+            }
+        };
+        this.makeItOfficialWithBlorbo = (blorbo) => {
+            const key = blorbo.aliases().join(",");
+            let relationship = this.relationshipMap.get(key);
+            if (!relationship) {
+                this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, 113));
+                relationship = this.relationshipMap.get(key);
+            }
+            if (relationship) {
+                relationship.official = true;
+            }
         };
         this.likeBlorboMore = (blorbo, amount) => {
             const key = blorbo.aliases().join(",");
@@ -3312,13 +3449,18 @@ class AiBeat {
             this.timeOfLastBeat = new Date().getTime();
             let causes = [];
             let effects = [];
+            let importantEffects = [];
             for (let t of this.filters) {
                 causes.push(this.processTags(t.toString()));
             }
             for (let a of this.actions) {
-                effects.push(a.applyAction(this));
+                let e = (a.applyAction(this));
+                if (a.importantReturn) {
+                    importantEffects.push(e); //some actions are conditional and i want them to tell me how they went. 
+                }
+                effects.push(e); //most actions are just for debugging tho
             }
-            this.addStorybeatToScreen(current_room.maze, this.processTags(this.command), this.processTags(this.owner.rand.pickFrom(this.flavorText)));
+            this.addStorybeatToScreen(current_room.maze, this.processTags(this.command), this.processTags(this.owner.rand.pickFrom(this.flavorText) + `${importantEffects.join(" ")}`));
             if (current_room.maze.debug) {
                 this.addStorybeatToScreen(current_room.maze, "AI: DEBUG", `DEBUG: Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)}... ${(effects.join("<br>"))}`);
             }
@@ -3380,14 +3522,19 @@ exports.AiBeat = AiBeat;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.communal_ai = void 0;
+const ConsiderWhetherTargetIsImportantToMe_1 = __webpack_require__(6989);
 const IncrementMyState_1 = __webpack_require__(9211);
 const baseFilter_1 = __webpack_require__(9505);
+const ILikeTargetMoreThanAmount_1 = __webpack_require__(8898);
 const TargetIsBreaching_1 = __webpack_require__(3779);
+const TargetIsImportantToMe_1 = __webpack_require__(6375);
 const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
 const BaseBeat_1 = __webpack_require__(1708);
+//if they're not already important to me, hang out just as bros
+const hangOutWithFriend = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }) && new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true })], [new ConsiderWhetherTargetIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30);
 const breachIfStabilityDropsEnough = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Breach`, [`${baseFilter_1.SUBJECTSTRING} has reached their limit. They have seen too many horrors. More than anyone could possibly bear. Their form begins twisting as they clutch their head. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { singleTarget: true, kMode: true }), new TargetIsBreaching_1.TargetIsBreeching({ invert: true, singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
 //things like confessing love or breaching if your stability level is low enough
-exports.communal_ai = [breachIfStabilityDropsEnough];
+exports.communal_ai = [breachIfStabilityDropsEnough, hangOutWithFriend];
 
 
 /***/ }),
@@ -3514,6 +3661,47 @@ class IHaveObjectWithTheme extends baseFilter_1.TargetFilter {
     }
 }
 exports.IHaveObjectWithTheme = IHaveObjectWithTheme;
+
+
+/***/ }),
+
+/***/ 8898:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ILikeTargetMoreThanAmount = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class ILikeTargetMoreThanAmount extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(amount, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            return `they like ${baseFilter_1.TARGETSTRING}  ${this.invert ? "not" : ""} more than  ${this.amount}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (owner.owner && (target instanceof Quotidian_1.Quotidian)) {
+                const relationship = owner.owner.getRelationshipWith(target);
+                if (relationship && relationship.amount > this.amount) {
+                    targetLocked = true;
+                }
+            }
+            if (this.invert) {
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+        this.amount = amount;
+    }
+}
+exports.ILikeTargetMoreThanAmount = ILikeTargetMoreThanAmount;
 
 
 /***/ }),
@@ -3853,6 +4041,46 @@ class TargetIsBreeching extends baseFilter_1.TargetFilter {
     }
 }
 exports.TargetIsBreeching = TargetIsBreeching;
+
+
+/***/ }),
+
+/***/ 6375:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetIsImportantToMe = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetIsImportantToMe extends baseFilter_1.TargetFilter {
+    constructor() {
+        //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+        super(...arguments);
+        this.toString = () => {
+            return `${baseFilter_1.TARGETSTRING} is  ${this.invert ? "not" : ""} important to ${baseFilter_1.SUBJECTSTRING}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (owner.owner && (target instanceof Quotidian_1.Quotidian)) {
+                const relationship = owner.owner.getRelationshipWith(target);
+                if (relationship && relationship.important) {
+                    targetLocked = true;
+                }
+            }
+            if (this.invert) {
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+    }
+}
+exports.TargetIsImportantToMe = TargetIsImportantToMe;
 
 
 /***/ }),
@@ -5349,7 +5577,7 @@ class Maze {
                 return;
             }
             //const blorbosToTest = ["Camille", "Ria"];
-            const blorbosToTest = [];
+            const blorbosToTest = ["Innocent", "Camille"];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
                     for (let theme of blorbo.themes) {
@@ -12478,6 +12706,8 @@ var map = {
 	"./Objects/Entities/Actions/ChangeStabilityLevelByAmount.ts": 6729,
 	"./Objects/Entities/Actions/CheckInventory": 1201,
 	"./Objects/Entities/Actions/CheckInventory.ts": 1201,
+	"./Objects/Entities/Actions/ConsiderWhetherTargetIsImportantToMe": 6989,
+	"./Objects/Entities/Actions/ConsiderWhetherTargetIsImportantToMe.ts": 6989,
 	"./Objects/Entities/Actions/DeploySass": 4237,
 	"./Objects/Entities/Actions/DeploySass.ts": 4237,
 	"./Objects/Entities/Actions/DestroyObjectInInventoryWithThemes": 457,
@@ -12588,6 +12818,8 @@ var map = {
 	"./Objects/Entities/TargetFilter/IHaveObjectWithName.ts": 6274,
 	"./Objects/Entities/TargetFilter/IHaveObjectWithTheme": 2146,
 	"./Objects/Entities/TargetFilter/IHaveObjectWithTheme.ts": 2146,
+	"./Objects/Entities/TargetFilter/ILikeTargetMoreThanAmount": 8898,
+	"./Objects/Entities/TargetFilter/ILikeTargetMoreThanAmount.ts": 8898,
 	"./Objects/Entities/TargetFilter/RandomTarget": 9824,
 	"./Objects/Entities/TargetFilter/RandomTarget.ts": 9824,
 	"./Objects/Entities/TargetFilter/TargetExistsInAWorldWhereBlorboWithNameIsAlive": 4186,
@@ -12604,6 +12836,8 @@ var map = {
 	"./Objects/Entities/TargetFilter/TargetIsBlorboBox.ts": 4068,
 	"./Objects/Entities/TargetFilter/TargetIsBreaching": 3779,
 	"./Objects/Entities/TargetFilter/TargetIsBreaching.ts": 3779,
+	"./Objects/Entities/TargetFilter/TargetIsImportantToMe": 6375,
+	"./Objects/Entities/TargetFilter/TargetIsImportantToMe.ts": 6375,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithName": 9587,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithName.ts": 9587,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithTheme": 83,

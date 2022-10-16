@@ -2,6 +2,7 @@ import { ConsiderWhetherTargetIsImportantToYou } from "../Actions/ConsiderWhethe
 import { IncrementMyState } from "../Actions/IncrementMyState";
 import { SUBJECTSTRING, TARGETSTRING } from "../TargetFilter/baseFilter";
 import { ILikeTargetMoreThanAmount } from "../TargetFilter/ILikeTargetMoreThanAmount";
+import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsBreeching } from "../TargetFilter/TargetIsBreaching";
 import { TargetIsImportantToMe } from "../TargetFilter/TargetIsImportantToMe";
 import { TargetStabilityLevelLessThanAmount } from "../TargetFilter/TargetStabilityLevelLessThanAmount";
@@ -11,7 +12,7 @@ import { AiBeat } from "./BaseBeat";
 const hangOutWithFriend = new AiBeat(
     `${SUBJECTSTRING}: Hang out with ${TARGETSTRING}`,
     [`${SUBJECTSTRING} and ${TARGETSTRING} hang out for a while. They both have a pretty good time. `],
-    [ new ILikeTargetMoreThanAmount(100, {singleTarget: true}) && new TargetIsImportantToMe({invert: true})],
+    [ new TargetIsAlive(), new ILikeTargetMoreThanAmount(100, {singleTarget: true}) && new TargetIsImportantToMe({invert: true, singleTarget: true})],
     [new ConsiderWhetherTargetIsImportantToYou()],
     true,
     1000*30
