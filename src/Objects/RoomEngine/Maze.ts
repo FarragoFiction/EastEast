@@ -157,6 +157,14 @@ export class Maze {
         }
     }
 
+    updateURL = ()=>{
+        if(!this.room){
+            return;
+        }
+        var pageUrl = `seed=${this.room.rand.internal_seed}&themes=${this.room.themes.map((item)=>item.key)}`;
+        updateURLParams(pageUrl);
+    }
+
     changeRoom = (room: Room, render = true) => {
         if (this.room) {
             this.room.teardown();
@@ -174,9 +182,8 @@ export class Maze {
             this.peewee.goStill();
         }
         this.spawnBlorbos();
+        this.updateURL();
         if (render) {
-            var pageUrl = '?' + `seed=${room.rand.internal_seed}&themes=${room.themes.map((item)=>item.key)}`;
-            window.history.pushState('', '', pageUrl);
             console.log("JR NOTE: rendering the new room, because i think this is true:", render)
             this.room.render();
         }

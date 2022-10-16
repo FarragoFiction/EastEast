@@ -2538,6 +2538,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.gender = exports.NB;
         this.minSpeed = 1;
         this.currentSpeed = 10;
+        this.sbabilityLevel = 113; //if it hits 0 they breach.
         this.timeOfLastBeat = new Date().getTime();
         //default everything to 1.0, everyone is perfectly bi and alloromantic
         this.platonicFOdds = 1.0;
@@ -5101,6 +5102,13 @@ class Maze {
                 this.room.resumeTicking();
             }
         };
+        this.updateURL = () => {
+            if (!this.room) {
+                return;
+            }
+            var pageUrl = `seed=${this.room.rand.internal_seed}&themes=${this.room.themes.map((item) => item.key)}`;
+            (0, URLUtils_1.updateURLParams)(pageUrl);
+        };
         this.changeRoom = (room, render = true) => {
             if (this.room) {
                 this.room.teardown();
@@ -5117,6 +5125,7 @@ class Maze {
                 this.peewee.goStill();
             }
             this.spawnBlorbos();
+            this.updateURL();
             if (render) {
                 console.log("JR NOTE: rendering the new room, because i think this is true:", render);
                 this.room.render();
@@ -5224,6 +5233,7 @@ const StringUtils_1 = __webpack_require__(7036);
 const StoryBeat_1 = __webpack_require__(5504);
 const End_1 = __webpack_require__(8115);
 const artifact_rate = 0.95; //lower is more artifacts
+const general_purpose_beats = [];
 class Room {
     //objects
     //people
@@ -5234,6 +5244,7 @@ class Room {
         this.wallHeight = 100;
         this.width = 400;
         this.height = 600;
+        this.beats = [...general_purpose_beats]; //combo of things like romance that can happen anywhere and specifics based on the rooms themes
         this.timesVisited = 0;
         this.blorbos = [];
         this.items = [];
@@ -9418,11 +9429,18 @@ const isItFriday = () => {
     return false;
 };
 exports.isItFriday = isItFriday;
+//if you give it new values for existing params it layers them on
 const updateURLParams = (params) => {
+    //if we're not overwriting we want it to handle 
     const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    params += `&${urlParams.toString()}`;
-    var pageUrl = '?' + `${params}`;
+    const currentParams = new URLSearchParams(queryString);
+    const newParams = new URLSearchParams(params);
+    //overwrites original, adds new
+    for (let [key, value] of newParams) {
+        currentParams.set(key, value);
+    }
+    //params += `&${urlParams.toString()}`;
+    var pageUrl = '?' + `${currentParams.toString()}`;
     window.history.pushState('', '', pageUrl);
 };
 exports.updateURLParams = updateURLParams;
