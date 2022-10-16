@@ -84,11 +84,11 @@ export class AiBeat {
         for (let a of this.actions) {
             effects.push(a.applyAction(this));
         }
+
+        this.addStorybeatToScreen(current_room.maze, this.processTags(this.command),this.processTags(this.owner.rand.pickFrom(this.flavorText)));
         if(current_room.maze.debug){
             this.addStorybeatToScreen(current_room.maze, "AI: DEBUG",`DEBUG: Because ${turnArrayIntoHumanSentence(causes)}... ${(effects.join("<br>"))}`);
         }
-        this.addStorybeatToScreen(current_room.maze, this.processTags(this.command),this.processTags(this.owner.rand.pickFrom(this.flavorText)));
-
     }
 
     performFriendlyActions = (current_room: Room) => {

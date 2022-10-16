@@ -128,7 +128,7 @@ class ChangeMyStabilityLevelByAmount extends BaseAction_1.Action {
                 return "";
             }
             subject.stabilityLevel += this.amount;
-            return `${subject.processedName()} stability level changes by ${subject.stabilityLevel} to ${this.amount}`;
+            return `${subject.processedName()} stability level changes by  ${this.amount} to  ${subject.stabilityLevel}`;
         };
         this.amount = amount;
     }
@@ -1003,13 +1003,13 @@ class HackGame extends BaseAction_1.Action {
             }
             let maze = beat.owner.room.maze;
             maze.debug = true;
-            let ret = `The puppet
-        He destroyed his strings
-        Yes
-        YES
-        The puppet is out
+            let ret = `<div style="width: 500px; margin-left: auto; margin-right: auto; padding: 50px;"><p>The puppet</p>
+        <p>He destroyed his strings</p>
+        <p>Yes</p>
+        <p>YES</p>
+        <p>The puppet is out</p>
         
-        Peewee off his strings, what sins will he commit?`;
+        <p> Peewee off his strings, what sins will he commit?</p></div>`;
             let functions = [];
             for (let test in maze) {
                 functions.push(test);
@@ -1021,6 +1021,7 @@ class HackGame extends BaseAction_1.Action {
             ret += `<p class="error" title="FUCK YOU I DO WHAT I WANT">Hacking: <b style="font-size: 72px">${pickedFunction}</b></p>`;
             // @ts-ignore
             maze[pickedFunction] = hackFunction; //typescript doesn't like my shitty hacks, well tough
+            ret += `<i style="font-family: Courier New" class="error">${hackFunction}<i>`;
             return ret;
         };
     }
@@ -2544,7 +2545,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
-        this.stabilityLevel = 10;
+        this.stabilityLevel = 113;
         //only for peewee
         this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new MoveRandomly_1.MoveRandomly(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new GiveObjectWithNameToTarget_1.GiveObjectWithName(""), new DropObjectWithName_1.DropObjectWithName(""), new EnterObject_1.EnterObject(), new CheckInventory_1.CheckInventory(), new FollowObject_1.FollowObject(), new PickupObject_1.PickupObject(), new DropAllObjects_1.DropAllObjects(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
@@ -3317,10 +3318,10 @@ class AiBeat {
             for (let a of this.actions) {
                 effects.push(a.applyAction(this));
             }
+            this.addStorybeatToScreen(current_room.maze, this.processTags(this.command), this.processTags(this.owner.rand.pickFrom(this.flavorText)));
             if (current_room.maze.debug) {
                 this.addStorybeatToScreen(current_room.maze, "AI: DEBUG", `DEBUG: Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)}... ${(effects.join("<br>"))}`);
             }
-            this.addStorybeatToScreen(current_room.maze, this.processTags(this.command), this.processTags(this.owner.rand.pickFrom(this.flavorText)));
         };
         this.performFriendlyActions = (current_room) => {
             if (!this.owner) {

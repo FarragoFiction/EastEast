@@ -21,13 +21,13 @@ export class HackGame extends Action{ //lawsuit
         }
         let maze = beat.owner.room.maze;
         maze.debug = true;
-        let ret = `The puppet
-        He destroyed his strings
-        Yes
-        YES
-        The puppet is out
+        let ret = `<div style="width: 500px; margin-left: auto; margin-right: auto; padding: 50px;"><p>The puppet</p>
+        <p>He destroyed his strings</p>
+        <p>Yes</p>
+        <p>YES</p>
+        <p>The puppet is out</p>
         
-        Peewee off his strings, what sins will he commit?`;
+        <p> Peewee off his strings, what sins will he commit?</p></div>`;
         let functions:string[] = [];
         for (let test in maze){
             functions.push(test);
@@ -40,6 +40,8 @@ export class HackGame extends Action{ //lawsuit
         ret += `<p class="error" title="FUCK YOU I DO WHAT I WANT">Hacking: <b style="font-size: 72px">${pickedFunction}</b></p>`;
         // @ts-ignore
         maze[pickedFunction] = hackFunction; //typescript doesn't like my shitty hacks, well tough
+        ret += `<i style="font-family: Courier New" class="error">${hackFunction}<i>`;
+
         return ret;
     }
 

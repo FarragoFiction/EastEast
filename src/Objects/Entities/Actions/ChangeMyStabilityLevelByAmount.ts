@@ -34,7 +34,7 @@ export class ChangeMyStabilityLevelByAmount extends Action {
             return "";
         }
         subject.stabilityLevel += this.amount;
-        return `${subject.processedName()} stability level changes by ${subject.stabilityLevel} to ${this.amount}`;
+        return `${subject.processedName()} stability level changes by  ${this.amount} to  ${subject.stabilityLevel}`;
 
     }
 
