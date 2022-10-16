@@ -4,7 +4,7 @@ import { Quotidian } from "../Blorbos/Quotidian";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { TargetFilter, TargetingOptionType, TARGETSTRING } from "./baseFilter";
 
-export class ILikeTargetMoreThanAmount extends TargetFilter {
+export class TargetIsImportantToMe extends TargetFilter {
     //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
 
 

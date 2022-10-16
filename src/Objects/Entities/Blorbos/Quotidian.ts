@@ -75,16 +75,61 @@ export const FEMALE = "F";
 export const MALE = "M";
 export const NB = "NB";
 
+
+export const hisProunon = (gender: string) => {
+    const HIS = "his"
+    const HER = "her"
+    const their = "their"
+    if (gender === MALE) {
+        return HIS;
+    } else if (gender === FEMALE) {
+        return HER;
+    } else {
+        return their;
+    }
+}
+
+export const heProunon = (gender: string) => {
+    const HE = "he"
+    const SHE = "she"
+    const they = "they"
+
+    if (gender === MALE) {
+        return HE;
+    } else if (gender === FEMALE) {
+        return SHE;
+    } else {
+        return they;
+    }
+}
+
+export const himPronoun = (gender: string) => {
+
+    const HIM = "him"
+    const HER = "her"
+    const them = "them"
+
+    if (gender === MALE) {
+        return HIM;
+    } else if (gender === FEMALE) {
+        return HER;
+    } else {
+        return them;
+    }
+}
+
+
 //what, did you think the REAL eye killer would be so formulaic? 
 export class Quotidian extends PhysicalObject {
     lore = "Technically everything alive in this place is a Quotidian, wearing a Mask to Play A Role to entertain you with this farce. Did you forget this was East, Observer? Illusions are forced to be real here, but that does not mean Zampanio stops hating you for it.  The real verisons of all of these people and monsters would behave very differently, would you agree?";
     maxSpeed = 20;
     gender = NB;
     minSpeed = 1;
+
     currentSpeed = 10;
     stabilityLevel = 113; //if it hits 0 they breach.
     friend?: FRIEND;
-    killerName? : string;
+    killerName?: string;
     timeOfLastBeat = new Date().getTime();
     //default everything to 1.0, everyone is perfectly bi and alloromantic
     platonicFOdds = 1.0;
@@ -93,11 +138,11 @@ export class Quotidian extends PhysicalObject {
     romanticFOdds = 1.0;
     romanticMOdds = 1.0;
     romanticNBOdds = 1.0;
-   likeMultiplier  = 1.0; //(effects how quickly they grow to like people in general)
+    likeMultiplier = 1.0; //(effects how quickly they grow to like people in general)
     dislikeMultiplier = 1.0; //(effects how quickly they grow to dislike ppl in general)
     relationshipMap = new Map<string, Relationship>(); //(keyed by array of all known names, csv)
     // relationshipMap = new Map<string, Relationship>([["???", new Relationship("???",100,"I really admire her dedication.","...","She's the smartest person I've ever met and just lights up  a room.","She's so cute when she's really excited about something she's talking about.","I can't imagine a life without her in some capacity.",true,true,false)]  ]);
-   
+
 
 
     beats: AiBeat[] = [];
@@ -115,7 +160,7 @@ export class Quotidian extends PhysicalObject {
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
     possible_random_move_algs = [new RandomMovement(this)]
-    movement_alg:Movement = pickFrom(this.possible_random_move_algs)
+    movement_alg: Movement = pickFrom(this.possible_random_move_algs)
     //TODO have a movement algorithm (effects can shift this)
     /*
     example movement algorithm
@@ -134,112 +179,158 @@ export class Quotidian extends PhysicalObject {
 
         this.directionalSprite = sprite;
         this.originalFlavor = this.flavorText;
-        if(beats.length === 0 && name == "Quotidian"){
+        if (beats.length === 0 && name == "Quotidian") {
             beats.push(new AiBeat(
                 "Quotidian: Be Bird Brained",
                 [`The Quotidian is sqwawking at the ${TARGETSTRING}.`],
                 [new TargetIsWithinRadiusOfSelf(5)],
-                [new DeploySass("Gross!"),new  PickupObject()],
+                [new DeploySass("Gross!"), new PickupObject()],
                 true
             ))
         }
         this.makeBeatsMyOwn(beats);
     }
-    
+
 
     processedName = () => {
-        return `${this.breaching?"Breaching ":""}${this.name}${this.dead ? "'s Grave" : ''}`;
+        return `${this.breaching ? "Breaching " : ""}${this.name}${this.dead ? "'s Grave" : ''}`;
     }
 
-    vibe = (blorbos: Quotidian[])=>{
-        for(let blorbo of blorbos){
+    vibe = (blorbos: Quotidian[]) => {
+        for (let blorbo of blorbos) {
             //don't gotta be within mele range but SHOULD matter that you're not as far apart as you can get
-            if(blorbo != this && distanceWithinRadius(50,this.x, this.y, blorbo.x, blorbo.y)){
+            if (blorbo != this && distanceWithinRadius(50, this.x, this.y, blorbo.x, blorbo.y)) {
                 this.intensifyFeelingsFor(blorbo, 1);
             }
         }
     }
 
-    generatePositiveOpinion = (blorbo: Quotidian)=>{
+    generatePositiveOpinion = (blorbo: Quotidian) => {
         return `I really like their ${blorbo.getRandomThemeConcept(COMPLIMENT)} nature.`
     }
 
-    generateNegativeOpinion = (blorbo: Quotidian)=>{
+    generateNegativeOpinion = (blorbo: Quotidian) => {
         return `I really like their ${blorbo.getRandomThemeConcept(INSULT)} nature.`
     }
 
-    generateImportantOpinion = (blorbo: Quotidian)=>{
+    generateImportantOpinion = (blorbo: Quotidian) => {
         return `They are more important to me than any ${this.getRandomThemeConcept(OBJECT)}`;
     }
 
-    generateRomanticOpinion = (blorbo: Quotidian)=>{
+    generateRomanticOpinion = (blorbo: Quotidian) => {
         return "I think about kissing them a lot."
     }
 
-    generateOfficialOpinion = (blorbo: Quotidian)=>{
+    generateOfficialOpinion = (blorbo: Quotidian) => {
         return "I hope we can be together forever."
     }
 
-    initializeRelationship = (key: string, blorbo: Quotidian, amount: number)=>{
-        return new Relationship(key, amount, this.generatePositiveOpinion(blorbo),this.generateNegativeOpinion(blorbo),this.generateImportantOpinion(blorbo),this.generateRomanticOpinion(blorbo),this.generateOfficialOpinion(blorbo));
+    initializeRelationship = (key: string, blorbo: Quotidian, amount: number) => {
+        return new Relationship(key, amount, this.generatePositiveOpinion(blorbo), this.generateNegativeOpinion(blorbo), this.generateImportantOpinion(blorbo), this.generateRomanticOpinion(blorbo), this.generateOfficialOpinion(blorbo));
     }
 
-    getRelationshipWith =(blorbo: Quotidian)=>{
-        const key:string = blorbo.aliases().join(",");
+    getRelationshipWith = (blorbo: Quotidian) => {
+        const key: string = blorbo.aliases().join(",");
         return this.relationshipMap.get(key);
     }
 
 
-    likeBlorboMore = (blorbo: Quotidian, amount: number)=>{
-        const key:string = blorbo.aliases().join(",");
+    realizeIHaveASquishOnBlorbo = (blorbo: Quotidian) => {
+        const key: string = blorbo.aliases().join(",");
+        let relationship = this.relationshipMap.get(key);
+        if (!relationship) {
+            this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, 113));
+            relationship = this.relationshipMap.get(key);
+        }
+
+        if (relationship) {
+            relationship.important = true;
+        }
+
+    }
+
+    realizeIHaveACrushOnBlorbo = (blorbo: Quotidian) => {
+        const key: string = blorbo.aliases().join(",");
+        let relationship = this.relationshipMap.get(key);
+        if (!relationship) {
+            this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, 113));
+            relationship = this.relationshipMap.get(key);
+        }
+
+        if (relationship) {
+            relationship.romantic = true;
+        }
+
+    }
+
+
+    makeItOfficialWithBlorbo = (blorbo: Quotidian) => {
+        const key: string = blorbo.aliases().join(",");
+        let relationship = this.relationshipMap.get(key);
+        if (!relationship) {
+            this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, 113));
+            relationship = this.relationshipMap.get(key);
+        }
+
+        if (relationship) {
+            relationship.official = true;
+        }
+
+    }
+
+
+
+
+    likeBlorboMore = (blorbo: Quotidian, amount: number) => {
+        const key: string = blorbo.aliases().join(",");
         const relationship = this.relationshipMap.get(key);
-        if(relationship){
+        if (relationship) {
             relationship.strengthen(amount, this.likeMultiplier);
-        }else{
-            this.relationshipMap.set(key,this.initializeRelationship(key, blorbo, amount) );
+        } else {
+            this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, amount));
         }
     }
 
-    likeBlorboLess = (blorbo: Quotidian, amount: number)=>{
-        const key:string = blorbo.aliases().join(",");
+    likeBlorboLess = (blorbo: Quotidian, amount: number) => {
+        const key: string = blorbo.aliases().join(",");
         const relationship = this.relationshipMap.get(key);
-        if(relationship){
+        if (relationship) {
             relationship.weaken(amount, this.dislikeMultiplier);
-        }else{
-            this.relationshipMap.set(key, this.initializeRelationship(key,blorbo, -1 *amount));
+        } else {
+            this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, -1 * amount));
         }
     }
 
     //if they're already in my relationship matrix, escalate it, else initialize it to zero
     //make sure you handle your like/dislike modifiers
-    intensifyFeelingsFor = (blorbo: Quotidian, amount: number)=>{
+    intensifyFeelingsFor = (blorbo: Quotidian, amount: number) => {
 
-        const key:string = blorbo.aliases().join(",");
+        const key: string = blorbo.aliases().join(",");
 
         const relationship = this.relationshipMap.get(key);
         //console.log("JR NOTE: trying to intensify feelings for ", key, " by amount ", amount, "relationship is", relationship);
 
-        if(relationship){
+        if (relationship) {
             relationship.intensify(amount, this.likeMultiplier, this.dislikeMultiplier);
-        }else{
-            this.relationshipMap.set(key, this.initializeRelationship(key,blorbo, amount));
+        } else {
+            this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, amount));
         }
     }
 
-    de_escalateFeelingsFor = (blorbo: Quotidian, amount: number)=>{
-        const key:string = blorbo.aliases().join(",");
+    de_escalateFeelingsFor = (blorbo: Quotidian, amount: number) => {
+        const key: string = blorbo.aliases().join(",");
         const relationship = this.relationshipMap.get(key);
-        if(relationship){
+        if (relationship) {
             relationship.de_escalate(amount, this.likeMultiplier, this.dislikeMultiplier);
-        }else{
-            this.relationshipMap.set(key, this.initializeRelationship(key,blorbo, amount));
+        } else {
+            this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, amount));
         }
     }
 
 
     //NOTE to avoid recursion does not clone states
-    clone = ()=>{
-        const ret =  new Quotidian(this.room, this.name, this.x, this.y,   this.themes, this.directionalSprite,  this.flavorText,[...this.beats]);
+    clone = () => {
+        const ret = new Quotidian(this.room, this.name, this.x, this.y, this.themes, this.directionalSprite, this.flavorText, [...this.beats]);
         ret.movement_alg = this.movement_alg.clone(this);
         return ret;
     }
@@ -248,12 +339,12 @@ export class Quotidian extends PhysicalObject {
 
     die = (causeOfDeath: string, killerName: string) => {
         console.log("JR NOTE: trying to kill", this.name, causeOfDeath)
-        if(!this.dead){
+        if (!this.dead) {
             this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
             this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
             this.room.processDeath(this);
             this.dead = true;
-            this.killerName=killerName;
+            this.killerName = killerName;
             this.container.style.zIndex = `${12}`; //fade into the background
 
         }
@@ -276,8 +367,8 @@ export class Quotidian extends PhysicalObject {
         this.movement_alg = new NoMovement(this);
     }
 
-    aliases = ()=>{
-       return [this.name, ...(this.states.map((i)=>i.name))];
+    aliases = () => {
+        return [this.name, ...(this.states.map((i) => i.name))];
     }
 
     /*
@@ -288,7 +379,7 @@ export class Quotidian extends PhysicalObject {
 
     incrementState = () => {
 
-        if(!this.states_inialized){
+        if (!this.states_inialized) {
 
             this.addSelfToStates();
             this.states_inialized = true;
@@ -308,7 +399,7 @@ export class Quotidian extends PhysicalObject {
             this.stateIndex = 0;
             chosenState = this.states[this.stateIndex];
             this.breaching = false;
-        }else{
+        } else {
             this.breaching = true;
         }
 
@@ -316,18 +407,18 @@ export class Quotidian extends PhysicalObject {
         this.lore = chosenState.lore;
         this.dislikeMultiplier = (chosenState as Quotidian).dislikeMultiplier;
         this.likeMultiplier = (chosenState as Quotidian).likeMultiplier;
-        this.relationshipMap =  (chosenState as Quotidian).relationshipMap;
-        this.platonicFOdds =  (chosenState as Quotidian).platonicFOdds;
-        this.platonicMOdds =  (chosenState as Quotidian).platonicMOdds;
-        this.platonicNBOdds =  (chosenState as Quotidian).platonicNBOdds;
-        this.romanticFOdds =  (chosenState as Quotidian).romanticFOdds;
-        this.romanticMOdds =  (chosenState as Quotidian).romanticMOdds;
-        this.romanticNBOdds =  (chosenState as Quotidian).romanticNBOdds;
+        this.relationshipMap = (chosenState as Quotidian).relationshipMap;
+        this.platonicFOdds = (chosenState as Quotidian).platonicFOdds;
+        this.platonicMOdds = (chosenState as Quotidian).platonicMOdds;
+        this.platonicNBOdds = (chosenState as Quotidian).platonicNBOdds;
+        this.romanticFOdds = (chosenState as Quotidian).romanticFOdds;
+        this.romanticMOdds = (chosenState as Quotidian).romanticMOdds;
+        this.romanticNBOdds = (chosenState as Quotidian).romanticNBOdds;
 
 
         this.movement_alg = (chosenState as Quotidian).movement_alg;
         this.movement_alg.entity = this;
-        this.currentSpeed =  (chosenState as Quotidian).currentSpeed;
+        this.currentSpeed = (chosenState as Quotidian).currentSpeed;
         this.flavorText = chosenState.flavorText;
         this.themes = chosenState.themes;
         this.directionalSprite = (chosenState as Quotidian).directionalSprite;
@@ -366,7 +457,7 @@ export class Quotidian extends PhysicalObject {
             this.image.src = this.room.totemObject.src;
             return;
         }
-        let source =  this.directionalSprite;
+        let source = this.directionalSprite;
         let chosen = this.directionalSprite.default_src;
         if (this.direction === Direction.DOWN) {
             chosen = source.down_src || source.default_src;
@@ -387,7 +478,7 @@ export class Quotidian extends PhysicalObject {
 
     }
 
-    itsBeenAwhileSinceLastBeat = (actionRate: number)=>{
+    itsBeenAwhileSinceLastBeat = (actionRate: number) => {
         return new Date().getTime() - this.timeOfLastBeat > actionRate;
     }
 
@@ -396,7 +487,7 @@ export class Quotidian extends PhysicalObject {
         let didSomething = false;
         //only does a room beat if all of my own ai does nothing
         let allPossibilities = [...this.beats];
-        for(let beat of roomBeats){
+        for (let beat of roomBeats) {
             const clonse = beat.clone(this);
             clonse.timeOfLastBeat = beat.timeOfLastBeat; //so i can actually use it
             allPossibilities.push(clonse); //IMPORTANT, need to set myself up as its owner for this tick
@@ -409,12 +500,12 @@ export class Quotidian extends PhysicalObject {
                 this.container.style.zIndex = `${30}`; //stand out
 
                 beat.performActions(this.room);
-                for(let b of roomBeats){
-                    if(beat.flavorText === b.flavorText){
+                for (let b of roomBeats) {
+                    if (beat.flavorText === b.flavorText) {
                         b.timeOfLastBeat = this.timeOfLastBeat; //make it so room effects know when they were last done so everyone in it can't just spam it in lockstep
                     }
                 }
-                
+
                 if (!beat.permanent) {
                     toRemove.push(beat);
                 }
@@ -422,9 +513,9 @@ export class Quotidian extends PhysicalObject {
             }
         }
 
-        if(!didSomething){
+        if (!didSomething) {
             //fade into bg
-            this.container.style.zIndex = `${20}`; 
+            this.container.style.zIndex = `${20}`;
 
         }
 
@@ -434,7 +525,7 @@ export class Quotidian extends PhysicalObject {
 
     }
 
-    tick = (actionRate:number, roomBeats: AiBeat[]) => {
+    tick = (actionRate: number, roomBeats: AiBeat[]) => {
         //console.log("JR NOTE: trying to tick: ", this.name);
         if (this.dead) {
             return;
@@ -444,7 +535,7 @@ export class Quotidian extends PhysicalObject {
             this.friend.tick();
         }
         //you can move quicker than you can think
-        if(this.itsBeenAwhileSinceLastBeat(actionRate)){
+        if (this.itsBeenAwhileSinceLastBeat(actionRate)) {
             this.processAiBeat(roomBeats);
         }
         this.movement_alg.tick();
