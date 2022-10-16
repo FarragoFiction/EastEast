@@ -51,6 +51,7 @@ window.onload = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const apocalypse = urlParams.get('apocalypse');
+    //NOTE, seed and themes will be loaded at the maze level
 
     //the apocalypse overrides friday (but has its own special hell for it)
     if(apocalypse === "night"){

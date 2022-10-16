@@ -56,7 +56,18 @@ export class Maze {
     }
 
     initialize = async () => {
-        const themes = [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY]]
+        let themes = [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY]]
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const seed = urlParams.get('seed');
+        const urlThemes = urlParams.get('themes');
+        if(seed){
+            this.rand.internal_seed = parseInt(seed); //load seed from url
+        }
+
+        if(urlThemes){
+            themes = urlThemes.split(",").map((item)=>all_themes[item]);
+        }
         this.room = await randomRoomWithThemes(this, this.ele, themes, this.rand);
         this.initializeBlorbos();
         await this.room.propagateMaze(3);
