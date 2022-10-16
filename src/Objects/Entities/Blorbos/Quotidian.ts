@@ -184,6 +184,11 @@ export class Quotidian extends PhysicalObject {
         return new Relationship(key, amount, this.generatePositiveOpinion(blorbo),this.generateNegativeOpinion(blorbo),this.generateImportantOpinion(blorbo),this.generateRomanticOpinion(blorbo),this.generateOfficialOpinion(blorbo));
     }
 
+    getRelationshipWith =(blorbo: Quotidian)=>{
+        const key:string = blorbo.aliases().join(",");
+        return this.relationshipMap.get(key);
+    }
+
 
     likeBlorboMore = (blorbo: Quotidian, amount: number)=>{
         const key:string = blorbo.aliases().join(",");

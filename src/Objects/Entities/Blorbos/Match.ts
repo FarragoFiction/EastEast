@@ -9,7 +9,12 @@ import { AiBeat } from "../StoryBeats/BaseBeat";
 import { Quotidian, Direction } from "./Quotidian";
 import { Relationship } from "./Relationship";
 
+/*
+"She was not such a tall woman, the Keeper. Skinny thing, no real muscle to her, and though she had vigor it was the feverish kind: burning but not healthy."
+-https://practicalguidetoevil.wordpress.com/2020/04/10/interlude-deadhand/
 
+was reading this chapter of A Practical Guide to Evil and it seemed perfect for ria, doesn't it?
+*/
 
 export class Ria extends Quotidian {
     lore = "Parker says her soul has the shape of an Elephant. She feels too big, too loud, too clumsy. She feels she takes up so so much room and her problems are huge and insurmountable and she just wishes she could shrink into herself. She just wishes she could F1X TH1NGS so she could stop burdening the ones she loves."
