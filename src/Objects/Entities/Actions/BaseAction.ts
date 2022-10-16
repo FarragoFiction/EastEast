@@ -7,6 +7,7 @@ import { AiBeat } from "../StoryBeats/BaseBeat";
 
 
 export class Action{ //lawsuit
+    importantReturn = true; //most returns are for debugging only. This isn't. 
 
     //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
     recognizedCommands:string[] = []; //nothing, so its default

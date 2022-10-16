@@ -77,15 +77,20 @@ export class AiBeat {
 
         let causes = [];
         let effects = [];
+        let importantEffects = [];
         for (let t of this.filters) {
             causes.push(this.processTags(t.toString()));
         }
 
         for (let a of this.actions) {
-            effects.push(a.applyAction(this));
+            let e = (a.applyAction(this));
+            if(a.importantReturn){
+                importantEffects.push(e); //some actions are conditional and i want them to tell me how they went. 
+            }
+            effects.push(e); //most actions are just for debugging tho
         }
 
-        this.addStorybeatToScreen(current_room.maze, this.processTags(this.command),this.processTags(this.owner.rand.pickFrom(this.flavorText)));
+        this.addStorybeatToScreen(current_room.maze, this.processTags(this.command),this.processTags(this.owner.rand.pickFrom(this.flavorText) +`${importantEffects.join(" ")}`));
         if(current_room.maze.debug){
             this.addStorybeatToScreen(current_room.maze, "AI: DEBUG",`DEBUG: Because ${turnArrayIntoHumanSentence(causes)}... ${(effects.join("<br>"))}`);
         }

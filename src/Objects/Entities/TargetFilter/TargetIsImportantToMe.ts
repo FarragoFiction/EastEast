@@ -2,23 +2,15 @@ import { turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
 import { PhysicalObject } from "../../PhysicalObject";
 import { Quotidian } from "../Blorbos/Quotidian";
 import { AiBeat } from "../StoryBeats/BaseBeat";
-import { TargetFilter, TargetingOptionType, TARGETSTRING } from "./baseFilter";
+import { SUBJECTSTRING, TargetFilter, TargetingOptionType, TARGETSTRING } from "./baseFilter";
 
 export class TargetIsImportantToMe extends TargetFilter {
     //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
 
 
-    amount: number;
-    //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
-
-
-    constructor(amount: number, options: TargetingOptionType = { singleTarget: false, invert: false, kMode: false }) {
-        super(options);
-        this.amount = amount;
-    }
     toString = () => {
 
-        return `they like ${TARGETSTRING}  ${this.invert ? "not" : ""} more than  ${this.amount}`;
+        return `${TARGETSTRING} is  ${this.invert ? "not" : ""} important to ${SUBJECTSTRING}`;
     }
 
     applyFilterToSingleTarget = (owner: AiBeat, target: PhysicalObject) => {
