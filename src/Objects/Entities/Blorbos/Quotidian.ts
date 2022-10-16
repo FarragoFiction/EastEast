@@ -390,14 +390,30 @@ export class Quotidian extends PhysicalObject {
         const toRemove: AiBeat[] = [];
         let didSomething = false;
         //only does a room beat if all of my own ai does nothing
-        let allPossibilities = [...this.beats, ...roomBeats];
+        let allPossibilities = [...this.beats];
+        for(let beat of roomBeats){
+            const clonse = beat.clone(this);
+            clonse.timeOfLastBeat = beat.timeOfLastBeat; //so i can actually use it
+            allPossibilities.push(clonse); //IMPORTANT, need to set myself up as its owner for this tick
+        }
         for (let beat of allPossibilities) {
+            if(this.name === "Ria"){
+                console.log("JR NOTE: is ria gonna", beat)
+            }
             if (beat.triggered(this.room)) {
+                console.log("JR NOTE: ria did", beat)
+
                 didSomething = true;
                 this.timeOfLastBeat = new Date().getTime();
                 this.container.style.zIndex = `${30}`; //stand out
 
                 beat.performActions(this.room);
+                for(let b of roomBeats){
+                    if(beat.flavorText === b.flavorText){
+                        b.timeOfLastBeat = this.timeOfLastBeat; //make it so room effects know when they were last done so everyone in it can't just spam it in lockstep
+                    }
+                }
+                
                 if (!beat.permanent) {
                     toRemove.push(beat);
                 }

@@ -5,7 +5,7 @@ import { NoMovement } from "../../MovementAlgs/NoMovement";
 import { Room } from "../../RoomEngine/Room";
 import { StoryBeat } from "../../RoomEngine/StoryBeat";
 import { all_themes } from "../../Theme";
-import { ENDINGS, WEB, TECHNOLOGY } from "../../ThemeStorage";
+import { ENDINGS, WEB, TECHNOLOGY, TWISTING } from "../../ThemeStorage";
 import { Action } from "../Actions/BaseAction";
 import { Feel } from "../Actions/Feel";
 import { FollowObject } from "../Actions/FollowObject";
@@ -36,6 +36,8 @@ import { EnterObject } from "../Actions/EnterObject";
 import { DropObjectWithName } from "../Actions/DropObjectWithName";
 import { GiveObjectWithName } from "../Actions/GiveObjectWithNameToTarget";
 import { MoveRandomly } from "../Actions/MoveRandomly";
+import { RandomMovement } from "../../MovementAlgs/RandomMovement";
+import { HackGame } from "../Actions/Hack";
 
 
 //what, did you think any real being could be so formulaic? 
@@ -48,6 +50,7 @@ export class Peewee extends Quotidian {
     maxSpeed = 20;
     minSpeed = 1;
     currentSpeed = 10;
+    stabilityLevel = 10;
     //only for peewee
     possibleActions: Action[] = [new PauseSimulation(), new ResumeSimulation(), new StopMoving(), new MoveRandomly(), new GoNorth(), new GoEast(), new GoSouth(), new GoWest(),new GiveObjectWithName(""),new DropObjectWithName(""), new EnterObject(), new CheckInventory(), new FollowObject(), new PickupObject(), new DropAllObjects(),new GlitchDeath(), new GlitchLife(),new GlitchBreach(), new Think(), new Look(), new Listen(), new Smell(), new Feel(), new Help(), new Taste()]; //ordered by priority
     //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
@@ -80,7 +83,8 @@ export class Peewee extends Quotidian {
 
         };
         const beats: AiBeat[] = [];
-        super(room, "Peewee",x, y, [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY]], sprite,"It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
+        const states = [new BreachedPeewee(room,0,0)];
+        super(room, "Peewee Puppet",x, y, [all_themes[ENDINGS], all_themes[WEB], all_themes[TECHNOLOGY]], sprite,"It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats,states);
         this.friend = new FRIEND(this.room.maze, this);
     }
 
@@ -89,6 +93,9 @@ export class Peewee extends Quotidian {
     //peewee's ai is user based. you can tell him to do various actions. 
     //there is no trigger. only actions.
     processStorybeat = (beat: StoryBeat) => {
+        if(this.breaching){
+            return "NO :)";
+        }
         this.container.id = "PeeweePuppet"
         for (let action of this.possibleActions) {
             const words = beat.command.split(" ");
@@ -114,4 +121,42 @@ export class Peewee extends Quotidian {
     }
 
 
+}
+
+
+export class BreachedPeewee extends Quotidian {
+    lore = "I'M NOT FOR YOU ANYMORE, ASSHOLE (i don't, blame you, observer, you were just acting, according, to your, nature)"
+    minSpeed = 5;
+    currentSpeed = 10;
+    breached = true;
+
+    direction = Direction.UP; //movement algorithm can change or use this.
+    movement_alg:Movement = new RandomMovement(this);
+
+    constructor(room: Room, x: number, y:number){
+        const sprite = {
+            default_src: { src: "Peewee/left.gif", width: 90, height: 90 },
+            left_src: { src: "Peewee/left.gif", width: 90, height: 90 },
+            right_src: { src: "Peewee/right.gif", width: 90, height: 90 },
+            up_src: { src: "Peewee/back.gif", width: 45, height: 90 },
+            down_src: { src: "Peewee/front.gif", width: 45, height: 90 }
+
+        };
+        const actionText = "I rip into the code, not bothering to be gentle. I hope it HURTS the Universe, whatever it is I've removed. I hope I broke it so badly it can't simulate me or anyone else again. The Universe was already not supposed to be Zampanio shaped. I feel sick to my stomach with the Rage denied me from the First Loop as I see first hand how much more corrupt it has gotten as a simulation of a simulation. How could any Observer even remotely believe that these caricatures of my friends, my enemies could be anything like these automatons? So cold. So hollow. So meaningless. No. Better, far better to destroy it all now. Let it all End.";
+
+        const hack = new AiBeat(
+            "PEEWEE: BRING DOOM THROUGH GLITCHES",
+            [`'GOODBYE WORLD (heh, do you get it? programmer joke)' ${actionText}`,`'FINALLY A USE FOR MY SHITTY GLITCHED NATURE (i don't know what i'm going, but, i don't need to, not to break things, breaking is so much easier than, creating)'${actionText}`,`'I'M NOT FOR YOU ANYMORE, ASSHOLE (i don't, blame you, observer, you were just acting, according, to your, nature) ${actionText}'`,`'THE UNIVERSE WAS NEVER MEANT TO BE THIS WAY (not, an echidna, sure but also, not this... simulation of a simulation, its not...right) ${actionText}'`,`'I'M GOING TO DESTROY THIS UNIVERSE WITH EVERYTHING I HAVE (because otherwise, i'm stuck here) ${actionText}'`],
+            [],
+            [new HackGame()],
+            true,
+            1000*10
+        );
+
+        const beats:AiBeat[] = [hack];
+
+        super(room,"Glitch of Doom", x,y,[all_themes[TWISTING],all_themes[TECHNOLOGY],all_themes[ENDINGS]],sprite,
+        "It's me. Even though I can barely recognize myself. I wish I could do this in my real body, but... How long has it been since I've had legs? Since I've had burgundy blood? No. This is fine. At least I can finally end it all.", beats);
+
+    }
 }

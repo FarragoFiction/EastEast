@@ -28,6 +28,7 @@ export class Maze {
 
     rand: SeededRandom;
     ele: HTMLElement;
+    debug = false;
     room?: Room;
     peewee?: Peewee; //all are quotidians in this twisted farce of a play. could a simulation capture their nuance? their depth?
     storybeats: StoryBeat[] = []; //can be added to by peewee and by the ai

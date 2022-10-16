@@ -587,10 +587,10 @@ const initBeatList = ()=>{
         new AiBeat(
             `${SUBJECTSTRING}: Degrade Stability`,
             [`${SUBJECTSTRING} clutches their head, their eyes spiralling in every direction. They don't know how to parse what they are experiencing. Their mind cracks open the littlest bit in response. `],
-            [  new RandomTarget(0.1, {singleTarget:true, kMode:true})],
-            [new ChangeMyStabilityLevelByAmount(10)],
+            [],
+            [new ChangeMyStabilityLevelByAmount(-13)],
             true,
-            1000*60)
+            1000*30)
     ];
 }
 

@@ -106,6 +106,73 @@ exports.Action = Action;
 
 /***/ }),
 
+/***/ 8801:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ChangeMyStabilityLevelByAmount = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+class ChangeMyStabilityLevelByAmount extends BaseAction_1.Action {
+    constructor(amount) {
+        super();
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            subject.stabilityLevel += this.amount;
+            return `${subject.processedName()} stability level changes by ${subject.stabilityLevel} to ${this.amount}`;
+        };
+        this.amount = amount;
+    }
+}
+exports.ChangeMyStabilityLevelByAmount = ChangeMyStabilityLevelByAmount;
+
+
+/***/ }),
+
+/***/ 6729:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ChangeStabilityLevelByAmount = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const BaseAction_1 = __webpack_require__(7042);
+class ChangeStabilityLevelByAmount extends BaseAction_1.Action {
+    constructor(amount) {
+        super();
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            let ret = "";
+            for (let target of beat.targets) {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    target.stabilityLevel += this.amount;
+                    ret += `${target.processedName()} stability level changes by ${target.stabilityLevel} to ${this.amount}. `;
+                }
+            }
+            return ret;
+        };
+        this.amount = amount;
+    }
+}
+exports.ChangeStabilityLevelByAmount = ChangeStabilityLevelByAmount;
+
+
+/***/ }),
+
 /***/ 1201:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -916,6 +983,42 @@ exports.GoWest = GoWest;
 
 /***/ }),
 
+/***/ 6139:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.HackGame = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+class HackGame extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = ["HACK", "DESTROY", "GLITCH", "RUIN"]; //nothing, so its default
+        this.applyAction = (beat) => {
+            if (!beat.owner) {
+                return ":(";
+            }
+            let maze = beat.owner.room.maze;
+            maze.debug = true;
+            let ret = `The puppet
+        He destroyed his strings
+        Yes
+        YES
+        The puppet is out :)`;
+            for (let test in maze) {
+                ret += test;
+            }
+            console.log("JR NOTE: ret", ret);
+            return ret;
+        };
+    }
+}
+exports.HackGame = HackGame;
+
+
+/***/ }),
+
 /***/ 3256:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1140,6 +1243,7 @@ exports.Listen = Listen;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Look = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
+const Quotidian_1 = __webpack_require__(6387);
 const BaseAction_1 = __webpack_require__(7042);
 const ThemeStorage_1 = __webpack_require__(1288);
 //assume only peewee can look
@@ -1214,6 +1318,9 @@ class Look extends BaseAction_1.Action {
                     retSoFar += `<li style="margin-bottom: 10px;"><u>${relationship.title}</u>: Strength: ${Math.round(relationship.amount)},   ${relationship.toString()}</li>`;
                 }
                 retSoFar += "</ul>";
+            }
+            if (lookcloser instanceof Quotidian_1.Quotidian) {
+                retSoFar += `<p>Their stability level is: ${lookcloser.stabilityLevel}</p>`;
             }
             return retSoFar;
         };
@@ -2357,7 +2464,7 @@ exports.FortitudeTwin = FortitudeTwin;
 
 //base level Entity object. quotidians can turn into anything
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Peewee = void 0;
+exports.BreachedPeewee = exports.Peewee = void 0;
 const NoMovement_1 = __webpack_require__(4956);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
@@ -2391,6 +2498,8 @@ const EnterObject_1 = __webpack_require__(9722);
 const DropObjectWithName_1 = __webpack_require__(2827);
 const GiveObjectWithNameToTarget_1 = __webpack_require__(6290);
 const MoveRandomly_1 = __webpack_require__(4287);
+const RandomMovement_1 = __webpack_require__(5997);
+const Hack_1 = __webpack_require__(6139);
 //what, did you think any real being could be so formulaic? 
 //regarding the real peewee, wanda is actually quite THRILLED there is a competing parasite in the Echidna distracting the immune system (and tbf, preventing an immune disorder in the form of the eye killer)
 //the universe is AWARE of the dangers to it and endlessly expands its immune system response
@@ -2418,11 +2527,13 @@ class Peewee extends Quotidian_1.Quotidian {
             down_src: { src: "Peewee/front.gif", width: 45, height: 90 }
         };
         const beats = [];
-        super(room, "Peewee", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY]], sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats);
+        const states = [new BreachedPeewee(room, 0, 0)];
+        super(room, "Peewee Puppet", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY]], sprite, "It's Peewee, the Glitch of Doom, the Devil of Spirals, the Puppet of Twisted Fate here to dance for your amusement. It's okay. If he weren't caught in your Threads, he'd be trying to End all our fun. We can't have that, now can we? After all, the End can Never Be The End in a Spiral :) :) :)", beats, states);
         this.lore = "While this is, clearly, not Peewee, it is, perhaps, the closest to Peewee anyone could be. A puppet with irrelevant will dancing for your pleasure.";
         this.maxSpeed = 20;
         this.minSpeed = 1;
         this.currentSpeed = 10;
+        this.stabilityLevel = 10;
         //only for peewee
         this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new MoveRandomly_1.MoveRandomly(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new GiveObjectWithNameToTarget_1.GiveObjectWithName(""), new DropObjectWithName_1.DropObjectWithName(""), new EnterObject_1.EnterObject(), new CheckInventory_1.CheckInventory(), new FollowObject_1.FollowObject(), new PickupObject_1.PickupObject(), new DropAllObjects_1.DropAllObjects(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
@@ -2432,6 +2543,9 @@ class Peewee extends Quotidian_1.Quotidian {
         //peewee's ai is user based. you can tell him to do various actions. 
         //there is no trigger. only actions.
         this.processStorybeat = (beat) => {
+            if (this.breaching) {
+                return "NO :)";
+            }
             this.container.id = "PeeweePuppet";
             for (let action of this.possibleActions) {
                 const words = beat.command.split(" ");
@@ -2457,6 +2571,28 @@ class Peewee extends Quotidian_1.Quotidian {
     }
 }
 exports.Peewee = Peewee;
+class BreachedPeewee extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "Peewee/left.gif", width: 90, height: 90 },
+            left_src: { src: "Peewee/left.gif", width: 90, height: 90 },
+            right_src: { src: "Peewee/right.gif", width: 90, height: 90 },
+            up_src: { src: "Peewee/back.gif", width: 45, height: 90 },
+            down_src: { src: "Peewee/front.gif", width: 45, height: 90 }
+        };
+        const actionText = "I rip into the code, not bothering to be gentle. I hope it HURTS the Universe, whatever it is I've removed. I hope I broke it so badly it can't simulate me or anyone else again. The Universe was already not supposed to be Zampanio shaped. I feel sick to my stomach with the Rage denied me from the First Loop as I see first hand how much more corrupt it has gotten as a simulation of a simulation. How could any Observer even remotely believe that these caricatures of my friends, my enemies could be anything like these automatons? So cold. So hollow. So meaningless. No. Better, far better to destroy it all now. Let it all End.";
+        const hack = new BaseBeat_1.AiBeat("PEEWEE: BRING DOOM THROUGH GLITCHES", [`'GOODBYE WORLD (heh, do you get it? programmer joke)' ${actionText}`, `'FINALLY A USE FOR MY SHITTY GLITCHED NATURE (i don't know what i'm going, but, i don't need to, not to break things, breaking is so much easier than, creating)'${actionText}`, `'I'M NOT FOR YOU ANYMORE, ASSHOLE (i don't, blame you, observer, you were just acting, according, to your, nature) ${actionText}'`, `'THE UNIVERSE WAS NEVER MEANT TO BE THIS WAY (not, an echidna, sure but also, not this... simulation of a simulation, its not...right) ${actionText}'`, `'I'M GOING TO DESTROY THIS UNIVERSE WITH EVERYTHING I HAVE (because otherwise, i'm stuck here) ${actionText}'`], [], [new Hack_1.HackGame()], true, 1000 * 10);
+        const beats = [hack];
+        super(room, "Glitch of Doom", x, y, [Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY], Theme_1.all_themes[ThemeStorage_1.ENDINGS]], sprite, "It's me. Even though I can barely recognize myself. I wish I could do this in my real body, but... How long has it been since I've had legs? Since I've had burgundy blood? No. This is fine. At least I can finally end it all.", beats);
+        this.lore = "I'M NOT FOR YOU ANYMORE, ASSHOLE (i don't, blame you, observer, you were just acting, according, to your, nature)";
+        this.minSpeed = 5;
+        this.currentSpeed = 10;
+        this.breached = true;
+        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+    }
+}
+exports.BreachedPeewee = BreachedPeewee;
 
 
 /***/ }),
@@ -2538,7 +2674,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.gender = exports.NB;
         this.minSpeed = 1;
         this.currentSpeed = 10;
-        this.sbabilityLevel = 113; //if it hits 0 they breach.
+        this.stabilityLevel = 113; //if it hits 0 they breach.
         this.timeOfLastBeat = new Date().getTime();
         //default everything to 1.0, everyone is perfectly bi and alloromantic
         this.platonicFOdds = 1.0;
@@ -2756,15 +2892,31 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.itsBeenAwhileSinceLastBeat = (actionRate) => {
             return new Date().getTime() - this.timeOfLastBeat > actionRate;
         };
-        this.processAiBeat = () => {
+        this.processAiBeat = (roomBeats) => {
             const toRemove = [];
             let didSomething = false;
-            for (let beat of this.beats) {
+            //only does a room beat if all of my own ai does nothing
+            let allPossibilities = [...this.beats];
+            for (let beat of roomBeats) {
+                const clonse = beat.clone(this);
+                clonse.timeOfLastBeat = beat.timeOfLastBeat; //so i can actually use it
+                allPossibilities.push(clonse); //IMPORTANT, need to set myself up as its owner for this tick
+            }
+            for (let beat of allPossibilities) {
+                if (this.name === "Ria") {
+                    console.log("JR NOTE: is ria gonna", beat);
+                }
                 if (beat.triggered(this.room)) {
+                    console.log("JR NOTE: ria did", beat);
                     didSomething = true;
                     this.timeOfLastBeat = new Date().getTime();
                     this.container.style.zIndex = `${30}`; //stand out
                     beat.performActions(this.room);
+                    for (let b of roomBeats) {
+                        if (beat.flavorText === b.flavorText) {
+                            b.timeOfLastBeat = this.timeOfLastBeat; //make it so room effects know when they were last done so everyone in it can't just spam it in lockstep
+                        }
+                    }
                     if (!beat.permanent) {
                         toRemove.push(beat);
                     }
@@ -2779,7 +2931,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 (0, ArrayUtils_1.removeItemOnce)(this.beats, beat);
             }
         };
-        this.tick = (actionRate) => {
+        this.tick = (actionRate, roomBeats) => {
             //console.log("JR NOTE: trying to tick: ", this.name);
             if (this.dead) {
                 return;
@@ -2790,7 +2942,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             }
             //you can move quicker than you can think
             if (this.itsBeenAwhileSinceLastBeat(actionRate)) {
-                this.processAiBeat();
+                this.processAiBeat(roomBeats);
             }
             this.movement_alg.tick();
             this.syncSpriteToDirection();
@@ -3162,7 +3314,7 @@ class AiBeat {
             if (DEBUG) {
                 this.addStorybeatToScreen(current_room.maze, "AI: DEBUG", `DEBUG: Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)}... ${(effects.join("<br>"))}`);
             }
-            this.addStorybeatToScreen(current_room.maze, this.command, this.processTags(this.owner.rand.pickFrom(this.flavorText)));
+            this.addStorybeatToScreen(current_room.maze, this.processTags(this.command), this.processTags(this.owner.rand.pickFrom(this.flavorText)));
         };
         this.performFriendlyActions = (current_room) => {
             if (!this.owner) {
@@ -3185,7 +3337,13 @@ class AiBeat {
             if (!this.owner) {
                 return console.error("ALWAYS clone beats, don't use them from list directly", this);
             }
+            if (this.owner.name === "Ria") {
+                console.log("JR NOTE: checking if ria has a target with filters", this.filters);
+            }
             if (!this.itsBeenAwhileSinceLastBeat()) {
+                if (this.owner.name === "Ria") {
+                    console.log("JR NOTE: ria is being impatient");
+                }
                 return false;
             }
             //start out targeting EVERYTHING in this room
@@ -3199,6 +3357,9 @@ class AiBeat {
                     return false;
                 }
             }
+            if (this.owner.name === "Ria") {
+                console.log("JR NOTE: ria is about to return true");
+            }
             return true;
         };
         this.filters = triggers;
@@ -3210,6 +3371,24 @@ class AiBeat {
     }
 }
 exports.AiBeat = AiBeat;
+
+
+/***/ }),
+
+/***/ 868:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.communal_ai = void 0;
+const IncrementMyState_1 = __webpack_require__(9211);
+const baseFilter_1 = __webpack_require__(9505);
+const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
+const BaseBeat_1 = __webpack_require__(1708);
+const breachIfStabilityDropsEnough = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Breach`, [`${baseFilter_1.SUBJECTSTRING} has reached their limit. They have seen too many horrors. More than anyone could possibly bear. Their form begins twisting as they clutch their head. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
+//things like confessing love or breaching if your stability level is low enough
+exports.communal_ai = [breachIfStabilityDropsEnough];
 
 
 /***/ }),
@@ -3894,6 +4073,49 @@ class TargetNameIncludesAnyOfTheseWords extends baseFilter_1.TargetFilter {
     }
 }
 exports.TargetNameIncludesAnyOfTheseWords = TargetNameIncludesAnyOfTheseWords;
+
+
+/***/ }),
+
+/***/ 3400:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetStabilityLevelLessThanAmount = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetStabilityLevelLessThanAmount extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(amount, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            return `${baseFilter_1.TARGETSTRING} is ${this.invert ? "not" : ""}  less stable than ${this.amount}}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (!owner.owner) {
+                console.error("INVALID TO CALL A BEAT WITHOUT AN OWNER");
+                return null;
+            }
+            if (target instanceof Quotidian_1.Quotidian) {
+                if (target.stabilityLevel < this.amount) {
+                    targetLocked = true;
+                }
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+        this.amount = amount;
+    }
+}
+exports.TargetStabilityLevelLessThanAmount = TargetStabilityLevelLessThanAmount;
 
 
 /***/ }),
@@ -5000,6 +5222,7 @@ const __1 = __webpack_require__(3607);
 const End_1 = __webpack_require__(8115);
 class Maze {
     constructor(ele, storySoFar, rand) {
+        this.debug = false;
         this.storybeats = []; //can be added to by peewee and by the ai
         this.boopAudio = new Audio("audio/264828__cmdrobot__text-message-or-videogame-jump.mp3");
         this.doorAudio = new Audio("audio/close_door_1.mp3");
@@ -5249,8 +5472,8 @@ const ArrayUtils_1 = __webpack_require__(3907);
 const StringUtils_1 = __webpack_require__(7036);
 const StoryBeat_1 = __webpack_require__(5504);
 const End_1 = __webpack_require__(8115);
+const CommunalAI_1 = __webpack_require__(868);
 const artifact_rate = 0.95; //lower is more artifacts
-const general_purpose_beats = [];
 class Room {
     //objects
     //people
@@ -5261,7 +5484,7 @@ class Room {
         this.wallHeight = 100;
         this.width = 400;
         this.height = 600;
-        this.beats = [...general_purpose_beats]; //combo of things like romance that can happen anywhere and specifics based on the rooms themes
+        this.beats = []; //combo of things like romance that can happen anywhere and specifics based on the rooms themes
         this.timesVisited = 0;
         this.blorbos = [];
         this.items = [];
@@ -5534,10 +5757,11 @@ class Room {
                 this.maze.addStorybeat(beat);
             }
             this.pendingStoryBeats = [];
+            this.blorbos = this.rand.shuffle(this.blorbos); //so its not always the same one going first
             for (let blorbo of this.blorbos) {
                 blorbo.vibe(this.blorbos); //social time baby! everyone in the room is invited!
                 if (!blorbo.dead) {
-                    blorbo.tick(this.actionRate);
+                    blorbo.tick(this.actionRate, this.beats);
                 }
                 this.checkForDoors(blorbo);
             }
@@ -5575,10 +5799,20 @@ class Room {
                 return true;
             }
         };
+        //order is theme beats, then communcal ai
+        this.setupBeats = () => {
+            for (let theme of this.themes) {
+                if (theme.beats && theme.beats.length > 0) {
+                    this.beats = [...theme.beats, ...this.beats];
+                }
+            }
+            this.beats = [...this.beats, ...CommunalAI_1.communal_ai];
+        };
         this.init = () => {
             this.name = `${(0, StringUtils_1.titleCase)(this.getRandomThemeConcept(ThemeStorage_1.ADJ))} ${(0, StringUtils_1.titleCase)(this.getRandomThemeConcept(ThemeStorage_1.LOCATION))}`;
             this.initFloor();
             this.initWall();
+            this.setupBeats();
         };
         this.clearBlorbos = () => {
             this.blorbos = [];
@@ -5939,7 +6173,7 @@ const ThemeStorage = __importStar(__webpack_require__(1288));
 //auto populated by creating themes. 
 exports.all_themes = {};
 class Theme {
-    constructor(key, tier, stats, string_possibilities, opinions, memories) {
+    constructor(key, tier, stats, string_possibilities, opinions, memories, beats) {
         this.stats = {};
         this.getOpinionOfTheme = (key) => {
             if (!this.opinions) {
@@ -5995,6 +6229,7 @@ class Theme {
         this.memories = memories;
         this.opinions = opinions;
         exports.all_themes[key] = this;
+        this.beats = beats;
     }
 }
 exports.Theme = Theme;
@@ -6051,8 +6286,9 @@ function initThemes() {
         string_possibilities[ThemeStorage.SPRITES] = ThemeStorage.sprite_possibilities[key];
         string_possibilities[ThemeStorage.FILTERS] = ThemeStorage.filter_possibilities[key];
         const opinions = ThemeStorage.theme_opinions[key];
+        const beats = ThemeStorage.beat_list[key];
         const memories = ThemeStorage.memories[key] ? ThemeStorage.memories[key] : [];
-        new Theme(key, 0, Stat.WrapStatsToStatMap(ThemeStorage.stats_map[key]), string_possibilities, opinions, memories);
+        new Theme(key, 0, Stat.WrapStatsToStatMap(ThemeStorage.stats_map[key]), string_possibilities, opinions, memories, beats);
     }
 }
 exports.initThemes = initThemes;
@@ -6089,10 +6325,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.KNOWING = exports.GUIDING = exports.CRAFTING = exports.LANGUAGE = exports.BUGS = exports.QUESTING = exports.DEFENSE = exports.MUSIC = exports.KILLING = exports.DARKNESS = exports.CENSORSHIP = exports.OBFUSCATION = exports.DOLLS = exports.HEALING = exports.SPYING = exports.ADDICTION = exports.NULL = exports.SPRITES = exports.FLOORFOREGROUND = exports.FLOORBACKGROUND = exports.WALLFOREGROUND = exports.WALLBACKGROUND = exports.THEME_OPINIONS = exports.FILTERS = exports.FLOOR = exports.WALL = exports.EFFECTS = exports.SOUND = exports.FEELING = exports.TASTE = exports.SMELL = exports.MONSTER_DESC = exports.LOC_DESC = exports.PHILOSOPHY = exports.SONG = exports.MIRACLE = exports.GENERALBACKSTORY = exports.CHILDBACKSTORY = exports.CITYNAME = exports.ASPECT = exports.CLASS = exports.MENU = exports.MEMORIES = exports.LOCATION = exports.OBJECT = exports.SUPERMOVE = exports.INSULT = exports.COMPLIMENT = exports.ADJ = exports.PERSON = void 0;
-exports.monster_desc = exports.loc_desc = exports.philosophy = exports.miracles = exports.child_backstories = exports.general_backstories = exports.location_possibilities = exports.object_possibilities = exports.person_posibilities = exports.stats_map = exports.sprite_possibilities = exports.floor_foregrounds = exports.floor_backgrounds = exports.wall_backgrounds = exports.wall_foregrounds = exports.keys = exports.TECHNOLOGY = exports.ART = exports.TIME = exports.SPACE = exports.OCEAN = exports.LONELY = exports.FIRE = exports.FREEDOM = exports.STEALING = exports.BURIED = exports.FLESH = exports.SCIENCE = exports.MATH = exports.TWISTING = exports.DEATH = exports.APOCALYPSE = exports.WASTE = exports.SERVICE = exports.FAMILY = exports.MAGIC = exports.LIGHT = exports.ANGELS = exports.HUNTING = exports.CLOWNS = exports.PLANTS = exports.DECAY = exports.CHOICES = exports.ZAP = exports.LOVE = exports.SOUL = exports.ANGER = exports.WEB = exports.ROYALTY = exports.ENDINGS = void 0;
-exports.initThemes = exports.checkIfAllKeysPresent = exports.super_name_possibilities_map = exports.memories = exports.compliment_possibilities = exports.filter_possibilities = exports.theme_opinions = exports.floor_possibilities = exports.wall_possibilities = exports.song_possibilities = exports.insult_possibilities = exports.adj_possibilities = exports.menu_options = exports.effect_possibilities = exports.smell_possibilities = exports.feeling_possibilities = exports.taste_possibilities = exports.sound_possibilities = void 0;
+exports.GUIDING = exports.CRAFTING = exports.LANGUAGE = exports.BUGS = exports.QUESTING = exports.DEFENSE = exports.MUSIC = exports.KILLING = exports.DARKNESS = exports.CENSORSHIP = exports.OBFUSCATION = exports.DOLLS = exports.HEALING = exports.SPYING = exports.ADDICTION = exports.NULL = exports.BEATS = exports.SPRITES = exports.FLOORFOREGROUND = exports.FLOORBACKGROUND = exports.WALLFOREGROUND = exports.WALLBACKGROUND = exports.THEME_OPINIONS = exports.FILTERS = exports.FLOOR = exports.WALL = exports.EFFECTS = exports.SOUND = exports.FEELING = exports.TASTE = exports.SMELL = exports.MONSTER_DESC = exports.LOC_DESC = exports.PHILOSOPHY = exports.SONG = exports.MIRACLE = exports.GENERALBACKSTORY = exports.CHILDBACKSTORY = exports.CITYNAME = exports.ASPECT = exports.CLASS = exports.MENU = exports.MEMORIES = exports.LOCATION = exports.OBJECT = exports.SUPERMOVE = exports.INSULT = exports.COMPLIMENT = exports.ADJ = exports.PERSON = void 0;
+exports.philosophy = exports.miracles = exports.child_backstories = exports.general_backstories = exports.location_possibilities = exports.object_possibilities = exports.person_posibilities = exports.stats_map = exports.beat_list = exports.sprite_possibilities = exports.floor_foregrounds = exports.floor_backgrounds = exports.wall_backgrounds = exports.wall_foregrounds = exports.keys = exports.TECHNOLOGY = exports.ART = exports.TIME = exports.SPACE = exports.OCEAN = exports.LONELY = exports.FIRE = exports.FREEDOM = exports.STEALING = exports.BURIED = exports.FLESH = exports.SCIENCE = exports.MATH = exports.TWISTING = exports.DEATH = exports.APOCALYPSE = exports.WASTE = exports.SERVICE = exports.FAMILY = exports.MAGIC = exports.LIGHT = exports.ANGELS = exports.HUNTING = exports.CLOWNS = exports.PLANTS = exports.DECAY = exports.CHOICES = exports.ZAP = exports.LOVE = exports.SOUL = exports.ANGER = exports.WEB = exports.ROYALTY = exports.ENDINGS = exports.KNOWING = void 0;
+exports.initThemes = exports.checkIfAllKeysPresent = exports.super_name_possibilities_map = exports.memories = exports.compliment_possibilities = exports.filter_possibilities = exports.theme_opinions = exports.floor_possibilities = exports.wall_possibilities = exports.song_possibilities = exports.insult_possibilities = exports.adj_possibilities = exports.menu_options = exports.effect_possibilities = exports.smell_possibilities = exports.feeling_possibilities = exports.taste_possibilities = exports.sound_possibilities = exports.monster_desc = exports.loc_desc = void 0;
 const constants_1 = __webpack_require__(8817);
+const ChangeMyStabilityLevelByAmount_1 = __webpack_require__(8801);
+const BaseBeat_1 = __webpack_require__(1708);
+const baseFilter_1 = __webpack_require__(9505);
 const Memory_1 = __webpack_require__(7953);
 const Stat = __importStar(__webpack_require__(9137));
 //categories within a theme
@@ -6129,6 +6368,7 @@ exports.WALLFOREGROUND = "WALLFOREGROUND";
 exports.FLOORBACKGROUND = "FLOORBACKGROUND";
 exports.FLOORFOREGROUND = "FLOORFOREGROUND";
 exports.SPRITES = "SPRITES"; //birbs
+exports.BEATS = "BEATS"; //beats
 //themes
 exports.NULL = "null";
 exports.ADDICTION = "addiction";
@@ -6188,6 +6428,7 @@ exports.wall_backgrounds = {};
 exports.floor_backgrounds = {};
 exports.floor_foregrounds = {};
 exports.sprite_possibilities = {};
+exports.beat_list = {};
 exports.stats_map = {};
 exports.person_posibilities = {};
 exports.object_possibilities = {};
@@ -6567,6 +6808,11 @@ const initWallForegrounds = () => {
     wall_foregrounds[MUSIC] =  ["Symphonic Synthesia"] ;
     wall_foregrounds[DEFENSE] =  ["Excalibur"] ;
     wall_foregrounds[QUESTING] = ["Satisfaction"] ;*/
+};
+const initBeatList = () => {
+    exports.beat_list[exports.TWISTING] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} clutches their head, their eyes spiralling in every direction. They don't know how to parse what they are experiencing. Their mind cracks open the littlest bit in response. `], [], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30)
+    ];
 };
 //no one said quotidians are locked into only mimicking HUMANS, just sapient things. 
 const initSpritePossibilities = () => {
@@ -7947,6 +8193,7 @@ const initThemes = () => {
     initThemeOpinions();
     initSpritePossibilities();
     initFilters();
+    initBeatList();
 };
 exports.initThemes = initThemes;
 
@@ -12180,6 +12427,10 @@ var map = {
 	"./Objects/Entities/Actions/AddThemeToRoom.ts": 8072,
 	"./Objects/Entities/Actions/BaseAction": 7042,
 	"./Objects/Entities/Actions/BaseAction.ts": 7042,
+	"./Objects/Entities/Actions/ChangeMyStabilityLevelByAmount": 8801,
+	"./Objects/Entities/Actions/ChangeMyStabilityLevelByAmount.ts": 8801,
+	"./Objects/Entities/Actions/ChangeStabilityLevelByAmount": 6729,
+	"./Objects/Entities/Actions/ChangeStabilityLevelByAmount.ts": 6729,
 	"./Objects/Entities/Actions/CheckInventory": 1201,
 	"./Objects/Entities/Actions/CheckInventory.ts": 1201,
 	"./Objects/Entities/Actions/DeploySass": 4237,
@@ -12216,6 +12467,8 @@ var map = {
 	"./Objects/Entities/Actions/GoSouth.ts": 3535,
 	"./Objects/Entities/Actions/GoWest": 4834,
 	"./Objects/Entities/Actions/GoWest.ts": 4834,
+	"./Objects/Entities/Actions/Hack": 6139,
+	"./Objects/Entities/Actions/Hack.ts": 6139,
 	"./Objects/Entities/Actions/Help": 3256,
 	"./Objects/Entities/Actions/Help.ts": 3256,
 	"./Objects/Entities/Actions/IncrementMyState": 9211,
@@ -12282,6 +12535,8 @@ var map = {
 	"./Objects/Entities/Blorbos/Yongki.ts": 3908,
 	"./Objects/Entities/StoryBeats/BaseBeat": 1708,
 	"./Objects/Entities/StoryBeats/BaseBeat.ts": 1708,
+	"./Objects/Entities/StoryBeats/CommunalAI": 868,
+	"./Objects/Entities/StoryBeats/CommunalAI.ts": 868,
 	"./Objects/Entities/StoryBeats/FriendlyAiBeat": 7717,
 	"./Objects/Entities/StoryBeats/FriendlyAiBeat.ts": 7717,
 	"./Objects/Entities/TargetFilter/IHaveObjectWithName": 6274,
@@ -12312,6 +12567,8 @@ var map = {
 	"./Objects/Entities/TargetFilter/TargetIstheKillerOfBlorboNamed.ts": 7082,
 	"./Objects/Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords": 4165,
 	"./Objects/Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords.ts": 4165,
+	"./Objects/Entities/TargetFilter/TargetStabilityLevelLessThanAmount": 3400,
+	"./Objects/Entities/TargetFilter/TargetStabilityLevelLessThanAmount.ts": 3400,
 	"./Objects/Entities/TargetFilter/baseFilter": 9505,
 	"./Objects/Entities/TargetFilter/baseFilter.ts": 9505,
 	"./Objects/Entities/TargetFilter/test": 1522,

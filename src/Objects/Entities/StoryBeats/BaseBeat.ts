@@ -88,7 +88,7 @@ export class AiBeat {
         if(DEBUG){
             this.addStorybeatToScreen(current_room.maze, "AI: DEBUG",`DEBUG: Because ${turnArrayIntoHumanSentence(causes)}... ${(effects.join("<br>"))}`);
         }
-        this.addStorybeatToScreen(current_room.maze, this.command,this.processTags(this.owner.rand.pickFrom(this.flavorText)));
+        this.addStorybeatToScreen(current_room.maze, this.processTags(this.command),this.processTags(this.owner.rand.pickFrom(this.flavorText)));
 
     }
 
@@ -115,11 +115,18 @@ export class AiBeat {
 
     //ALL triggers must be true for this to be true.
     triggered = (current_room: Room, allow_self = false) => {
+        
         this.itemName= "ERROR: NO ITEM FOUND"; //reset
         if(!this. owner){
             return console.error("ALWAYS clone beats, don't use them from list directly", this);
         }
+        if(this.owner.name === "Ria"){
+            console.log("JR NOTE: checking if ria has a target with filters", this.filters)
+        }
         if(!this.itsBeenAwhileSinceLastBeat()){
+            if(this.owner.name === "Ria"){
+                console.log("JR NOTE: ria is being impatient")
+            }
             return false;
         }
         //start out targeting EVERYTHING in this room
@@ -133,6 +140,11 @@ export class AiBeat {
                 return false;
             }
         }
+
+        if(this.owner.name === "Ria"){
+            console.log("JR NOTE: ria is about to return true")
+        }
+
         return true;
     }
 

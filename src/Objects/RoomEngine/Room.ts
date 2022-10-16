@@ -14,6 +14,7 @@ import { Peewee } from "../Entities/Blorbos/Peewee";
 import { Quotidian } from "../Entities/Blorbos/Quotidian";
 import { AiBeat } from "../Entities/StoryBeats/BaseBeat";
 import { communal_ai } from "../Entities/StoryBeats/CommunalAI";
+import { shuffle } from "../../Utils/NonSeededRandUtils";
 
 const artifact_rate = 0.95;//lower is more artifacts
 
@@ -356,12 +357,12 @@ export class Room {
             this.maze.addStorybeat(beat);
         }
         this.pendingStoryBeats = [];
-
+        this.blorbos = this.rand.shuffle(this.blorbos); //so its not always the same one going first
         for (let blorbo of this.blorbos) {
 
             blorbo.vibe(this.blorbos); //social time baby! everyone in the room is invited!
             if (!blorbo.dead) {
-                blorbo.tick(this.actionRate, beats);
+                blorbo.tick(this.actionRate, this.beats);
             }
             this.checkForDoors(blorbo);
         }
@@ -407,7 +408,7 @@ export class Room {
     //order is theme beats, then communcal ai
     setupBeats = ()=>{
         for(let theme of this.themes){
-            if(theme.beats.length > 0){
+            if(theme.beats && theme.beats.length > 0){
                 this.beats = [...theme.beats,...this.beats];
             }
         }
