@@ -35,7 +35,7 @@ export class Yongki extends Quotidian{
     minSpeed = 5;
     currentSpeed = 25;
     relationshipMap = new Map<string, Relationship>([
-        ["Snail Friend", new Relationship("Snail Friend",1000,"I really like how viscous it is! That means its having a thick, sticky consistency between solid and liquid; having a high viscosity.","Why must Snail Friends die so easily :(","It even has a little house!","Captain says that romance might happen naturally between people who spend a lot of time together but a snail is not people.","This is the best pet ever!",true,true,false)]
+        ["Snail Friend", new Relationship("Snail Friend",1000,"I really like how viscous it is! That means its having a thick, sticky consistency between solid and liquid; having a high viscosity.","Why must Snail Friends die so easily :(","It even has a little house!","Captain says that romance might happen naturally between people who spend a lot of time together but a snail is not people.","This is the best pet ever!",true,false,true)]
     ]);
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new RandomMovement(this);

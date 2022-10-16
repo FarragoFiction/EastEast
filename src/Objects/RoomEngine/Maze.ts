@@ -175,6 +175,8 @@ export class Maze {
         }
         this.spawnBlorbos();
         if (render) {
+            var pageUrl = '?' + `seed=${room.rand.internal_seed}&themes=${room.themes.map((item)=>item.key)}`;
+            window.history.pushState('', '', pageUrl);
             console.log("JR NOTE: rendering the new room, because i think this is true:", render)
             this.room.render();
         }

@@ -3043,6 +3043,7 @@ const TargetIsNearObjectWithName_1 = __webpack_require__(9587);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const Quotidian_1 = __webpack_require__(6387);
+const Relationship_1 = __webpack_require__(7739);
 class Yongki extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
@@ -3059,6 +3060,9 @@ class Yongki extends Quotidian_1.Quotidian {
         this.maxSpeed = 100;
         this.minSpeed = 5;
         this.currentSpeed = 25;
+        this.relationshipMap = new Map([
+            ["Snail Friend", new Relationship_1.Relationship("Snail Friend", 1000, "I really like how viscous it is! That means its having a thick, sticky consistency between solid and liquid; having a high viscosity.", "Why must Snail Friends die so easily :(", "It even has a little house!", "Captain says that romance might happen naturally between people who spend a lot of time together but a snail is not people.", "This is the best pet ever!", true, false, true)]
+        ]);
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
         this.lore = "Parker says that Yongki has the soul of a gorilla. A gentle giant. His body craves so much violence yet he attacks only when attacked.  Captain has stabelized him, given him room to grow and seek enlightenment.";
