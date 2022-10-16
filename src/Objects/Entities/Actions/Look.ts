@@ -94,6 +94,9 @@ export class Look extends Action {
             }
             retSoFar += "</ul>"
         }
+        if(lookcloser instanceof Quotidian){
+            retSoFar += `<p>Their stability level is: ${lookcloser.stabilityLevel}</p>`
+        }
         return retSoFar;
     }
 
