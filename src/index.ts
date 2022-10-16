@@ -69,7 +69,7 @@ window.onload = async () => {
     button.innerText = "Click To Begin!";
     initStats();
     initThemes();
-    const seed = 85;
+    const seed = 13;
     if (ele && storySoFar) {
         console.log("JR NOTE: making maze")
         maze = new Maze(ele, storySoFar, new SeededRandom(seed));

@@ -5120,7 +5120,7 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            var pageUrl = `seed=${this.room.rand.internal_seed}&themes=${this.room.themes.map((item) => item.key)}`;
+            var pageUrl = `seed=${this.room.rand.initial_seed}&themes=${this.room.themes.map((item) => item.key)}`;
             (0, URLUtils_1.updateURLParams)(pageUrl);
         };
         this.changeRoom = (room, render = true) => {
@@ -5215,7 +5215,7 @@ class Maze {
                 this.addCommandStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: right now everything is in debug mode (because she saw something alive, the eye killer kills) eventually replace all with custom flavor text that gets passed into the beat 'With a purple glint, the EyeKiller shows ${TARGETNAME} her stabs.'"));
             }
         };
-        this.rand = rand;
+        this.rand = new SeededRandom_1.default(rand.internal_seed);
         this.ele = ele;
         this.storySoFar = storySoFar;
         this.initialize();

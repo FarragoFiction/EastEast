@@ -63,6 +63,8 @@ export class Maze {
         const urlThemes = urlParams.get('themes');
         if(seed){
             this.rand = new SeededRandom(parseInt(seed)); //load seed from url
+        }else{
+            this.rand = new SeededRandom(1972000401);
         }
 
         if(urlThemes){
