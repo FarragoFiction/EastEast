@@ -5025,6 +5025,9 @@ class Maze {
             if (seed) {
                 this.rand = new SeededRandom_1.default(parseInt(seed)); //load seed from url
             }
+            else {
+                this.rand = new SeededRandom_1.default(1972000401);
+            }
             if (urlThemes) {
                 themes = urlThemes.split(",").map((item) => Theme_1.all_themes[item]);
             }
@@ -9817,7 +9820,7 @@ window.onload = async () => {
     button.innerText = "Click To Begin!";
     (0, Stat_1.initStats)();
     (0, Theme_1.initThemes)();
-    const seed = 85;
+    const seed = 13;
     if (ele && storySoFar) {
         console.log("JR NOTE: making maze");
         maze = new Maze_1.Maze(ele, storySoFar, new SeededRandom_1.default(seed));

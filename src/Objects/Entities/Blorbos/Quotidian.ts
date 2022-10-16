@@ -82,7 +82,7 @@ export class Quotidian extends PhysicalObject {
     gender = NB;
     minSpeed = 1;
     currentSpeed = 10;
-    sbabilityLevel = 113; //if it hits 0 they breach.
+    stabilityLevel = 113; //if it hits 0 they breach.
     friend?: FRIEND;
     killerName? : string;
     timeOfLastBeat = new Date().getTime();
