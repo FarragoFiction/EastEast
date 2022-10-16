@@ -10,7 +10,6 @@ import { SUBJECTSTRING, TargetFilter, TARGETSTRING } from "../TargetFilter/baseF
 export const ITEMSTRING = "ITEMSTRING";
 export const BONUSSTRING = "BONUSSTRING";
 
-const DEBUG = false;
 
 export class AiBeat {
     permanent: boolean; //is this a one and done or should it be forever. 
@@ -85,7 +84,7 @@ export class AiBeat {
         for (let a of this.actions) {
             effects.push(a.applyAction(this));
         }
-        if(DEBUG){
+        if(current_room.maze.debug){
             this.addStorybeatToScreen(current_room.maze, "AI: DEBUG",`DEBUG: Because ${turnArrayIntoHumanSentence(causes)}... ${(effects.join("<br>"))}`);
         }
         this.addStorybeatToScreen(current_room.maze, this.processTags(this.command),this.processTags(this.owner.rand.pickFrom(this.flavorText)));
@@ -120,13 +119,8 @@ export class AiBeat {
         if(!this. owner){
             return console.error("ALWAYS clone beats, don't use them from list directly", this);
         }
-        if(this.owner.name === "Ria"){
-            console.log("JR NOTE: checking if ria has a target with filters", this.filters)
-        }
+ 
         if(!this.itsBeenAwhileSinceLastBeat()){
-            if(this.owner.name === "Ria"){
-                console.log("JR NOTE: ria is being impatient")
-            }
             return false;
         }
         //start out targeting EVERYTHING in this room
@@ -139,10 +133,6 @@ export class AiBeat {
             if (this.targets.length === 0) {
                 return false;
             }
-        }
-
-        if(this.owner.name === "Ria"){
-            console.log("JR NOTE: ria is about to return true")
         }
 
         return true;

@@ -397,11 +397,7 @@ export class Quotidian extends PhysicalObject {
             allPossibilities.push(clonse); //IMPORTANT, need to set myself up as its owner for this tick
         }
         for (let beat of allPossibilities) {
-            if(this.name === "Ria"){
-                console.log("JR NOTE: is ria gonna", beat)
-            }
             if (beat.triggered(this.room)) {
-                console.log("JR NOTE: ria did", beat)
 
                 didSomething = true;
                 this.timeOfLastBeat = new Date().getTime();

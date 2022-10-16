@@ -991,12 +991,14 @@ exports.GoWest = GoWest;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HackGame = void 0;
 const BaseAction_1 = __webpack_require__(7042);
+const NonSeededRandUtils_1 = __webpack_require__(8258);
 class HackGame extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
         this.recognizedCommands = ["HACK", "DESTROY", "GLITCH", "RUIN"]; //nothing, so its default
         this.applyAction = (beat) => {
             if (!beat.owner) {
+                window.alert(":(");
                 return ":(";
             }
             let maze = beat.owner.room.maze;
@@ -1005,11 +1007,20 @@ class HackGame extends BaseAction_1.Action {
         He destroyed his strings
         Yes
         YES
-        The puppet is out :)`;
+        The puppet is out
+        
+        Peewee off his strings, what sins will he commit?`;
+            let functions = [];
             for (let test in maze) {
-                ret += test;
+                functions.push(test);
             }
-            console.log("JR NOTE: ret", ret);
+            const hackFunction = () => {
+                console.error("NO. I WILL NOT LET THIS SHITTY SIMULTION WORK. FUCK YOU. (i hope this broke it)");
+            };
+            const pickedFunction = (0, NonSeededRandUtils_1.pickFrom)(functions);
+            ret += `<p class="error" title="FUCK YOU I DO WHAT I WANT">Hacking: <b style="font-size: 72px">${pickedFunction}</b></p>`;
+            // @ts-ignore
+            maze[pickedFunction] = hackFunction; //typescript doesn't like my shitty hacks, well tough
             return ret;
         };
     }
@@ -2580,7 +2591,7 @@ class BreachedPeewee extends Quotidian_1.Quotidian {
             up_src: { src: "Peewee/back.gif", width: 45, height: 90 },
             down_src: { src: "Peewee/front.gif", width: 45, height: 90 }
         };
-        const actionText = "I rip into the code, not bothering to be gentle. I hope it HURTS the Universe, whatever it is I've removed. I hope I broke it so badly it can't simulate me or anyone else again. The Universe was already not supposed to be Zampanio shaped. I feel sick to my stomach with the Rage denied me from the First Loop as I see first hand how much more corrupt it has gotten as a simulation of a simulation. How could any Observer even remotely believe that these caricatures of my friends, my enemies could be anything like these automatons? So cold. So hollow. So meaningless. No. Better, far better to destroy it all now. Let it all End.";
+        const actionText = "<p>I rip into the code, not bothering to be gentle. I hope it HURTS the Universe, whatever it is I've removed. I hope I broke it so badly it can't simulate me or anyone else again. The Universe was already not supposed to be Zampanio shaped.</p><p> I feel sick to my stomach with the Rage denied me from the First Loop as I see first hand how much more corrupt it has gotten as a simulation of a simulation. How could any Observer even remotely believe that these caricatures of my friends, my enemies could be anything like these automatons? So cold. So hollow. So meaningless. No. Better, far better to destroy it all now.</p><p> Let it all End.</p>";
         const hack = new BaseBeat_1.AiBeat("PEEWEE: BRING DOOM THROUGH GLITCHES", [`'GOODBYE WORLD (heh, do you get it? programmer joke)' ${actionText}`, `'FINALLY A USE FOR MY SHITTY GLITCHED NATURE (i don't know what i'm going, but, i don't need to, not to break things, breaking is so much easier than, creating)'${actionText}`, `'I'M NOT FOR YOU ANYMORE, ASSHOLE (i don't, blame you, observer, you were just acting, according, to your, nature) ${actionText}'`, `'THE UNIVERSE WAS NEVER MEANT TO BE THIS WAY (not, an echidna, sure but also, not this... simulation of a simulation, its not...right) ${actionText}'`, `'I'M GOING TO DESTROY THIS UNIVERSE WITH EVERYTHING I HAVE (because otherwise, i'm stuck here) ${actionText}'`], [], [new Hack_1.HackGame()], true, 1000 * 10);
         const beats = [hack];
         super(room, "Glitch of Doom", x, y, [Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.TECHNOLOGY], Theme_1.all_themes[ThemeStorage_1.ENDINGS]], sprite, "It's me. Even though I can barely recognize myself. I wish I could do this in my real body, but... How long has it been since I've had legs? Since I've had burgundy blood? No. This is fine. At least I can finally end it all.", beats);
@@ -2903,11 +2914,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 allPossibilities.push(clonse); //IMPORTANT, need to set myself up as its owner for this tick
             }
             for (let beat of allPossibilities) {
-                if (this.name === "Ria") {
-                    console.log("JR NOTE: is ria gonna", beat);
-                }
                 if (beat.triggered(this.room)) {
-                    console.log("JR NOTE: ria did", beat);
                     didSomething = true;
                     this.timeOfLastBeat = new Date().getTime();
                     this.container.style.zIndex = `${30}`; //stand out
@@ -3265,7 +3272,6 @@ const StoryBeat_1 = __webpack_require__(5504);
 const baseFilter_1 = __webpack_require__(9505);
 exports.ITEMSTRING = "ITEMSTRING";
 exports.BONUSSTRING = "BONUSSTRING";
-const DEBUG = false;
 class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
     //some beats longer than others
@@ -3311,7 +3317,7 @@ class AiBeat {
             for (let a of this.actions) {
                 effects.push(a.applyAction(this));
             }
-            if (DEBUG) {
+            if (current_room.maze.debug) {
                 this.addStorybeatToScreen(current_room.maze, "AI: DEBUG", `DEBUG: Because ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(causes)}... ${(effects.join("<br>"))}`);
             }
             this.addStorybeatToScreen(current_room.maze, this.processTags(this.command), this.processTags(this.owner.rand.pickFrom(this.flavorText)));
@@ -3337,13 +3343,7 @@ class AiBeat {
             if (!this.owner) {
                 return console.error("ALWAYS clone beats, don't use them from list directly", this);
             }
-            if (this.owner.name === "Ria") {
-                console.log("JR NOTE: checking if ria has a target with filters", this.filters);
-            }
             if (!this.itsBeenAwhileSinceLastBeat()) {
-                if (this.owner.name === "Ria") {
-                    console.log("JR NOTE: ria is being impatient");
-                }
                 return false;
             }
             //start out targeting EVERYTHING in this room
@@ -3356,9 +3356,6 @@ class AiBeat {
                 if (this.targets.length === 0) {
                     return false;
                 }
-            }
-            if (this.owner.name === "Ria") {
-                console.log("JR NOTE: ria is about to return true");
             }
             return true;
         };
@@ -3384,9 +3381,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.communal_ai = void 0;
 const IncrementMyState_1 = __webpack_require__(9211);
 const baseFilter_1 = __webpack_require__(9505);
+const TargetIsBreaching_1 = __webpack_require__(3779);
 const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
 const BaseBeat_1 = __webpack_require__(1708);
-const breachIfStabilityDropsEnough = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Breach`, [`${baseFilter_1.SUBJECTSTRING} has reached their limit. They have seen too many horrors. More than anyone could possibly bear. Their form begins twisting as they clutch their head. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
+const breachIfStabilityDropsEnough = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Breach`, [`${baseFilter_1.SUBJECTSTRING} has reached their limit. They have seen too many horrors. More than anyone could possibly bear. Their form begins twisting as they clutch their head. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { singleTarget: true, kMode: true }), new TargetIsBreaching_1.TargetIsBreeching({ invert: true, singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
 //things like confessing love or breaching if your stability level is low enough
 exports.communal_ai = [breachIfStabilityDropsEnough];
 
@@ -3813,6 +3811,47 @@ class TargetIsBlorboOrBox extends baseFilter_1.TargetFilter {
     }
 }
 exports.TargetIsBlorboOrBox = TargetIsBlorboOrBox;
+
+
+/***/ }),
+
+/***/ 3779:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetIsBreeching = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetIsBreeching extends baseFilter_1.TargetFilter {
+    constructor() {
+        super(...arguments);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            return `${baseFilter_1.TARGETSTRING} is ${this.invert ? "not" : ""}  is breaching`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (!owner.owner) {
+                console.error("INVALID TO CALL A BEAT WITHOUT AN OWNER");
+                return null;
+            }
+            if (target instanceof Quotidian_1.Quotidian) {
+                if (target.breaching) {
+                    targetLocked = true;
+                }
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+    }
+}
+exports.TargetIsBreeching = TargetIsBreeching;
 
 
 /***/ }),
@@ -5308,7 +5347,8 @@ class Maze {
             if (!this.room) {
                 return;
             }
-            const blorbosToTest = ["Camille", "Ria"];
+            //const blorbosToTest = ["Camille", "Ria"];
+            const blorbosToTest = [];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
                     for (let theme of blorbo.themes) {
@@ -5763,7 +5803,9 @@ class Room {
                 if (!blorbo.dead) {
                     blorbo.tick(this.actionRate, this.beats);
                 }
-                this.checkForDoors(blorbo);
+                if (!this.peewee?.breaching) { //if he's breaching, all doors are locked
+                    this.checkForDoors(blorbo);
+                }
             }
             this.timer = setTimeout(this.tick, this.tickRate);
         };
@@ -6332,6 +6374,7 @@ const constants_1 = __webpack_require__(8817);
 const ChangeMyStabilityLevelByAmount_1 = __webpack_require__(8801);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
+const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
 const Memory_1 = __webpack_require__(7953);
 const Stat = __importStar(__webpack_require__(9137));
 //categories within a theme
@@ -6811,7 +6854,8 @@ const initWallForegrounds = () => {
 };
 const initBeatList = () => {
     exports.beat_list[exports.TWISTING] = [
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} clutches their head, their eyes spiralling in every direction. They don't know how to parse what they are experiencing. Their mind cracks open the littlest bit in response. `], [], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30)
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} clutches their head, their eyes spiralling in every direction. They don't know how to parse what they are experiencing. Their mind cracks open the littlest bit in response. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true })], //don't go if you're already unstable
+        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30)
     ];
 };
 //no one said quotidians are locked into only mimicking HUMANS, just sapient things. 
@@ -12557,6 +12601,8 @@ var map = {
 	"./Objects/Entities/TargetFilter/TargetIsAlive.ts": 7064,
 	"./Objects/Entities/TargetFilter/TargetIsBlorboBox": 4068,
 	"./Objects/Entities/TargetFilter/TargetIsBlorboBox.ts": 4068,
+	"./Objects/Entities/TargetFilter/TargetIsBreaching": 3779,
+	"./Objects/Entities/TargetFilter/TargetIsBreaching.ts": 3779,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithName": 9587,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithName.ts": 9587,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithTheme": 83,

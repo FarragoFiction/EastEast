@@ -142,7 +142,7 @@ export class BreachedPeewee extends Quotidian {
             down_src: { src: "Peewee/front.gif", width: 45, height: 90 }
 
         };
-        const actionText = "I rip into the code, not bothering to be gentle. I hope it HURTS the Universe, whatever it is I've removed. I hope I broke it so badly it can't simulate me or anyone else again. The Universe was already not supposed to be Zampanio shaped. I feel sick to my stomach with the Rage denied me from the First Loop as I see first hand how much more corrupt it has gotten as a simulation of a simulation. How could any Observer even remotely believe that these caricatures of my friends, my enemies could be anything like these automatons? So cold. So hollow. So meaningless. No. Better, far better to destroy it all now. Let it all End.";
+        const actionText = "<p>I rip into the code, not bothering to be gentle. I hope it HURTS the Universe, whatever it is I've removed. I hope I broke it so badly it can't simulate me or anyone else again. The Universe was already not supposed to be Zampanio shaped.</p><p> I feel sick to my stomach with the Rage denied me from the First Loop as I see first hand how much more corrupt it has gotten as a simulation of a simulation. How could any Observer even remotely believe that these caricatures of my friends, my enemies could be anything like these automatons? So cold. So hollow. So meaningless. No. Better, far better to destroy it all now.</p><p> Let it all End.</p>";
 
         const hack = new AiBeat(
             "PEEWEE: BRING DOOM THROUGH GLITCHES",

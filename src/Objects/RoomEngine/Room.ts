@@ -364,7 +364,9 @@ export class Room {
             if (!blorbo.dead) {
                 blorbo.tick(this.actionRate, this.beats);
             }
-            this.checkForDoors(blorbo);
+            if(!this.peewee?.breaching){ //if he's breaching, all doors are locked
+                this.checkForDoors(blorbo);
+            }
         }
 
         this.timer = setTimeout(this.tick, this.tickRate);

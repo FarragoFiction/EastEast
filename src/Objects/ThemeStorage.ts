@@ -3,6 +3,7 @@ import { ChangeMyStabilityLevelByAmount } from './Entities/Actions/ChangeMyStabi
 import { AiBeat } from './Entities/StoryBeats/BaseBeat';
 import { SUBJECTSTRING } from './Entities/TargetFilter/baseFilter';
 import { RandomTarget } from './Entities/TargetFilter/RandomTarget';
+import { TargetStabilityLevelLessThanAmount } from './Entities/TargetFilter/TargetStabilityLevelLessThanAmount';
 import { Memory } from './Memory';
 import * as Stat from './Stat';
 
@@ -587,7 +588,7 @@ const initBeatList = ()=>{
         new AiBeat(
             `${SUBJECTSTRING}: Degrade Stability`,
             [`${SUBJECTSTRING} clutches their head, their eyes spiralling in every direction. They don't know how to parse what they are experiencing. Their mind cracks open the littlest bit in response. `],
-            [],
+            [new TargetStabilityLevelLessThanAmount(0, {invert: true, singleTarget:true, kMode: true})], //don't go if you're already unstable
             [new ChangeMyStabilityLevelByAmount(-13)],
             true,
             1000*30)
