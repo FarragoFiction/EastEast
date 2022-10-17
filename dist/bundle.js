@@ -5712,7 +5712,7 @@ class Maze {
                 return;
             }
             //const blorbosToTest = ["Camille", "Ria"];
-            const blorbosToTest = ["Innocent", "Camille"];
+            const blorbosToTest = ["Ria", "Camille"];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
                     for (let theme of blorbo.themes) {
