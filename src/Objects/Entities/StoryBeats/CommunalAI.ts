@@ -54,4 +54,4 @@ const breachIfStabilityDropsEnough = new AiBeat(
 );
 
 //things like confessing love or breaching if your stability level is low enough
-export const communal_ai:AiBeat[] = [breachIfStabilityDropsEnough,hangOutWithFriend,hangOutWithPotentialCrush]
+export const communal_ai:AiBeat[] = [breachIfStabilityDropsEnough,hangOutWithFriend,hangOutWithPotentialCrush,botherEnemey]
