@@ -1,5 +1,7 @@
-import { ConsiderWhetherTargetIsImportantToYou } from "../Actions/ConsiderWhetherTargetIsImportantToMe";
+
+import { ConsiderWhetherTargetIsImportantToYou } from "../Actions/ConsiderIfIsImportantToMe";
 import { IncrementMyState } from "../Actions/IncrementMyState";
+import { ConsiderWhetherTargetIsRomanticToYou } from "../Actions/ConsiderIfIsRomantic";
 import { SUBJECTSTRING, TARGETSTRING } from "../TargetFilter/baseFilter";
 import { ILikeTargetMoreThanAmount } from "../TargetFilter/ILikeTargetMoreThanAmount";
 import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
@@ -7,6 +9,7 @@ import { TargetIsBreeching } from "../TargetFilter/TargetIsBreaching";
 import { TargetIsImportantToMe } from "../TargetFilter/TargetIsImportantToMe";
 import { TargetStabilityLevelLessThanAmount } from "../TargetFilter/TargetStabilityLevelLessThanAmount";
 import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from "./BaseBeat";
+import { TargetIsRomanticToMe } from "../TargetFilter/TargetIsRomanticToMe";
 
 
 //JR NOTE: you can pass these to ai beats to debug them better (and not get any other beats spam)
@@ -24,6 +27,15 @@ const hangOutWithFriend = new AiBeat(
     1000*30,
 );
 
+const hangOutWithPotentialCrush = new AiBeat(
+    `${SUBJECTSTRING}: Hang out with ${TARGETSTRING}`,
+    [`${SUBJECTSTRING} and ${TARGETSTRING} hang out for a while. They both have a pretty good time. `],
+    [ new TargetIsAlive(), new ILikeTargetMoreThanAmount(100, {singleTarget: true}),new TargetIsRomanticToMe({invert: true, singleTarget: true})],
+    [new ConsiderWhetherTargetIsRomanticToYou()],
+    true,
+    1000*30,
+);
+
 const breachIfStabilityDropsEnough = new AiBeat(
     `${SUBJECTSTRING}: Breach`,
     [`${SUBJECTSTRING} has reached ${SUBJECT_HIS_SCRIPT} limit. ${SUBJECT_HE_SCRIPT} have seen too many horrors. More than anyone could possibly bear. ${SUBJECT_HIS_SCRIPT} form begins twisting as they clutch ${SUBJECT_HIS_SCRIPT} head. `],
@@ -34,4 +46,4 @@ const breachIfStabilityDropsEnough = new AiBeat(
 );
 
 //things like confessing love or breaching if your stability level is low enough
-export const communal_ai:AiBeat[] = [breachIfStabilityDropsEnough,hangOutWithFriend]
+export const communal_ai:AiBeat[] = [breachIfStabilityDropsEnough,hangOutWithFriend,hangOutWithPotentialCrush]
