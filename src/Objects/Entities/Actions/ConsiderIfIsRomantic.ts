@@ -28,12 +28,14 @@ export class ConsiderWhetherTargetIsRomanticToYou extends Action {
         }
         let odds = 0.0;
         if(target.gender === FEMALE){
-            odds = subject.romanticFOdds;
+            odds = subject.romanticFOdds + subject.platonicFOdds;
         }else if(target.gender === MALE){
-            odds = subject.romanticMOdds;
+            odds = subject.romanticMOdds + subject.platonicMOdds;
         }else{
-            odds = subject.romanticNBOdds;
+            odds = subject.romanticNBOdds + subject.platonicNBOdds;
         }
+
+        
         const baseModifier = 13; //on average, how often they have to hang out to decide they're crushing
         if(subject.rand.nextDouble() < odds/baseModifier){
             subject.realizeIHaveACrushOnBlorbo(target);

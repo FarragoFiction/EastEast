@@ -205,7 +205,7 @@ exports.CheckInventory = CheckInventory;
 
 /***/ }),
 
-/***/ 6989:
+/***/ 4032:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -250,6 +250,55 @@ class ConsiderWhetherTargetIsImportantToYou extends BaseAction_1.Action {
     }
 }
 exports.ConsiderWhetherTargetIsImportantToYou = ConsiderWhetherTargetIsImportantToYou;
+
+
+/***/ }),
+
+/***/ 1060:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ConsiderWhetherTargetIsRomanticToYou = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const BaseAction_1 = __webpack_require__(7042);
+const baseFilter_1 = __webpack_require__(9505);
+class ConsiderWhetherTargetIsRomanticToYou extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.importantReturn = true;
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            let target = beat.targets[0];
+            if (!subject || !target || !(target instanceof Quotidian_1.Quotidian)) {
+                return "";
+            }
+            let odds = 0.0;
+            if (target.gender === Quotidian_1.FEMALE) {
+                odds = subject.romanticFOdds + subject.platonicFOdds;
+            }
+            else if (target.gender === Quotidian_1.MALE) {
+                odds = subject.romanticMOdds + subject.platonicMOdds;
+            }
+            else {
+                odds = subject.romanticNBOdds + subject.platonicNBOdds;
+            }
+            const baseModifier = 13; //on average, how often they have to hang out to decide they're crushing
+            if (subject.rand.nextDouble() < odds / baseModifier) {
+                subject.realizeIHaveACrushOnBlorbo(target);
+                return `${subject.processedName()} realizes that ${baseFilter_1.TARGETSTRING} actually...looks really nice and maybe would be good to kiss?.`;
+            }
+            return "";
+        };
+    }
+}
+exports.ConsiderWhetherTargetIsRomanticToYou = ConsiderWhetherTargetIsRomanticToYou;
 
 
 /***/ }),
@@ -3558,8 +3607,9 @@ exports.AiBeat = AiBeat;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.communal_ai = exports.debugAiBeat = void 0;
-const ConsiderWhetherTargetIsImportantToMe_1 = __webpack_require__(6989);
+const ConsiderIfIsImportantToMe_1 = __webpack_require__(4032);
 const IncrementMyState_1 = __webpack_require__(9211);
+const ConsiderIfIsRomantic_1 = __webpack_require__(1060);
 const baseFilter_1 = __webpack_require__(9505);
 const ILikeTargetMoreThanAmount_1 = __webpack_require__(8898);
 const TargetIsAlive_1 = __webpack_require__(7064);
@@ -3567,16 +3617,18 @@ const TargetIsBreaching_1 = __webpack_require__(3779);
 const TargetIsImportantToMe_1 = __webpack_require__(6375);
 const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
 const BaseBeat_1 = __webpack_require__(1708);
+const TargetIsRomanticToMe_1 = __webpack_require__(7705);
 //JR NOTE: you can pass these to ai beats to debug them better (and not get any other beats spam)
 const debugAiBeat = (beat) => {
     console.log("JR NOTE: I am a beat to debug", beat);
 };
 exports.debugAiBeat = debugAiBeat;
 //if they're not already important to me, hang out just as bros
-const hangOutWithFriend = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }), new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true, singleTarget: true })], [new ConsiderWhetherTargetIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30);
+const hangOutWithFriend = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }), new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true, singleTarget: true })], [new ConsiderIfIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30);
+const hangOutWithPotentialCrush = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }), new TargetIsRomanticToMe_1.TargetIsRomanticToMe({ invert: true, singleTarget: true })], [new ConsiderIfIsRomantic_1.ConsiderWhetherTargetIsRomanticToYou()], true, 1000 * 30);
 const breachIfStabilityDropsEnough = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Breach`, [`${baseFilter_1.SUBJECTSTRING} has reached ${BaseBeat_1.SUBJECT_HIS_SCRIPT} limit. ${BaseBeat_1.SUBJECT_HE_SCRIPT} have seen too many horrors. More than anyone could possibly bear. ${BaseBeat_1.SUBJECT_HIS_SCRIPT} form begins twisting as they clutch ${BaseBeat_1.SUBJECT_HIS_SCRIPT} head. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { singleTarget: true, kMode: true }), new TargetIsBreaching_1.TargetIsBreeching({ invert: true, singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
 //things like confessing love or breaching if your stability level is low enough
-exports.communal_ai = [breachIfStabilityDropsEnough, hangOutWithFriend];
+exports.communal_ai = [breachIfStabilityDropsEnough, hangOutWithFriend, hangOutWithPotentialCrush];
 
 
 /***/ }),
@@ -4232,6 +4284,44 @@ class TargetNearObjectWithTheme extends baseFilter_1.TargetFilter {
     }
 }
 exports.TargetNearObjectWithTheme = TargetNearObjectWithTheme;
+
+
+/***/ }),
+
+/***/ 7705:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetIsRomanticToMe = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetIsRomanticToMe extends baseFilter_1.TargetFilter {
+    constructor() {
+        //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+        super(...arguments);
+        this.toString = () => {
+            return `${baseFilter_1.TARGETSTRING} is  ${this.invert ? "not" : ""} important to ${baseFilter_1.SUBJECTSTRING}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (owner.owner && (target instanceof Quotidian_1.Quotidian)) {
+                const relationship = owner.owner.getRelationshipWith(target);
+                if (relationship && relationship.romantic) {
+                    targetLocked = true;
+                }
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+    }
+}
+exports.TargetIsRomanticToMe = TargetIsRomanticToMe;
 
 
 /***/ }),
@@ -12747,8 +12837,10 @@ var map = {
 	"./Objects/Entities/Actions/ChangeStabilityLevelByAmount.ts": 6729,
 	"./Objects/Entities/Actions/CheckInventory": 1201,
 	"./Objects/Entities/Actions/CheckInventory.ts": 1201,
-	"./Objects/Entities/Actions/ConsiderWhetherTargetIsImportantToMe": 6989,
-	"./Objects/Entities/Actions/ConsiderWhetherTargetIsImportantToMe.ts": 6989,
+	"./Objects/Entities/Actions/ConsiderIfIsImportantToMe": 4032,
+	"./Objects/Entities/Actions/ConsiderIfIsImportantToMe.ts": 4032,
+	"./Objects/Entities/Actions/ConsiderIfIsRomantic": 1060,
+	"./Objects/Entities/Actions/ConsiderIfIsRomantic.ts": 1060,
 	"./Objects/Entities/Actions/DeploySass": 4237,
 	"./Objects/Entities/Actions/DeploySass.ts": 4237,
 	"./Objects/Entities/Actions/DestroyObjectInInventoryWithThemes": 457,
@@ -12883,6 +12975,8 @@ var map = {
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithName.ts": 9587,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithTheme": 83,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithTheme.ts": 83,
+	"./Objects/Entities/TargetFilter/TargetIsRomanticToMe": 7705,
+	"./Objects/Entities/TargetFilter/TargetIsRomanticToMe.ts": 7705,
 	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf": 5535,
 	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf.ts": 5535,
 	"./Objects/Entities/TargetFilter/TargetIstheKillerOfBlorboNamed": 7082,
