@@ -22,8 +22,7 @@ export class TargetIsImportantToMe extends TargetFilter {
                 targetLocked = true;
             }
         }
-        if (this.invert) {
-        }
+
         if (targetLocked) {
             return this.invert ? null : target;
         } else {

@@ -57,9 +57,6 @@ export class TargetFilter {
                     }
                 }
             }
-            if(this.singleTarget){
-                return targets[0];
-            }
             return targets;
         }
         return [];

@@ -6,21 +6,27 @@ import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsBreeching } from "../TargetFilter/TargetIsBreaching";
 import { TargetIsImportantToMe } from "../TargetFilter/TargetIsImportantToMe";
 import { TargetStabilityLevelLessThanAmount } from "../TargetFilter/TargetStabilityLevelLessThanAmount";
-import { AiBeat } from "./BaseBeat";
+import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from "./BaseBeat";
+
+
+//JR NOTE: you can pass these to ai beats to debug them better (and not get any other beats spam)
+export const debugAiBeat = (beat: AiBeat)=>{
+    console.log("JR NOTE: I am a beat to debug", beat)
+}
 
 //if they're not already important to me, hang out just as bros
 const hangOutWithFriend = new AiBeat(
     `${SUBJECTSTRING}: Hang out with ${TARGETSTRING}`,
     [`${SUBJECTSTRING} and ${TARGETSTRING} hang out for a while. They both have a pretty good time. `],
-    [ new TargetIsAlive(), new ILikeTargetMoreThanAmount(100, {singleTarget: true}) && new TargetIsImportantToMe({invert: true, singleTarget: true})],
+    [ new TargetIsAlive(), new ILikeTargetMoreThanAmount(100, {singleTarget: true}),new TargetIsImportantToMe({invert: true, singleTarget: true})],
     [new ConsiderWhetherTargetIsImportantToYou()],
     true,
-    1000*30
+    1000*30,
 );
 
 const breachIfStabilityDropsEnough = new AiBeat(
     `${SUBJECTSTRING}: Breach`,
-    [`${SUBJECTSTRING} has reached their limit. They have seen too many horrors. More than anyone could possibly bear. Their form begins twisting as they clutch their head. `],
+    [`${SUBJECTSTRING} has reached ${SUBJECT_HIS_SCRIPT} limit. ${SUBJECT_HE_SCRIPT} have seen too many horrors. More than anyone could possibly bear. ${SUBJECT_HIS_SCRIPT} form begins twisting as they clutch ${SUBJECT_HIS_SCRIPT} head. `],
     [  new TargetStabilityLevelLessThanAmount(0, {singleTarget:true, kMode: true}), new TargetIsBreeching({invert: true,singleTarget:true, kMode: true})],
     [new IncrementMyState("")],
     true,

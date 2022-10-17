@@ -22,16 +22,18 @@ export class ILikeTargetMoreThanAmount extends TargetFilter {
     }
 
     applyFilterToSingleTarget = (owner: AiBeat, target: PhysicalObject) => {
+        console.log("JR NOTE: checkint the filter for ILikeTargetMoreThanAmount")
         let targetLocked = false;
         
         if (owner.owner && (target instanceof Quotidian)) {
             const relationship = owner.owner.getRelationshipWith(target);
+            console.log("JR NOTE: relationship i'm checking is", relationship)
             if(relationship && relationship.amount > this.amount){
+                console.log(`I (${owner.owner.name}) like ${target.name} ${relationship.amount} which is more than ${this.amount}`);
                 targetLocked = true;
             }
         }
-        if (this.invert) {
-        }
+
         if (targetLocked) {
             return this.invert ? null : target;
         } else {

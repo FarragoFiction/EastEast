@@ -1,6 +1,6 @@
 import { ACHIEVEMENTS, BACKSTORY, CITYBUILDING, CODE, COMPANIONS, GODS, INVENTORY, LORE, OPTIONS, QUESTS, RESISTANCES, SKILLGRAPH, STATISTICS, STATUS, WARROOM } from '../Utils/constants';
 import { ChangeMyStabilityLevelByAmount } from './Entities/Actions/ChangeMyStabilityLevelByAmount';
-import { AiBeat } from './Entities/StoryBeats/BaseBeat';
+import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from './Entities/StoryBeats/BaseBeat';
 import { SUBJECTSTRING } from './Entities/TargetFilter/baseFilter';
 import { RandomTarget } from './Entities/TargetFilter/RandomTarget';
 import { TargetStabilityLevelLessThanAmount } from './Entities/TargetFilter/TargetStabilityLevelLessThanAmount';
@@ -587,7 +587,7 @@ const initBeatList = ()=>{
     beat_list[TWISTING] = [
         new AiBeat(
             `${SUBJECTSTRING}: Degrade Stability`,
-            [`${SUBJECTSTRING} clutches their head, their eyes spiralling in every direction. They don't know how to parse what they are experiencing. Their mind cracks open the littlest bit in response. `],
+            [`${SUBJECTSTRING} clutches ${SUBJECT_HIS_SCRIPT} head, ${SUBJECT_HIS_SCRIPT} eyes spiralling in every direction. ${SUBJECT_HE_SCRIPT} doesn't know how to parse what ${SUBJECT_HE_SCRIPT} is experiencing. ${SUBJECT_HIS_SCRIPT} mind cracks open the littlest bit in response. `],
             [new TargetStabilityLevelLessThanAmount(0, {invert: true, singleTarget:true, kMode: true})], //don't go if you're already unstable
             [new ChangeMyStabilityLevelByAmount(-13)],
             true,

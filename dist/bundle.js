@@ -2313,6 +2313,7 @@ class Innocent extends Quotidian_1.Quotidian {
         super(room, "Innocent", x, y, [Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.ANGELS]], sprite, "Wow, she seems totally innocent!", beats, states);
         this.maxSpeed = 50;
         this.minSpeed = 5;
+        this.gender = Quotidian_1.FEMALE;
         this.currentSpeed = 5;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
@@ -3404,16 +3405,23 @@ exports.Captain = Captain;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AiBeat = exports.BONUSSTRING = exports.ITEMSTRING = void 0;
+exports.AiBeat = exports.TARGET_HE_SCRIPT = exports.TARGET_HIM_SCRIPT = exports.TARGET_HIS_SCRIPT = exports.SUBJECT_HE_SCRIPT = exports.SUBJECT_HIM_SCRIPT = exports.SUBJECT_HIS_SCRIPT = exports.BONUSSTRING = exports.ITEMSTRING = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const StoryBeat_1 = __webpack_require__(5504);
+const Quotidian_1 = __webpack_require__(6387);
 const baseFilter_1 = __webpack_require__(9505);
 exports.ITEMSTRING = "ITEMSTRING";
 exports.BONUSSTRING = "BONUSSTRING";
+exports.SUBJECT_HIS_SCRIPT = "[SUBJECTHISSCRIPT]";
+exports.SUBJECT_HIM_SCRIPT = "[SUBJECTHIMSCRIPT]";
+exports.SUBJECT_HE_SCRIPT = "[SUBJECTHESCRIPT]";
+exports.TARGET_HIS_SCRIPT = "[TARGETHISSCRIPT]";
+exports.TARGET_HIM_SCRIPT = "[TARGETHIMSCRIPT]";
+exports.TARGET_HE_SCRIPT = "[TARGETHESCRIPT]";
 class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
     //some beats longer than others
-    constructor(command, flavorText, triggers, actions, permanent = false, timeBetweenBeats = 10000) {
+    constructor(command, flavorText, triggers, actions, permanent = false, timeBetweenBeats = 10000, debugFunction) {
         //used for things like neville philosophizing
         this.bonusString = "";
         this.itemName = "ERROR: NO ITEM FOUND";
@@ -3424,7 +3432,7 @@ class AiBeat {
         };
         this.clone = (owner) => {
             //doesn't clone targets, those are set per beat when resolved..
-            const beat = new AiBeat(this.command, this.flavorText, this.filters, this.actions, this.permanent);
+            const beat = new AiBeat(this.command, this.flavorText, this.filters, this.actions, this.permanent, this.timeBetweenBeats, this.debugFunction);
             beat.owner = owner;
             return beat;
         };
@@ -3434,12 +3442,32 @@ class AiBeat {
             return beat;
         };
         this.processTags = (text) => {
-            let ret = text.replaceAll(baseFilter_1.TARGETSTRING, (0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.targets.map((t) => t.name)));
+            let ret = text;
+            if (this.targets && this.targets.length > 0) {
+                ret = text.replaceAll(baseFilter_1.TARGETSTRING, (0, ArrayUtils_1.turnArrayIntoHumanSentence)(this.targets.map((t) => t.name)));
+            }
             ret = ret.replaceAll(exports.ITEMSTRING, this.itemName);
             if (this.owner) {
                 ret = ret.replaceAll(baseFilter_1.SUBJECTSTRING, this.owner.processedName());
             }
             ret = ret.replaceAll(exports.BONUSSTRING, this.bonusString);
+            if (this.owner) {
+                ret = ret.replaceAll(exports.SUBJECT_HE_SCRIPT, (0, Quotidian_1.heProunon)(this.owner.gender));
+                ret = ret.replaceAll(exports.SUBJECT_HIM_SCRIPT, (0, Quotidian_1.heProunon)(this.owner.gender));
+                ret = ret.replaceAll(exports.SUBJECT_HIS_SCRIPT, (0, Quotidian_1.hisProunon)(this.owner.gender));
+            }
+            if (this.targets) {
+                if (this.targets.length === 1 && this.targets[0] instanceof Quotidian_1.Quotidian) {
+                    ret = ret.replaceAll(exports.TARGET_HE_SCRIPT, (0, Quotidian_1.heProunon)(this.targets[0].gender));
+                    ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.heProunon)(this.targets[0].gender));
+                    ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.hisProunon)(this.targets[0].gender));
+                }
+                else {
+                    ret = ret.replaceAll(exports.TARGET_HE_SCRIPT, (0, Quotidian_1.heProunon)(Quotidian_1.NB));
+                    ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.heProunon)(Quotidian_1.NB));
+                    ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.hisProunon)(Quotidian_1.NB));
+                }
+            }
             return ret;
         };
         this.performActions = (current_room) => {
@@ -3458,7 +3486,7 @@ class AiBeat {
                 if (a.importantReturn) {
                     importantEffects.push(e); //some actions are conditional and i want them to tell me how they went. 
                 }
-                effects.push(e); //most actions are just for debugging tho
+                effects.push(e); //most actions are just for debugging
             }
             this.addStorybeatToScreen(current_room.maze, this.processTags(this.command), this.processTags(this.owner.rand.pickFrom(this.flavorText) + `${importantEffects.join(" ")}`));
             if (current_room.maze.debug) {
@@ -3482,6 +3510,9 @@ class AiBeat {
         };
         //ALL triggers must be true for this to be true.
         this.triggered = (current_room, allow_self = false) => {
+            if (this.debugFunction) {
+                this.debugFunction(this);
+            }
             this.itemName = "ERROR: NO ITEM FOUND"; //reset
             if (!this.owner) {
                 return console.error("ALWAYS clone beats, don't use them from list directly", this);
@@ -3505,6 +3536,7 @@ class AiBeat {
         this.filters = triggers;
         this.command = command;
         this.actions = actions;
+        this.debugFunction = debugFunction;
         this.flavorText = flavorText;
         this.permanent = permanent;
         this.timeBetweenBeats = timeBetweenBeats;
@@ -3526,13 +3558,17 @@ const ConsiderWhetherTargetIsImportantToMe_1 = __webpack_require__(6989);
 const IncrementMyState_1 = __webpack_require__(9211);
 const baseFilter_1 = __webpack_require__(9505);
 const ILikeTargetMoreThanAmount_1 = __webpack_require__(8898);
+const TargetIsAlive_1 = __webpack_require__(7064);
 const TargetIsBreaching_1 = __webpack_require__(3779);
 const TargetIsImportantToMe_1 = __webpack_require__(6375);
 const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
 const BaseBeat_1 = __webpack_require__(1708);
+const debug = (beat) => {
+    console.log("JR NOTE: I am a beat to debug", beat);
+};
 //if they're not already important to me, hang out just as bros
-const hangOutWithFriend = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }) && new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true })], [new ConsiderWhetherTargetIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30);
-const breachIfStabilityDropsEnough = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Breach`, [`${baseFilter_1.SUBJECTSTRING} has reached their limit. They have seen too many horrors. More than anyone could possibly bear. Their form begins twisting as they clutch their head. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { singleTarget: true, kMode: true }), new TargetIsBreaching_1.TargetIsBreeching({ invert: true, singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
+const hangOutWithFriend = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }) && new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true, singleTarget: true })], [new ConsiderWhetherTargetIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30, debug);
+const breachIfStabilityDropsEnough = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Breach`, [`${baseFilter_1.SUBJECTSTRING} has reached ${BaseBeat_1.SUBJECT_HIS_SCRIPT} limit. ${BaseBeat_1.SUBJECT_HE_SCRIPT} have seen too many horrors. More than anyone could possibly bear. ${BaseBeat_1.SUBJECT_HIS_SCRIPT} form begins twisting as they clutch ${BaseBeat_1.SUBJECT_HIS_SCRIPT} head. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { singleTarget: true, kMode: true }), new TargetIsBreaching_1.TargetIsBreeching({ invert: true, singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
 //things like confessing love or breaching if your stability level is low enough
 exports.communal_ai = [breachIfStabilityDropsEnough, hangOutWithFriend];
 
@@ -3682,14 +3718,15 @@ class ILikeTargetMoreThanAmount extends baseFilter_1.TargetFilter {
             return `they like ${baseFilter_1.TARGETSTRING}  ${this.invert ? "not" : ""} more than  ${this.amount}`;
         };
         this.applyFilterToSingleTarget = (owner, target) => {
+            console.log("JR NOTE: checkint the filter for ILikeTargetMoreThanAmount");
             let targetLocked = false;
             if (owner.owner && (target instanceof Quotidian_1.Quotidian)) {
                 const relationship = owner.owner.getRelationshipWith(target);
+                console.log("JR NOTE: relationship i'm checking is", relationship);
                 if (relationship && relationship.amount > this.amount) {
+                    console.log(`I (${owner.owner.name}) like ${target.name} ${relationship.amount} which is more than ${this.amount}`);
                     targetLocked = true;
                 }
-            }
-            if (this.invert) {
             }
             if (targetLocked) {
                 return this.invert ? null : target;
@@ -4068,8 +4105,6 @@ class TargetIsImportantToMe extends baseFilter_1.TargetFilter {
                 if (relationship && relationship.important) {
                     targetLocked = true;
                 }
-            }
-            if (this.invert) {
             }
             if (targetLocked) {
                 return this.invert ? null : target;
@@ -7083,7 +7118,7 @@ const initWallForegrounds = () => {
 };
 const initBeatList = () => {
     exports.beat_list[exports.TWISTING] = [
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} clutches their head, their eyes spiralling in every direction. They don't know how to parse what they are experiencing. Their mind cracks open the littlest bit in response. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true })], //don't go if you're already unstable
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} clutches ${BaseBeat_1.SUBJECT_HIS_SCRIPT} head, ${BaseBeat_1.SUBJECT_HIS_SCRIPT} eyes spiralling in every direction. ${BaseBeat_1.SUBJECT_HE_SCRIPT} doesn't know how to parse what ${BaseBeat_1.SUBJECT_HE_SCRIPT} is experiencing. ${BaseBeat_1.SUBJECT_HIS_SCRIPT} mind cracks open the littlest bit in response. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true })], //don't go if you're already unstable
         [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30)
     ];
 };

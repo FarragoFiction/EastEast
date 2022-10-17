@@ -119,6 +119,8 @@ export class Innocent extends Quotidian{
 
     maxSpeed = 50;
     minSpeed = 5;
+    gender = FEMALE;
+
     currentSpeed = 5;
 
     direction = Direction.UP; //movement algorithm can change or use this.

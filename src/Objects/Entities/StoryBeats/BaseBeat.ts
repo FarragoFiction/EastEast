@@ -4,17 +4,25 @@ import { Maze } from "../../RoomEngine/Maze";
 import { Room } from "../../RoomEngine/Room";
 import { StoryBeat } from "../../RoomEngine/StoryBeat";
 import { Action } from "../Actions/BaseAction";
-import { Quotidian } from "../Blorbos/Quotidian";
+import { heProunon, hisProunon, NB, Quotidian } from "../Blorbos/Quotidian";
 import { SUBJECTSTRING, TargetFilter, TARGETSTRING } from "../TargetFilter/baseFilter";
 
 export const ITEMSTRING = "ITEMSTRING";
 export const BONUSSTRING = "BONUSSTRING";
+export const SUBJECT_HIS_SCRIPT = "[SUBJECTHISSCRIPT]"
+export const SUBJECT_HIM_SCRIPT = "[SUBJECTHIMSCRIPT]"
+export const SUBJECT_HE_SCRIPT = "[SUBJECTHESCRIPT]"
+
+export const TARGET_HIS_SCRIPT = "[TARGETHISSCRIPT]"
+export const TARGET_HIM_SCRIPT = "[TARGETHIMSCRIPT]"
+export const TARGET_HE_SCRIPT = "[TARGETHESCRIPT]"
 
 
 export class AiBeat {
     permanent: boolean; //is this a one and done or should it be forever. 
     filters: TargetFilter[];
     actions: Action[];
+    debugFunction?: Function;
     command: string;
     //used for things like neville philosophizing
     bonusString = "";
@@ -31,10 +39,11 @@ export class AiBeat {
 
 
     //some beats longer than others
-    constructor(command: string,flavorText: string[], triggers: TargetFilter[], actions: Action[], permanent = false, timeBetweenBeats=10000) {
+    constructor(command: string,flavorText: string[], triggers: TargetFilter[], actions: Action[], permanent = false, timeBetweenBeats=10000, debugFunction?:Function) {
         this.filters = triggers;
         this.command = command;
         this.actions = actions;
+        this.debugFunction = debugFunction;
         this.flavorText = flavorText;
         this.permanent = permanent;
         this.timeBetweenBeats = timeBetweenBeats;
@@ -46,8 +55,9 @@ export class AiBeat {
 
     clone = (owner: Quotidian) => {
         //doesn't clone targets, those are set per beat when resolved..
-        const beat =  new AiBeat(this.command,this.flavorText,this.filters, this.actions, this.permanent);
+        const beat =  new AiBeat(this.command,this.flavorText,this.filters, this.actions, this.permanent, this.timeBetweenBeats, this.debugFunction);
         beat.owner = owner;
+    
         return beat;
     }
 
@@ -58,13 +68,34 @@ export class AiBeat {
     }
 
     processTags = (text: string)=>{
-        let ret = text.replaceAll(TARGETSTRING, turnArrayIntoHumanSentence(this.targets.map((t)=>t.name)));
+        let ret = text;
+        if(this.targets && this.targets.length > 0){
+            ret = text.replaceAll(TARGETSTRING, turnArrayIntoHumanSentence(this.targets.map((t)=>t.name)));
+        }
         ret = ret.replaceAll(ITEMSTRING, this.itemName);
         if(this.owner){
             ret = ret.replaceAll(SUBJECTSTRING, this.owner.processedName());
         }
 
         ret = ret.replaceAll(BONUSSTRING, this.bonusString);
+
+        if(this.owner){
+            ret = ret.replaceAll(SUBJECT_HE_SCRIPT, heProunon(this.owner.gender));
+            ret = ret.replaceAll(SUBJECT_HIM_SCRIPT, heProunon(this.owner.gender));
+            ret = ret.replaceAll(SUBJECT_HIS_SCRIPT, hisProunon(this.owner.gender));
+        }
+        if(this.targets){
+            if(this.targets.length === 1 && this.targets[0] instanceof Quotidian){
+                ret = ret.replaceAll(TARGET_HE_SCRIPT, heProunon(this.targets[0].gender));
+                ret = ret.replaceAll(TARGET_HIM_SCRIPT, heProunon(this.targets[0].gender));
+                ret = ret.replaceAll(TARGET_HIM_SCRIPT, hisProunon(this.targets[0].gender));  
+            }else{
+                ret = ret.replaceAll(TARGET_HE_SCRIPT, heProunon(NB));
+                ret = ret.replaceAll(TARGET_HIM_SCRIPT, heProunon(NB));
+                ret = ret.replaceAll(TARGET_HIM_SCRIPT, hisProunon(NB));   
+            }
+        }
+
 
         return ret;
     }
@@ -87,7 +118,7 @@ export class AiBeat {
             if(a.importantReturn){
                 importantEffects.push(e); //some actions are conditional and i want them to tell me how they went. 
             }
-            effects.push(e); //most actions are just for debugging tho
+            effects.push(e); //most actions are just for debugging
         }
 
         this.addStorybeatToScreen(current_room.maze, this.processTags(this.command),this.processTags(this.owner.rand.pickFrom(this.flavorText) +`${importantEffects.join(" ")}`));
@@ -119,7 +150,9 @@ export class AiBeat {
 
     //ALL triggers must be true for this to be true.
     triggered = (current_room: Room, allow_self = false) => {
-        
+        if(this.debugFunction){
+            this.debugFunction(this);
+        }
         this.itemName= "ERROR: NO ITEM FOUND"; //reset
         if(!this. owner){
             return console.error("ALWAYS clone beats, don't use them from list directly", this);
