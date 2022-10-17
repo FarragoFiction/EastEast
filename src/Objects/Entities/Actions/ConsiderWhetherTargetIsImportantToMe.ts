@@ -34,7 +34,8 @@ export class ConsiderWhetherTargetIsImportantToYou extends Action {
         }else{
             odds = subject.platonicNBOdds;
         }
-        if(subject.rand.nextDouble() < odds){
+        const baseModifier = 3; //on average, how often they have to hang out to decide they're important
+        if(subject.rand.nextDouble() < odds/baseModifier){
             subject.realizeIHaveASquishOnBlorbo(target);
             return `${subject.processedName()} realizes that ${TARGETSTRING} is important to ${himPronoun(subject.gender)}.`;
 

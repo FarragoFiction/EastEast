@@ -23,7 +23,7 @@ export class Camille extends Quotidian{
         ["Ria,Match", new Relationship("Ria,Match",1000000,"I really admire her dedication.","...","She's the smartest person I've ever met and just lights up  a room.","She's so cute when she's really excited about something she's talking about.","I can't imagine a life without her in some capacity.",true,true,false)]
     ]); //(keyed by array of all known names, csv)
     //camille just likes making friends :), absolute shit attachment stat
-    likeMultiplier  = 13.0; //(effects how quickly they grow to like people in general)
+    likeMultiplier  = 3.0; //(effects how quickly they grow to like people in general)
     dislikeMultiplier = 0.3; //(effects how quickly they grow to dislike ppl in general)
     gender = FEMALE;
 

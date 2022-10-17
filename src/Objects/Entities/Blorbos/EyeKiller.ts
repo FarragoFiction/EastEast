@@ -32,7 +32,10 @@ export class EyeKiller extends Quotidian{
     minSpeed = 5;
     gender = FEMALE;
     likeMultiplier = 0.5; //(effects how quickly they grow to like people in general)
-    dislikeMultiplier = 13.3; 
+    dislikeMultiplier = 3.3; 
+    romanticFOdds = 0.0; //likes ladies more than others
+    romanticMOdds = 0.0;
+    romanticNBOdds = 0.0;
 
     currentSpeed = 5;
 

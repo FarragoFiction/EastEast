@@ -240,7 +240,8 @@ class ConsiderWhetherTargetIsImportantToYou extends BaseAction_1.Action {
             else {
                 odds = subject.platonicNBOdds;
             }
-            if (subject.rand.nextDouble() < odds) {
+            const baseModifier = 3; //on average, how often they have to hang out to decide they're important
+            if (subject.rand.nextDouble() < odds / baseModifier) {
                 subject.realizeIHaveASquishOnBlorbo(target);
                 return `${subject.processedName()} realizes that ${baseFilter_1.TARGETSTRING} is important to ${(0, Quotidian_1.himPronoun)(subject.gender)}.`;
             }
@@ -2184,7 +2185,7 @@ class Camille extends Quotidian_1.Quotidian {
             ["Ria,Match", new Relationship_1.Relationship("Ria,Match", 1000000, "I really admire her dedication.", "...", "She's the smartest person I've ever met and just lights up  a room.", "She's so cute when she's really excited about something she's talking about.", "I can't imagine a life without her in some capacity.", true, true, false)]
         ]); //(keyed by array of all known names, csv)
         //camille just likes making friends :), absolute shit attachment stat
-        this.likeMultiplier = 13.0; //(effects how quickly they grow to like people in general)
+        this.likeMultiplier = 3.0; //(effects how quickly they grow to like people in general)
         this.dislikeMultiplier = 0.3; //(effects how quickly they grow to dislike ppl in general)
         this.gender = Quotidian_1.FEMALE;
         this.maxSpeed = 50;
@@ -2272,7 +2273,10 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.minSpeed = 5;
         this.gender = Quotidian_1.FEMALE;
         this.likeMultiplier = 0.5; //(effects how quickly they grow to like people in general)
-        this.dislikeMultiplier = 13.3;
+        this.dislikeMultiplier = 3.3;
+        this.romanticFOdds = 0.0; //likes ladies more than others
+        this.romanticMOdds = 0.0;
+        this.romanticNBOdds = 0.0;
         this.currentSpeed = 5;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -3553,7 +3557,7 @@ exports.AiBeat = AiBeat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.communal_ai = void 0;
+exports.communal_ai = exports.debugAiBeat = void 0;
 const ConsiderWhetherTargetIsImportantToMe_1 = __webpack_require__(6989);
 const IncrementMyState_1 = __webpack_require__(9211);
 const baseFilter_1 = __webpack_require__(9505);
@@ -3563,11 +3567,13 @@ const TargetIsBreaching_1 = __webpack_require__(3779);
 const TargetIsImportantToMe_1 = __webpack_require__(6375);
 const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
 const BaseBeat_1 = __webpack_require__(1708);
-const debug = (beat) => {
+//JR NOTE: you can pass these to ai beats to debug them better (and not get any other beats spam)
+const debugAiBeat = (beat) => {
     console.log("JR NOTE: I am a beat to debug", beat);
 };
+exports.debugAiBeat = debugAiBeat;
 //if they're not already important to me, hang out just as bros
-const hangOutWithFriend = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }) && new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true, singleTarget: true })], [new ConsiderWhetherTargetIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30, debug);
+const hangOutWithFriend = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }), new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true, singleTarget: true })], [new ConsiderWhetherTargetIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30);
 const breachIfStabilityDropsEnough = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Breach`, [`${baseFilter_1.SUBJECTSTRING} has reached ${BaseBeat_1.SUBJECT_HIS_SCRIPT} limit. ${BaseBeat_1.SUBJECT_HE_SCRIPT} have seen too many horrors. More than anyone could possibly bear. ${BaseBeat_1.SUBJECT_HIS_SCRIPT} form begins twisting as they clutch ${BaseBeat_1.SUBJECT_HIS_SCRIPT} head. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { singleTarget: true, kMode: true }), new TargetIsBreaching_1.TargetIsBreeching({ invert: true, singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
 //things like confessing love or breaching if your stability level is low enough
 exports.communal_ai = [breachIfStabilityDropsEnough, hangOutWithFriend];
