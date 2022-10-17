@@ -75,7 +75,7 @@ exports.Action = void 0;
 const ThemeStorage_1 = __webpack_require__(1288);
 class Action {
     constructor() {
-        this.importantReturn = true; //most returns are for debugging only. This isn't. 
+        this.importantReturn = false; //most returns are for debugging only. This isn't. 
         //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
         this.recognizedCommands = []; //nothing, so its default
         //for all fights, if yongki, yongki win
