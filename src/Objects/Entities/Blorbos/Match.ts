@@ -20,6 +20,8 @@ export class Ria extends Quotidian {
     lore = "Parker says her soul has the shape of an Elephant. She feels too big, too loud, too clumsy. She feels she takes up so so much room and her problems are huge and insurmountable and she just wishes she could shrink into herself. She just wishes she could F1X TH1NGS so she could stop burdening the ones she loves."
     relationshipMap = new Map<string, Relationship>([
         ["Camille,End", new Relationship("Camille,End", 1000000, "She's so smart, she always knows the right thing to say.", "Why isn't she talking to me...", "No one makes me feel as seen and understood as she does and if soul mates were real...", "Oh. Um. Yeah. Wow. She's really good.", "<3", true, true, false)]
+        ,["Peewee Puppet,Glitch of Doom", new Relationship("Peewee Puppet,Glitch of Doom",500,"He's so smart! He understands exactly why it all needs to burn!","How could he be so mean to me? What does he MEAN that nothing would take the Universe's place if we destroyed it? How could he be so cruel?","Surely he's the key to finally burning it all to the ground!","<3","*giggle* Peewee is so dreamy!",true,true,false)]
+
     ]);
 
     romanticFOdds = 1.0; //likes ladies more than others
@@ -60,6 +62,8 @@ export class Match extends Quotidian {
     lore = "She burns because there is no more hope for this Universe. She tried so hard and gave so much and finally there is nothing left at all of her but ashes and heat. There is no hope. Time to give in to Rage and start over from scratch."
     relationshipMap = new Map<string, Relationship>([
         ["Camille,End", new Relationship("Camille,End", 1000000, "She is so good at killing...", "Why isn't she killing! It's not fair!", "She makes me feel so warm... I'm burning up!", "I'd feel complete if I just had her.", "I'm obsessed with her.", true, true, false)]
+        ,["Peewee Puppet,Glitch of Doom", new Relationship("Peewee Puppet,Glitch of Doom",500,"BURN WITH ME, PEEWEE~!","NO! I REFUSE TO BELIEVE IT! THERE *HAS* TO BE A POINT TO BURNING IT ALL! I WON'T LISTEN!","THE GASOLINE TO MY FIRE~!","<3","*giggle* PEEWEE IS SO DREAMY~!",true,true,false)]
+
     ]);
     likeMultiplier = 0.0001; //(effects how quickly they grow to like people in general)
     dislikeMultiplier = 13.0; //(effects how quickly they grow to dislike ppl in general)

@@ -2231,7 +2231,8 @@ class Camille extends Quotidian_1.Quotidian {
         super(room, "Camille", x, y, [Theme_1.all_themes[ThemeStorage_1.ENDINGS], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.QUESTING], Theme_1.all_themes[ThemeStorage_1.LONELY]], sprite, "The End Comes For Us All", beats, states);
         this.lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
         this.relationshipMap = new Map([
-            ["Ria,Match", new Relationship_1.Relationship("Ria,Match", 1000000, "I really admire her dedication.", "...", "She's the smartest person I've ever met and just lights up  a room.", "She's so cute when she's really excited about something she's talking about.", "I can't imagine a life without her in some capacity.", true, true, false)]
+            ["Ria,Match", new Relationship_1.Relationship("Ria,Match", 1000000, "I really admire her dedication.", "...", "She's the smartest person I've ever met and just lights up  a room.", "She's so cute when she's really excited about something she's talking about.", "I can't imagine a life without her in some capacity.", true, true, false)],
+            ["Peewee Puppet,Glitch of Doom", new Relationship_1.Relationship("Peewee Puppet,Glitch of Doom", -1000000, "I have to admit, he never gives up.", "I really wish he'd stop trying to destroy the Universe. That's probably why he's so Doomed.", "I kind of feel bad for him. It's not his fault he's tied up like this.", "<3", "I never thought we'd end up like this.", false, false, false)]
         ]); //(keyed by array of all known names, csv)
         //camille just likes making friends :), absolute shit attachment stat
         this.likeMultiplier = 3.0; //(effects how quickly they grow to like people in general)
@@ -2447,7 +2448,8 @@ class Ria extends Quotidian_1.Quotidian {
         super(room, "Ria", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION]], sprite, "Ria sure looks like she's trying to figure something out!", beats, states);
         this.lore = "Parker says her soul has the shape of an Elephant. She feels too big, too loud, too clumsy. She feels she takes up so so much room and her problems are huge and insurmountable and she just wishes she could shrink into herself. She just wishes she could F1X TH1NGS so she could stop burdening the ones she loves.";
         this.relationshipMap = new Map([
-            ["Camille,End", new Relationship_1.Relationship("Camille,End", 1000000, "She's so smart, she always knows the right thing to say.", "Why isn't she talking to me...", "No one makes me feel as seen and understood as she does and if soul mates were real...", "Oh. Um. Yeah. Wow. She's really good.", "<3", true, true, false)]
+            ["Camille,End", new Relationship_1.Relationship("Camille,End", 1000000, "She's so smart, she always knows the right thing to say.", "Why isn't she talking to me...", "No one makes me feel as seen and understood as she does and if soul mates were real...", "Oh. Um. Yeah. Wow. She's really good.", "<3", true, true, false)],
+            ["Peewee Puppet,Glitch of Doom", new Relationship_1.Relationship("Peewee Puppet,Glitch of Doom", 500, "He's so smart! He understands exactly why it all needs to burn!", "How could he be so mean to me? What does he MEAN that nothing would take the Universe's place if we destroyed it? How could he be so cruel?", "Surely he's the key to finally burning it all to the ground!", "<3", "*giggle* Peewee is so dreamy!", true, true, false)]
         ]);
         this.romanticFOdds = 1.0; //likes ladies more than others
         this.romanticMOdds = 0.1;
@@ -2472,7 +2474,8 @@ class Match extends Quotidian_1.Quotidian {
         super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION], Theme_1.all_themes[ThemeStorage_1.ANGER], Theme_1.all_themes[ThemeStorage_1.KILLING]], sprite, "The Match is burning...", beats);
         this.lore = "She burns because there is no more hope for this Universe. She tried so hard and gave so much and finally there is nothing left at all of her but ashes and heat. There is no hope. Time to give in to Rage and start over from scratch.";
         this.relationshipMap = new Map([
-            ["Camille,End", new Relationship_1.Relationship("Camille,End", 1000000, "She is so good at killing...", "Why isn't she killing! It's not fair!", "She makes me feel so warm... I'm burning up!", "I'd feel complete if I just had her.", "I'm obsessed with her.", true, true, false)]
+            ["Camille,End", new Relationship_1.Relationship("Camille,End", 1000000, "She is so good at killing...", "Why isn't she killing! It's not fair!", "She makes me feel so warm... I'm burning up!", "I'd feel complete if I just had her.", "I'm obsessed with her.", true, true, false)],
+            ["Peewee Puppet,Glitch of Doom", new Relationship_1.Relationship("Peewee Puppet,Glitch of Doom", 500, "BURN WITH ME, PEEWEE~!", "NO! I REFUSE TO BELIEVE IT! THERE *HAS* TO BE A POINT TO BURNING IT ALL! I WON'T LISTEN!", "THE GASOLINE TO MY FIRE~!", "<3", "*giggle* PEEWEE IS SO DREAMY~!", true, true, false)]
         ]);
         this.likeMultiplier = 0.0001; //(effects how quickly they grow to like people in general)
         this.dislikeMultiplier = 13.0; //(effects how quickly they grow to dislike ppl in general)
@@ -3623,12 +3626,13 @@ const debugAiBeat = (beat) => {
     console.log("JR NOTE: I am a beat to debug", beat);
 };
 exports.debugAiBeat = debugAiBeat;
+const botherEnemey = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Annoy ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} dedicates a chunk of time to annoying the ever loving shit out of ${baseFilter_1.TARGETSTRING}. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(-100, { singleTarget: true, invert: true }), new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true, singleTarget: true })], [new ConsiderIfIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30);
 //if they're not already important to me, hang out just as bros
 const hangOutWithFriend = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }), new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true, singleTarget: true })], [new ConsiderIfIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30);
 const hangOutWithPotentialCrush = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }), new TargetIsRomanticToMe_1.TargetIsRomanticToMe({ invert: true, singleTarget: true })], [new ConsiderIfIsRomantic_1.ConsiderWhetherTargetIsRomanticToYou()], true, 1000 * 30);
 const breachIfStabilityDropsEnough = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Breach`, [`${baseFilter_1.SUBJECTSTRING} has reached ${BaseBeat_1.SUBJECT_HIS_SCRIPT} limit. ${BaseBeat_1.SUBJECT_HE_SCRIPT} have seen too many horrors. More than anyone could possibly bear. ${BaseBeat_1.SUBJECT_HIS_SCRIPT} form begins twisting as they clutch ${BaseBeat_1.SUBJECT_HIS_SCRIPT} head. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { singleTarget: true, kMode: true }), new TargetIsBreaching_1.TargetIsBreeching({ invert: true, singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
 //things like confessing love or breaching if your stability level is low enough
-exports.communal_ai = [breachIfStabilityDropsEnough, hangOutWithFriend, hangOutWithPotentialCrush];
+exports.communal_ai = [breachIfStabilityDropsEnough, hangOutWithFriend, hangOutWithPotentialCrush, botherEnemey];
 
 
 /***/ }),
