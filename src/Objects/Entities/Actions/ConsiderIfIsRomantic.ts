@@ -39,7 +39,7 @@ export class ConsiderWhetherTargetIsRomanticToYou extends Action {
         const baseModifier = 13; //on average, how often they have to hang out to decide they're crushing
         if(subject.rand.nextDouble() < odds/baseModifier){
             subject.realizeIHaveACrushOnBlorbo(target);
-            return `${subject.processedName()} realizes that ${TARGETSTRING} actually...looks really nice and maybe would be good to kiss?.`;
+            return `${subject.processedName()} realizes that ${TARGETSTRING} actually...looks really nice and maybe would be good to kiss?`;
 
         }
         return "";

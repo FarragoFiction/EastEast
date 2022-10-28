@@ -234,6 +234,18 @@ export class Quotidian extends PhysicalObject {
         return this.relationshipMap.get(key);
     }
 
+    realizeIWantToSpendMyLifeWithTarget = (blorbo: Quotidian)=>{
+        const key: string = blorbo.aliases().join(",");
+        let relationship = this.relationshipMap.get(key);
+        if (!relationship) {
+            this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, 113));
+            relationship = this.relationshipMap.get(key);
+        }
+
+        if (relationship) {
+            relationship.official = true;
+        }
+    }
 
     realizeIHaveASquishOnBlorbo = (blorbo: Quotidian) => {
         const key: string = blorbo.aliases().join(",");
