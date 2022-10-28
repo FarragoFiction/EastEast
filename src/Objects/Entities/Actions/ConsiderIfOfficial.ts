@@ -27,12 +27,12 @@ export class ConsiderWhetherTargetIsOfficialToYou extends Action {
         const howYouFeelAboutMe = target.getRelationshipWith(subject);
 
         if(howIFeelAboutYou?.important || howIFeelAboutYou?.romantic){
-            return `${subject.processedName()} doesn't feel like ${TARGETSTRING} is all that special.`;
+            return ``//nothing terribly special is going on;
         }
 
         
         if(howYouFeelAboutMe?.important || howYouFeelAboutMe?.romantic){
-            return `${subject.processedName()} confesses that they want to spend the rest of their life together with ${TARGETSTRING}. ${SUBJECT_HE_SCRIPT} apologizes, but doens't feel the same way.`;
+            return `${subject.processedName()} confesses that they want to spend the rest of their life together with ${TARGETSTRING}. ${SUBJECT_HE_SCRIPT} apologizes, but doesn't feel the same way.`;
         }
         
 
