@@ -3246,7 +3246,7 @@ class Relationship {
         this.official = false; //do both parties agree that This Is A Thing (whatever flavor it is?)
         this.toString = () => {
             let ret = "";
-            this.amount > 0 ? ret += this.positiveFlavor : this.negativeFlavor;
+            this.amount > 0 ? ret += this.positiveFlavor : ret += this.negativeFlavor;
             this.important ? ret += " " + this.importantFlavor : null;
             this.romantic ? ret += " " + this.romanticFlavor : null;
             this.official ? ret += " " + this.official : null;
