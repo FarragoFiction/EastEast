@@ -11,6 +11,7 @@ import { TargetStabilityLevelLessThanAmount } from "../TargetFilter/TargetStabil
 import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from "./BaseBeat";
 import { TargetIsRomanticToMe } from "../TargetFilter/TargetIsRomanticToMe";
 import { ConsiderWhetherTargetIsOfficialToYou } from "../Actions/ConsiderIfOfficial";
+import { TargetIsOfficialToMe } from "../TargetFilter/TargetIsOfficialToMe";
 
 
 //JR NOTE: you can pass these to ai beats to debug them better (and not get any other beats spam)
@@ -46,11 +47,21 @@ const hangOutWithPotentialCrush = new AiBeat(
 );
 
 
+//in theory you can make someone a life partner who isn't even important to you, and they were roommates
 const hangOutWithPotentialLifePartner = new AiBeat(
     `${SUBJECTSTRING}: Hang out with ${TARGETSTRING}`,
-    [`${SUBJECTSTRING} and ${TARGETSTRING} spends hours talking together about their hopes and dreams. `],
-    [ new TargetIsAlive(), new ILikeTargetMoreThanAmount(500, {singleTarget: true})],
+    [`${SUBJECTSTRING} and ${TARGETSTRING} spend hours talking together about their hopes and dreams. `,`${SUBJECTSTRING} and ${TARGETSTRING} are really enjoying spending time together. `,`${SUBJECTSTRING} and ${TARGETSTRING} are in a very silly debate together. `],
+    [ new TargetIsAlive(), new ILikeTargetMoreThanAmount(500, {singleTarget: true}),new TargetIsOfficialToMe({invert: true, singleTarget: true})],
     [new ConsiderWhetherTargetIsOfficialToYou()],
+    true,
+    1000*30,
+);
+
+const hangOutWithLifePartner = new AiBeat(
+    `${SUBJECTSTRING}: Hang out with ${TARGETSTRING}`,
+    [`${SUBJECTSTRING} and ${TARGETSTRING} cook meals together. `, `${SUBJECTSTRING} and ${TARGETSTRING} decorate a room together. `,`${SUBJECTSTRING} and ${TARGETSTRING} are cleaning up a little. `],
+    [ new TargetIsAlive(), new ILikeTargetMoreThanAmount(500, {singleTarget: true}),new TargetIsOfficialToMe({singleTarget: true})],
+    [],
     true,
     1000*30,
 );
@@ -65,4 +76,4 @@ const breachIfStabilityDropsEnough = new AiBeat(
 );
 
 //things like confessing love or breaching if your stability level is low enough
-export const communal_ai:AiBeat[] = [breachIfStabilityDropsEnough,hangOutWithFriend,hangOutWithPotentialCrush,hangOutWithPotentialLifePartner,botherEnemey]
+export const communal_ai:AiBeat[] = [breachIfStabilityDropsEnough,hangOutWithFriend,hangOutWithPotentialCrush,hangOutWithPotentialLifePartner,hangOutWithLifePartner,botherEnemey]

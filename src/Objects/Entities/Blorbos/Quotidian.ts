@@ -127,6 +127,7 @@ export class Quotidian extends PhysicalObject {
     minSpeed = 1;
 
     currentSpeed = 10;
+    instablityRate = 1; //if something goes wrong, how much does it effect their stability level?
     stabilityLevel = 113; //if it hits 0 they breach.
     friend?: FRIEND;
     killerName?: string;

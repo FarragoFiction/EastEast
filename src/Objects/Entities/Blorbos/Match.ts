@@ -27,6 +27,8 @@ export class Ria extends Quotidian {
     romanticFOdds = 1.0; //likes ladies more than others
     romanticMOdds = 0.1;
     romanticNBOdds = 0.1;
+    instablityRate = 113; //if something goes wrong, ria reacts very badly
+
     maxSpeed = 8;
     minSpeed = 5;
     currentSpeed = 5;

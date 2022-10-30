@@ -30,6 +30,8 @@ export class EyeKiller extends Quotidian{
     lore = "Parker has said her soul is in the shape of a ram. He says there is a joke in there, about time and sheep. (in the West, sheep are sacrificed to travel in time) But the important point is that the Killer's soul is that of prey, that of something CERTAIN you will KILL it unless she rams her blade deep into your heart first. They say horses live in silent hill, but sheep must, too.";
     maxSpeed = 50;
     minSpeed = 5;
+    instablityRate = 113; //if something goes wrong, how much does it effect their stability level?
+
     gender = FEMALE;
     likeMultiplier = 0.5; //(effects how quickly they grow to like people in general)
     dislikeMultiplier = 3.3; 

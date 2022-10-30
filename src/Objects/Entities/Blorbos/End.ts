@@ -28,7 +28,8 @@ export class Camille extends Quotidian{
     likeMultiplier  = 3.0; //(effects how quickly they grow to like people in general)
     dislikeMultiplier = 0.3; //(effects how quickly they grow to dislike ppl in general)
     gender = FEMALE;
-
+    instablityRate = 113; //camille is a glass canon of endurance
+    stabilityLevel = 1113;
     maxSpeed = 50;
     minSpeed = 5;
     currentSpeed = 5;

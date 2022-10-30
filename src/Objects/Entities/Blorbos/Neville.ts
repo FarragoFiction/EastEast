@@ -20,7 +20,7 @@ import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsTheKillerOfBlorboNamed } from "../TargetFilter/TargetIstheKillerOfBlorboNamed";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
-import { Quotidian, Direction } from "./Quotidian";
+import { Quotidian, Direction, MALE } from "./Quotidian";
 
 
 
@@ -30,6 +30,8 @@ export class Neville extends Quotidian{
     maxSpeed = 8;
     minSpeed = 5;
     currentSpeed = 5;
+    gender = MALE;
+
     likeMultiplier = 3.3; //(effects how quickly they grow to like people in general)
     dislikeMultiplier = 0.3; 
 

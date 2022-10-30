@@ -332,14 +332,16 @@ class ConsiderWhetherTargetIsOfficialToYou extends BaseAction_1.Action {
             }
             const howIFeelAboutYou = subject.getRelationshipWith(target);
             const howYouFeelAboutMe = target.getRelationshipWith(subject);
-            if (howIFeelAboutYou?.important || howIFeelAboutYou?.romantic) {
+            if (!howIFeelAboutYou?.important || !howIFeelAboutYou?.romantic) {
                 return ``; //nothing terribly special is going on;
             }
-            if (howYouFeelAboutMe?.important || howYouFeelAboutMe?.romantic) {
+            if (!howYouFeelAboutMe?.important || !howYouFeelAboutMe?.romantic) {
+                subject.stabilityLevel += -1 * subject.instablityRate; //ria might crack from this
                 return `${subject.processedName()} confesses that they want to spend the rest of their life together with ${baseFilter_1.TARGETSTRING}. ${BaseBeat_1.SUBJECT_HE_SCRIPT} apologizes, but doesn't feel the same way.`;
             }
             if (subject.rand.nextDouble() < .5) {
                 subject.realizeIWantToSpendMyLifeWithTarget(target);
+                subject.stabilityLevel += subject.instablityRate; //its such a relief
                 return `${subject.processedName()} explains how important ${baseFilter_1.TARGETSTRING} is to ${BaseBeat_1.SUBJECT_HIM_SCRIPT} and ${baseFilter_1.TARGETSTRING} agrees!  They immediately begin planning to move in together while applause is heard from the air itself.`;
             }
             return "";
@@ -2286,6 +2288,8 @@ class Camille extends Quotidian_1.Quotidian {
         this.likeMultiplier = 3.0; //(effects how quickly they grow to like people in general)
         this.dislikeMultiplier = 0.3; //(effects how quickly they grow to dislike ppl in general)
         this.gender = Quotidian_1.FEMALE;
+        this.instablityRate = 113; //camille is a glass canon of endurance
+        this.stabilityLevel = 1113;
         this.maxSpeed = 50;
         this.minSpeed = 5;
         this.currentSpeed = 5;
@@ -2369,6 +2373,7 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.lore = "Parker has said her soul is in the shape of a ram. He says there is a joke in there, about time and sheep. (in the West, sheep are sacrificed to travel in time) But the important point is that the Killer's soul is that of prey, that of something CERTAIN you will KILL it unless she rams her blade deep into your heart first. They say horses live in silent hill, but sheep must, too.";
         this.maxSpeed = 50;
         this.minSpeed = 5;
+        this.instablityRate = 113; //if something goes wrong, how much does it effect their stability level?
         this.gender = Quotidian_1.FEMALE;
         this.likeMultiplier = 0.5; //(effects how quickly they grow to like people in general)
         this.dislikeMultiplier = 3.3;
@@ -2502,6 +2507,7 @@ class Ria extends Quotidian_1.Quotidian {
         this.romanticFOdds = 1.0; //likes ladies more than others
         this.romanticMOdds = 0.1;
         this.romanticNBOdds = 0.1;
+        this.instablityRate = 113; //if something goes wrong, ria reacts very badly
         this.maxSpeed = 8;
         this.minSpeed = 5;
         this.currentSpeed = 5;
@@ -2590,6 +2596,7 @@ class Neville extends Quotidian_1.Quotidian {
         this.maxSpeed = 8;
         this.minSpeed = 5;
         this.currentSpeed = 5;
+        this.gender = Quotidian_1.MALE;
         this.likeMultiplier = 3.3; //(effects how quickly they grow to like people in general)
         this.dislikeMultiplier = 0.3;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
@@ -2891,6 +2898,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.gender = exports.NB;
         this.minSpeed = 1;
         this.currentSpeed = 10;
+        this.instablityRate = 1; //if something goes wrong, how much does it effect their stability level?
         this.stabilityLevel = 113; //if it hits 0 they breach.
         this.timeOfLastBeat = new Date().getTime();
         //default everything to 1.0, everyone is perfectly bi and alloromantic
@@ -3681,6 +3689,7 @@ const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
 const BaseBeat_1 = __webpack_require__(1708);
 const TargetIsRomanticToMe_1 = __webpack_require__(7705);
 const ConsiderIfOfficial_1 = __webpack_require__(6448);
+const TargetIsOfficialToMe_1 = __webpack_require__(8916);
 //JR NOTE: you can pass these to ai beats to debug them better (and not get any other beats spam)
 const debugAiBeat = (beat) => {
     console.log("JR NOTE: I am a beat to debug", beat);
@@ -3690,10 +3699,12 @@ const botherEnemey = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Annoy
 //if they're not already important to me, hang out just as bros
 const hangOutWithFriend = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }), new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true, singleTarget: true })], [new ConsiderIfIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30);
 const hangOutWithPotentialCrush = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }), new TargetIsRomanticToMe_1.TargetIsRomanticToMe({ invert: true, singleTarget: true })], [new ConsiderIfIsRomantic_1.ConsiderWhetherTargetIsRomanticToYou()], true, 1000 * 30);
-const hangOutWithPotentialLifePartner = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} spends hours talking together about their hopes and dreams. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(500, { singleTarget: true })], [new ConsiderIfOfficial_1.ConsiderWhetherTargetIsOfficialToYou()], true, 1000 * 30);
+//in theory you can make someone a life partner who isn't even important to you, and they were roommates
+const hangOutWithPotentialLifePartner = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} spend hours talking together about their hopes and dreams. `, `${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} are really enjoying spending time together. `, `${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} are in a very silly debate together. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(500, { singleTarget: true }), new TargetIsOfficialToMe_1.TargetIsOfficialToMe({ invert: true, singleTarget: true })], [new ConsiderIfOfficial_1.ConsiderWhetherTargetIsOfficialToYou()], true, 1000 * 30);
+const hangOutWithLifePartner = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} cook meals together. `, `${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} decorate a room together. `, `${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} are cleaning up a little. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(500, { singleTarget: true }), new TargetIsOfficialToMe_1.TargetIsOfficialToMe({ singleTarget: true })], [], true, 1000 * 30);
 const breachIfStabilityDropsEnough = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Breach`, [`${baseFilter_1.SUBJECTSTRING} has reached ${BaseBeat_1.SUBJECT_HIS_SCRIPT} limit. ${BaseBeat_1.SUBJECT_HE_SCRIPT} have seen too many horrors. More than anyone could possibly bear. ${BaseBeat_1.SUBJECT_HIS_SCRIPT} form begins twisting as they clutch ${BaseBeat_1.SUBJECT_HIS_SCRIPT} head. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { singleTarget: true, kMode: true }), new TargetIsBreaching_1.TargetIsBreeching({ invert: true, singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
 //things like confessing love or breaching if your stability level is low enough
-exports.communal_ai = [breachIfStabilityDropsEnough, hangOutWithFriend, hangOutWithPotentialCrush, hangOutWithPotentialLifePartner, botherEnemey];
+exports.communal_ai = [breachIfStabilityDropsEnough, hangOutWithFriend, hangOutWithPotentialCrush, hangOutWithPotentialLifePartner, hangOutWithLifePartner, botherEnemey];
 
 
 /***/ }),
@@ -4349,6 +4360,44 @@ class TargetNearObjectWithTheme extends baseFilter_1.TargetFilter {
     }
 }
 exports.TargetNearObjectWithTheme = TargetNearObjectWithTheme;
+
+
+/***/ }),
+
+/***/ 8916:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetIsOfficialToMe = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetIsOfficialToMe extends baseFilter_1.TargetFilter {
+    constructor() {
+        //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+        super(...arguments);
+        this.toString = () => {
+            return `${baseFilter_1.TARGETSTRING} is  ${this.invert ? "not" : ""} important to ${baseFilter_1.SUBJECTSTRING}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (owner.owner && (target instanceof Quotidian_1.Quotidian)) {
+                const relationship = owner.owner.getRelationshipWith(target);
+                if (relationship && relationship.official) {
+                    targetLocked = true;
+                }
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+    }
+}
+exports.TargetIsOfficialToMe = TargetIsOfficialToMe;
 
 
 /***/ }),
@@ -9058,7 +9107,8 @@ exports.albhed_map = {
     ".": "http://farragofiction.com/NotebookSimulator/",
     ",": "http://farragofiction.com/LightAndVoid/?dearWitherby=true",
     ";": "https://github.com/FarragoFiction/EastEast",
-    "`": "Thttp://farragofiction.com/TitlePendingFanWork/"
+    "`": "http://farragofiction.com/TitlePendingFanWork/",
+    "-": "https://farragofiction.com/DearDiary?truth=true"
     //0: http://farragofiction.com/ParkerLotLost/ <-- maybe this will be EastEastEast one day, that or ElevatorSim
     //11: http://farragofiction.com/DocSlaughterFileServer 
     //https://jadedresearcher.tumblr.com/post/692341174641606656
@@ -12314,6 +12364,7 @@ const text = `
 ,
 .
 ;
+-
 `;
 
 
@@ -13043,6 +13094,8 @@ var map = {
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithName.ts": 9587,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithTheme": 83,
 	"./Objects/Entities/TargetFilter/TargetIsNearObjectWithTheme.ts": 83,
+	"./Objects/Entities/TargetFilter/TargetIsOfficialToMe": 8916,
+	"./Objects/Entities/TargetFilter/TargetIsOfficialToMe.ts": 8916,
 	"./Objects/Entities/TargetFilter/TargetIsRomanticToMe": 7705,
 	"./Objects/Entities/TargetFilter/TargetIsRomanticToMe.ts": 7705,
 	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf": 5535,
