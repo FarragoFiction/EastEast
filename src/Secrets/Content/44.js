@@ -15,4 +15,5 @@ export const text = `
 ,
 .
 ;
+-
 `;

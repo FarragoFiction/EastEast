@@ -292,13 +292,61 @@ class ConsiderWhetherTargetIsRomanticToYou extends BaseAction_1.Action {
             const baseModifier = 13; //on average, how often they have to hang out to decide they're crushing
             if (subject.rand.nextDouble() < odds / baseModifier) {
                 subject.realizeIHaveACrushOnBlorbo(target);
-                return `${subject.processedName()} realizes that ${baseFilter_1.TARGETSTRING} actually...looks really nice and maybe would be good to kiss?.`;
+                return `${subject.processedName()} realizes that ${baseFilter_1.TARGETSTRING} actually...looks really nice and maybe would be good to kiss?`;
             }
             return "";
         };
     }
 }
 exports.ConsiderWhetherTargetIsRomanticToYou = ConsiderWhetherTargetIsRomanticToYou;
+
+
+/***/ }),
+
+/***/ 6448:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ConsiderWhetherTargetIsOfficialToYou = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const BaseAction_1 = __webpack_require__(7042);
+const BaseBeat_1 = __webpack_require__(1708);
+const baseFilter_1 = __webpack_require__(9505);
+//do you want to be a Thing (whether romantic or platonic?)
+class ConsiderWhetherTargetIsOfficialToYou extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.importantReturn = true;
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            let target = beat.targets[0];
+            if (!subject || !target || !(target instanceof Quotidian_1.Quotidian)) {
+                return "";
+            }
+            const howIFeelAboutYou = subject.getRelationshipWith(target);
+            const howYouFeelAboutMe = target.getRelationshipWith(subject);
+            if (howIFeelAboutYou?.important || howIFeelAboutYou?.romantic) {
+                return ``; //nothing terribly special is going on;
+            }
+            if (howYouFeelAboutMe?.important || howYouFeelAboutMe?.romantic) {
+                return `${subject.processedName()} confesses that they want to spend the rest of their life together with ${baseFilter_1.TARGETSTRING}. ${BaseBeat_1.SUBJECT_HE_SCRIPT} apologizes, but doesn't feel the same way.`;
+            }
+            if (subject.rand.nextDouble() < .5) {
+                subject.realizeIWantToSpendMyLifeWithTarget(target);
+                return `${subject.processedName()} explains how important ${baseFilter_1.TARGETSTRING} is to ${BaseBeat_1.SUBJECT_HIM_SCRIPT} and ${baseFilter_1.TARGETSTRING} agrees!  They immediately begin planning to move in together while applause is heard from the air itself.`;
+            }
+            return "";
+        };
+    }
+}
+exports.ConsiderWhetherTargetIsOfficialToYou = ConsiderWhetherTargetIsOfficialToYou;
 
 
 /***/ }),
@@ -2900,6 +2948,17 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             const key = blorbo.aliases().join(",");
             return this.relationshipMap.get(key);
         };
+        this.realizeIWantToSpendMyLifeWithTarget = (blorbo) => {
+            const key = blorbo.aliases().join(",");
+            let relationship = this.relationshipMap.get(key);
+            if (!relationship) {
+                this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, 113));
+                relationship = this.relationshipMap.get(key);
+            }
+            if (relationship) {
+                relationship.official = true;
+            }
+        };
         this.realizeIHaveASquishOnBlorbo = (blorbo) => {
             const key = blorbo.aliases().join(",");
             let relationship = this.relationshipMap.get(key);
@@ -3621,6 +3680,7 @@ const TargetIsImportantToMe_1 = __webpack_require__(6375);
 const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
 const BaseBeat_1 = __webpack_require__(1708);
 const TargetIsRomanticToMe_1 = __webpack_require__(7705);
+const ConsiderIfOfficial_1 = __webpack_require__(6448);
 //JR NOTE: you can pass these to ai beats to debug them better (and not get any other beats spam)
 const debugAiBeat = (beat) => {
     console.log("JR NOTE: I am a beat to debug", beat);
@@ -3630,9 +3690,10 @@ const botherEnemey = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Annoy
 //if they're not already important to me, hang out just as bros
 const hangOutWithFriend = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }), new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true, singleTarget: true })], [new ConsiderIfIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30);
 const hangOutWithPotentialCrush = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }), new TargetIsRomanticToMe_1.TargetIsRomanticToMe({ invert: true, singleTarget: true })], [new ConsiderIfIsRomantic_1.ConsiderWhetherTargetIsRomanticToYou()], true, 1000 * 30);
+const hangOutWithPotentialLifePartner = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} spends hours talking together about their hopes and dreams. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(500, { singleTarget: true })], [new ConsiderIfOfficial_1.ConsiderWhetherTargetIsOfficialToYou()], true, 1000 * 30);
 const breachIfStabilityDropsEnough = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Breach`, [`${baseFilter_1.SUBJECTSTRING} has reached ${BaseBeat_1.SUBJECT_HIS_SCRIPT} limit. ${BaseBeat_1.SUBJECT_HE_SCRIPT} have seen too many horrors. More than anyone could possibly bear. ${BaseBeat_1.SUBJECT_HIS_SCRIPT} form begins twisting as they clutch ${BaseBeat_1.SUBJECT_HIS_SCRIPT} head. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { singleTarget: true, kMode: true }), new TargetIsBreaching_1.TargetIsBreeching({ invert: true, singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
 //things like confessing love or breaching if your stability level is low enough
-exports.communal_ai = [breachIfStabilityDropsEnough, hangOutWithFriend, hangOutWithPotentialCrush, botherEnemey];
+exports.communal_ai = [breachIfStabilityDropsEnough, hangOutWithFriend, hangOutWithPotentialCrush, hangOutWithPotentialLifePartner, botherEnemey];
 
 
 /***/ }),
@@ -8996,7 +9057,8 @@ exports.albhed_map = {
     "?": "http://farragofiction.com/ParkerLotLost/",
     ".": "http://farragofiction.com/NotebookSimulator/",
     ",": "http://farragofiction.com/LightAndVoid/?dearWitherby=true",
-    ";": "https://github.com/FarragoFiction/EastEast"
+    ";": "https://github.com/FarragoFiction/EastEast",
+    "`": "Thttp://farragofiction.com/TitlePendingFanWork/"
     //0: http://farragofiction.com/ParkerLotLost/ <-- maybe this will be EastEastEast one day, that or ElevatorSim
     //11: http://farragofiction.com/DocSlaughterFileServer 
     //https://jadedresearcher.tumblr.com/post/692341174641606656
@@ -12845,6 +12907,8 @@ var map = {
 	"./Objects/Entities/Actions/ConsiderIfIsImportantToMe.ts": 4032,
 	"./Objects/Entities/Actions/ConsiderIfIsRomantic": 1060,
 	"./Objects/Entities/Actions/ConsiderIfIsRomantic.ts": 1060,
+	"./Objects/Entities/Actions/ConsiderIfOfficial": 6448,
+	"./Objects/Entities/Actions/ConsiderIfOfficial.ts": 6448,
 	"./Objects/Entities/Actions/DeploySass": 4237,
 	"./Objects/Entities/Actions/DeploySass.ts": 4237,
 	"./Objects/Entities/Actions/DestroyObjectInInventoryWithThemes": 457,

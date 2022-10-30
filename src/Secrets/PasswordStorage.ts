@@ -59,7 +59,8 @@ export const albhed_map = {
     ".": "http://farragofiction.com/NotebookSimulator/",
     ",": "http://farragofiction.com/LightAndVoid/?dearWitherby=true",
     ";": "https://github.com/FarragoFiction/EastEast",
-    "`": "Thttp://farragofiction.com/TitlePendingFanWork/"
+    "`": "http://farragofiction.com/TitlePendingFanWork/",
+    "-": "https://farragofiction.com/DearDiary?truth=true"
 
     //0: http://farragofiction.com/ParkerLotLost/ <-- maybe this will be EastEastEast one day, that or ElevatorSim
     //11: http://farragofiction.com/DocSlaughterFileServer 
