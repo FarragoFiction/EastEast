@@ -45,11 +45,6 @@ export class Ria extends Quotidian {
             default_src: { src: "Placeholders/thematch.png", width: 50, height: 50 },
 
         };
-
-        const breachedSprite = {
-            default_src: { src: "Placeholders/match2.png", width: 50, height: 50 },
-
-        };
         const beats: AiBeat[] = [];
         const states = [new Match(room, 0, 0)];
 
@@ -79,7 +74,7 @@ export class Match extends Quotidian {
 
     constructor(room: Room, x: number, y: number) {
         const sprite = {
-            default_src: { src: "Placeholders/match2.png", width: 50, height: 50 },
+            default_src: { src: "Placeholders/match.png", width: 50, height: 50 },
 
         };
         const beats: AiBeat[] = [];

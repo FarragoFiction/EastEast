@@ -2493,9 +2493,6 @@ class Ria extends Quotidian_1.Quotidian {
         const sprite = {
             default_src: { src: "Placeholders/thematch.png", width: 50, height: 50 },
         };
-        const breachedSprite = {
-            default_src: { src: "Placeholders/match2.png", width: 50, height: 50 },
-        };
         const beats = [];
         const states = [new Match(room, 0, 0)];
         super(room, "Ria", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION]], sprite, "Ria sure looks like she's trying to figure something out!", beats, states);
@@ -2522,7 +2519,7 @@ exports.Ria = Ria;
 class Match extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "Placeholders/match2.png", width: 50, height: 50 },
+            default_src: { src: "Placeholders/match.png", width: 50, height: 50 },
         };
         const beats = [];
         super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION], Theme_1.all_themes[ThemeStorage_1.ANGER], Theme_1.all_themes[ThemeStorage_1.KILLING]], sprite, "The Match is burning...", beats);
@@ -2920,6 +2917,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.justice = 0; //how much do you trust your own judgement, how quick are you to judge
         this.originalFlavor = "";
         this.dead = false;
+        this.cachedAliases = [];
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
@@ -3074,7 +3072,11 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             this.movement_alg = new NoMovement_1.NoMovement(this);
         };
         this.aliases = () => {
-            return [this.name, ...(this.states.map((i) => i.name))];
+            if (!this.cachedAliases || this.cachedAliases.length === 0) {
+                //cached so if states change later they'll seem like a stranger (but if they breach they won't)
+                this.cachedAliases = [this.name, ...(this.states.map((i) => i.name))];
+            }
+            return this.cachedAliases;
         };
         /*
     

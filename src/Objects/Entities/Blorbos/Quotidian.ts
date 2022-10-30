@@ -154,6 +154,7 @@ export class Quotidian extends PhysicalObject {
     justice = 0; //how much do you trust your own judgement, how quick are you to judge
     originalFlavor = "";
     dead = false;
+    cachedAliases:string[] = [];
 
     sass?: HTMLElement;
     sassBegun?: Date;
@@ -381,7 +382,12 @@ export class Quotidian extends PhysicalObject {
     }
 
     aliases = () => {
-        return [this.name, ...(this.states.map((i) => i.name))];
+        if(!this.cachedAliases || this.cachedAliases.length === 0){
+            //cached so if states change later they'll seem like a stranger (but if they breach they won't)
+            this.cachedAliases =  [this.name, ...(this.states.map((i) => i.name))];
+        }
+        return this.cachedAliases;
+
     }
 
     /*
