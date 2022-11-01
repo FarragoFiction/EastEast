@@ -7,7 +7,7 @@ import { Theme } from "../../Theme";
 import { FLOORBACKGROUND } from "../../ThemeStorage";
 import { TARGETSTRING } from "../TargetFilter/baseFilter";
 
-export class SpawnObjectFromThemeUnderFloorAtFeet extends Action { //lawsuit
+export class SpawnObjectFromThemeUnderFloorAtMyFeet extends Action { //lawsuit
 
     recognizedCommands: string[] = []
     theme: Theme;
@@ -31,7 +31,10 @@ export class SpawnObjectFromThemeUnderFloorAtFeet extends Action { //lawsuit
 
         // const image: any = await addImageProcess(`images/Walkabout/Objects/UnderFloorObjects/${item.src}`) as HTMLImageElement;
  
-        for(let target of beat.targets){
+            const target = beat.owner;
+            if(!target){
+                return "";
+            }
             const raw_item = this.theme.pickPossibilityFor(subject.rand, FLOORBACKGROUND)
 
             const image = document.createElement("img");
@@ -56,7 +59,7 @@ export class SpawnObjectFromThemeUnderFloorAtFeet extends Action { //lawsuit
             item.flavorText = beat.processTags(item.flavorText);
             item.x = target.x;
             item.y = target.y;
-        }
+
 
  
 

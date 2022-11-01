@@ -740,6 +740,7 @@ const initFloorBackgrounds = () => {
     //i think my favorite part of all this being bg is this means the wanderer will never comment on it. nothing noteworthy about it, really
     floor_backgrounds[KILLING] = [{ src: "blood1.png", desc: "TODO" }, { src: "blood2.png", desc: "TODO" }, { src: "blood3.png", desc: "TODO" }, { src: "blood4.png", desc: "TODO" }, { src: "bloodpuddle.png", desc: "TODO" }];
     floor_backgrounds[TWISTING] = [{ src: "Minotaur2.png", desc: "TODO" }, { src: "NotMinotaur.png", desc: "TODO" }];
+    floor_backgrounds[FIRE] =  [{name: "Smoke", src: "smoke3.png", desc: "Is the fire about to flare up, or did it just burn out?"},{name: "Smoke", src: "smoke2.png", desc: "Is the fire about to flare up, or did it just burn out?"},{name: "Smoke", src: "smoke1.png", desc: "Is the fire about to flare up, or did it just burn out?"},{name: "Fire", src: "flame7.png", desc: "This used to be a precious memory."},{name: "Fire", src: "flame6.png", desc: "Let it all burn..."},{name: "Fire", src: "flame4.png", desc: "Let it all burn..."},{name: "Fire", src: "flame3.png", desc: "Let it all burn..."},{name: "Fire", src: "flame2.png", desc: "Let it all burn..."},{name: "Fire", src: "flame1.png", desc: "Let it all burn..."}];
 
     /*
     floor_backgrounds[LOVE] = ["stonewalls.png","roses.png"];

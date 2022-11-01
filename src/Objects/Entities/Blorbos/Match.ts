@@ -6,14 +6,18 @@ import { PhysicalObject } from "../../PhysicalObject";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { KILLING, FIRE, WEB, ADDICTION, MUSIC, ANGER } from "../../ThemeStorage";
+import { AddThemeToRoom } from "../Actions/AddThemeToRoom";
 import { DestroyObject } from "../Actions/DestroyObject";
 import { IncrementMyState } from "../Actions/IncrementMyState";
 import { SpawnObjectFromThemeUnderFloorAtFeet } from "../Actions/SpawnObjectFromThemeUnderFloorAtFeet";
+import { SpawnObjectFromThemeUnderFloorAtMyFeet } from "../Actions/SpawnObjectFromThemeUnderFloorAtMyFeet";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { TARGETSTRING } from "../TargetFilter/baseFilter";
+import { RandomTarget } from "../TargetFilter/RandomTarget";
 import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
 import { TargetIsBreeching } from "../TargetFilter/TargetIsBreaching";
+import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { Quotidian, Direction } from "./Quotidian";
 import { Relationship } from "./Relationship";
 
@@ -57,10 +61,10 @@ export class Ria extends Quotidian {
         const shallIGiveYouThisPear = new AiBeat(
             "Ria: Long For A Better Universe",
             [`Her eyes lock with horror on the ${TARGETSTRING}. "No....no..." She moans, sinking to her knees. "How could..." A giggle escapes her, like steam from a kettle... "How could any Universe allow this? How could..." Her voice is chocked out by flames and smoke as her body begins to ignite.  The sound of the flames sounds like music. 'If we burn it all~' they say, 'We can start anew! Won't you help me reset everything?`],
-            [new TargetIsAlive({invert: true})],
+            [new TargetIsAlive({invert: true}), new TargetIsBlorboOrBox()],
             [new IncrementMyState("no")],
-            true,
-            1000*60
+            false, //she only breaches the once
+            1000*10
         );
 
         const beats:AiBeat[] = [shallIGiveYouThisPear];
@@ -100,11 +104,11 @@ export class Match extends Quotidian {
         //yes, she will even burn fire. 
         const BurnObject = new AiBeat(
             "Match: Burn It All",
-            [`'It MUST be enough!', you hear the fire sing, 'One day I will burn enough that it will all come back!' The ${TARGETSTRING} burn.`,`With a sound like laughter and music, the ${TARGETSTRING} burns away to fire and ashes and smoke.`, ` The Match girl appears to be smiling and crying all at once as she burns ${TARGETSTRING} all away.`],
-            [],
-            [new DestroyObject(), new SpawnObjectFromThemeUnderFloorAtFeet(all_themes[FIRE])],
+            [`'It MUST be enough!', you hear the fire around the lit Match sing, 'One day I will burn enough that it will all come back!' the Match sings through the flames. The ${TARGETSTRING} burn.`,`With a sound like laughter and music, the Match girl burns away the ${TARGETSTRING}  to fire and ashes and smoke.`, ` The Match girl appears to be smiling and crying all at once as she burns ${TARGETSTRING} all away.`],
+            [new TargetNameIncludesAnyOfTheseWords(["Match"], {invert:true})],
+            [new SpawnObjectFromThemeUnderFloorAtMyFeet(all_themes[FIRE],"Despairing Flame","Surely if this burns enough something new can grow in its place."),new SpawnObjectFromThemeUnderFloorAtFeet(all_themes[FIRE],"Despairing Flame","Surely if this burns enough something new can grow in its place."), new AddThemeToRoom(all_themes[FIRE]),new DestroyObject() ],
             true,
-            2*60*1000
+            1000
         );
 
         const beats: AiBeat[] = [BurnObject];

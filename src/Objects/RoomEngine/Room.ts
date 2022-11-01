@@ -63,6 +63,7 @@ export class Room {
     eraseObject = (object: PhysicalObject)=>{
         removeItemOnce(this.blorbos, object);
         removeItemOnce(this.items, object);
+        object.container.remove();
     }
 
     getRandomThemeConcept = (concept: string) => {

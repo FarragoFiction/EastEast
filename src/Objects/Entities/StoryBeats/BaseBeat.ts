@@ -100,6 +100,10 @@ export class AiBeat {
         return ret;
     }
 
+    toString=()=>{
+        return this.command
+    }
+
     performActions = (current_room: Room) => {
         if(!this. owner){
             return console.error("ALWAYS clone beats, don't use them from list directly", this);

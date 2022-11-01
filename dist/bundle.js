@@ -381,6 +381,41 @@ exports.DeploySass = DeploySass;
 
 /***/ }),
 
+/***/ 3693:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DestroyObject = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const baseFilter_1 = __webpack_require__(9505);
+class DestroyObject extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const targets = beat.targets;
+            if (targets.length < 1) {
+                return `${subject.processedName()} can't see anything to descend into like that...`;
+            }
+            for (let target of targets) {
+                target.room.eraseObject(target);
+            }
+            subject.emitSass("?!");
+            return `${subject.processedName()} destroys utterly the ${baseFilter_1.TARGETSTRING}.`;
+        };
+    }
+}
+exports.DestroyObject = DestroyObject;
+
+
+/***/ }),
+
 /***/ 457:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1482,6 +1517,7 @@ class Look extends BaseAction_1.Action {
             }
             if (lookcloser instanceof Quotidian_1.Quotidian) {
                 retSoFar += `<p>Their stability level is: ${lookcloser.stabilityLevel}</p>`;
+                retSoFar += `<p>Their AI is is: ${(lookcloser.beats.join(","))}</p>`;
             }
             return retSoFar;
         };
@@ -1877,9 +1913,8 @@ exports.SpawnObjectFromThemeUnderFloorAtFeet = void 0;
 const BaseAction_1 = __webpack_require__(7042);
 const PhysicalObject_1 = __webpack_require__(8466);
 const ThemeStorage_1 = __webpack_require__(1288);
-const baseFilter_1 = __webpack_require__(9505);
 class SpawnObjectFromThemeUnderFloorAtFeet extends BaseAction_1.Action {
-    constructor(theme) {
+    constructor(theme, name, flavorText) {
         super();
         this.recognizedCommands = [];
         this.applyAction = (beat) => {
@@ -1887,32 +1922,95 @@ class SpawnObjectFromThemeUnderFloorAtFeet extends BaseAction_1.Action {
             if (!subject) {
                 return "";
             }
-            const raw_item = this.theme.pickPossibilityFor(subject.rand, ThemeStorage_1.FLOORBACKGROUND);
             // const image: any = await addImageProcess(`images/Walkabout/Objects/UnderFloorObjects/${item.src}`) as HTMLImageElement;
+            for (let target of beat.targets) {
+                const raw_item = this.theme.pickPossibilityFor(subject.rand, ThemeStorage_1.FLOORBACKGROUND);
+                const image = document.createElement("img");
+                image.src = `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`;
+                const item = new PhysicalObject_1.PhysicalObject(subject.room, this.name, 0, 0, image.width, image.height, [this.theme], 0, `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`, this.flavorText);
+                console.log("JR NOTE: trying to spawn ", item);
+                image.onload = () => {
+                    console.log("JR NOTE: item loaded ", item);
+                    item.width = image.width;
+                    item.height = image.height;
+                    item.updateRendering();
+                    subject.room.addItem(item);
+                };
+                if (target.name && target.name.toUpperCase().includes("PEEWEE") && item.name.toUpperCase().includes("BLOOD")) {
+                    item.container.style.filter = "hue-rotate(62deg) saturate(64%) brightness(224%)";
+                }
+                else {
+                }
+                item.name = beat.processTags(item.name);
+                item.flavorText = beat.processTags(item.flavorText);
+                item.x = target.x;
+                item.y = target.y;
+            }
+            return `${subject.processedName()} drops a(n) thing.`;
+        };
+        this.theme = theme;
+        this.name = name;
+        this.flavorText = flavorText;
+    }
+}
+exports.SpawnObjectFromThemeUnderFloorAtFeet = SpawnObjectFromThemeUnderFloorAtFeet;
+
+
+/***/ }),
+
+/***/ 1483:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SpawnObjectFromThemeUnderFloorAtMyFeet = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const PhysicalObject_1 = __webpack_require__(8466);
+const ThemeStorage_1 = __webpack_require__(1288);
+class SpawnObjectFromThemeUnderFloorAtMyFeet extends BaseAction_1.Action {
+    constructor(theme, name, flavorText) {
+        super();
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            // const image: any = await addImageProcess(`images/Walkabout/Objects/UnderFloorObjects/${item.src}`) as HTMLImageElement;
+            const target = beat.owner;
+            if (!target) {
+                return "";
+            }
+            const raw_item = this.theme.pickPossibilityFor(subject.rand, ThemeStorage_1.FLOORBACKGROUND);
             const image = document.createElement("img");
             image.src = `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`;
-            const item = new PhysicalObject_1.PhysicalObject(subject.room, `${baseFilter_1.TARGETSTRING}'s blood`, 0, 0, image.width, image.height, [this.theme], 0, `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`);
+            const item = new PhysicalObject_1.PhysicalObject(subject.room, this.name, 0, 0, image.width, image.height, [this.theme], 0, `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`, this.flavorText);
+            console.log("JR NOTE: trying to spawn ", item);
             image.onload = () => {
+                console.log("JR NOTE: item loaded ", item);
                 item.width = image.width;
                 item.height = image.height;
                 item.updateRendering();
                 subject.room.addItem(item);
             };
-            if (beat.targets[0].name.toUpperCase().includes("PEEWEE") && item.name.toUpperCase().includes("BLOOD")) {
+            if (target.name && target.name.toUpperCase().includes("PEEWEE") && item.name.toUpperCase().includes("BLOOD")) {
                 item.container.style.filter = "hue-rotate(62deg) saturate(64%) brightness(224%)";
             }
             else {
             }
             item.name = beat.processTags(item.name);
             item.flavorText = beat.processTags(item.flavorText);
-            item.x = beat.targets[0].x;
-            item.y = beat.targets[0].y;
-            return `${subject.processedName()} drops a(n) ${item.name}.`;
+            item.x = target.x;
+            item.y = target.y;
+            return `${subject.processedName()} drops a(n) thing.`;
         };
         this.theme = theme;
+        this.name = name;
+        this.flavorText = flavorText;
     }
 }
-exports.SpawnObjectFromThemeUnderFloorAtFeet = SpawnObjectFromThemeUnderFloorAtFeet;
+exports.SpawnObjectFromThemeUnderFloorAtMyFeet = SpawnObjectFromThemeUnderFloorAtMyFeet;
 
 
 /***/ }),
@@ -2389,8 +2487,8 @@ class EyeKiller extends Quotidian_1.Quotidian {
             const approachEgg = new BaseBeat_1.AiBeat("Killer: Go Egg", [`The Eye Killer sees the ${baseFilter_1.TARGETSTRING}.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
             const pickupEgg = new BaseBeat_1.AiBeat("Killer: Take Egg", [`The Eye Killer picks up the ${baseFilter_1.TARGETSTRING}.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60);
             //new IHaveObjectWithName(["Egg"], {invert: true}),new TargetHasObjectWithName(["Egg"], {invert: true}),
-            const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat("Killer: Kill", [`The Eye Killer brutally stabs the  ${baseFilter_1.TARGETSTRING} over and over until they stop twitching.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000);
-            const desecrateCorpse = new BaseBeat_1.AiBeat("Killer: Do Art", [`The Eye Killer appears to creating some sort of art piece out of what remains of the ${baseFilter_1.TARGETSTRING}.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING])], true, 30 * 1000);
+            const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat("Killer: Kill", [`The Eye Killer brutally stabs the  ${baseFilter_1.TARGETSTRING} over and over until they stop twitching.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING], `${baseFilter_1.TARGETSTRING}'s blood`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`)], true, 30 * 1000);
+            const desecrateCorpse = new BaseBeat_1.AiBeat("Killer: Do Art", [`The Eye Killer appears to creating some sort of art piece out of what remains of the ${baseFilter_1.TARGETSTRING}.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING], `${baseFilter_1.TARGETSTRING}'s blood`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`)], true, 30 * 1000);
             const beats = [
                 approachEgg,
                 pickupEgg,
@@ -2480,6 +2578,16 @@ exports.Match = exports.Ria = void 0;
 const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
+const AddThemeToRoom_1 = __webpack_require__(8072);
+const DestroyObject_1 = __webpack_require__(3693);
+const IncrementMyState_1 = __webpack_require__(9211);
+const SpawnObjectFromThemeUnderFloorAtFeet_1 = __webpack_require__(2888);
+const SpawnObjectFromThemeUnderFloorAtMyFeet_1 = __webpack_require__(1483);
+const BaseBeat_1 = __webpack_require__(1708);
+const baseFilter_1 = __webpack_require__(9505);
+const TargetIsAlive_1 = __webpack_require__(7064);
+const TargetIsBlorboBox_1 = __webpack_require__(4068);
+const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const Quotidian_1 = __webpack_require__(6387);
 const Relationship_1 = __webpack_require__(7739);
 /*
@@ -2493,7 +2601,9 @@ class Ria extends Quotidian_1.Quotidian {
         const sprite = {
             default_src: { src: "Placeholders/thematch.png", width: 50, height: 50 },
         };
-        const beats = [];
+        const shallIGiveYouThisPear = new BaseBeat_1.AiBeat("Ria: Long For A Better Universe", [`Her eyes lock with horror on the ${baseFilter_1.TARGETSTRING}. "No....no..." She moans, sinking to her knees. "How could..." A giggle escapes her, like steam from a kettle... "How could any Universe allow this? How could..." Her voice is chocked out by flames and smoke as her body begins to ignite.  The sound of the flames sounds like music. 'If we burn it all~' they say, 'We can start anew! Won't you help me reset everything?`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox()], [new IncrementMyState_1.IncrementMyState("no")], false, //she only breaches the once
+        1000 * 10);
+        const beats = [shallIGiveYouThisPear];
         const states = [new Match(room, 0, 0)];
         super(room, "Ria", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION]], sprite, "Ria sure looks like she's trying to figure something out!", beats, states);
         this.lore = "Parker says her soul has the shape of an Elephant. She feels too big, too loud, too clumsy. She feels she takes up so so much room and her problems are huge and insurmountable and she just wishes she could shrink into herself. She just wishes she could F1X TH1NGS so she could stop burdening the ones she loves.";
@@ -2521,7 +2631,9 @@ class Match extends Quotidian_1.Quotidian {
         const sprite = {
             default_src: { src: "Placeholders/match.png", width: 50, height: 50 },
         };
-        const beats = [];
+        //yes, she will even burn fire. 
+        const BurnObject = new BaseBeat_1.AiBeat("Match: Burn It All", [`'It MUST be enough!', you hear the fire around the lit Match sing, 'One day I will burn enough that it will all come back!' the Match sings through the flames. The ${baseFilter_1.TARGETSTRING} burn.`, `With a sound like laughter and music, the ${baseFilter_1.TARGETSTRING} burns away to fire and ashes and smoke.`, ` The Match girl appears to be smiling and crying all at once as she burns ${baseFilter_1.TARGETSTRING} all away.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Match"], { invert: true })], [new SpawnObjectFromThemeUnderFloorAtMyFeet_1.SpawnObjectFromThemeUnderFloorAtMyFeet(Theme_1.all_themes[ThemeStorage_1.FIRE], "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.FIRE], "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.FIRE]), new DestroyObject_1.DestroyObject()], true, 1000);
+        const beats = [BurnObject];
         super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION], Theme_1.all_themes[ThemeStorage_1.ANGER], Theme_1.all_themes[ThemeStorage_1.KILLING]], sprite, "The Match is burning...", beats);
         this.lore = "She burns because there is no more hope for this Universe. She tried so hard and gave so much and finally there is nothing left at all of her but ashes and heat. There is no hope. Time to give in to Rage and start over from scratch.";
         this.relationshipMap = new Map([
@@ -3594,6 +3706,9 @@ class AiBeat {
                 }
             }
             return ret;
+        };
+        this.toString = () => {
+            return this.command;
         };
         this.performActions = (current_room) => {
             if (!this.owner) {
@@ -5274,6 +5389,7 @@ const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 class PhysicalObject {
     constructor(room, name, x, y, width, height, themes, layer, src, flavorText, states) {
+        this.eraseMe = false; //more than death, being erased means you want the system to delete you outright, at least from rendering
         //why yes, this WILL cause delightful chaos. why can you put a hot dog inside a lightbulb? because its weird and offputting. and because you'll probably forget where you stashed that hotdog later on.  it would be TRIVIAL to make it so only living creatures can have inventory. I am making a deliberate choice to not do this.
         this.inventory = [];
         this.states_inialized = false;
@@ -5527,6 +5643,7 @@ const FriendlyAiBeat_1 = __webpack_require__(7717);
 const TargetHasObjectWithName_1 = __webpack_require__(4864);
 const TargetHasObjectWithTheme_1 = __webpack_require__(9093);
 const TargetIsAlive_1 = __webpack_require__(7064);
+const TargetIsBreaching_1 = __webpack_require__(3779);
 const TargetIsNearObjectWithName_1 = __webpack_require__(9587);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const Theme_1 = __webpack_require__(9702);
@@ -5606,7 +5723,7 @@ class FRIEND {
             ${this.start}
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li>Even before Camille joined Zampanio, her gift was unending strength at the cost of being barred from connections.</li><li>Her head is sliced clean off should she attach herself to others.</li><li>Zampanio's gift to her was allowing this curse to mutate.<li>And the curse is extremely easy to fool.</li></ol> </p>
-            ${this.end}`, "Camille is drawn to those fated for Death, and kills them before their fate can reach them. In this way, the Echidna Universe, as the arbiter of fate, can direct her to dstroy threats.  Camille is the only one from her Universe meant to be here, as she is extremely useful as an immune system. The fierce desire of Camille to preserver despite odds, to keep optimism in the face of despair, lead her to break the rules and tear a hole between the worlds, a hole that Parker gleefully exploited to toss his favorite blorbos into.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], { singleTarget: true }), new TargetIsAlive_1.TargetIsAlive({ invert: true })], []);
+            ${this.end}`, "Camille is drawn to those fated for Death, and kills them before their fate can reach them. In this way, the Echidna Universe, as the arbiter of fate, can direct her to dstroy threats.  Camille is the only one from her Universe meant to be here, as she is extremely useful as an immune system. The fierce desire of Camille to preserver despite odds, to keep optimism in the face of despair, lead her to break the rules and tear a hole between the worlds, a hole that Parker gleefully exploited to toss his favorite blorbos into. Camille is associated with the Crumbling Armor and the Funeral of the Dead Butterflies. She is Death aligned, as well as Doom.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Killer"], { singleTarget: true }), new TargetIsAlive_1.TargetIsAlive({ invert: true })], []);
             const giveBugToChicken = new FriendlyAiBeat_1.FriendlyAiBeat(`
             ${this.start}
             <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
@@ -5617,7 +5734,7 @@ class FRIEND {
             `, `
             ${this.start}
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
-            <ol><li>The snail came well before the chicken. <li>JR wrote a fic in response to ICs fic, though not the one about the Eye Killer eating an Egg.</li></ol> </p>
+            <ol><li>The snail came well before the chicken. <li>JR wrote a fic in response to ICs fic, though not the one about the Eye Killer eating an Egg.</li><li>FRIDAY MODE interacts weirdly with the APOCALYPSE!</li></ol> </p>
             ${this.end}`, "The Truth is that JR spent a not inconsiderable amount of effort adding chicken ai to this 'game'. So cut them so slack that the quests for the chicken are a bit repetitive. ", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Chicken"], { singleTarget: true }), new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true })], []);
             const givePlantToChicken = new FriendlyAiBeat_1.FriendlyAiBeat(`
             ${this.start}
@@ -5629,7 +5746,7 @@ class FRIEND {
             `, `
             ${this.start}
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
-            <ol><li>The chicken came well before the egg. <li>IC wrote the fic that had NAM cook the Killer an egg.</li></ol> </p>
+            <ol><li>The chicken came well before the egg. <li>IC wrote the fic that had NAM cook the Killer an egg.</li><li>'ls' and 'dir' teach you SECRETS</li></ol> </p>
             ${this.end}`, "The Truth is that JR spent a not inconsiderable amount of effort adding chicken ai to this 'game'.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Chicken"], { singleTarget: true }), new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.PLANTS]], { singleTarget: true })], []);
             const putMirrorNearYongki = new FriendlyAiBeat_1.FriendlyAiBeat(`
             ${this.start}
@@ -5642,7 +5759,7 @@ class FRIEND {
             ${this.start}
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li>The Corporation had a Mirror that would bring an alternate you into your body. <li>The Mirror would send the original you to a new place.</li><li>It could only do it once per Universe.</li><li>Yongki is what happens when you run out of Universes but keep beign exposed to the Mirror.</li><li>Zampanio's gift to Yongki is that he takes the Mirror wherver he goes in his Reflection now.</li></ol> </p>
-            ${this.end}`, "It seems IC enjoys multiple souls in a single body as a narrative conceit.  D follows the same path, though has not yet been Focused on by the Observers.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Yongki"], { singleTarget: true }), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Mirror"], { singleTarget: true })], []);
+            ${this.end}`, "It seems IC enjoys multiple souls in a single body as a narrative conceit.  D follows the same path, though has not yet been Focused on by the Observers. Yongki is associated with the MIRROR of REFLECTION. He is a STRANGER to everyone, even himself.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Yongki"], { singleTarget: true }), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Mirror"], { singleTarget: true })], []);
             const putMirrorNearCaptain = new FriendlyAiBeat_1.FriendlyAiBeat(`
             ${this.start}
             <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
@@ -5654,8 +5771,20 @@ class FRIEND {
             ${this.start}
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li> <li>Captain is the Original Yongki.</li><li>Only two people know how he returned to his Body.</li><li>Captain does not bring the Mirror with him. </li><li>When Captain is in charge, Yongki stares through his eyes.</li><li>This is enough to Reflect a Mirror.</li><li>Captain's gift from Zampanio is something else.</li></ol> </p>
-            ${this.end}`, "Captain has a crush on Doctor Fiona Slaughter.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Captain"], { singleTarget: true }), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Mirror"], { singleTarget: true })], []);
-            this.quests = [killTheEnd, putMirrorNearCaptain, putMirrorNearYongki, givePlantToChicken, giveBugToChicken, giveBookToBird, giveEggToKiller, killTheKiller];
+            ${this.end}`, "Captain has a crush on Doctor Fiona Slaughter. Captain is melded with the ALL AROUND HELPER and is a STRANGER in a STRANGE LAND.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Captain"], { singleTarget: true }), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Mirror"], { singleTarget: true })], []);
+            const KillSomeoneInFrontOfRia = new FriendlyAiBeat_1.FriendlyAiBeat(`
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: BREACH RIA. HELPFUL HINT: Make sure one (1) PERSON near RIA is DEAD!</p>
+            ${this.end}
+            `, `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li> <li>Ria wants nothing more than a better Universe.</li><li>Ria struggles with Addiction.</li><li>Ria is trying her best. </li><li>When the fires of heartbreak consume her, she will eventually come out the other end stronger. But not in this Loop of the Spiral.</li></ol> </p>
+            ${this.end}`, "Ria is associated with the SCORCHED GIRL, though something of the SINGING MACHINE shines through in her Web Alignment. Desolation and Web pull her strings. Hope and Rage.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Ria"], { singleTarget: true }), new TargetIsBreaching_1.TargetIsBreeching()], []);
+            this.quests = [KillSomeoneInFrontOfRia, killTheEnd, putMirrorNearCaptain, putMirrorNearYongki, givePlantToChicken, giveBugToChicken, giveBookToBird, giveEggToKiller, killTheKiller];
         };
         this.deployQuest = (quest) => {
             this.currentQuest = quest;
@@ -5778,7 +5907,7 @@ class Maze {
         };
         this.initializeBlorbos = () => {
             if (this.room) {
-                this.blorbos.push(new Underscore_1.Underscore(this.room, 150, 150), new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", []));
+                this.blorbos.push(new Underscore_1.Vik(this.room, 150, 150), new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", []));
                 this.blorbos.push(new SnailFriend_1.Snail(this.room, 150, 150));
                 this.blorbos.push(new ChickenFriend_1.Chicken(this.room, 150, 150));
                 this.blorbos.push(new EyeKiller_1.EyeKiller(this.room, 150, 150));
@@ -6010,6 +6139,11 @@ class Room {
         this.children = [];
         this.name = "???";
         this.pendingStoryBeats = [];
+        this.eraseObject = (object) => {
+            (0, ArrayUtils_1.removeItemOnce)(this.blorbos, object);
+            (0, ArrayUtils_1.removeItemOnce)(this.items, object);
+            object.container.remove();
+        };
         this.getRandomThemeConcept = (concept) => {
             if (this.themes.length === 0) {
                 return `[ERROR: NO THEME FOUND FOR ${this.name.toUpperCase()}]`;
@@ -6510,13 +6644,13 @@ class StoryBeat {
         this.commandClass = "'";
         this.responseClass = "";
         this.checkClass = (words, className) => {
-            console.log("JR NOTE: words are", words);
+            //console.log("JR NOTE: words are",words)
             for (let word of words) {
                 /* if(this.command.toUpperCase().includes(word.toUpperCase())){
                      this.commandClass = `${this.commandClass} ${className}`
                  }*/
                 if (this.response.toUpperCase().includes(word.toUpperCase())) {
-                    console.log(`JR NOTE: ${word} is in ${this.response} `);
+                    //console.log(`JR NOTE: ${word} is in ${this.response} `)
                     this.responseClass = `${this.responseClass} ${className}`;
                 }
             }
@@ -7435,7 +7569,7 @@ const initFloorForegrounds = () => {
     exports.floor_foregrounds[exports.LONELY] = [{ name: "Lonely figure", src: "lonely_figure.png", desc: "Alone..." }];
     //JR NOTE: from here down are just ghoul objects, need to go back and add things from sprite sheets as well
     exports.floor_foregrounds[exports.FREEDOM] = [{ src: "Freedom_Object.png", desc: "Have you seen the freedom object? It seems to have gotten out..." }];
-    exports.floor_foregrounds[exports.FIRE] = [{ src: "Fire_Object.png", desc: "Hmm Interesting..." }];
+    exports.floor_foregrounds[exports.FIRE] = [{ src: "Fire_Object.png", desc: "Hmm Interesting..." }, { name: "Smoke", src: "smoke3.png", desc: "Is the fire about to flare up, or did it just burn out?" }, { name: "Smoke", src: "smoke2.png", desc: "Is the fire about to flare up, or did it just burn out?" }, { name: "Smoke", src: "smoke1.png", desc: "Is the fire about to flare up, or did it just burn out?" }, { name: "Fire", src: "flame7.png", desc: "This used to be a precious memory." }, { name: "Fire", src: "flame6.png", desc: "Let it all burn..." }, { name: "Fire", src: "flame4.png", desc: "Let it all burn..." }, { name: "Fire", src: "flame3.png", desc: "Let it all burn..." }, { name: "Fire", src: "flame2.png", desc: "Let it all burn..." }, { name: "Fire", src: "flame1.png", desc: "Let it all burn..." }];
     exports.floor_foregrounds[exports.OCEAN] = [{ src: "Ocean_Object_2.png", desc: "Why is the Baltic Sea Anomaly an Ocean Object? Don't ask me..." }, { src: "Ocean_Object_1.png", desc: "The fish gasps for breath." }];
     exports.floor_foregrounds[exports.MATH] = [{ src: "Math_Object.png", desc: "Don't you hate it when the beads break? Makes math so much harder." }];
     exports.floor_foregrounds[exports.FAMILY] = [{ src: "Family_Object.png", desc: "Family Tree Pruned." }];
@@ -7472,6 +7606,7 @@ const initFloorBackgrounds = () => {
     //i think my favorite part of all this being bg is this means the wanderer will never comment on it. nothing noteworthy about it, really
     exports.floor_backgrounds[exports.KILLING] = [{ src: "blood1.png", desc: "TODO" }, { src: "blood2.png", desc: "TODO" }, { src: "blood3.png", desc: "TODO" }, { src: "blood4.png", desc: "TODO" }, { src: "bloodpuddle.png", desc: "TODO" }];
     exports.floor_backgrounds[exports.TWISTING] = [{ src: "Minotaur2.png", desc: "TODO" }, { src: "NotMinotaur.png", desc: "TODO" }];
+    exports.floor_backgrounds[exports.FIRE] = [{ name: "Smoke", src: "smoke3.png", desc: "Is the fire about to flare up, or did it just burn out?" }, { name: "Smoke", src: "smoke2.png", desc: "Is the fire about to flare up, or did it just burn out?" }, { name: "Smoke", src: "smoke1.png", desc: "Is the fire about to flare up, or did it just burn out?" }, { name: "Fire", src: "flame7.png", desc: "This used to be a precious memory." }, { name: "Fire", src: "flame6.png", desc: "Let it all burn..." }, { name: "Fire", src: "flame4.png", desc: "Let it all burn..." }, { name: "Fire", src: "flame3.png", desc: "Let it all burn..." }, { name: "Fire", src: "flame2.png", desc: "Let it all burn..." }, { name: "Fire", src: "flame1.png", desc: "Let it all burn..." }];
     /*
     floor_backgrounds[LOVE] = ["stonewalls.png","roses.png"];
     floor_backgrounds[BUGS] =  ["dirtwall.png","darkcorruption.png"];
@@ -12964,6 +13099,8 @@ var map = {
 	"./Objects/Entities/Actions/ConsiderIfOfficial.ts": 6448,
 	"./Objects/Entities/Actions/DeploySass": 4237,
 	"./Objects/Entities/Actions/DeploySass.ts": 4237,
+	"./Objects/Entities/Actions/DestroyObject": 3693,
+	"./Objects/Entities/Actions/DestroyObject.ts": 3693,
 	"./Objects/Entities/Actions/DestroyObjectInInventoryWithThemes": 457,
 	"./Objects/Entities/Actions/DestroyObjectInInventoryWithThemes.ts": 457,
 	"./Objects/Entities/Actions/DestroyRandomObjectInInventoryAndPhilosophise": 4516,
@@ -13028,6 +13165,8 @@ var map = {
 	"./Objects/Entities/Actions/SpawnObjectAtFeet.ts": 8884,
 	"./Objects/Entities/Actions/SpawnObjectFromThemeUnderFloorAtFeet": 2888,
 	"./Objects/Entities/Actions/SpawnObjectFromThemeUnderFloorAtFeet.ts": 2888,
+	"./Objects/Entities/Actions/SpawnObjectFromThemeUnderFloorAtMyFeet": 1483,
+	"./Objects/Entities/Actions/SpawnObjectFromThemeUnderFloorAtMyFeet.ts": 1483,
 	"./Objects/Entities/Actions/StopMoving": 4469,
 	"./Objects/Entities/Actions/StopMoving.ts": 4469,
 	"./Objects/Entities/Actions/Taste": 8520,

@@ -14,7 +14,7 @@ import { Quotidian } from "../Entities/Blorbos/Quotidian";
 import { Snail } from "../Entities/Blorbos/SnailFriend";
 import { JR } from "../Entities/Blorbos/JR";
 import { Ria } from "../Entities/Blorbos/Match";
-import { Underscore } from "../Entities/Blorbos/Underscore";
+import { Underscore, Vik } from "../Entities/Blorbos/Underscore";
 import { LIGHT } from "../Stat";
 import { Solemn } from "../Entities/Blorbos/Solemn";
 import { Devona } from "../Entities/Blorbos/Devona";
@@ -81,7 +81,7 @@ export class Maze {
 
     initializeBlorbos = () => {
         if (this.room) {
-            this.blorbos.push(new Underscore(this.room, 150,150),
+            this.blorbos.push(new Vik(this.room, 150,150),
              new Quotidian(this.room, "Quotidian", 150, 350, [all_themes[SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", []));
             this.blorbos.push(new Snail(this.room, 150, 150));
             this.blorbos.push(new Chicken(this.room, 150, 150));
