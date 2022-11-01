@@ -60,6 +60,11 @@ export class Room {
         this.init();
     }
 
+    eraseObject = (object: PhysicalObject)=>{
+        removeItemOnce(this.blorbos, object);
+        removeItemOnce(this.items, object);
+    }
+
     getRandomThemeConcept = (concept: string) => {
         if (this.themes.length === 0) {
             return `[ERROR: NO THEME FOUND FOR ${this.name.toUpperCase()}]`;

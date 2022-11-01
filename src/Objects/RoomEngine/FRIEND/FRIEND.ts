@@ -6,6 +6,7 @@ import { FriendlyAiBeat } from "../../Entities/StoryBeats/FriendlyAiBeat";
 import { TargetHasObjectWithName } from "../../Entities/TargetFilter/TargetHasObjectWithName";
 import { TargetHasObjectWithTheme } from "../../Entities/TargetFilter/TargetHasObjectWithTheme";
 import { TargetIsAlive } from "../../Entities/TargetFilter/TargetIsAlive";
+import { TargetIsBreeching } from "../../Entities/TargetFilter/TargetIsBreaching";
 import { TargetNearObjectWithName } from "../../Entities/TargetFilter/TargetIsNearObjectWithName";
 import { TargetNameIncludesAnyOfTheseWords } from "../../Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { PhysicalObject } from "../../PhysicalObject";
@@ -128,7 +129,7 @@ export class FRIEND{
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li>Even before Camille joined Zampanio, her gift was unending strength at the cost of being barred from connections.</li><li>Her head is sliced clean off should she attach herself to others.</li><li>Zampanio's gift to her was allowing this curse to mutate.<li>And the curse is extremely easy to fool.</li></ol> </p>
             ${this.end}`,
-            "Camille is drawn to those fated for Death, and kills them before their fate can reach them. In this way, the Echidna Universe, as the arbiter of fate, can direct her to dstroy threats.  Camille is the only one from her Universe meant to be here, as she is extremely useful as an immune system. The fierce desire of Camille to preserver despite odds, to keep optimism in the face of despair, lead her to break the rules and tear a hole between the worlds, a hole that Parker gleefully exploited to toss his favorite blorbos into.",
+            "Camille is drawn to those fated for Death, and kills them before their fate can reach them. In this way, the Echidna Universe, as the arbiter of fate, can direct her to dstroy threats.  Camille is the only one from her Universe meant to be here, as she is extremely useful as an immune system. The fierce desire of Camille to preserver despite odds, to keep optimism in the face of despair, lead her to break the rules and tear a hole between the worlds, a hole that Parker gleefully exploited to toss his favorite blorbos into. Camille is associated with the Crumbling Armor and the Funeral of the Dead Butterflies. She is Death aligned, as well as Doom.",
             [new TargetNameIncludesAnyOfTheseWords(["Killer"],{singleTarget:true}),new TargetIsAlive({invert:true})],
             []
         );
@@ -146,7 +147,7 @@ export class FRIEND{
             `
             ${this.start}
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
-            <ol><li>The snail came well before the chicken. <li>JR wrote a fic in response to ICs fic, though not the one about the Eye Killer eating an Egg.</li></ol> </p>
+            <ol><li>The snail came well before the chicken. <li>JR wrote a fic in response to ICs fic, though not the one about the Eye Killer eating an Egg.</li><li>FRIDAY MODE interacts weirdly with the APOCALYPSE!</li></ol> </p>
             ${this.end}`,
             "The Truth is that JR spent a not inconsiderable amount of effort adding chicken ai to this 'game'. So cut them so slack that the quests for the chicken are a bit repetitive. ",
             [new TargetNameIncludesAnyOfTheseWords(["Chicken"],{singleTarget:true}),new TargetHasObjectWithTheme([all_themes[BUGS]],{singleTarget:true})],
@@ -166,7 +167,7 @@ export class FRIEND{
             `
             ${this.start}
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
-            <ol><li>The chicken came well before the egg. <li>IC wrote the fic that had NAM cook the Killer an egg.</li></ol> </p>
+            <ol><li>The chicken came well before the egg. <li>IC wrote the fic that had NAM cook the Killer an egg.</li><li>'ls' and 'dir' teach you SECRETS</li></ol> </p>
             ${this.end}`,
             "The Truth is that JR spent a not inconsiderable amount of effort adding chicken ai to this 'game'.",
             [new TargetNameIncludesAnyOfTheseWords(["Chicken"],{singleTarget:true}),new TargetHasObjectWithTheme([all_themes[PLANTS]],{singleTarget:true})],
@@ -189,7 +190,7 @@ export class FRIEND{
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li>The Corporation had a Mirror that would bring an alternate you into your body. <li>The Mirror would send the original you to a new place.</li><li>It could only do it once per Universe.</li><li>Yongki is what happens when you run out of Universes but keep beign exposed to the Mirror.</li><li>Zampanio's gift to Yongki is that he takes the Mirror wherver he goes in his Reflection now.</li></ol> </p>
             ${this.end}`,
-            "It seems IC enjoys multiple souls in a single body as a narrative conceit.  D follows the same path, though has not yet been Focused on by the Observers.",
+            "It seems IC enjoys multiple souls in a single body as a narrative conceit.  D follows the same path, though has not yet been Focused on by the Observers. Yongki is associated with the MIRROR of REFLECTION. He is a STRANGER to everyone, even himself.",
             [new TargetNameIncludesAnyOfTheseWords(["Yongki"],{singleTarget:true}),new TargetNearObjectWithName(["Mirror"],{singleTarget:true})],
             []
         );
@@ -209,13 +210,33 @@ export class FRIEND{
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
             <ol><li> <li>Captain is the Original Yongki.</li><li>Only two people know how he returned to his Body.</li><li>Captain does not bring the Mirror with him. </li><li>When Captain is in charge, Yongki stares through his eyes.</li><li>This is enough to Reflect a Mirror.</li><li>Captain's gift from Zampanio is something else.</li></ol> </p>
             ${this.end}`,
-            "Captain has a crush on Doctor Fiona Slaughter.",
+            "Captain has a crush on Doctor Fiona Slaughter. Captain is melded with the ALL AROUND HELPER and is a STRANGER in a STRANGE LAND.",
             [new TargetNameIncludesAnyOfTheseWords(["Captain"],{singleTarget:true}),new TargetNearObjectWithName(["Mirror"],{singleTarget:true})],
             []
         );
 
+        const KillSomeoneInFrontOfRia = new FriendlyAiBeat(
+            `
+            ${this.start}
+            <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
+            <b>FRIEND</b>'s rewards are LORE and SECRETS.</p>
+            
+            <p>To receive rewards: BREACH RIA. HELPFUL HINT: Make sure one (1) PERSON near RIA is DEAD!</p>
+            ${this.end}
+            `,
 
-        this.quests = [killTheEnd,putMirrorNearCaptain,putMirrorNearYongki,givePlantToChicken,giveBugToChicken,giveBookToBird, giveEggToKiller, killTheKiller];
+            `
+            ${this.start}
+            <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
+            <ol><li> <li>Ria wants nothing more than a better Universe.</li><li>Ria struggles with Addiction.</li><li>Ria is trying her best. </li><li>When the fires of heartbreak consume her, she will eventually come out the other end stronger. But not in this Loop of the Spiral.</li></ol> </p>
+            ${this.end}`,
+            "Ria is associated with the SCORCHED GIRL, though something of the SINGING MACHINE shines through in her Web Alignment. Desolation and Web pull her strings. Hope and Rage.",
+            [new TargetNameIncludesAnyOfTheseWords(["Ria"],{singleTarget:true}),new TargetIsBreeching()],
+            []
+        );
+
+
+        this.quests = [KillSomeoneInFrontOfRia,killTheEnd,putMirrorNearCaptain,putMirrorNearYongki,givePlantToChicken,giveBugToChicken,giveBookToBird, giveEggToKiller, killTheKiller];
     }
 
     deployQuest = (quest: FriendlyAiBeat)=>{

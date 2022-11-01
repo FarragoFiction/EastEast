@@ -2,10 +2,18 @@
 
 import { Movement } from "../../MovementAlgs/BaseMovement";
 import { RandomMovement } from "../../MovementAlgs/RandomMovement";
+import { PhysicalObject } from "../../PhysicalObject";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { KILLING, FIRE, WEB, ADDICTION, MUSIC, ANGER } from "../../ThemeStorage";
+import { DestroyObject } from "../Actions/DestroyObject";
+import { IncrementMyState } from "../Actions/IncrementMyState";
+import { SpawnObjectFromThemeUnderFloorAtFeet } from "../Actions/SpawnObjectFromThemeUnderFloorAtFeet";
 import { AiBeat } from "../StoryBeats/BaseBeat";
+import { TARGETSTRING } from "../TargetFilter/baseFilter";
+import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
+import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
+import { TargetIsBreeching } from "../TargetFilter/TargetIsBreaching";
 import { Quotidian, Direction } from "./Quotidian";
 import { Relationship } from "./Relationship";
 
@@ -45,7 +53,17 @@ export class Ria extends Quotidian {
             default_src: { src: "Placeholders/thematch.png", width: 50, height: 50 },
 
         };
-        const beats: AiBeat[] = [];
+
+        const shallIGiveYouThisPear = new AiBeat(
+            "Ria: Long For A Better Universe",
+            [`Her eyes lock with horror on the ${TARGETSTRING}. "No....no..." She moans, sinking to her knees. "How could..." A giggle escapes her, like steam from a kettle... "How could any Universe allow this? How could..." Her voice is chocked out by flames and smoke as her body begins to ignite.  The sound of the flames sounds like music. 'If we burn it all~' they say, 'We can start anew! Won't you help me reset everything?`],
+            [new TargetIsAlive({invert: true})],
+            [new IncrementMyState("no")],
+            true,
+            1000*60
+        );
+
+        const beats:AiBeat[] = [shallIGiveYouThisPear];
         const states = [new Match(room, 0, 0)];
 
         super(room, "Ria", x, y, [all_themes[FIRE], all_themes[MUSIC], all_themes[WEB], all_themes[ADDICTION]], sprite,
@@ -77,7 +95,19 @@ export class Match extends Quotidian {
             default_src: { src: "Placeholders/match.png", width: 50, height: 50 },
 
         };
-        const beats: AiBeat[] = [];
+
+
+        //yes, she will even burn fire. 
+        const BurnObject = new AiBeat(
+            "Match: Burn It All",
+            [`'It MUST be enough!', you hear the fire sing, 'One day I will burn enough that it will all come back!' The ${TARGETSTRING} burn.`,`With a sound like laughter and music, the ${TARGETSTRING} burns away to fire and ashes and smoke.`, ` The Match girl appears to be smiling and crying all at once as she burns ${TARGETSTRING} all away.`],
+            [],
+            [new DestroyObject(), new SpawnObjectFromThemeUnderFloorAtFeet(all_themes[FIRE])],
+            true,
+            2*60*1000
+        );
+
+        const beats: AiBeat[] = [BurnObject];
 
         super(room, "Match", x, y, [all_themes[FIRE], all_themes[MUSIC], all_themes[WEB], all_themes[ADDICTION], all_themes[ANGER], all_themes[KILLING]], sprite,
             "The Match is burning...", beats);

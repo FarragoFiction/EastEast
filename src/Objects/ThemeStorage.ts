@@ -702,7 +702,7 @@ const initFloorForegrounds = () => {
 
     //JR NOTE: from here down are just ghoul objects, need to go back and add things from sprite sheets as well
     floor_foregrounds[FREEDOM] =  [{ src: "Freedom_Object.png", desc: "Have you seen the freedom object? It seems to have gotten out..." }];
-    floor_foregrounds[FIRE] =  [{ src: "Fire_Object.png", desc: "Hmm Interesting..."}];
+    floor_foregrounds[FIRE] =  [{ src: "Fire_Object.png", desc: "Hmm Interesting..."},{name: "Smoke", src: "smoke3.png", desc: "Is the fire about to flare up, or did it just burn out?"},{name: "Smoke", src: "smoke2.png", desc: "Is the fire about to flare up, or did it just burn out?"},{name: "Smoke", src: "smoke1.png", desc: "Is the fire about to flare up, or did it just burn out?"},{name: "Fire", src: "flame7.png", desc: "This used to be a precious memory."},{name: "Fire", src: "flame6.png", desc: "Let it all burn..."},{name: "Fire", src: "flame4.png", desc: "Let it all burn..."},{name: "Fire", src: "flame3.png", desc: "Let it all burn..."},{name: "Fire", src: "flame2.png", desc: "Let it all burn..."},{name: "Fire", src: "flame1.png", desc: "Let it all burn..."}];
     floor_foregrounds[OCEAN] =  [{ src: "Ocean_Object_2.png", desc: "Why is the Baltic Sea Anomaly an Ocean Object? Don't ask me..."},{ src: "Ocean_Object_1.png", desc: "The fish gasps for breath."}];
     floor_foregrounds[MATH] =  [{ src: "Math_Object.png", desc: "Don't you hate it when the beads break? Makes math so much harder." }];
     floor_foregrounds[FAMILY] = [{ src: "Family_Object.png", desc: "Family Tree Pruned."}];
