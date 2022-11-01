@@ -255,7 +255,7 @@ export class Room {
             const doorRect = door.getBoundingClientRect()
             if (boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())) {
                 this.maze.playDoorSound();
-                if (blorbo.name !== "Peewee") {
+                if (!blorbo.name.includes("Peewee")) {
                     this.removeBlorbo(blorbo);
                     this.maze.addStorybeat(new StoryBeat(`${blorbo.name} Leave`, `${blorbo.name} leaves out the NORTH DOOR.`))
 
@@ -277,7 +277,7 @@ export class Room {
             const doorRect = door.getBoundingClientRect();
             if (boundingBoxesIntersect(doorRect, blorboRect)) {
                 this.maze.playDoorSound();
-                if (blorbo.name !== "Peewee") {
+                if (!blorbo.name.includes("Peewee")) {
                     this.removeBlorbo(blorbo);
                     this.maze.addStorybeat(new StoryBeat(`${blorbo.name} Leave`, `${blorbo.name} leaves out the SOUTH DOOR.`))
                 } else {
@@ -298,7 +298,7 @@ export class Room {
             const doorRect = door.getBoundingClientRect()
             if (boundingBoxesIntersect(doorRect, blorbo.container.getBoundingClientRect())) {
                 this.maze.playDoorSound();
-                if (blorbo.name !== "Peewee") {
+                if (!blorbo.name.includes("Peewee")) {
                     this.removeBlorbo(blorbo);
                     this.maze.addStorybeat(new StoryBeat(`${blorbo.name} Leave`, `${blorbo.name} leaves out the EAST DOOR.`))
 
