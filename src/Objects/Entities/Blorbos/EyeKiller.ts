@@ -172,4 +172,19 @@ export class Innocent extends Quotidian{
         const states = [new EyeKiller(room,0,0)];
         super(room,"Innocent", x,y,[all_themes[FAMILY],all_themes[ANGELS]],sprite,"Wow, she seems totally innocent!", beats, states);
     }
+
+    checkFilters = ()=>{
+        //const dark_mask = `mask-image: radial-gradient(ellipse at ${wandererLoc.x} ${wandererLoc.y}, black 0%,  10%, rgba(0, 0, 0, 0.15) 25%);`;
+        this.filterStringAppliedToRoom = "";
+        for(let theme of this.themes){
+            const option =  theme.pickPossibilityFor(this.rand,FILTERS);
+            if(!option.includes("ERROR")){
+                this.filterStringAppliedToRoom += option;
+            }
+        }
+        if(this.room.peewee){
+            this.room.peewee.horrorGame = true;
+        }
+        this.room.applyFilter(this.filterStringAppliedToRoom); //do not overwrite
+    }
 }   

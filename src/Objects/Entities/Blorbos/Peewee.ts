@@ -99,7 +99,9 @@ export class Peewee extends Quotidian {
         }
 
         if(this.horrorGame){
-            this.room.element.style.maskImage = ` radial-gradient(ellipse at ${this.x}px ${this.y}px, black 0%,  10%, rgba(0, 0, 0, 0.15) 25%)`;
+            const css = `radial-gradient(ellipse at ${this.x}px ${this.y}px, black 0%,  10%, rgba(0, 0, 0, 0.15) 25%)`;
+            this.room.element.style.webkitMaskImage = css;
+            this.room.element.style.maskImage = css;
 
         }
         //don't mind FRIEND, just a lil parasite on you 

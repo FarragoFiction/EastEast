@@ -37,6 +37,8 @@ export class PhysicalObject {
     flavorText: string;
     themes: Theme[];
     layer: number;
+    filterString = "";
+
     lore = "GLITCH"
     //most objects won't have alternate states, but artifacts and blorbos (who breach), will
     states: PhysicalObject[] = [];
@@ -159,6 +161,21 @@ export class PhysicalObject {
         })
 
     }
+
+        //if you give me a filter i'll remove it and nothing else (useful for when blorbos dies)
+        clearFilterPart = (filter: string)=>{
+            this.filterString = this.filterString.replaceAll(filter,"");
+            this.container.style.filter = this.filterString;
+    
+        }
+    
+        applyFilter = (filter: string, overwrite = true)=>{
+            if(overwrite){
+                this.filterString = "";
+            }
+            this.filterString += filter;
+            this.container.style.filter = this.filterString;
+        }
 
     dropObject = (object: PhysicalObject) => {
         object.x = this.x;

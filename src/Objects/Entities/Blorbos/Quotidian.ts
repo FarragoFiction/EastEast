@@ -125,7 +125,6 @@ export class Quotidian extends PhysicalObject {
     maxSpeed = 20;
     gender = NB;
     minSpeed = 1;
-    filterString = "";
     filterStringAppliedToRoom = "";
 
     currentSpeed = 10;

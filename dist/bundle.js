@@ -2498,6 +2498,20 @@ class EyeKiller extends Quotidian_1.Quotidian {
             ];
             this.makeBeatsMyOwn(beats);
         };
+        this.checkFilters = () => {
+            //const dark_mask = `mask-image: radial-gradient(ellipse at ${wandererLoc.x} ${wandererLoc.y}, black 0%,  10%, rgba(0, 0, 0, 0.15) 25%);`;
+            this.filterStringAppliedToRoom = "";
+            for (let theme of this.themes) {
+                const option = theme.pickPossibilityFor(this.rand, ThemeStorage_1.FILTERS);
+                if (!option.includes("ERROR")) {
+                    this.filterStringAppliedToRoom += option;
+                }
+            }
+            if (this.room.peewee) {
+                this.room.peewee.horrorGame = true;
+            }
+            this.room.applyFilter(this.filterStringAppliedToRoom); //do not overwrite
+        };
         this.setupAI();
         this.breaching = true;
     }
@@ -2523,6 +2537,20 @@ class Innocent extends Quotidian_1.Quotidian {
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
         this.lore = "She should not be here. She is not part of the Loop.  The Eye Killer made sure of it. And yet. If the Killer falls...the Innocent is the Killer. In the end.";
+        this.checkFilters = () => {
+            //const dark_mask = `mask-image: radial-gradient(ellipse at ${wandererLoc.x} ${wandererLoc.y}, black 0%,  10%, rgba(0, 0, 0, 0.15) 25%);`;
+            this.filterStringAppliedToRoom = "";
+            for (let theme of this.themes) {
+                const option = theme.pickPossibilityFor(this.rand, ThemeStorage_1.FILTERS);
+                if (!option.includes("ERROR")) {
+                    this.filterStringAppliedToRoom += option;
+                }
+            }
+            if (this.room.peewee) {
+                this.room.peewee.horrorGame = true;
+            }
+            this.room.applyFilter(this.filterStringAppliedToRoom); //do not overwrite
+        };
     }
 }
 exports.Innocent = Innocent;
@@ -2632,7 +2660,7 @@ class Match extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/match.png", width: 50, height: 50 },
         };
         //yes, she will even burn fire. 
-        const BurnObject = new BaseBeat_1.AiBeat("Match: Burn It All", [`'It MUST be enough!', you hear the fire around the lit Match sing, 'One day I will burn enough that it will all come back!' the Match sings through the flames. The ${baseFilter_1.TARGETSTRING} burn.`, `With a sound like laughter and music, the ${baseFilter_1.TARGETSTRING} burns away to fire and ashes and smoke.`, ` The Match girl appears to be smiling and crying all at once as she burns ${baseFilter_1.TARGETSTRING} all away.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Match"], { invert: true })], [new SpawnObjectFromThemeUnderFloorAtMyFeet_1.SpawnObjectFromThemeUnderFloorAtMyFeet(Theme_1.all_themes[ThemeStorage_1.FIRE], "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.FIRE], "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.FIRE]), new DestroyObject_1.DestroyObject()], true, 1000);
+        const BurnObject = new BaseBeat_1.AiBeat("Match: Burn It All", [`'It MUST be enough!', you hear the fire around the lit Match sing, 'One day I will burn enough that it will all come back!' the Match sings through the flames. The ${baseFilter_1.TARGETSTRING} burn.`, `With a sound like laughter and music, the Match girl burns away the ${baseFilter_1.TARGETSTRING}  to fire and ashes and smoke.`, ` The Match girl appears to be smiling and crying all at once as she burns ${baseFilter_1.TARGETSTRING} all away.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Match"], { invert: true })], [new SpawnObjectFromThemeUnderFloorAtMyFeet_1.SpawnObjectFromThemeUnderFloorAtMyFeet(Theme_1.all_themes[ThemeStorage_1.FIRE], "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.FIRE], "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.FIRE]), new DestroyObject_1.DestroyObject()], true, 1000);
         const beats = [BurnObject];
         super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION], Theme_1.all_themes[ThemeStorage_1.ANGER], Theme_1.all_themes[ThemeStorage_1.KILLING]], sprite, "The Match is burning...", beats);
         this.lore = "She burns because there is no more hope for this Universe. She tried so hard and gave so much and finally there is nothing left at all of her but ashes and heat. There is no hope. Time to give in to Rage and start over from scratch.";
@@ -2828,6 +2856,32 @@ class Peewee extends Quotidian_1.Quotidian {
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
         this.gender = Quotidian_1.MALE;
+        this.horrorGame = false;
+        this.tick = (actionRate, roomBeats) => {
+            //console.log("JR NOTE: trying to tick: ", this.name);
+            if (this.dead) {
+                return;
+            }
+            if (this.breaching) {
+                this.checkFilters();
+            }
+            if (this.horrorGame) {
+                const css = `radial-gradient(ellipse at ${this.x}px ${this.y}px, black 0%,  10%, rgba(0, 0, 0, 0.15) 25%)`;
+                this.room.element.style.webkitMaskImage = css;
+                this.room.element.style.maskImage = css;
+            }
+            //don't mind FRIEND, just a lil parasite on you 
+            if ((this.friend)) {
+                this.friend.tick();
+            }
+            //you can move quicker than you can think
+            if (this.itsBeenAwhileSinceLastBeat(actionRate)) {
+                this.processAiBeat(roomBeats);
+            }
+            this.movement_alg.tick();
+            this.syncSpriteToDirection();
+            this.updateRendering();
+        };
         //peewee's ai is user based. you can tell him to do various actions. 
         //there is no trigger. only actions.
         this.processStorybeat = (beat) => {
@@ -3006,6 +3060,8 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.maxSpeed = 20;
         this.gender = exports.NB;
         this.minSpeed = 1;
+        this.filterString = "";
+        this.filterStringAppliedToRoom = "";
         this.currentSpeed = 10;
         this.instablityRate = 1; //if something goes wrong, how much does it effect their stability level?
         this.stabilityLevel = 113; //if it hits 0 they breach.
@@ -3162,6 +3218,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.die = (causeOfDeath, killerName) => {
             console.log("JR NOTE: trying to kill", this.name, causeOfDeath);
             if (!this.dead) {
+                this.room.clearFilterPart(this.filterStringAppliedToRoom);
                 this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
                 this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
                 this.room.processDeath(this);
@@ -3314,10 +3371,23 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 (0, ArrayUtils_1.removeItemOnce)(this.beats, beat);
             }
         };
+        this.checkFilters = () => {
+            this.filterStringAppliedToRoom = "";
+            for (let theme of this.themes) {
+                const option = theme.pickPossibilityFor(this.rand, ThemeStorage_1.FILTERS);
+                if (!option.includes("ERROR")) {
+                    this.filterStringAppliedToRoom += option;
+                }
+            }
+            this.room.applyFilter(this.filterStringAppliedToRoom); //do not overwrite
+        };
         this.tick = (actionRate, roomBeats) => {
             //console.log("JR NOTE: trying to tick: ", this.name);
             if (this.dead) {
                 return;
+            }
+            if (this.breaching) {
+                this.checkFilters();
             }
             //don't mind FRIEND, just a lil parasite on you 
             if ((this.friend)) {
@@ -3506,6 +3576,12 @@ exports.Underscore = exports.Vik = void 0;
 const NoMovement_1 = __webpack_require__(4956);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
+const ChangeMyStabilityLevelByAmount_1 = __webpack_require__(8801);
+const IncrementMyState_1 = __webpack_require__(9211);
+const BaseBeat_1 = __webpack_require__(1708);
+const baseFilter_1 = __webpack_require__(9505);
+const TargetIsBreaching_1 = __webpack_require__(3779);
+const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
 const Quotidian_1 = __webpack_require__(6387);
 /*
     todo: once relationship engine is cmoplete vik picks someone at random to hate, and tehn anyone they hate they insult
@@ -3516,7 +3592,10 @@ class Vik extends Quotidian_1.Quotidian {
         const sprite = {
             default_src: { src: "Placeholders/_.png", width: 56, height: 100 },
         };
-        const beats = [];
+        const becomeHungry = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Become Hungry`, [`${baseFilter_1.SUBJECTSTRING}'s many eyes all close briefly. When they open again, something is wrong. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true })], //don't go if you're already unstable
+        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30);
+        const breachIfTooHungry = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Embrace Corruption`, [`You don't understand what you are seeing. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(13, { singleTarget: true, kMode: true }), new TargetIsBreaching_1.TargetIsBreeching({ invert: true, singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
+        const beats = [breachIfTooHungry, becomeHungry];
         super(room, "Vik", x, y, [Theme_1.all_themes[ThemeStorage_1.DARKNESS], Theme_1.all_themes[ThemeStorage_1.CENSORSHIP], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.DECAY], Theme_1.all_themes[ThemeStorage_1.LOVE], Theme_1.all_themes[ThemeStorage_1.FLESH]], sprite, "Their face is lightly censored, but you can still make out most of them.", beats);
         this.lore = "Their soul has long since rotted off them in viscous chunks, but Parker claims it once was a cat.";
         this.gender = Quotidian_1.NB;
@@ -3530,6 +3609,52 @@ class Vik extends Quotidian_1.Quotidian {
         this.dislikeMultiplier = 3.0;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
+        this.die = (causeOfDeath, killerName) => {
+            if (!this.dead) {
+                //things do NOT stop being censored just because vik is dead. if anything, they get worse. 
+                this.room.applyFilter(`blur(500) hue-rotate(681deg) brightness(60%)`, true);
+                this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
+                this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
+                this.room.processDeath(this);
+                this.dead = true;
+                this.killerName = killerName;
+                this.container.style.zIndex = `${12}`; //fade into the background
+            }
+        };
+        this.tick = (actionRate, roomBeats) => {
+            //console.log("JR NOTE: trying to tick: ", this.name);
+            this.checkFilters(); //dying does not stop vik, if anything it gets worse
+            if (this.dead) {
+                return;
+            }
+            if (this.breaching) {
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+                console.log(`%cDON'T LOOK!%c  DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LO DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! OK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK! DON'T LOOK!`, "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:25px;text-decoration:underline;", "font-weight: bold;font-family: 'Courier New', monospace;color:red; font-size:13px;");
+            }
+            //don't mind FRIEND, just a lil parasite on you 
+            if ((this.friend)) {
+                this.friend.tick();
+            }
+            //you can move quicker than you can think
+            if (this.itsBeenAwhileSinceLastBeat(actionRate)) {
+                this.processAiBeat(roomBeats);
+            }
+            this.movement_alg.tick();
+            this.syncSpriteToDirection();
+            this.updateRendering();
+        };
     }
 }
 exports.Vik = Vik;
@@ -5953,7 +6078,7 @@ class Maze {
                 return;
             }
             //const blorbosToTest = ["Camille", "Ria"];
-            const blorbosToTest = ["Ria", "Camille"];
+            const blorbosToTest = ["Vik"];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
                     for (let theme of blorbo.themes) {
@@ -6130,6 +6255,7 @@ class Room {
         this.width = 400;
         this.height = 600;
         this.beats = []; //combo of things like romance that can happen anywhere and specifics based on the rooms themes
+        this.filterString = ""; //any time you're asked to rerender put this in as your filter.
         this.timesVisited = 0;
         this.blorbos = [];
         this.items = [];
@@ -6188,12 +6314,25 @@ class Room {
             this.maze.chantingEngine.start();
             this.tick();
         };
+        //if you give me a filter i'll remove it and nothing else (useful for when blorbos dies)
+        this.clearFilterPart = (filter) => {
+            this.filterString = this.filterString.replaceAll(filter, "");
+            this.element.style.filter = this.filterString;
+        };
+        this.applyFilter = (filter, overwrite = true) => {
+            if (overwrite) {
+                this.filterString = "";
+            }
+            this.filterString += filter;
+            this.element.style.filter = this.filterString;
+        };
         this.render = async () => {
             console.log("JR NOTE: I am rendering a room", this.name);
             this.apocalypseTime();
             this.timesVisited++;
             await this.spawnChildrenIfNeeded();
             this.element.innerHTML = "";
+            this.element.style.filter = this.filterString;
             this.width = this.element.getBoundingClientRect().width;
             this.height = this.element.getBoundingClientRect().height;
             const wall = (0, misc_1.createElementWithIdAndParent)("div", this.element, "wall");
