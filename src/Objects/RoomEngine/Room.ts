@@ -34,7 +34,7 @@ export class Room {
 
     //a room has a source if they are inside of something
     totemObject?: PhysicalObject;
-
+    filterString = "";//any time you're asked to rerender put this in as your filter.
     timesVisited = 0;
     blorbos: Quotidian[] = [];
     peewee?: Peewee; //peewee is optional to the universe;
@@ -115,12 +115,28 @@ export class Room {
         this.tick();
     }
 
+    //if you give me a filter i'll remove it and nothing else (useful for when blorbos dies)
+    clearFilterPart = (filter: string)=>{
+        this.filterString = this.filterString.replaceAll(filter,"");
+        this.element.style.filter = this.filterString;
+
+    }
+
+    applyFilter = (filter: string, overwrite = true)=>{
+        if(overwrite){
+            this.filterString = "";
+        }
+        this.filterString += filter;
+        this.element.style.filter = this.filterString;
+    }
+
     render = async () => {
         console.log("JR NOTE: I am rendering a room", this.name)
         this.apocalypseTime();
         this.timesVisited++;
         await this.spawnChildrenIfNeeded();
         this.element.innerHTML = "";
+        this.element.style.filter = this.filterString;
         this.width = this.element.getBoundingClientRect().width;
         this.height = this.element.getBoundingClientRect().height;
         const wall = createElementWithIdAndParent("div", this.element, "wall");

@@ -5,7 +5,7 @@ import { NoMovement } from "../../MovementAlgs/NoMovement";
 import { RandomMovement } from "../../MovementAlgs/RandomMovement";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
-import { HUNTING, KILLING, FAMILY, DARKNESS, ANGELS } from "../../ThemeStorage";
+import { HUNTING, KILLING, FAMILY, DARKNESS, ANGELS, FILTERS } from "../../ThemeStorage";
 import { AddThemeToRoom } from "../Actions/AddThemeToRoom";
 import { FollowObject } from "../Actions/FollowObject";
 import { IncrementMyState } from "../Actions/IncrementMyState";
@@ -117,6 +117,22 @@ export class EyeKiller extends Quotidian{
         ];
         this.makeBeatsMyOwn(beats);
     }
+
+    checkFilters = ()=>{
+        //const dark_mask = `mask-image: radial-gradient(ellipse at ${wandererLoc.x} ${wandererLoc.y}, black 0%,  10%, rgba(0, 0, 0, 0.15) 25%);`;
+        this.filterStringAppliedToRoom = "";
+        for(let theme of this.themes){
+            const option =  theme.pickPossibilityFor(this.rand,FILTERS);
+            if(!option.includes("ERROR")){
+                this.filterStringAppliedToRoom += option;
+            }
+        }
+        if(this.room.peewee){
+            this.room.peewee.horrorGame = true;
+        }
+        this.room.applyFilter(this.filterStringAppliedToRoom); //do not overwrite
+    }
+
 }   
 
 

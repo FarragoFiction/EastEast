@@ -10,7 +10,7 @@ import { PhysicalObject } from "../../PhysicalObject"
 import { FRIEND } from "../../RoomEngine/FRIEND/FRIEND"
 import { Room } from "../../RoomEngine/Room"
 import { Theme } from "../../Theme"
-import { COMPLIMENT, INSULT, OBJECT } from "../../ThemeStorage"
+import { COMPLIMENT, FILTERS, INSULT, OBJECT } from "../../ThemeStorage"
 import { DeploySass } from "../Actions/DeploySass"
 import { PickupObject } from "../Actions/PickupObject"
 import { AiBeat } from "../StoryBeats/BaseBeat"
@@ -125,6 +125,8 @@ export class Quotidian extends PhysicalObject {
     maxSpeed = 20;
     gender = NB;
     minSpeed = 1;
+    filterString = "";
+    filterStringAppliedToRoom = "";
 
     currentSpeed = 10;
     instablityRate = 1; //if something goes wrong, how much does it effect their stability level?
@@ -354,6 +356,7 @@ export class Quotidian extends PhysicalObject {
     die = (causeOfDeath: string, killerName: string) => {
         console.log("JR NOTE: trying to kill", this.name, causeOfDeath)
         if (!this.dead) {
+            this.room.clearFilterPart(this.filterStringAppliedToRoom);
             this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
             this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
             this.room.processDeath(this);
@@ -544,10 +547,24 @@ export class Quotidian extends PhysicalObject {
 
     }
 
+    checkFilters = ()=>{
+        this.filterStringAppliedToRoom = "";
+        for(let theme of this.themes){
+            const option =  theme.pickPossibilityFor(this.rand,FILTERS);
+            if(!option.includes("ERROR")){
+                this.filterStringAppliedToRoom += option;
+            }
+        }
+        this.room.applyFilter(this.filterStringAppliedToRoom); //do not overwrite
+    }
+
     tick = (actionRate: number, roomBeats: AiBeat[]) => {
         //console.log("JR NOTE: trying to tick: ", this.name);
         if (this.dead) {
             return;
+        }
+        if(this.breaching ){
+             this.checkFilters();
         }
         //don't mind FRIEND, just a lil parasite on you 
         if ((this.friend)) {

@@ -58,6 +58,7 @@ export class Peewee extends Quotidian {
     direction = Direction.DOWN; //movement algorithm can change or use this.
     movement_alg: Movement = new NoMovement(this);
     gender = MALE;
+    horrorGame = false;
 
     //TODO have a movement algorithm (effects can shift this)
     /*
@@ -88,6 +89,33 @@ export class Peewee extends Quotidian {
         this.friend = new FRIEND(this.room.maze, this);
     }
 
+    tick = (actionRate: number, roomBeats: AiBeat[]) => {
+        //console.log("JR NOTE: trying to tick: ", this.name);
+        if (this.dead) {
+            return;
+        }
+        if(this.breaching ){
+             this.checkFilters();
+        }
+
+        if(this.horrorGame){
+            this.room.element.style.maskImage = ` radial-gradient(ellipse at ${this.x}px ${this.y}px, black 0%,  10%, rgba(0, 0, 0, 0.15) 25%)`;
+
+        }
+        //don't mind FRIEND, just a lil parasite on you 
+        if ((this.friend)) {
+            this.friend.tick();
+        }
+        //you can move quicker than you can think
+        if (this.itsBeenAwhileSinceLastBeat(actionRate)) {
+            this.processAiBeat(roomBeats);
+        }
+        this.movement_alg.tick();
+        this.syncSpriteToDirection();
+        this.updateRendering();
+    }
+
+    
 
 
     //peewee's ai is user based. you can tell him to do various actions. 
