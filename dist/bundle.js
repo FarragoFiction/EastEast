@@ -6259,7 +6259,7 @@ const StringUtils_1 = __webpack_require__(7036);
 const StoryBeat_1 = __webpack_require__(5504);
 const End_1 = __webpack_require__(8115);
 const CommunalAI_1 = __webpack_require__(868);
-const artifact_rate = 0.05; //lower is more artifacts
+const artifact_rate = 0.55; //lower is more artifacts
 class Room {
     //objects
     //people
