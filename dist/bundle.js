@@ -3060,7 +3060,6 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.maxSpeed = 20;
         this.gender = exports.NB;
         this.minSpeed = 1;
-        this.filterString = "";
         this.filterStringAppliedToRoom = "";
         this.currentSpeed = 10;
         this.instablityRate = 1; //if something goes wrong, how much does it effect their stability level?
@@ -5518,6 +5517,7 @@ class PhysicalObject {
         //why yes, this WILL cause delightful chaos. why can you put a hot dog inside a lightbulb? because its weird and offputting. and because you'll probably forget where you stashed that hotdog later on.  it would be TRIVIAL to make it so only living creatures can have inventory. I am making a deliberate choice to not do this.
         this.inventory = [];
         this.states_inialized = false;
+        this.filterString = "";
         this.lore = "GLITCH";
         //most objects won't have alternate states, but artifacts and blorbos (who breach), will
         this.states = [];
@@ -5596,6 +5596,18 @@ class PhysicalObject {
                 this.container.setAttribute("currentLocation", `${this.x}, ${this.y}`);
                 this.customShit();
             });
+        };
+        //if you give me a filter i'll remove it and nothing else (useful for when blorbos dies)
+        this.clearFilterPart = (filter) => {
+            this.filterString = this.filterString.replaceAll(filter, "");
+            this.container.style.filter = this.filterString;
+        };
+        this.applyFilter = (filter, overwrite = true) => {
+            if (overwrite) {
+                this.filterString = "";
+            }
+            this.filterString += filter;
+            this.container.style.filter = this.filterString;
         };
         this.dropObject = (object) => {
             object.x = this.x;
@@ -6326,6 +6338,7 @@ class Room {
             this.filterString += filter;
             this.element.style.filter = this.filterString;
         };
+        //the theorist of labyrinths says 'zampanio - sim = zapano'
         this.render = async () => {
             console.log("JR NOTE: I am rendering a room", this.name);
             this.apocalypseTime();
@@ -9319,6 +9332,42 @@ exports.ApocalypseEngine = ApocalypseEngine;
 
 /***/ }),
 
+/***/ 1917:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.parseComments = void 0;
+//https://stackoverflow.com/questions/5989315/regex-for-match-replacing-javascript-comments-both-multiline-and-inline was key
+const parseComments = (fileLocation) => {
+    const httpGet = (theUrl) => {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", theUrl, false); // false for synchronous request
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+    };
+    //const url = 'dist/bundle.js';
+    const resp = httpGet(fileLocation);
+    console.log("JR NOTE: resp is", resp);
+    const fullComments = resp.match(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm);
+    let ret = [];
+    if (!fullComments) {
+        return ret;
+    }
+    for (let item of fullComments) {
+        const banned = ["/******/", "/***/", "/* harmony export */", "/* binding */"];
+        if (!banned.includes(item)) {
+            ret.push(item);
+        }
+    }
+    return ret;
+};
+exports.parseComments = parseComments;
+
+
+/***/ }),
+
 /***/ 9867:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -10812,6 +10861,7 @@ const Maze_1 = __webpack_require__(7194);
 const misc_1 = __webpack_require__(4079);
 const Apocalypse_1 = __webpack_require__(3790);
 const URLUtils_1 = __webpack_require__(389);
+const CommentsParser_1 = __webpack_require__(1917);
 let maze;
 const handleClick = () => {
     if (maze) {
@@ -10842,7 +10892,21 @@ const whiteNight = () => {
     }
 };
 exports.whiteNight = whiteNight;
+const tryComments = () => {
+    try {
+        if (window.location.href.includes("file://")) {
+            window.comments = (0, CommentsParser_1.parseComments)('http://farragofiction.com/LitRPGSimE/dist/bundle.js'); //gets around CORS problems for serverless files
+        }
+        else {
+            window.comments = (0, CommentsParser_1.parseComments)('dist/bundle.js'); //dosen't brittle-ly point it at the test url
+        }
+    }
+    catch (e) {
+        console.error("??? why can't i load the comments?");
+    }
+};
 window.onload = async () => {
+    tryComments();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const apocalypse = urlParams.get('apocalypse');
@@ -13434,6 +13498,8 @@ var map = {
 	"./Objects/ThemeStorage.ts": 1288,
 	"./Secrets/Apocalypse": 3790,
 	"./Secrets/Apocalypse.ts": 3790,
+	"./Secrets/CommentsParser": 1917,
+	"./Secrets/CommentsParser.ts": 1917,
 	"./Secrets/Content/0": 6243,
 	"./Secrets/Content/0.js": 6243,
 	"./Secrets/Content/1": 6489,

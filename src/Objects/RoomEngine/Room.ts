@@ -130,6 +130,7 @@ export class Room {
         this.element.style.filter = this.filterString;
     }
 
+    //the theorist of labyrinths says 'zampanio - sim = zapano'
     render = async () => {
         console.log("JR NOTE: I am rendering a room", this.name)
         this.apocalypseTime();

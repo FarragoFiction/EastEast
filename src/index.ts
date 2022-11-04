@@ -9,6 +9,7 @@ import { createElementWithIdAndParent } from "./Utils/misc";
 import { visitFunctionBody } from "typescript";
 import { ApocalypseEngine } from "./Secrets/Apocalypse";
 import { isItFriday } from "./Utils/URLUtils";
+import { parseComments } from "./Secrets/CommentsParser";
 
 
 let maze: Maze;
@@ -25,39 +26,52 @@ const handleClick = () => {
 }
 
 
-const itsFriday = ()=>{
+const itsFriday = () => {
     const body = document.querySelector("body");
-    if(body){
+    if (body) {
         body.innerHTML = "";
         alert("WARNING: HIGH CONTRAST FLASHING IMAGES")
         const ele = createElementWithIdAndParent("div", body, "ItsFridaySoEastIsRestingHaveThisInstead");
-        ele.innerHTML  = `
-        <iframe class='fuckedup' style="overflow: hidden;" width="${window.innerWidth-10}" height="${window.innerHeight-10}" src="https://www.youtube-nocookie.com/embed/Ti1D9t8n0qA?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        ele.innerHTML = `
+        <iframe class='fuckedup' style="overflow: hidden;" width="${window.innerWidth - 10}" height="${window.innerHeight - 10}" src="https://www.youtube-nocookie.com/embed/Ti1D9t8n0qA?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         `;
 
     }
 }
 
-export const whiteNight = ()=>{
+export const whiteNight = () => {
     const body = document.querySelector("body");
-    if(body){
+    if (body) {
         body.innerHTML = "";
         const apocalypse = new ApocalypseEngine(body);
     }
 
 }
 
+const tryComments = () => {
+    try {
+        if (window.location.href.includes("file://")) {
+            (window as any).comments = parseComments('http://farragofiction.com/LitRPGSimE/dist/bundle.js'); //gets around CORS problems for serverless files
+        } else {
+            (window as any).comments = parseComments('dist/bundle.js'); //dosen't brittle-ly point it at the test url
+        }
+    } catch (e) {
+        console.error("??? why can't i load the comments?")
+    }
+}
+
 window.onload = async () => {
+    tryComments();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const apocalypse = urlParams.get('apocalypse');
     //NOTE, seed and themes will be loaded at the maze level
 
     //the apocalypse overrides friday (but has its own special hell for it)
-    if(apocalypse === "night"){
+    if (apocalypse === "night") {
         whiteNight();
         return;
-    }else if(isItFriday()){
+    } else if (isItFriday()) {
         itsFriday();
         return;
     }
@@ -82,16 +96,16 @@ window.onload = async () => {
 
 }
 
-const handlePause = (event: MouseEvent)=>{
-        console.log("JR NOTE: pause button was clicked",maze.tickingStatus())
-        if(maze.tickingStatus()){
-            maze.pause();
-        }else{
-            maze.resume();
-        }
-        if(event.target){
-            maze.tickingStatus() ? (event.target as HTMLElement).innerText = "Pause": (event.target as HTMLElement).innerText = "Play";
-        }
+const handlePause = (event: MouseEvent) => {
+    console.log("JR NOTE: pause button was clicked", maze.tickingStatus())
+    if (maze.tickingStatus()) {
+        maze.pause();
+    } else {
+        maze.resume();
+    }
+    if (event.target) {
+        maze.tickingStatus() ? (event.target as HTMLElement).innerText = "Pause" : (event.target as HTMLElement).innerText = "Play";
+    }
 }
 
 
