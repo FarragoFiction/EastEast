@@ -2,7 +2,7 @@
 import { initStats } from "./Objects/Stat";
 import { initThemes } from "./Objects/Theme";
 
-import { getRandomNumberBetween } from "./Utils/NonSeededRandUtils";
+import { getRandomNumberBetween, pickFrom } from "./Utils/NonSeededRandUtils";
 import SeededRandom from "./Utils/SeededRandom";
 import { Maze } from "./Objects/RoomEngine/Maze";
 import { createElementWithIdAndParent } from "./Utils/misc";
@@ -48,10 +48,29 @@ export const whiteNight = () => {
 
 }
 
+export const renderNineCommentsOnScreen = ()=>{
+    console.log("JR NOTE: rendeirng 9 comments on screen")
+    const body = document.querySelector("body");
+    const comments = (window as any).comments;
+    if(!body){
+        return;
+    }
+    for(let i = 0; i<9; i++){
+        const ele = createElementWithIdAndParent("div",body, undefined,"comment" );
+        ele.innerHTML = pickFrom(comments).replaceAll("\n","<br>");
+        ele.style.left = `${getRandomNumberBetween(0,100)}vh`;
+        ele.style.top = `${getRandomNumberBetween(0,100)}vh`;
+
+        body.append(ele);
+    }
+}
+
 const tryComments = () => {
     try {
         if (window.location.href.includes("file://")) {
             (window as any).comments = parseComments('http://farragofiction.com/LitRPGSimE/dist/bundle.js'); //gets around CORS problems for serverless files
+            renderNineCommentsOnScreen();
+
         } else {
             (window as any).comments = parseComments('dist/bundle.js'); //dosen't brittle-ly point it at the test url
         }

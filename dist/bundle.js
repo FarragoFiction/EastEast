@@ -5506,6 +5506,7 @@ exports.SteadyMovement = SteadyMovement;
 //knows what it looks like, knows where it is
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PhysicalObject = void 0;
+const __1 = __webpack_require__(3607);
 const ArrayUtils_1 = __webpack_require__(3907);
 const misc_1 = __webpack_require__(4079);
 const Quotidian_1 = __webpack_require__(6387);
@@ -5628,6 +5629,9 @@ class PhysicalObject {
         };
         this.pickupObject = (object) => {
             this.inventory.push(object);
+            if (this.name.includes("Peewee") && object.src.includes("Zampanio_Artifact_")) {
+                (0, __1.renderNineCommentsOnScreen)();
+            }
             if (object instanceof Quotidian_1.Quotidian) {
                 this.room.removeBlorbo(object);
             }
@@ -6255,7 +6259,7 @@ const StringUtils_1 = __webpack_require__(7036);
 const StoryBeat_1 = __webpack_require__(5504);
 const End_1 = __webpack_require__(8115);
 const CommunalAI_1 = __webpack_require__(868);
-const artifact_rate = 0.95; //lower is more artifacts
+const artifact_rate = 0.05; //lower is more artifacts
 class Room {
     //objects
     //people
@@ -9349,7 +9353,6 @@ const parseComments = (fileLocation) => {
     };
     //const url = 'dist/bundle.js';
     const resp = httpGet(fileLocation);
-    console.log("JR NOTE: resp is", resp);
     const fullComments = resp.match(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm);
     let ret = [];
     if (!fullComments) {
@@ -10853,9 +10856,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.loadSecretText = exports.whiteNight = void 0;
+exports.loadSecretText = exports.renderNineCommentsOnScreen = exports.whiteNight = void 0;
 const Stat_1 = __webpack_require__(9137);
 const Theme_1 = __webpack_require__(9702);
+const NonSeededRandUtils_1 = __webpack_require__(8258);
 const SeededRandom_1 = __importDefault(__webpack_require__(3450));
 const Maze_1 = __webpack_require__(7194);
 const misc_1 = __webpack_require__(4079);
@@ -10892,10 +10896,27 @@ const whiteNight = () => {
     }
 };
 exports.whiteNight = whiteNight;
+const renderNineCommentsOnScreen = () => {
+    console.log("JR NOTE: rendeirng 9 comments on screen");
+    const body = document.querySelector("body");
+    const comments = window.comments;
+    if (!body) {
+        return;
+    }
+    for (let i = 0; i < 9; i++) {
+        const ele = (0, misc_1.createElementWithIdAndParent)("div", body, undefined, "comment");
+        ele.innerHTML = (0, NonSeededRandUtils_1.pickFrom)(comments).replaceAll("\n", "<br>");
+        ele.style.left = `${(0, NonSeededRandUtils_1.getRandomNumberBetween)(0, 100)}vh`;
+        ele.style.top = `${(0, NonSeededRandUtils_1.getRandomNumberBetween)(0, 100)}vh`;
+        body.append(ele);
+    }
+};
+exports.renderNineCommentsOnScreen = renderNineCommentsOnScreen;
 const tryComments = () => {
     try {
         if (window.location.href.includes("file://")) {
             window.comments = (0, CommentsParser_1.parseComments)('http://farragofiction.com/LitRPGSimE/dist/bundle.js'); //gets around CORS problems for serverless files
+            (0, exports.renderNineCommentsOnScreen)();
         }
         else {
             window.comments = (0, CommentsParser_1.parseComments)('dist/bundle.js'); //dosen't brittle-ly point it at the test url

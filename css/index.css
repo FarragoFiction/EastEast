@@ -118,10 +118,36 @@
   font-family: blood2;
 }
 
+.comment{
+  font-size: 24px;
+  position: absolute;
+  opacity: 75%;
+  color: #c4c4c4;
+  pointer-events: none;
+  text-shadow: 0 0 3px #888888;
+  animation: fadeOut ease 60s;
+  animation-fill-mode: forwards;
+
+}
+
 .light{
   color: yellow;
   text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 30px #fff, 0 0 40px yellow, 0 0 50px #fff, 0 0 60px #fff, 0 0 70px #fff
 
+}
+
+.fade-out {
+  animation: fadeOut ease 5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .fire{

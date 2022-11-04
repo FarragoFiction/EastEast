@@ -12,7 +12,6 @@ export const parseComments= (fileLocation: string)=>{
       }
     //const url = 'dist/bundle.js';
     const resp = httpGet(fileLocation);
-    console.log("JR NOTE: resp is", resp);
     const fullComments = resp.match(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm);
     let ret:string[] = [];
     if(!fullComments){

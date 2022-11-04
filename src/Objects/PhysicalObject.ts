@@ -1,5 +1,6 @@
 //knows what it looks like, knows where it is
 
+import { renderNineCommentsOnScreen } from "..";
 import { removeItemOnce } from "../Utils/ArrayUtils";
 import { getElementCenterPoint } from "../Utils/misc";
 import SeededRandom from "../Utils/SeededRandom";
@@ -198,6 +199,9 @@ export class PhysicalObject {
 
     pickupObject = (object: PhysicalObject) => {
         this.inventory.push(object);
+        if(this.name.includes("Peewee") && object.src.includes("Zampanio_Artifact_")){
+            renderNineCommentsOnScreen();
+        }
         if (object instanceof Quotidian) {
             this.room.removeBlorbo(object);
         } else {
