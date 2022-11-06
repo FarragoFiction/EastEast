@@ -236,6 +236,9 @@ export class PhysicalObject {
         this.container.style.left = `${this.original_x}px`;
         this.container.append(this.image);
         this.parent.append(this.container);
+        if(this.src.includes("Artifacts/Zampanio_Artifact")){
+            this.applyFilter("drop-shadow(0 0 0.75rem rgb(255, 217, 0))"); //glow cuz you're important
+        }
 
     }
 

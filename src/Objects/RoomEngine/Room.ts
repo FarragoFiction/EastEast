@@ -16,7 +16,7 @@ import { AiBeat } from "../Entities/StoryBeats/BaseBeat";
 import { communal_ai } from "../Entities/StoryBeats/CommunalAI";
 import { shuffle } from "../../Utils/NonSeededRandUtils";
 
-const artifact_rate = 0.55;//lower is more artifacts
+const artifact_rate = 0.75;//lower is more artifacts
 
 
 

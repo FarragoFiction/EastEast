@@ -2401,6 +2401,13 @@ class Camille extends Quotidian_1.Quotidian {
     }
 }
 exports.Camille = Camille;
+/*
+call it the universe
+or call it fate
+call it whatever you want
+but she is its Knight, and the tool it uses to destroy those it has no use for
+the immune system of the Echidna
+*/
 class End extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
@@ -3040,6 +3047,14 @@ const himPronoun = (gender) => {
     }
 };
 exports.himPronoun = himPronoun;
+/*
+There are two threat types in Zampanio:
+
+Captain style: personal (the threat is at specific targets), with purpose and goals that clash with the continued existence of whatever they are threatening.  Examples include: Captain, Peewee, Ria, Doc Slaughter, the Twins
+
+Greater Seatle Polycule style:  impersonal (the threat could be at anyone), with no real intelligence or purpose or goal behind the threat (even if the entity behind the threat has intelligence and purpase) examples include the Greater Seatle Polycule (formerly known as Lee-Hunter), the Eye Killer, Witherby, Camille, Apocalypse Chick, Parker, Vik, Hoon, K, Yongki
+
+*/
 //what, did you think the REAL eye killer would be so formulaic? 
 class Quotidian extends PhysicalObject_1.PhysicalObject {
     //TODO have a movement algorithm (effects can shift this)
@@ -5665,6 +5680,9 @@ class PhysicalObject {
             this.container.style.left = `${this.original_x}px`;
             this.container.append(this.image);
             this.parent.append(this.container);
+            if (this.src.includes("Artifacts/Zampanio_Artifact")) {
+                this.applyFilter("drop-shadow(0 0 0.75rem rgb(255, 217, 0))"); //glow cuz you're important
+            }
         };
         this.room = room;
         this.name = name;
@@ -6259,7 +6277,7 @@ const StringUtils_1 = __webpack_require__(7036);
 const StoryBeat_1 = __webpack_require__(5504);
 const End_1 = __webpack_require__(8115);
 const CommunalAI_1 = __webpack_require__(868);
-const artifact_rate = 0.55; //lower is more artifacts
+const artifact_rate = 0.75; //lower is more artifacts
 class Room {
     //objects
     //people
@@ -9343,6 +9361,20 @@ exports.ApocalypseEngine = ApocalypseEngine;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.parseComments = void 0;
+/*
+You can really tell how much I enjoyed the Debug Glasses in the [Title Pending] game.
+
+God it really was so Zampanio wasn't it?
+
+The idea of being trapped, not in a narrative unrelated to you, but in the game you yourself are making. Trapped in a dev cycle that you thought would be a month or two, that's stretching out to months and months and you can't find any playtesters even as your scope creeps and creeps and no one is helping you and ....
+
+
+Well.
+
+Yeah.
+
+[Title Pending] really hit for me.
+*/
 //https://stackoverflow.com/questions/5989315/regex-for-match-replacing-javascript-comments-both-multiline-and-inline was key
 const parseComments = (fileLocation) => {
     const httpGet = (theUrl) => {
@@ -9367,6 +9399,25 @@ const parseComments = (fileLocation) => {
     return ret;
 };
 exports.parseComments = parseComments;
+/*
+Actually, no, lets talk about this.
+
+[Title Pending] inspired me to use my own comments in my own game as content, not for wastes, not for those looking beneath the surface, but to rip it, kicking and screaming into the Light.
+
+I've always, ALWAYS rambled and rambled in my comments. And those that See it seem to appreciate it (hi!).
+
+But it's always a layer denied to those who tread carefully on the surface?
+
+And this idea, of flipping the script, of turning the unseen into the can't-miss (well, only if you realize you can pick items up and realize certain items are different)...
+
+POINT is...
+
+I like it.
+
+And I like that if you tread only on the surface you can still SEE these, but completely divorced of context they're almost impossible to parse.
+
+Misleading through piles upon piles of information is p much the core of Zampanio I'm trying to capture, afterall :) :) :)
+*/ 
 
 
 /***/ }),
