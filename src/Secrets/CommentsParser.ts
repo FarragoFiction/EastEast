@@ -38,3 +38,23 @@ export const parseComments= (fileLocation: string)=>{
     }
     return ret;
 }
+
+/*
+Actually, no, lets talk about this.  
+
+[Title Pending] inspired me to use my own comments in my own game as content, not for wastes, not for those looking beneath the surface, but to rip it, kicking and screaming into the Light.
+
+I've always, ALWAYS rambled and rambled in my comments. And those that See it seem to appreciate it (hi!). 
+
+But it's always a layer denied to those who tread carefully on the surface?
+
+And this idea, of flipping the script, of turning the unseen into the can't-miss (well, only if you realize you can pick items up and realize certain items are different)...
+
+POINT is...
+
+I like it. 
+
+And I like that if you tread only on the surface you can still SEE these, but completely divorced of context they're almost impossible to parse.
+
+Misleading through piles upon piles of information is p much the core of Zampanio I'm trying to capture, afterall :) :) :)
+*/
