@@ -118,6 +118,14 @@ export const himPronoun = (gender: string) => {
     }
 }
 
+/*
+There are two threat types in Zampanio:
+
+Captain style: personal (the threat is at specific targets), with purpose and goals that clash with the continued existence of whatever they are threatening.  Examples include: Captain, Peewee, Ria, Doc Slaughter, the Twins
+
+Greater Seatle Polycule style:  impersonal (the threat could be at anyone), with no real intelligence or purpose or goal behind the threat (even if the entity behind the threat has intelligence and purpase) examples include the Greater Seatle Polycule (formerly known as Lee-Hunter), the Eye Killer, Witherby, Camille, Apocalypse Chick, Parker, Vik, Hoon, K, Yongki
+
+*/
 
 //what, did you think the REAL eye killer would be so formulaic? 
 export class Quotidian extends PhysicalObject {

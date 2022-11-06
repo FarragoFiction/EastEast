@@ -74,7 +74,13 @@ export class Camille extends Quotidian{
     }
 }
 
-
+/*
+call it the universe
+or call it fate
+call it whatever you want
+but she is its Knight, and the tool it uses to destroy those it has no use for
+the immune system of the Echidna
+*/
 export class End extends Quotidian{
     lore = "There is nothing left of the smiling girl. Just a husk of a corpse built for one purpose.";
 
