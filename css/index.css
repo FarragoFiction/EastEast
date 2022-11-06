@@ -127,6 +127,7 @@
   text-shadow: 0 0 3px #888888;
   animation: fadeOut ease 60s;
   animation-fill-mode: forwards;
+  filter: drop-shadow(0 0 0.75rem rgb(255, 217, 0));
 
 }
 
