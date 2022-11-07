@@ -2,7 +2,8 @@
 
 import { renderNineCommentsOnScreen } from "..";
 import { removeItemOnce } from "../Utils/ArrayUtils";
-import { getElementCenterPoint } from "../Utils/misc";
+import { createElementWithIdAndParent, getElementCenterPoint } from "../Utils/misc";
+import { getRandomNumberBetween, pickFrom } from "../Utils/NonSeededRandUtils";
 import SeededRandom from "../Utils/SeededRandom";
 import { Quotidian } from "./Entities/Blorbos/Quotidian";
 import { Room } from "./RoomEngine/Room";
@@ -220,6 +221,33 @@ export class PhysicalObject {
         return getElementCenterPoint(this.container)
     }
 
+    //viks most likely to cause this but anyone can join the party
+    //the party being sins. so many sins.
+    //i am doing everything i hate, on purpose
+    //for reasons of catharsis
+    fuckShitUP = (time: string)=>{
+        const mildAmount = getRandomNumberBetween(5, 15);
+        const extremeAmount = getRandomNumberBetween(50, 100);
+        const normalWidth = this.image.width;
+        const normalHeight = this.image.height;
+        const mildOptions = [`opacity: 1.0-${mildAmount/100}`,`filter: hue-rotate(${extremeAmount});`, `filter: grayscale(${extremeAmount});`, `width: ${normalWidth + mildAmount}px;`, `width: ${normalWidth - mildAmount}px;`, `height: ${normalHeight + mildAmount}px;`, `height: ${normalHeight - mildAmount}px;`, `translate(0px, ${mildAmount}px)`, `translate(${mildAmount}px, ${mildAmount}px);`, `translate(${mildAmount}px, 0px);`];
+        const extremeOptions = [`transform: matrix(1, 2, 3, 4, 5, 6);`,`transform: rotate(0.5turn);`,`opacity: 1.0-${extremeAmount/100}`,`filter: brightness(1000);`, `filter: brightness(0);`, `filter: hue-rotate(180);`, `width: ${normalWidth + extremeAmount}px;`, `height: ${normalHeight + extremeAmount}px;`, `height: ${normalHeight - extremeAmount}px;`, `width: ${normalHeight - extremeAmount}px;`, `opacity:0;`, `translate(${extremeAmount}px, ${extremeAmount}px);`, `translate(${extremeAmount}px);`, `translate(0px, ${extremeAmount}px);`];
+        const options = extremeOptions;
+        const animation_name = this.name + getRandomNumberBetween(0,999999);
+       const inadvisable_hacked_css_keyframe = `
+       @keyframes ${animation_name} {
+        0% { ${pickFrom(options)} }
+        100% { ${pickFrom(options)} }
+       `
+       this.image.innerHTML="";
+       const absolute_bullshit = createElementWithIdAndParent("style",this.image);
+        absolute_bullshit.textContent = inadvisable_hacked_css_keyframe;
+       const timing_functions = ["ease","ease-in","ease-out","ease-in-out","linear","step-start","step-end"];
+       const animation = `${animation_name} ${getRandomNumberBetween(0,3)*Math.random()}s ${pickFrom(timing_functions)} 0s ${time}`;
+       console.log("JR NOTE: animation is", animation)
+       this.image.style.animation = animation;
+    }
+
     attachToParent = (parent: HTMLElement) => {
         this.parent = parent;
         if(this.room.totemObject){//if you're inside another object, reflect it
@@ -228,6 +256,9 @@ export class PhysicalObject {
             this.image.src = this.src;
         }
         this.image.style.width = `${this.width}px`;
+        if(this instanceof Quotidian){
+         this.image.classList.add("shake"); //the living are never truly still
+        }
         this.container.style.display = "block";
         this.container.className = this.name;
         this.container.style.zIndex = `${this.layer + 10}`;

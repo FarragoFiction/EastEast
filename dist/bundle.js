@@ -761,6 +761,38 @@ exports.FollowObject = FollowObject;
 
 /***/ }),
 
+/***/ 2992:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FuckShitUp = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+class FuckShitUp extends BaseAction_1.Action {
+    constructor(time) {
+        super();
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            subject.fuckShitUP(this.time);
+            return `${subject.processedName()} gets fucked up`;
+        };
+        this.time = time;
+    }
+}
+exports.FuckShitUp = FuckShitUp;
+
+
+/***/ }),
+
 /***/ 6290:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2397,6 +2429,7 @@ class Camille extends Quotidian_1.Quotidian {
             console.warn(`JR NOTE: whoops. Looks like Camille...lost her head! 🥁 `);
             this.incrementState();
             this.breaching = true;
+            this.image.classList.remove("shake"); //she's not breathing anymore
         };
     }
 }
@@ -2874,6 +2907,11 @@ class Peewee extends Quotidian_1.Quotidian {
             }
             if (this.horrorGame) {
                 const css = `radial-gradient(ellipse at ${this.x}px ${this.y}px, black 0%,  10%, rgba(0, 0, 0, 0.15) 25%)`;
+                this.room.element.style.webkitMaskImage = css;
+                this.room.element.style.maskImage = css;
+            }
+            else {
+                const css = `radial-gradient(ellipse at ${this.x}px ${this.y}px, black 0%,  10%, rgba(0, 0, 0, 0.65) 25%)`;
                 this.room.element.style.webkitMaskImage = css;
                 this.room.element.style.maskImage = css;
             }
@@ -3386,14 +3424,15 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             }
         };
         this.checkFilters = () => {
-            this.filterStringAppliedToRoom = "";
-            for (let theme of this.themes) {
-                const option = theme.pickPossibilityFor(this.rand, ThemeStorage_1.FILTERS);
-                if (!option.includes("ERROR")) {
-                    this.filterStringAppliedToRoom += option;
+            if (this.filterStringAppliedToRoom === "") {
+                for (let theme of this.themes) {
+                    const option = theme.pickPossibilityFor(this.rand, ThemeStorage_1.FILTERS);
+                    if (!option.includes("ERROR")) {
+                        this.filterStringAppliedToRoom += option;
+                    }
                 }
+                this.room.applyFilter(this.filterStringAppliedToRoom); //do not overwrite
             }
-            this.room.applyFilter(this.filterStringAppliedToRoom); //do not overwrite
         };
         this.tick = (actionRate, roomBeats) => {
             //console.log("JR NOTE: trying to tick: ", this.name);
@@ -3591,6 +3630,7 @@ const NoMovement_1 = __webpack_require__(4956);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const ChangeMyStabilityLevelByAmount_1 = __webpack_require__(8801);
+const FuckShitUp_1 = __webpack_require__(2992);
 const IncrementMyState_1 = __webpack_require__(9211);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
@@ -3607,7 +3647,7 @@ class Vik extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/_.png", width: 56, height: 100 },
         };
         const becomeHungry = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Become Hungry`, [`${baseFilter_1.SUBJECTSTRING}'s many eyes all close briefly. When they open again, something is wrong. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true })], //don't go if you're already unstable
-        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30);
+        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13), new FuckShitUp_1.FuckShitUp("1")], true, 1000 * 30);
         const breachIfTooHungry = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Embrace Corruption`, [`You don't understand what you are seeing. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(13, { singleTarget: true, kMode: true }), new TargetIsBreaching_1.TargetIsBreeching({ invert: true, singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
         const beats = [breachIfTooHungry, becomeHungry];
         super(room, "Vik", x, y, [Theme_1.all_themes[ThemeStorage_1.DARKNESS], Theme_1.all_themes[ThemeStorage_1.CENSORSHIP], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.DECAY], Theme_1.all_themes[ThemeStorage_1.LOVE], Theme_1.all_themes[ThemeStorage_1.FLESH]], sprite, "Their face is lightly censored, but you can still make out most of them.", beats);
@@ -5524,6 +5564,7 @@ exports.PhysicalObject = void 0;
 const __1 = __webpack_require__(3607);
 const ArrayUtils_1 = __webpack_require__(3907);
 const misc_1 = __webpack_require__(4079);
+const NonSeededRandUtils_1 = __webpack_require__(8258);
 const Quotidian_1 = __webpack_require__(6387);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
@@ -5663,6 +5704,32 @@ class PhysicalObject {
         this.centerPos = () => {
             return (0, misc_1.getElementCenterPoint)(this.container);
         };
+        //viks most likely to cause this but anyone can join the party
+        //the party being sins. so many sins.
+        //i am doing everything i hate, on purpose
+        //for reasons of catharsis
+        this.fuckShitUP = (time) => {
+            const mildAmount = (0, NonSeededRandUtils_1.getRandomNumberBetween)(5, 15);
+            const extremeAmount = (0, NonSeededRandUtils_1.getRandomNumberBetween)(50, 100);
+            const normalWidth = this.image.width;
+            const normalHeight = this.image.height;
+            const mildOptions = [`opacity: 1.0-${mildAmount / 100}`, `filter: hue-rotate(${extremeAmount});`, `filter: grayscale(${extremeAmount});`, `width: ${normalWidth + mildAmount}px;`, `width: ${normalWidth - mildAmount}px;`, `height: ${normalHeight + mildAmount}px;`, `height: ${normalHeight - mildAmount}px;`, `translate(0px, ${mildAmount}px)`, `translate(${mildAmount}px, ${mildAmount}px);`, `translate(${mildAmount}px, 0px);`];
+            const extremeOptions = [`transform: matrix(1, 2, 3, 4, 5, 6);`, `transform: rotate(0.5turn);`, `opacity: 1.0-${extremeAmount / 100}`, `filter: brightness(1000);`, `filter: brightness(0);`, `filter: hue-rotate(180);`, `width: ${normalWidth + extremeAmount}px;`, `height: ${normalHeight + extremeAmount}px;`, `height: ${normalHeight - extremeAmount}px;`, `width: ${normalHeight - extremeAmount}px;`, `opacity:0;`, `translate(${extremeAmount}px, ${extremeAmount}px);`, `translate(${extremeAmount}px);`, `translate(0px, ${extremeAmount}px);`];
+            const options = extremeOptions;
+            const animation_name = this.name + (0, NonSeededRandUtils_1.getRandomNumberBetween)(0, 999999);
+            const inadvisable_hacked_css_keyframe = `
+       @keyframes ${animation_name} {
+        0% { ${(0, NonSeededRandUtils_1.pickFrom)(options)} }
+        100% { ${(0, NonSeededRandUtils_1.pickFrom)(options)} }
+       `;
+            this.image.innerHTML = "";
+            const absolute_bullshit = (0, misc_1.createElementWithIdAndParent)("style", this.image);
+            absolute_bullshit.textContent = inadvisable_hacked_css_keyframe;
+            const timing_functions = ["ease", "ease-in", "ease-out", "ease-in-out", "linear", "step-start", "step-end"];
+            const animation = `${animation_name} ${(0, NonSeededRandUtils_1.getRandomNumberBetween)(0, 3) * Math.random()}s ${(0, NonSeededRandUtils_1.pickFrom)(timing_functions)} 0s ${time}`;
+            console.log("JR NOTE: animation is", animation);
+            this.image.style.animation = animation;
+        };
         this.attachToParent = (parent) => {
             this.parent = parent;
             if (this.room.totemObject) { //if you're inside another object, reflect it
@@ -5672,6 +5739,9 @@ class PhysicalObject {
                 this.image.src = this.src;
             }
             this.image.style.width = `${this.width}px`;
+            if (this instanceof Quotidian_1.Quotidian) {
+                this.image.classList.add("shake"); //the living are never truly still
+            }
             this.container.style.display = "block";
             this.container.className = this.name;
             this.container.style.zIndex = `${this.layer + 10}`;
@@ -6112,7 +6182,7 @@ class Maze {
                 return;
             }
             //const blorbosToTest = ["Camille", "Ria"];
-            const blorbosToTest = ["Vik"];
+            const blorbosToTest = ["Vik", "Yongki"];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
                     for (let theme of blorbo.themes) {
@@ -6367,7 +6437,9 @@ class Room {
             this.timesVisited++;
             await this.spawnChildrenIfNeeded();
             this.element.innerHTML = "";
-            console.log(`JR NOTE: i am in room ${this.name} and filter is ${this.filterString}`);
+            if (this.peewee) {
+                this.peewee.horrorGame = false;
+            }
             this.element.style.filter = this.filterString;
             this.width = this.element.getBoundingClientRect().width;
             this.height = this.element.getBoundingClientRect().height;
@@ -10968,7 +11040,6 @@ const tryComments = () => {
     try {
         if (window.location.href.includes("file://")) {
             window.comments = (0, CommentsParser_1.parseComments)('http://farragofiction.com/LitRPGSimE/dist/bundle.js'); //gets around CORS problems for serverless files
-            (0, exports.renderNineCommentsOnScreen)();
         }
         else {
             window.comments = (0, CommentsParser_1.parseComments)('dist/bundle.js'); //dosen't brittle-ly point it at the test url
@@ -13391,6 +13462,8 @@ var map = {
 	"./Objects/Entities/Actions/Feel.ts": 4543,
 	"./Objects/Entities/Actions/FollowObject": 744,
 	"./Objects/Entities/Actions/FollowObject.ts": 744,
+	"./Objects/Entities/Actions/FuckShitUp": 2992,
+	"./Objects/Entities/Actions/FuckShitUp.ts": 2992,
 	"./Objects/Entities/Actions/GiveObjectWithNameToTarget": 6290,
 	"./Objects/Entities/Actions/GiveObjectWithNameToTarget.ts": 6290,
 	"./Objects/Entities/Actions/GiveRandomObjectToTarget": 4009,

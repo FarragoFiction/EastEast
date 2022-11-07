@@ -163,7 +163,7 @@ export class Quotidian extends PhysicalObject {
     justice = 0; //how much do you trust your own judgement, how quick are you to judge
     originalFlavor = "";
     dead = false;
-    cachedAliases:string[] = [];
+    cachedAliases: string[] = [];
 
     sass?: HTMLElement;
     sassBegun?: Date;
@@ -245,7 +245,7 @@ export class Quotidian extends PhysicalObject {
         return this.relationshipMap.get(key);
     }
 
-    realizeIWantToSpendMyLifeWithTarget = (blorbo: Quotidian)=>{
+    realizeIWantToSpendMyLifeWithTarget = (blorbo: Quotidian) => {
         const key: string = blorbo.aliases().join(",");
         let relationship = this.relationshipMap.get(key);
         if (!relationship) {
@@ -392,9 +392,9 @@ export class Quotidian extends PhysicalObject {
     }
 
     aliases = () => {
-        if(!this.cachedAliases || this.cachedAliases.length === 0){
+        if (!this.cachedAliases || this.cachedAliases.length === 0) {
             //cached so if states change later they'll seem like a stranger (but if they breach they won't)
-            this.cachedAliases =  [this.name, ...(this.states.map((i) => i.name))];
+            this.cachedAliases = [this.name, ...(this.states.map((i) => i.name))];
         }
         return this.cachedAliases;
 
@@ -554,15 +554,16 @@ export class Quotidian extends PhysicalObject {
 
     }
 
-    checkFilters = ()=>{
-        this.filterStringAppliedToRoom = "";
-        for(let theme of this.themes){
-            const option =  theme.pickPossibilityFor(this.rand,FILTERS);
-            if(!option.includes("ERROR")){
-                this.filterStringAppliedToRoom += option;
+    checkFilters = () => {
+        if (this.filterStringAppliedToRoom === "") {
+            for (let theme of this.themes) {
+                const option = theme.pickPossibilityFor(this.rand, FILTERS);
+                if (!option.includes("ERROR")) {
+                    this.filterStringAppliedToRoom += option;
+                }
             }
+            this.room.applyFilter(this.filterStringAppliedToRoom); //do not overwrite
         }
-        this.room.applyFilter(this.filterStringAppliedToRoom); //do not overwrite
     }
 
     tick = (actionRate: number, roomBeats: AiBeat[]) => {
@@ -570,8 +571,8 @@ export class Quotidian extends PhysicalObject {
         if (this.dead) {
             return;
         }
-        if(this.breaching ){
-             this.checkFilters();
+        if (this.breaching) {
+            this.checkFilters();
         }
         //don't mind FRIEND, just a lil parasite on you 
         if ((this.friend)) {

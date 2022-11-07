@@ -71,6 +71,7 @@ export class Camille extends Quotidian{
         console.warn(`JR NOTE: whoops. Looks like Camille...lost her head! 🥁 `);
         this.incrementState();
         this.breaching  = true;
+        this.image.classList.remove("shake");//she's not breathing anymore
     }
 }
 

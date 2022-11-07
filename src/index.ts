@@ -69,8 +69,6 @@ const tryComments = () => {
     try {
         if (window.location.href.includes("file://")) {
             (window as any).comments = parseComments('http://farragofiction.com/LitRPGSimE/dist/bundle.js'); //gets around CORS problems for serverless files
-            renderNineCommentsOnScreen();
-
         } else {
             (window as any).comments = parseComments('dist/bundle.js'); //dosen't brittle-ly point it at the test url
         }

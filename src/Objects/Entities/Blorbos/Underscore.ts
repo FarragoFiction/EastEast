@@ -1,9 +1,11 @@
+import { getRandomNumberBetween } from "../../../Utils/NonSeededRandUtils";
 import { Movement } from "../../MovementAlgs/BaseMovement";
 import { NoMovement } from "../../MovementAlgs/NoMovement";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { OBFUSCATION, DECAY, LOVE, FLESH, DARKNESS, CENSORSHIP } from "../../ThemeStorage";
 import { ChangeMyStabilityLevelByAmount } from "../Actions/ChangeMyStabilityLevelByAmount";
+import { FuckShitUp } from "../Actions/FuckShitUp";
 import { IncrementMyState } from "../Actions/IncrementMyState";
 import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from "../StoryBeats/BaseBeat";
 import { SUBJECTSTRING } from "../TargetFilter/baseFilter";
@@ -41,7 +43,7 @@ export class Vik extends Quotidian {
             `${SUBJECTSTRING}: Become Hungry`,
             [`${SUBJECTSTRING}'s many eyes all close briefly. When they open again, something is wrong. `],
             [new TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true })], //don't go if you're already unstable
-            [new ChangeMyStabilityLevelByAmount(-13)],
+            [new ChangeMyStabilityLevelByAmount(-13), new FuckShitUp("1")],
             true,
             1000 * 30);
 
@@ -56,6 +58,8 @@ export class Vik extends Quotidian {
         const beats: AiBeat[] = [breachIfTooHungry,becomeHungry];
         super(room, "Vik", x, y, [all_themes[DARKNESS], all_themes[CENSORSHIP], all_themes[OBFUSCATION], all_themes[DECAY], all_themes[LOVE], all_themes[FLESH]], sprite, "Their face is lightly censored, but you can still make out most of them.", beats);
     }
+
+
 
     die = (causeOfDeath: string, killerName: string) => {
         if (!this.dead) {
