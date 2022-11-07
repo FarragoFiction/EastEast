@@ -137,6 +137,9 @@ export class Room {
         this.timesVisited++;
         await this.spawnChildrenIfNeeded();
         this.element.innerHTML = "";
+        if(this.peewee){
+            this.peewee.horrorGame = false;
+        }
         this.element.style.filter = this.filterString;
         this.width = this.element.getBoundingClientRect().width;
         this.height = this.element.getBoundingClientRect().height;

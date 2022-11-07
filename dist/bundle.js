@@ -6367,6 +6367,7 @@ class Room {
             this.timesVisited++;
             await this.spawnChildrenIfNeeded();
             this.element.innerHTML = "";
+            console.log(`JR NOTE: i am in room ${this.name} and filter is ${this.filterString}`);
             this.element.style.filter = this.filterString;
             this.width = this.element.getBoundingClientRect().width;
             this.height = this.element.getBoundingClientRect().height;
