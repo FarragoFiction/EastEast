@@ -20,6 +20,10 @@ const handleClick = () => {
             button.remove();
             maze.begin();
         }
+        const audio = new Audio();
+        audio.src = "audio/weirdmusic.mp3";
+        audio.loop= true;
+        audio.play();
         window.removeEventListener("click", handleClick);
     }
 

@@ -10998,6 +10998,9 @@ const handleClick = () => {
             button.remove();
             maze.begin();
         }
+        const audio = new Audio();
+        audio.src = "audio/weirdmusic.mp3";
+        audio.play();
         window.removeEventListener("click", handleClick);
     }
 };
