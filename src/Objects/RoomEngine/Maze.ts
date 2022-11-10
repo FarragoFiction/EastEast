@@ -284,7 +284,7 @@ export class Maze {
                 input.value = "";
                 return false;
             }
-            this.addCommandStorybeat(new StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: right now everything is in debug mode (because she saw something alive, the eye killer kills) eventually replace all with custom flavor text that gets passed into the beat 'With a purple glint, the EyeKiller shows ${TARGETNAME} her stabs.'"));
+            this.addCommandStorybeat(new StoryBeat("Peewee: Await Commands", "If you do not know how to command Peewee, I'd suggest typing 'help'. See. Not even gigglesnort. I'm really trying here. I could have been all 'I suggest asking for help' but no. Type help. In the little text box down there. I'm rooting for you :) :) :)"));
         }
     }
 

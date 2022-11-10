@@ -61,7 +61,6 @@ export class FRIEND{
             this.gigglesnortOptions = this.maze.peewee.possibleActions.filter((i)=>!i.hidden).map((i)=>`I think PEEWEE can ${i.recognizedCommands[0]}`);
         }
         this.gigglesnortOptions  = [...this.gigglesnortOptions, ...Object.keys(passwords).map((item)=>`The rabbithole is waiting for: ${item}`)];
-        console.log("JR NOTE: created gigglesnort options", this.gigglesnortOptions)
 
     }
 
@@ -254,7 +253,7 @@ export class FRIEND{
     deployQuest = (quest: FriendlyAiBeat)=>{
         this.currentQuest = quest;
         this.currentQuest.owner = this.maze.peewee;
-        this.maze.addStorybeat(new StoryBeat("FRIEND: Give Quest " + `FRIEND can also offer this: ${pickFrom(this.gigglesnortOptions)}`,this.currentQuest.startingText));
+        this.maze.addStorybeat(new StoryBeat("FRIEND: Give Quest " ,this.currentQuest.startingText));
     }
 
     rewardQuest = ()=>{

@@ -1291,7 +1291,7 @@ class Help extends BaseAction_1.Action {
                 return "";
             }
             const peewee = subject;
-            return `To best command Peewee, your base options are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(peewee.possibleActions.filter((i) => !i.hidden).map((i) => i.recognizedCommands[0]))}.  <br>The vast gulf between your extra-universal eldritch horror and Peewee means that only basic concepts can be transalted.  'go WEST' and 'take blade' or 'give blad devona' work best. <br>What things might you see that no other Observer has ever seen in this sprawling maze? If you see something especially entertaining, you should let people know. JR if you can. The Unmarked if you can't. You...DO know what the Unmarked are...don't you?`;
+            return `To best command Peewee, your base options are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(peewee.possibleActions.filter((i) => !i.hidden).map((i) => i.recognizedCommands[0]))}.  <br><br>The vast gulf between your extra-universal eldritch horror and Peewee means that only basic concepts can be transalted.  'go WEST' and 'take blade' or 'give blade devona' work best. <br><br>What things might you see that no other Observer has ever seen in this sprawling simulated maze? If you see something especially entertaining, you should let people know. JR if you can. The Unmarked if you can't. You...DO know what the Unmarked are...don't you?`;
         };
     }
 }
@@ -4152,11 +4152,9 @@ class ILikeTargetMoreThanAmount extends baseFilter_1.TargetFilter {
             return `they like ${baseFilter_1.TARGETSTRING}  ${this.invert ? "not" : ""} more than  ${this.amount}`;
         };
         this.applyFilterToSingleTarget = (owner, target) => {
-            console.log("JR NOTE: checkint the filter for ILikeTargetMoreThanAmount");
             let targetLocked = false;
             if (owner.owner && (target instanceof Quotidian_1.Quotidian)) {
                 const relationship = owner.owner.getRelationshipWith(target);
-                console.log("JR NOTE: relationship i'm checking is", relationship);
                 if (relationship && relationship.amount > this.amount) {
                     console.log(`I (${owner.owner.name}) like ${target.name} ${relationship.amount} which is more than ${this.amount}`);
                     targetLocked = true;
@@ -5916,7 +5914,6 @@ class FRIEND {
                 this.gigglesnortOptions = this.maze.peewee.possibleActions.filter((i) => !i.hidden).map((i) => `I think PEEWEE can ${i.recognizedCommands[0]}`);
             }
             this.gigglesnortOptions = [...this.gigglesnortOptions, ...Object.keys(PasswordStorage_1.passwords).map((item) => `The rabbithole is waiting for: ${item}`)];
-            console.log("JR NOTE: created gigglesnort options", this.gigglesnortOptions);
         };
         this.init = () => {
             this.createGigglesnortOptions();
@@ -6032,7 +6029,7 @@ class FRIEND {
         this.deployQuest = (quest) => {
             this.currentQuest = quest;
             this.currentQuest.owner = this.maze.peewee;
-            this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Give Quest " + `FRIEND can also offer this: ${(0, NonSeededRandUtils_1.pickFrom)(this.gigglesnortOptions)}`, this.currentQuest.startingText));
+            this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Give Quest ", this.currentQuest.startingText));
         };
         this.rewardQuest = () => {
             if (this.currentQuest) {
@@ -6326,7 +6323,7 @@ class Maze {
                     input.value = "";
                     return false;
                 };
-                this.addCommandStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "Peewee is awaiting the Observers commands. Also: JR NOTE: right now everything is in debug mode (because she saw something alive, the eye killer kills) eventually replace all with custom flavor text that gets passed into the beat 'With a purple glint, the EyeKiller shows ${TARGETNAME} her stabs.'"));
+                this.addCommandStorybeat(new StoryBeat_1.StoryBeat("Peewee: Await Commands", "If you do not know how to command Peewee, I'd suggest typing 'help'. See. Not even gigglesnort. I'm really trying here. I could have been all 'I suggest asking for help' but no. Type help. In the little text box down there. I'm rooting for you :) :) :)"));
             }
         };
         this.rand = new SeededRandom_1.default(rand.internal_seed);
