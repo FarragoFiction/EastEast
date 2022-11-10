@@ -76,6 +76,7 @@ const ThemeStorage_1 = __webpack_require__(1288);
 class Action {
     constructor() {
         this.importantReturn = false; //most returns are for debugging only. This isn't. 
+        this.hidden = false; //if its hidden peewee won't suggest it if he has access to it.
         //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
         this.recognizedCommands = []; //nothing, so its default
         //for all fights, if yongki, yongki win
@@ -906,7 +907,8 @@ const BaseAction_1 = __webpack_require__(7042);
 class GlitchBreach extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
-        this.recognizedCommands = ["DESTABILIZE", "BREACH", "ENRAGE"];
+        this.hidden = true;
+        this.recognizedCommands = ["BREACH", "ENRAGE", "DESTABILIZE"];
         this.noTarget = (beat, current_room, subject) => {
             return `${subject.processedName()} doesn't see anything to breach.`;
         };
@@ -963,7 +965,8 @@ const Quotidian_1 = __webpack_require__(6387);
 class GlitchDeath extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
-        this.recognizedCommands = ["DEATHFLAG", "KILL", "MURDER", "SLAUGHTER"];
+        this.hidden = true;
+        this.recognizedCommands = ["KILL", "MURDER", "SLAUGHTER", "DEATHFLAG"];
         this.noTarget = (beat, current_room, subject) => {
             return `${subject.processedName()} doesn't see anything to make un-alive.`;
         };
@@ -1021,6 +1024,7 @@ const BaseAction_1 = __webpack_require__(7042);
 class GlitchLife extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
+        this.hidden = true;
         this.recognizedCommands = ["REVIVE", "HEAL", "RESURRECT", "CORPSESMOOCH"];
         this.noTarget = (beat, current_room, subject) => {
             return `${subject.processedName()} doesn't see anything to make un-alive.`;
@@ -1287,7 +1291,7 @@ class Help extends BaseAction_1.Action {
                 return "";
             }
             const peewee = subject;
-            return `To best command Peewee, your base options are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(peewee.possibleActions.map((i) => i.recognizedCommands[0]))}.`;
+            return `To best command Peewee, your base options are ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(peewee.possibleActions.filter((i) => !i.hidden).map((i) => i.recognizedCommands[0]))}.  <br>The vast gulf between your extra-universal eldritch horror and Peewee means that only basic concepts can be transalted.  'go WEST' and 'take blade' or 'give blad devona' work best. <br>What things might you see that no other Observer has ever seen in this sprawling maze? If you see something especially entertaining, you should let people know. JR if you can. The Unmarked if you can't. You...DO know what the Unmarked are...don't you?`;
         };
     }
 }
@@ -5866,6 +5870,7 @@ exports.ChantingEngine = ChantingEngine;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FRIEND = void 0;
+const PasswordStorage_1 = __webpack_require__(9867);
 const ArrayUtils_1 = __webpack_require__(3907);
 const NonSeededRandUtils_1 = __webpack_require__(8258);
 const FriendlyAiBeat_1 = __webpack_require__(7717);
@@ -5905,7 +5910,16 @@ class FRIEND {
         this.start = `<img style="display: block; margin-left: auto; margin-right: auto; width: 300px;"src='images/Walkabout/Sprites/FRIEND.png'></img><span style="font-family: Courier New">`;
         this.end = "</span>";
         this.timeOfLastQuest = new Date().getTime();
+        this.gigglesnortOptions = [];
+        this.createGigglesnortOptions = () => {
+            if (this.maze.peewee) {
+                this.gigglesnortOptions = this.maze.peewee.possibleActions.filter((i) => !i.hidden).map((i) => `I think PEEWEE can ${i.recognizedCommands[0]}`);
+            }
+            this.gigglesnortOptions = [...this.gigglesnortOptions, ...Object.keys(PasswordStorage_1.passwords).map((item) => `The rabbithole is waiting for: ${item}`)];
+            console.log("JR NOTE: created gigglesnort options", this.gigglesnortOptions);
+        };
         this.init = () => {
+            this.createGigglesnortOptions();
             const giveBookToBird = new FriendlyAiBeat_1.FriendlyAiBeat(`
             ${this.start}
             <p>Hello, I am <b>FRIEND</b>. <b>FRIEND</b> offers rewards for tasks. <b>FRIEND</b> has many rewards.
@@ -6018,11 +6032,11 @@ class FRIEND {
         this.deployQuest = (quest) => {
             this.currentQuest = quest;
             this.currentQuest.owner = this.maze.peewee;
-            this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Give Quest", this.currentQuest.startingText));
+            this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Give Quest " + `FRIEND can also offer this: ${(0, NonSeededRandUtils_1.pickFrom)(this.gigglesnortOptions)}`, this.currentQuest.startingText));
         };
         this.rewardQuest = () => {
             if (this.currentQuest) {
-                this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Reward Quest", this.currentQuest.endingText, this.currentQuest.truthText));
+                this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Reward Quest", this.currentQuest.endingText + `FRIEND can also offer this: ${(0, NonSeededRandUtils_1.pickFrom)(this.gigglesnortOptions)}`, this.currentQuest.truthText));
             }
             else {
                 this.maze.addStorybeat(new StoryBeat_1.StoryBeat("FRIEND: Deny Quest", `${this.start}<b>FRIEND</b> can not give that which does not exist. ${this.end}`));
@@ -11000,6 +11014,7 @@ const handleClick = () => {
         }
         const audio = new Audio();
         audio.src = "audio/weirdmusic.mp3";
+        audio.loop = true;
         audio.play();
         window.removeEventListener("click", handleClick);
     }

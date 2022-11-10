@@ -1,3 +1,4 @@
+import { passwords } from "../../../Secrets/PasswordStorage";
 import { removeItemOnce } from "../../../Utils/ArrayUtils";
 import { pickFrom } from "../../../Utils/NonSeededRandUtils";
 import { Quotidian } from "../../Entities/Blorbos/Quotidian";
@@ -46,6 +47,7 @@ export class FRIEND{
     start = `<img style="display: block; margin-left: auto; margin-right: auto; width: 300px;"src='images/Walkabout/Sprites/FRIEND.png'></img><span style="font-family: Courier New">`;
     end = "</span>";
     timeOfLastQuest = new Date().getTime();
+    gigglesnortOptions:string[] = [];
 
 
     constructor(maze: Maze,physicalBody: Quotidian){
@@ -54,7 +56,17 @@ export class FRIEND{
         this.init();
     }
 
+    createGigglesnortOptions  = ()=>{
+        if(this.maze.peewee){
+            this.gigglesnortOptions = this.maze.peewee.possibleActions.filter((i)=>!i.hidden).map((i)=>`I think PEEWEE can ${i.recognizedCommands[0]}`);
+        }
+        this.gigglesnortOptions  = [...this.gigglesnortOptions, ...Object.keys(passwords).map((item)=>`The rabbithole is waiting for: ${item}`)];
+        console.log("JR NOTE: created gigglesnort options", this.gigglesnortOptions)
+
+    }
+
     init = ()=>{
+        this.createGigglesnortOptions();
         const giveBookToBird = new FriendlyAiBeat(
             `
             ${this.start}
@@ -242,12 +254,12 @@ export class FRIEND{
     deployQuest = (quest: FriendlyAiBeat)=>{
         this.currentQuest = quest;
         this.currentQuest.owner = this.maze.peewee;
-        this.maze.addStorybeat(new StoryBeat("FRIEND: Give Quest",this.currentQuest.startingText));
+        this.maze.addStorybeat(new StoryBeat("FRIEND: Give Quest " + `FRIEND can also offer this: ${pickFrom(this.gigglesnortOptions)}`,this.currentQuest.startingText));
     }
 
     rewardQuest = ()=>{
         if(this.currentQuest){
-         this.maze.addStorybeat(new StoryBeat("FRIEND: Reward Quest",this.currentQuest.endingText, this.currentQuest.truthText));
+         this.maze.addStorybeat(new StoryBeat("FRIEND: Reward Quest",this.currentQuest.endingText + `FRIEND can also offer this: ${pickFrom(this.gigglesnortOptions)}`, this.currentQuest.truthText));
         }else{
             this.maze.addStorybeat(new StoryBeat("FRIEND: Deny Quest",`${this.start}<b>FRIEND</b> can not give that which does not exist. ${this.end}`))
         }

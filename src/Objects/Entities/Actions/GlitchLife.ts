@@ -12,6 +12,7 @@ import { AiBeat } from "../StoryBeats/BaseBeat";
 export class GlitchLife extends Action {
 
 
+    hidden = true;
 
     recognizedCommands: string[] = ["REVIVE", "HEAL", "RESURRECT","CORPSESMOOCH"];
 

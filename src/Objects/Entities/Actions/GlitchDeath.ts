@@ -12,8 +12,8 @@ import { Quotidian } from "../Blorbos/Quotidian";
 export class GlitchDeath extends Action {
 
 
-
-    recognizedCommands: string[] = ["DEATHFLAG","KILL", "MURDER", "SLAUGHTER"];
+    hidden = true;
+    recognizedCommands: string[] = ["KILL", "MURDER", "SLAUGHTER", "DEATHFLAG"];
 
 
     noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian) => {

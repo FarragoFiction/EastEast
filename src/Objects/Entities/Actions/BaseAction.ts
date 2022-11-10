@@ -8,6 +8,7 @@ import { AiBeat } from "../StoryBeats/BaseBeat";
 
 export class Action{ //lawsuit
     importantReturn = false; //most returns are for debugging only. This isn't. 
+    hidden = false; //if its hidden peewee won't suggest it if he has access to it.
 
     //IMPORTANT. DO NOT TRY TO STORE ANY INFORMAITON INSIDE THIS, OR WHEN A STORY BEAT CLONES ITSELF THERE WILL BE PROBLEMS
     recognizedCommands:string[] = []; //nothing, so its default

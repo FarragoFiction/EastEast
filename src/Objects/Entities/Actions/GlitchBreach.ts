@@ -11,9 +11,10 @@ import { Quotidian } from "../Blorbos/Quotidian";
 //hi!!! Did you know peewee is wasted? And a doom player?
 export class GlitchBreach extends Action {
 
+    hidden = true;
 
 
-    recognizedCommands: string[] = ["DESTABILIZE","BREACH","ENRAGE"];
+    recognizedCommands: string[] = ["BREACH","ENRAGE","DESTABILIZE"];
 
 
     noTarget = (beat: AiBeat, current_room: Room, subject: Quotidian) => {

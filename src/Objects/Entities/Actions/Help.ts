@@ -37,7 +37,7 @@ export class Help extends Action {
             return "";
         }        
         const peewee = subject as Peewee;
-        return `To best command Peewee, your base options are ${turnArrayIntoHumanSentence(peewee.possibleActions.map((i)=>i.recognizedCommands[0]))}.`;
+        return `To best command Peewee, your base options are ${turnArrayIntoHumanSentence(peewee.possibleActions.filter((i)=>!i.hidden).map((i)=>i.recognizedCommands[0]))}.  <br><br>The vast gulf between your extra-universal eldritch horror and Peewee means that only basic concepts can be transalted.  'go WEST' and 'take blade' or 'give blade devona' work best. <br><br>What things might you see that no other Observer has ever seen in this sprawling maze? If you see something especially entertaining, you should let people know. JR if you can. The Unmarked if you can't. You...DO know what the Unmarked are...don't you?`;
     }
 
 
