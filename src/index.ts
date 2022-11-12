@@ -11,7 +11,7 @@ import { ApocalypseEngine } from "./Secrets/Apocalypse";
 import { isItFriday } from "./Utils/URLUtils";
 import { parseComments } from "./Secrets/CommentsParser";
 
-
+// https://www.youtube.com/watch?v=VMUz2TNMvL0 the Watcher of Threads found this
 let maze: Maze;
 const handleClick = () => {
     if (maze) {

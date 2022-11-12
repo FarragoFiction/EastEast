@@ -160,6 +160,7 @@ export interface SlaughterMap {
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
 /*
+
 WHAT WILL YOU CREATE
 99 Rooms
 kINTSUGI
@@ -253,6 +254,8 @@ export const passwords: PasswordMap = {
     ,"MEMENTO MORI": new Secret("Caging of an Innocent 1", "Secrets/Content/46.js")
     ,"MEMENTO VIVERE": new Secret("Caging of an Innocent 2", "Secrets/Content/47.js")
     ,"KINTSUGI": new Secret("DM made my symbol even cooler.", "",`<img style="background: white; width: 500px;" src = 'http://farragofiction.com/ZampanioHotlink/maze9b.svg' alt = "dm made my symbol even cooler...kintsugi is also something i'm associated with."><p>The Mind Neuron from Homestuck, Three Question Marks, The Yellow Sign. DM was a Genius designing this, then he took it up a notch by adding in the Maze.</p>`)
+    
+    ,"MIX OF TRUTH AND LIES": new Secret("Animorphs",  "Secrets/Content/61.js")
 
     , "LS": new Secret("FILE LIST (UNIX)", "Secrets/PasswordStorage.ts")
     , "DIR": new Secret("FILE LIST (DOS)", "Secrets/PasswordStorage.ts")
