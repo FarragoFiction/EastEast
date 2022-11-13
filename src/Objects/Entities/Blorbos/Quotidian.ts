@@ -46,7 +46,21 @@ Alt: Stranger of Fleshy Dreams
 Neighbor: Friend of Strange Doom
 Tyrfing: Warrior of Destroyed Hope
 NAM: Child of Fated Identities*/
-
+export const stats_values_mapping = (value:number) => {
+    if (value === 1) {
+      return "I";
+    } else if (value ===2) {
+      return "II";
+    } else if (value ===3) {
+      return "III";
+    } else if (value ===4) {
+      return "IV";
+    } else if (value ===5) {
+      return "V";
+    }else{
+        return "EX";
+    }
+  }
 
 
 export enum Direction {
@@ -135,6 +149,7 @@ export class Quotidian extends PhysicalObject {
     minSpeed = 1;
     filterStringAppliedToRoom = "";
 
+
     currentSpeed = 10;
     instablityRate = 1; //if something goes wrong, how much does it effect their stability level?
     stabilityLevel = 113; //if it hits 0 they breach.
@@ -159,8 +174,8 @@ export class Quotidian extends PhysicalObject {
     // 0 min, 5 max
     fortitude = 0; //how brave are you, how physically fit
     temperance = 0; // how much can you avoid obsessing over things (especially people), how good are you at charisma type stuff without getting attached
-    prudence = 5; //how much do you think things through, attention to detail
-    justice = 0; //how much do you trust your own judgement, how quick are you to judge
+    prudence = 0; //how much do you think things through, attention to detail
+    judgement = 0; //how much do you trust your own judgement, how quick are you to judge
     originalFlavor = "";
     dead = false;
     cachedAliases: string[] = [];
@@ -189,6 +204,7 @@ export class Quotidian extends PhysicalObject {
         super(room, name, x, y, sprite.default_src.width, sprite.default_src.height, themes, 11, `${baseImageLocation}${sprite.default_src.src}`, flavorText, states);
 
         this.directionalSprite = sprite;
+        this.initStats();
         this.originalFlavor = this.flavorText;
         if (beats.length === 0 && name == "Quotidian") {
             beats.push(new AiBeat(
@@ -200,6 +216,24 @@ export class Quotidian extends PhysicalObject {
             ))
         }
         this.makeBeatsMyOwn(beats);
+    }
+
+    initStats = ()=>{
+        if(this.fortitude === 0){
+            this.fortitude = this.rand.getRandomNumberBetween(1,5);
+        }
+
+        if(this.prudence === 0){
+            this.prudence = this.rand.getRandomNumberBetween(1,5);
+        }
+
+        if(this.temperance === 0){
+            this.temperance = this.rand.getRandomNumberBetween(1,5);
+        }
+
+        if(this.judgement === 0){
+            this.judgement = this.rand.getRandomNumberBetween(1,5);
+        }
     }
 
 

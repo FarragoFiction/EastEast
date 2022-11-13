@@ -1,7 +1,7 @@
 
 import { turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
 import { Room } from "../../RoomEngine/Room";
-import { Quotidian } from "../Blorbos/Quotidian";
+import { Quotidian, stats_values_mapping } from "../Blorbos/Quotidian";
 import { Action } from "./BaseAction";
 import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
@@ -97,6 +97,12 @@ export class Look extends Action {
         if(lookcloser instanceof Quotidian){
             retSoFar += `<p>Their stability level is: ${lookcloser.stabilityLevel}</p>`
             retSoFar += `<p>Their AI is is: ${(lookcloser.beats.join(","))}</p>`
+            retSoFar += `<p>Their stats are: <ul> 
+            <li>Fortitude: ${(stats_values_mapping(lookcloser.fortitude))}</li>
+            <li>Prudence: ${(stats_values_mapping(lookcloser.prudence))}</li>
+            <li>Temperence: ${(stats_values_mapping(lookcloser.temperance))}</li>
+            <li>Judgement: ${(stats_values_mapping(lookcloser.judgement))}</li>
+            </ul></p>`
 
         }
         return retSoFar;

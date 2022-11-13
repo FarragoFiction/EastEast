@@ -1554,6 +1554,12 @@ class Look extends BaseAction_1.Action {
             if (lookcloser instanceof Quotidian_1.Quotidian) {
                 retSoFar += `<p>Their stability level is: ${lookcloser.stabilityLevel}</p>`;
                 retSoFar += `<p>Their AI is is: ${(lookcloser.beats.join(","))}</p>`;
+                retSoFar += `<p>Their stats are: <ul> 
+            <li>Fortitude: ${((0, Quotidian_1.stats_values_mapping)(lookcloser.fortitude))}</li>
+            <li>Prudence: ${((0, Quotidian_1.stats_values_mapping)(lookcloser.prudence))}</li>
+            <li>Temperence: ${((0, Quotidian_1.stats_values_mapping)(lookcloser.temperance))}</li>
+            <li>Judgement: ${((0, Quotidian_1.stats_values_mapping)(lookcloser.judgement))}</li>
+            </ul></p>`;
             }
             return retSoFar;
         };
@@ -2995,7 +3001,7 @@ exports.BreachedPeewee = BreachedPeewee;
 
 //base level Entity object. quotidians can turn into anything
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Quotidian = exports.himPronoun = exports.heProunon = exports.hisProunon = exports.NB = exports.MALE = exports.FEMALE = exports.Direction = void 0;
+exports.Quotidian = exports.himPronoun = exports.heProunon = exports.hisProunon = exports.NB = exports.MALE = exports.FEMALE = exports.Direction = exports.stats_values_mapping = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const misc_1 = __webpack_require__(4079);
 const NonSeededRandUtils_1 = __webpack_require__(8258);
@@ -3033,6 +3039,27 @@ Alt: Stranger of Fleshy Dreams
 Neighbor: Friend of Strange Doom
 Tyrfing: Warrior of Destroyed Hope
 NAM: Child of Fated Identities*/
+const stats_values_mapping = (value) => {
+    if (value === 1) {
+        return "I";
+    }
+    else if (value === 2) {
+        return "II";
+    }
+    else if (value === 3) {
+        return "III";
+    }
+    else if (value === 4) {
+        return "IV";
+    }
+    else if (value === 5) {
+        return "V";
+    }
+    else {
+        return "EX";
+    }
+};
+exports.stats_values_mapping = stats_values_mapping;
 var Direction;
 (function (Direction) {
     Direction[Direction["UP"] = 1] = "UP";
@@ -3137,14 +3164,28 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         // 0 min, 5 max
         this.fortitude = 0; //how brave are you, how physically fit
         this.temperance = 0; // how much can you avoid obsessing over things (especially people), how good are you at charisma type stuff without getting attached
-        this.prudence = 5; //how much do you think things through, attention to detail
-        this.justice = 0; //how much do you trust your own judgement, how quick are you to judge
+        this.prudence = 0; //how much do you think things through, attention to detail
+        this.judgement = 0; //how much do you trust your own judgement, how quick are you to judge
         this.originalFlavor = "";
         this.dead = false;
         this.cachedAliases = [];
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
+        this.initStats = () => {
+            if (this.fortitude === 0) {
+                this.fortitude = this.rand.getRandomNumberBetween(1, 5);
+            }
+            if (this.prudence === 0) {
+                this.prudence = this.rand.getRandomNumberBetween(1, 5);
+            }
+            if (this.temperance === 0) {
+                this.temperance = this.rand.getRandomNumberBetween(1, 5);
+            }
+            if (this.judgement === 0) {
+                this.judgement = this.rand.getRandomNumberBetween(1, 5);
+            }
+        };
         this.processedName = () => {
             return `${this.breaching ? "Breaching " : ""}${this.name}${this.dead ? "'s Grave" : ''}`;
         };
@@ -3459,6 +3500,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             this.updateRendering();
         };
         this.directionalSprite = sprite;
+        this.initStats();
         this.originalFlavor = this.flavorText;
         if (beats.length === 0 && name == "Quotidian") {
             beats.push(new BaseBeat_1.AiBeat("Quotidian: Be Bird Brained", [`The Quotidian is sqwawking at the ${baseFilter_1.TARGETSTRING}.`], [new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass("Gross!"), new PickupObject_1.PickupObject()], true));
@@ -3784,7 +3826,7 @@ class Yongki extends Quotidian_1.Quotidian {
         ]);
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
-        this.lore = "Parker says that Yongki has the soul of a gorilla. A gentle giant. His body craves so much violence yet he attacks only when attacked.  Captain has stabelized him, given him room to grow and seek enlightenment.";
+        this.lore = "Parker says that Yongki has the soul of a gorilla. A gentle giant. His body craves so much violence yet he attacks only when attacked.  Captain has stabilized him, given him room to grow and seek enlightenment.";
         this.likeMultiplier = 10.3; //yongki is so happy
         this.die = (causeOfDeath) => {
             console.log(`JR NOTE: actually, it says right here in the code, Yongki wins. If you think you're going to ${causeOfDeath}, you're wrong. Hope this helps.`);
@@ -9639,6 +9681,7 @@ exports.Slaughter = Slaughter;
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
 /*
+
 WHAT WILL YOU CREATE
 99 Rooms
 kINTSUGI
@@ -9725,6 +9768,7 @@ exports.passwords = {
     "MEMENTO MORI": new Secret("Caging of an Innocent 1", "Secrets/Content/46.js"),
     "MEMENTO VIVERE": new Secret("Caging of an Innocent 2", "Secrets/Content/47.js"),
     "KINTSUGI": new Secret("DM made my symbol even cooler.", "", `<img style="background: white; width: 500px;" src = 'http://farragofiction.com/ZampanioHotlink/maze9b.svg' alt = "dm made my symbol even cooler...kintsugi is also something i'm associated with."><p>The Mind Neuron from Homestuck, Three Question Marks, The Yellow Sign. DM was a Genius designing this, then he took it up a notch by adding in the Maze.</p>`),
+    "MIX OF TRUTH AND LIES": new Secret("Animorphs", "Secrets/Content/61.js"),
     "LS": new Secret("FILE LIST (UNIX)", "Secrets/PasswordStorage.ts"),
     "DIR": new Secret("FILE LIST (DOS)", "Secrets/PasswordStorage.ts")
 };
@@ -11001,6 +11045,7 @@ const misc_1 = __webpack_require__(4079);
 const Apocalypse_1 = __webpack_require__(3790);
 const URLUtils_1 = __webpack_require__(389);
 const CommentsParser_1 = __webpack_require__(1917);
+// https://www.youtube.com/watch?v=VMUz2TNMvL0 the Watcher of Threads found this
 let maze;
 const handleClick = () => {
     if (maze) {
@@ -13339,6 +13384,27 @@ EDICT: REST NOW, CHILD.  LET YOUR LOOP END.
 
 /***/ }),
 
+/***/ 110:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+Look. I can explain the Animorphs stuff, okay? 
+
+....
+
+No I can't. 
+
+*flees*
+
+`;
+
+/***/ }),
+
 /***/ 8791:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -13769,6 +13835,8 @@ var map = {
 	"./Secrets/Content/6.js": 1178,
 	"./Secrets/Content/60": 5593,
 	"./Secrets/Content/60.js": 5593,
+	"./Secrets/Content/61": 110,
+	"./Secrets/Content/61.js": 110,
 	"./Secrets/Content/7": 8791,
 	"./Secrets/Content/7.js": 8791,
 	"./Secrets/Content/8": 4997,
