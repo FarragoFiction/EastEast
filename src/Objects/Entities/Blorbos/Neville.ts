@@ -21,12 +21,20 @@ import { TargetIsTheKillerOfBlorboNamed } from "../TargetFilter/TargetIstheKille
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { Quotidian, Direction, MALE } from "./Quotidian";
+import { Relationship } from "./Relationship";
 
 
 
 export class Neville extends Quotidian{
     lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. "
+    relationshipMap = new Map<string, Relationship>([
+        ["Devona,Insightful Punishing Twin", new Relationship("Devona,Insightful Punishing Twin,",10000,"She is the bravest person I know. She never gives up.","...","I want to spend my life seeing the things she finds.","...","We promised to protect each other forever.",true,false,true)]
 
+    ]);
+    fortitude = 5;
+    prudence = 1;
+    temperance = 2;
+    judgement = 2;
     maxSpeed = 8;
     minSpeed = 5;
     currentSpeed = 5;

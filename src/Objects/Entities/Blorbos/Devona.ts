@@ -23,6 +23,7 @@ import { TargetIsTheKillerOfBlorboNamed } from "../TargetFilter/TargetIstheKille
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 import { Quotidian, Direction, FEMALE } from "./Quotidian";
+import { Relationship } from "./Relationship";
 
 
 
@@ -35,6 +36,15 @@ export class Devona extends Quotidian{
     romanticFOdds = 0.0;
     romanticMOdds = 0.0;
     romanticNBOdds = 0.0;
+    fortitude = 1;
+    prudence = 5;
+    temperance = 2;
+    judgement = 2;
+
+    relationshipMap = new Map<string, Relationship>([
+        ["Neville,Fortitudinous Punishing Twin", new Relationship("Neville,Fortitudinous Punishing Twin,",10000,"He is so brave! I wish I could just ignore how scary the world is...","...","I want to spend my life helping him parse data...","...","Ever since I saved him from the Punishing Bird, we've been together. I don't want to stop.",true,false,true)]
+    ]);
+    
 
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new RandomMovement(this);

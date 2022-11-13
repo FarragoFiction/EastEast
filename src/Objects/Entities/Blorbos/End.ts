@@ -34,6 +34,11 @@ export class Camille extends Quotidian{
     minSpeed = 5;
     currentSpeed = 5;
 
+    fortitude = 4;
+    prudence = 3;
+    temperance = 1;
+    judgement = 5;
+
     direction = Direction.UP; //movement algorithm can change or use this.
     movement_alg:Movement = new NoMovement(this);
 

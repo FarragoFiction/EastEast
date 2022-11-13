@@ -30,7 +30,7 @@ import { Snail } from "./SnailFriend";
 
 export class Yongki extends Quotidian{
     gender = MALE;
-
+    fortitude = 13; //all other stats ar erandom because of the mirror
     maxSpeed = 100;
     minSpeed = 5;
     currentSpeed = 25;

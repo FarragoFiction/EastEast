@@ -39,6 +39,11 @@ export class EyeKiller extends Quotidian{
     romanticMOdds = 0.0;
     romanticNBOdds = 0.0;
 
+    fortitude = 1;
+    prudence = 5;
+    temperance = 3;
+    judgement = 3;
+
     currentSpeed = 5;
 
     direction = Direction.UP; //movement algorithm can change or use this.

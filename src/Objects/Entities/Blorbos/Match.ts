@@ -35,6 +35,10 @@ export class Ria extends Quotidian {
         ,["Peewee Puppet,Glitch of Doom", new Relationship("Peewee Puppet,Glitch of Doom",500,"He's so smart! He understands exactly why it all needs to burn!","How could he be so mean to me? What does he MEAN that nothing would take the Universe's place if we destroyed it? How could he be so cruel?","Surely he's the key to finally burning it all to the ground!","<3","*giggle* Peewee is so dreamy!",true,true,false)]
 
     ]);
+    fortitude = 2;
+    prudence = 3;
+    temperance = 1;
+    judgement = 3;
 
     romanticFOdds = 1.0; //likes ladies more than others
     romanticMOdds = 0.1;

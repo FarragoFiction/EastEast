@@ -12,6 +12,7 @@ import { SUBJECTSTRING } from "../TargetFilter/baseFilter";
 import { TargetIsBreeching } from "../TargetFilter/TargetIsBreaching";
 import { TargetStabilityLevelLessThanAmount } from "../TargetFilter/TargetStabilityLevelLessThanAmount";
 import { Quotidian, Direction, NB } from "./Quotidian";
+import { Relationship } from "./Relationship";
 
 
 /*
@@ -20,6 +21,15 @@ import { Quotidian, Direction, NB } from "./Quotidian";
 */
 
 export class Vik extends Quotidian {
+
+    relationshipMap = new Map<string, Relationship>([
+        ["Parker", new Relationship("Parker",10000,"Parker is remarkably resiliant and independant. He does not need anyone to take care of him. That said, he can definitely benefit from reminders to hydrate.","...","He made me realize I didn't have to put so much of myself into protecting Yongki. Caregiver fatigue really snuck up on me.","...","Parker is the only person I trust to not take advanatage of me even when I am having a bad day.",true,false,true)]
+    ]);
+
+    fortitude = 3;
+    prudence = 5;
+    temperance = 5;
+    judgement = 5;
     lore = "Their soul has long since rotted off them in viscous chunks, but Parker claims it once was a cat.";
     gender = NB;
     romanticFOdds = 0.0;

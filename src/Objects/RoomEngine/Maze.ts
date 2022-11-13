@@ -24,6 +24,8 @@ import { Yongki } from "../Entities/Blorbos/Yongki";
 import { updateURLParams } from "../../Utils/URLUtils";
 import { whiteNight } from "../..";
 import { Camille } from "../Entities/Blorbos/End";
+import { Parker } from "../Entities/Blorbos/Parker";
+import { Khana } from "../Entities/Blorbos/K";
 export class Maze {
 
     rand: SeededRandom;
@@ -93,7 +95,10 @@ export class Maze {
             this.blorbos.push(new Devona(this.room, 150, 150));
             this.blorbos.push(new Neville(this.room, 150, 150));
             this.blorbos.push(new Yongki(this.room, 150, 150));
-            //this.blorbos.push(new JR(this.room, 150, 150));
+            this.blorbos.push(new JR(this.room, 150, 150));
+            this.blorbos.push(new Khana(this.room, 150, 150));
+            this.blorbos.push(new Parker(this.room, 150, 150));
+
 
         }
     }

@@ -13,6 +13,10 @@ import { Quotidian, Direction, MALE } from "./Quotidian";
 export class Solemn extends Quotidian{
     lore = "Parker says witherby's soul is a Hare...something that looks like it should be cuddly and social but if you look closer you realize how cold its eyes truly are."
     gender = MALE;
+    fortitude = 2; //he can kick your ribs in, if he needs to
+    prudence = 3; 
+    temperance = 4; //no matter how much he wants something, he can usually hold himself back. this is...not a good thing. it leaves him so isolated and...cold
+    judgement = 1; //poor boy is always second guessing himself
 
     maxSpeed = 8;
     minSpeed = 5;
