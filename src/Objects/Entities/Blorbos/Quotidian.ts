@@ -1,6 +1,7 @@
 //base level Entity object. quotidians can turn into anything
 
 import { removeItemOnce } from "../../../Utils/ArrayUtils"
+import { FORTITUDE, JUDGEMENT, PRUDENCE, TEMPERANCE } from "../../../Utils/constants"
 import { createElementWithIdAndParent, distanceWithinRadius } from "../../../Utils/misc"
 import { pickFrom } from "../../../Utils/NonSeededRandUtils"
 import { Movement } from "../../MovementAlgs/BaseMovement"
@@ -216,6 +217,29 @@ export class Quotidian extends PhysicalObject {
             ))
         }
         this.makeBeatsMyOwn(beats);
+    }
+
+    highestStat = ()=>{
+        const checkIfStatIsHighestOrEqual = (stat: number)=>{
+            return stat >= this.fortitude && stat >= this.prudence && stat >= this.temperance && stat > this.judgement;
+        }
+
+        if(checkIfStatIsHighestOrEqual(this.fortitude)){
+            return FORTITUDE;
+        }
+
+        if(checkIfStatIsHighestOrEqual(this.prudence)){
+            return PRUDENCE;
+        }
+
+        if(checkIfStatIsHighestOrEqual(this.temperance)){
+            return TEMPERANCE;
+        }
+
+        if(checkIfStatIsHighestOrEqual(this.judgement)){
+            return JUDGEMENT;
+        }
+  
     }
 
     initStats = ()=>{
