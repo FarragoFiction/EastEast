@@ -536,6 +536,11 @@ export class Quotidian extends PhysicalObject {
 
     }
 
+    //if a quotidian needs to do something special do it now
+    customSyncCode = ()=>{
+
+    }
+
 
 
     syncSpriteToDirection = () => {
@@ -562,6 +567,7 @@ export class Quotidian extends PhysicalObject {
             this.image.src = src;
             this.image.style.width = `${chosen.width}px`;
         }
+        this.customSyncCode();
 
     }
 

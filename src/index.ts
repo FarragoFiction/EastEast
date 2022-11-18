@@ -22,6 +22,7 @@ const handleClick = () => {
         }
         const audio = new Audio();
         audio.src = "audio/weirdmusic.mp3";
+        audio.volume = 0.5;
         audio.loop= true;
         audio.play();
         window.removeEventListener("click", handleClick);

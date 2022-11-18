@@ -145,8 +145,7 @@ export class PhysicalObject {
     }
 
 
-    customShit = () => {
-        //for example, living creatures might say things
+    customShitForRendering = () => {
     }
 
     updateRendering = () => {
@@ -159,7 +158,7 @@ export class PhysicalObject {
 
             this.container.style.transform = `translate(${this.x - this.original_x}px,${this.y - this.original_y}px)`;
             this.container.setAttribute("currentLocation",`${this.x}, ${this.y}`);
-            this.customShit();
+            this.customShitForRendering();
         })
 
     }
@@ -256,6 +255,7 @@ export class PhysicalObject {
             this.image.src = this.src;
         }
         this.image.style.width = `${this.width}px`;
+        this.image.setAttribute("lore",this.lore);//see im helping
         if(this instanceof Quotidian){
          this.image.classList.add("shake"); //the living are never truly still
         }

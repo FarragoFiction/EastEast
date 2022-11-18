@@ -2320,6 +2320,7 @@ const TargetIstheKillerOfBlorboNamed_1 = __webpack_require__(7082);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const Quotidian_1 = __webpack_require__(6387);
+const Relationship_1 = __webpack_require__(7739);
 class Devona extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
@@ -2347,6 +2348,13 @@ class Devona extends Quotidian_1.Quotidian {
         this.romanticFOdds = 0.0;
         this.romanticMOdds = 0.0;
         this.romanticNBOdds = 0.0;
+        this.fortitude = 1;
+        this.prudence = 5;
+        this.temperance = 2;
+        this.judgement = 2;
+        this.relationshipMap = new Map([
+            ["Neville,Fortitudinous Punishing Twin", new Relationship_1.Relationship("Neville,Fortitudinous Punishing Twin,", 10000, "He is so brave! I wish I could just ignore how scary the world is...", "...", "I want to spend my life helping him parse data...", "...", "Ever since I saved him from the Punishing Bird, we've been together. I don't want to stop.", true, false, true)]
+        ]);
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new RandomMovement_1.RandomMovement(this);
     }
@@ -2433,6 +2441,10 @@ class Camille extends Quotidian_1.Quotidian {
         this.maxSpeed = 50;
         this.minSpeed = 5;
         this.currentSpeed = 5;
+        this.fortitude = 4;
+        this.prudence = 3;
+        this.temperance = 1;
+        this.judgement = 5;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
         this.die = (causeOfDeath) => {
@@ -2487,6 +2499,7 @@ exports.End = End;
 //just leave her alone with her egg
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Innocent = exports.EyeKiller = void 0;
+const misc_1 = __webpack_require__(4079);
 const NoMovement_1 = __webpack_require__(4956);
 const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
@@ -2511,7 +2524,7 @@ const Quotidian_1 = __webpack_require__(6387);
 class EyeKiller extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "KillerLeft.gif", width: 50, height: 50 },
+            default_src: { src: "KillerDown.gif", width: 50, height: 50 },
             left_src: { src: "KillerLeft.gif", width: 50, height: 50 },
             right_src: { src: "KillerRight.gif", width: 50, height: 50 },
             up_src: { src: "KillerUp.gif", width: 50, height: 50 },
@@ -2521,6 +2534,7 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.lore = "Parker has said her soul is in the shape of a ram. He says there is a joke in there, about time and sheep. (in the West, sheep are sacrificed to travel in time) But the important point is that the Killer's soul is that of prey, that of something CERTAIN you will KILL it unless she rams her blade deep into your heart first. They say horses live in silent hill, but sheep must, too.";
         this.maxSpeed = 50;
         this.minSpeed = 5;
+        this.eyeImageContainer = document.createElement("div");
         this.instablityRate = 113; //if something goes wrong, how much does it effect their stability level?
         this.gender = Quotidian_1.FEMALE;
         this.likeMultiplier = 0.5; //(effects how quickly they grow to like people in general)
@@ -2528,9 +2542,43 @@ class EyeKiller extends Quotidian_1.Quotidian {
         this.romanticFOdds = 0.0; //likes ladies more than others
         this.romanticMOdds = 0.0;
         this.romanticNBOdds = 0.0;
+        this.fortitude = 1;
+        this.prudence = 5;
+        this.temperance = 3;
+        this.judgement = 3;
         this.currentSpeed = 5;
-        this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
+        this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
+        this.customShitForRendering = () => {
+            this.eyeImageContainer.style.transform = `translate(${this.x - this.original_x}px,${this.y - this.original_y}px)`;
+            this.eyeImageContainer.setAttribute("currentLocation", `${this.x}, ${this.y}`);
+        };
+        //the eye killer has a single glowing eye
+        this.customSyncCode = () => {
+            //nothing for default quotidians
+            if (!this.eyeImageContainer.parentElement) {
+                const spookyEyesContainer = document.querySelector("#current-room-for-spooky-eyes");
+                if (spookyEyesContainer) {
+                    spookyEyesContainer.append(this.eyeImageContainer);
+                    this.eyeImageContainer.style.position = "absolute";
+                    this.eyeImageContainer.style.top = `${this.original_y}px`;
+                    this.eyeImageContainer.style.left = `${this.original_x}px`;
+                    this.eyeImageContainer.style.zIndex = "100";
+                    this.eyeImageContainer.setAttribute("inspiration", "Vampire Survivors");
+                    const eyeImage = (0, misc_1.createElementWithIdAndParent)("img", this.eyeImageContainer, undefined, "shake");
+                    if (eyeImage) {
+                        eyeImage.src = "images/Walkabout/Sprites/KillerDownEye.gif";
+                        eyeImage.style.width = "50px";
+                    }
+                }
+            }
+            if (this.direction === Quotidian_1.Direction.DOWN) {
+                this.eyeImageContainer.style.display = "block";
+            }
+            else {
+                this.eyeImageContainer.style.display = "none";
+            }
+        };
         this.setupAI = async () => {
             //hunting time
             const pickATarget = new BaseBeat_1.AiBeat("Killer: Hunt", [`The Eye Killer begins hunting ${baseFilter_1.TARGETSTRING}.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
@@ -2645,6 +2693,42 @@ exports.JR = JR;
 
 /***/ }),
 
+/***/ 1069:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Khana = void 0;
+const NoMovement_1 = __webpack_require__(4956);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6387);
+class Khana extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "k.png", width: 56, height: 100 },
+        };
+        const beats = [];
+        //funny how similar he is, on a suface level, to parker
+        super(room, "K", x, y, [Theme_1.all_themes[ThemeStorage_1.ANGER], Theme_1.all_themes[ThemeStorage_1.LIGHT], Theme_1.all_themes[ThemeStorage_1.STEALING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.SPYING]], sprite, "The Censorship is for your protection.", beats);
+        this.lore = "Parker says he has the soul of a mosquito. Something tiny and vulnerable, who has no CHOICE but to risk annoying you for the very chance to live. ";
+        this.fortitude = 1;
+        this.prudence = 3;
+        this.temperance = 2;
+        this.judgement = 1;
+        this.maxSpeed = 50;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
+        this.movement_alg = new NoMovement_1.NoMovement(this);
+    }
+}
+exports.Khana = Khana;
+
+
+/***/ }),
+
 /***/ 7685:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2689,6 +2773,10 @@ class Ria extends Quotidian_1.Quotidian {
             ["Camille,End", new Relationship_1.Relationship("Camille,End", 1000000, "She's so smart, she always knows the right thing to say.", "Why isn't she talking to me...", "No one makes me feel as seen and understood as she does and if soul mates were real...", "Oh. Um. Yeah. Wow. She's really good.", "<3", true, true, false)],
             ["Peewee Puppet,Glitch of Doom", new Relationship_1.Relationship("Peewee Puppet,Glitch of Doom", 500, "He's so smart! He understands exactly why it all needs to burn!", "How could he be so mean to me? What does he MEAN that nothing would take the Universe's place if we destroyed it? How could he be so cruel?", "Surely he's the key to finally burning it all to the ground!", "<3", "*giggle* Peewee is so dreamy!", true, true, false)]
         ]);
+        this.fortitude = 2;
+        this.prudence = 3;
+        this.temperance = 1;
+        this.judgement = 3;
         this.romanticFOdds = 1.0; //likes ladies more than others
         this.romanticMOdds = 0.1;
         this.romanticNBOdds = 0.1;
@@ -2759,6 +2847,7 @@ const TargetIstheKillerOfBlorboNamed_1 = __webpack_require__(7082);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const TargetNameIncludesAnyOfTheseWords_1 = __webpack_require__(4165);
 const Quotidian_1 = __webpack_require__(6387);
+const Relationship_1 = __webpack_require__(7739);
 class Neville extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
@@ -2780,6 +2869,13 @@ class Neville extends Quotidian_1.Quotidian {
         const states = [new FortitudeTwin(room, 0, 0)];
         super(room, "Neville", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "Neville is staring into space.", beats, states);
         this.lore = "According to Parker, his soul is like an Emu. Powerful and fast, yet willing to starve itself to protect those that matter. ";
+        this.relationshipMap = new Map([
+            ["Devona,Insightful Punishing Twin", new Relationship_1.Relationship("Devona,Insightful Punishing Twin,", 10000, "She is the bravest person I know. She never gives up.", "...", "I want to spend my life seeing the things she finds.", "...", "We promised to protect each other forever.", true, false, true)]
+        ]);
+        this.fortitude = 5;
+        this.prudence = 1;
+        this.temperance = 2;
+        this.judgement = 2;
         this.maxSpeed = 8;
         this.minSpeed = 5;
         this.currentSpeed = 5;
@@ -2819,6 +2915,45 @@ class FortitudeTwin extends Quotidian_1.Quotidian {
     }
 }
 exports.FortitudeTwin = FortitudeTwin;
+
+
+/***/ }),
+
+/***/ 3873:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Parker = void 0;
+const NoMovement_1 = __webpack_require__(4956);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6387);
+const Relationship_1 = __webpack_require__(7739);
+class Parker extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "theshot.png", width: 56, height: 100 },
+        };
+        const beats = [];
+        super(room, "Parker", x, y, [Theme_1.all_themes[ThemeStorage_1.BURIED], Theme_1.all_themes[ThemeStorage_1.STEALING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.SPYING]], sprite, "The Censorship is for your protection.", beats);
+        this.lore = "Parker digs and digs adn digs yet remains trapped. The Lord of Space sets the rules of this setting, and Parker, as the Thief of Space can not longer steal himself from setting to setting.  He was born with the rest in the Corporation's setting, but he placed himself in a Doomed setting from his favorite video game when the Despair became too much.  When the Despair inevitably became too much in the new setting, he stole himself away again, going back this time to drag away any of his blorbos from his previous life he could find.  He hates. HATES that Wanda has trapped him here. He wants to keep going. Tunneling and tunenling through universes and settings until he finally finds one where he can be happy. Surely the next one, right?  He doesn't know what his soul would be shaped like in a Daemon AU.  He's not a CHARACTER in the story, he's the one who Watches. If he digs enough, maybe the AU will be real? He's trying so hard. It's hard being Wasted, its hard and no one understands. ";
+        this.relationshipMap = new Map([
+            ["Vik,_", new Relationship_1.Relationship("Vik,_,", 10000, "Bestie cares so much about everyone!", "...", "Vik convinced me I don't have to be COMPLETELY separate from the narrative! And, PLUS: Vik's immune to bullets!", "...", "Bestie helps me remember to hyrdate! Without bestie, I'm not myself...", true, false, true)]
+        ]);
+        this.fortitude = 2;
+        this.prudence = 5;
+        this.temperance = 5;
+        this.judgement = 5;
+        this.maxSpeed = 50;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
+        this.movement_alg = new NoMovement_1.NoMovement(this);
+    }
+}
+exports.Parker = Parker;
 
 
 /***/ }),
@@ -3003,6 +3138,7 @@ exports.BreachedPeewee = BreachedPeewee;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Quotidian = exports.himPronoun = exports.heProunon = exports.hisProunon = exports.NB = exports.MALE = exports.FEMALE = exports.Direction = exports.stats_values_mapping = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
+const constants_1 = __webpack_require__(8817);
 const misc_1 = __webpack_require__(4079);
 const NonSeededRandUtils_1 = __webpack_require__(8258);
 const NoMovement_1 = __webpack_require__(4956);
@@ -3172,6 +3308,23 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
+        this.highestStat = () => {
+            const checkIfStatIsHighestOrEqual = (stat) => {
+                return stat >= this.fortitude && stat >= this.prudence && stat >= this.temperance && stat > this.judgement;
+            };
+            if (checkIfStatIsHighestOrEqual(this.fortitude)) {
+                return constants_1.FORTITUDE;
+            }
+            if (checkIfStatIsHighestOrEqual(this.prudence)) {
+                return constants_1.PRUDENCE;
+            }
+            if (checkIfStatIsHighestOrEqual(this.temperance)) {
+                return constants_1.TEMPERANCE;
+            }
+            if (checkIfStatIsHighestOrEqual(this.judgement)) {
+                return constants_1.JUDGEMENT;
+            }
+        };
         this.initStats = () => {
             if (this.fortitude === 0) {
                 this.fortitude = this.rand.getRandomNumberBetween(1, 5);
@@ -3404,6 +3557,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 }, 3000);
             }
         };
+        //if a quotidian needs to do something special do it now
+        this.customSyncCode = () => {
+        };
         this.syncSpriteToDirection = () => {
             //breached creatures look different, as a rule
             if (this.room.totemObject) {
@@ -3429,6 +3585,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 this.image.src = src;
                 this.image.style.width = `${chosen.width}px`;
             }
+            this.customSyncCode();
         };
         this.itsBeenAwhileSinceLastBeat = (actionRate) => {
             return new Date().getTime() - this.timeOfLastBeat > actionRate;
@@ -3648,6 +3805,10 @@ class Solemn extends Quotidian_1.Quotidian {
         super(room, "Solemn", x, y, [Theme_1.all_themes[ThemeStorage_1.LONELY], Theme_1.all_themes[ThemeStorage_1.ANGELS], Theme_1.all_themes[ThemeStorage_1.SERVICE], Theme_1.all_themes[ThemeStorage_1.STEALING]], sprite, "Witherby looks very friendly!", beats);
         this.lore = "Parker says witherby's soul is a Hare...something that looks like it should be cuddly and social but if you look closer you realize how cold its eyes truly are.";
         this.gender = Quotidian_1.MALE;
+        this.fortitude = 2; //he can kick your ribs in, if he needs to
+        this.prudence = 3;
+        this.temperance = 4; //no matter how much he wants something, he can usually hold himself back. this is...not a good thing. it leaves him so isolated and...cold
+        this.judgement = 1; //poor boy is always second guessing himself
         this.maxSpeed = 8;
         this.minSpeed = 5;
         this.currentSpeed = 5;
@@ -3683,6 +3844,7 @@ const baseFilter_1 = __webpack_require__(9505);
 const TargetIsBreaching_1 = __webpack_require__(3779);
 const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
 const Quotidian_1 = __webpack_require__(6387);
+const Relationship_1 = __webpack_require__(7739);
 /*
     todo: once relationship engine is cmoplete vik picks someone at random to hate, and tehn anyone they hate they insult
     (if they pick a new person to hate, or otherwise have two people to hate they forgive one)
@@ -3697,6 +3859,13 @@ class Vik extends Quotidian_1.Quotidian {
         const breachIfTooHungry = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Embrace Corruption`, [`You don't understand what you are seeing. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. Something is wrong. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(13, { singleTarget: true, kMode: true }), new TargetIsBreaching_1.TargetIsBreeching({ invert: true, singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 30);
         const beats = [breachIfTooHungry, becomeHungry];
         super(room, "Vik", x, y, [Theme_1.all_themes[ThemeStorage_1.DARKNESS], Theme_1.all_themes[ThemeStorage_1.CENSORSHIP], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.DECAY], Theme_1.all_themes[ThemeStorage_1.LOVE], Theme_1.all_themes[ThemeStorage_1.FLESH]], sprite, "Their face is lightly censored, but you can still make out most of them.", beats);
+        this.relationshipMap = new Map([
+            ["Parker", new Relationship_1.Relationship("Parker", 10000, "Parker is remarkably resiliant and independant. He does not need anyone to take care of him. That said, he can definitely benefit from reminders to hydrate.", "...", "He made me realize I didn't have to put so much of myself into protecting Yongki. Caregiver fatigue really snuck up on me.", "...", "Parker is the only person I trust to not take advanatage of me even when I am having a bad day.", true, false, true)]
+        ]);
+        this.fortitude = 3;
+        this.prudence = 5;
+        this.temperance = 5;
+        this.judgement = 5;
         this.lore = "Their soul has long since rotted off them in viscous chunks, but Parker claims it once was a cat.";
         this.gender = Quotidian_1.NB;
         this.romanticFOdds = 0.0;
@@ -3818,6 +3987,7 @@ class Yongki extends Quotidian_1.Quotidian {
         const states = [new Captain(room, 0, 0)];
         super(room, "Yongki", x, y, [Theme_1.all_themes[ThemeStorage_1.CLOWNS], Theme_1.all_themes[ThemeStorage_1.CHOICES], Theme_1.all_themes[ThemeStorage_1.DEFENSE], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Yongki, everyones favorite himbo!", beats, states);
         this.gender = Quotidian_1.MALE;
+        this.fortitude = 13; //all other stats ar erandom because of the mirror
         this.maxSpeed = 100;
         this.minSpeed = 5;
         this.currentSpeed = 25;
@@ -4302,6 +4472,49 @@ exports.TargetExistsInAWorldWhereBlorboNamedXIsAlive = TargetExistsInAWorldWhere
 
 /***/ }),
 
+/***/ 6000:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetFortitudeLessThanAmount = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetFortitudeLessThanAmount extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(amount, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            return `${baseFilter_1.TARGETSTRING} is ${this.invert ? "not" : ""}  braver than ${this.amount}}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (!owner.owner) {
+                console.error("INVALID TO CALL A BEAT WITHOUT AN OWNER");
+                return null;
+            }
+            if (target instanceof Quotidian_1.Quotidian) {
+                if (target.fortitude < this.amount) {
+                    targetLocked = true;
+                }
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+        this.amount = amount;
+    }
+}
+exports.TargetFortitudeLessThanAmount = TargetFortitudeLessThanAmount;
+
+
+/***/ }),
+
 /***/ 4864:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -4436,6 +4649,49 @@ class TargetHasTheme extends baseFilter_1.TargetFilter {
     }
 }
 exports.TargetHasTheme = TargetHasTheme;
+
+
+/***/ }),
+
+/***/ 5362:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetHighestStatIsX = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetHighestStatIsX extends baseFilter_1.TargetFilter {
+    //this is not a place of honor
+    constructor(stat, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            return `${baseFilter_1.TARGETSTRING}'s highest stat is ${this.invert ? "not" : ""}   ${this.stat}}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (!owner.owner) {
+                console.error("INVALID TO CALL A BEAT WITHOUT AN OWNER");
+                return null;
+            }
+            if (target instanceof Quotidian_1.Quotidian) {
+                if (target.highestStat() === this.stat) {
+                    targetLocked = true;
+                }
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+        this.stat = stat;
+    }
+}
+exports.TargetHighestStatIsX = TargetHighestStatIsX;
 
 
 /***/ }),
@@ -4882,6 +5138,49 @@ exports.TargetIsTheKillerOfBlorboNamed = TargetIsTheKillerOfBlorboNamed;
 
 /***/ }),
 
+/***/ 3678:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetJudgementLessThanAmount = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetJudgementLessThanAmount extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(amount, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            return `${baseFilter_1.TARGETSTRING} is ${this.invert ? "not" : ""} less judgement than ${this.amount}}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (!owner.owner) {
+                console.error("INVALID TO CALL A BEAT WITHOUT AN OWNER");
+                return null;
+            }
+            if (target instanceof Quotidian_1.Quotidian) {
+                if (target.judgement < this.amount) {
+                    targetLocked = true;
+                }
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+        this.amount = amount;
+    }
+}
+exports.TargetJudgementLessThanAmount = TargetJudgementLessThanAmount;
+
+
+/***/ }),
+
 /***/ 4165:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -4930,6 +5229,49 @@ exports.TargetNameIncludesAnyOfTheseWords = TargetNameIncludesAnyOfTheseWords;
 
 /***/ }),
 
+/***/ 1877:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetPrudenceLessThanAmount = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetPrudenceLessThanAmount extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(amount, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            return `${baseFilter_1.TARGETSTRING} is ${this.invert ? "not" : ""} less prudent than ${this.amount}}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (!owner.owner) {
+                console.error("INVALID TO CALL A BEAT WITHOUT AN OWNER");
+                return null;
+            }
+            if (target instanceof Quotidian_1.Quotidian) {
+                if (target.prudence < this.amount) {
+                    targetLocked = true;
+                }
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+        this.amount = amount;
+    }
+}
+exports.TargetPrudenceLessThanAmount = TargetPrudenceLessThanAmount;
+
+
+/***/ }),
+
 /***/ 3400:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -4969,6 +5311,49 @@ class TargetStabilityLevelLessThanAmount extends baseFilter_1.TargetFilter {
     }
 }
 exports.TargetStabilityLevelLessThanAmount = TargetStabilityLevelLessThanAmount;
+
+
+/***/ }),
+
+/***/ 5159:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TargetTemperenceLessThanAmount = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class TargetTemperenceLessThanAmount extends baseFilter_1.TargetFilter {
+    //NOTE NO REAL TIME INFORMATION SHOULD BE STORED HERE. ANY INSTANCE OF THIS FILTER SHOULD BEHAVE THE EXACT SAME WAY
+    constructor(amount, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            return `${baseFilter_1.TARGETSTRING} is ${this.invert ? "not" : ""} less temperant than ${this.amount}}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (!owner.owner) {
+                console.error("INVALID TO CALL A BEAT WITHOUT AN OWNER");
+                return null;
+            }
+            if (target instanceof Quotidian_1.Quotidian) {
+                if (target.temperance < this.amount) {
+                    targetLocked = true;
+                }
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+        this.amount = amount;
+    }
+}
+exports.TargetTemperenceLessThanAmount = TargetTemperenceLessThanAmount;
 
 
 /***/ }),
@@ -5683,8 +6068,7 @@ class PhysicalObject {
         this.clone = () => {
             return new PhysicalObject(this.room, this.name, this.x, this.y, this.width, this.height, this.themes, this.layer, this.src, this.flavorText);
         };
-        this.customShit = () => {
-            //for example, living creatures might say things
+        this.customShitForRendering = () => {
         };
         this.updateRendering = () => {
             requestAnimationFrame(() => {
@@ -5695,7 +6079,7 @@ class PhysicalObject {
                 //console.log(`JR NOTE: moving ${this.x}, ${this.y} which offset is ${this.original_x-this.x}, ${this.original_y-this.y}`)
                 this.container.style.transform = `translate(${this.x - this.original_x}px,${this.y - this.original_y}px)`;
                 this.container.setAttribute("currentLocation", `${this.x}, ${this.y}`);
-                this.customShit();
+                this.customShitForRendering();
             });
         };
         //if you give me a filter i'll remove it and nothing else (useful for when blorbos dies)
@@ -5783,6 +6167,7 @@ class PhysicalObject {
                 this.image.src = this.src;
             }
             this.image.style.width = `${this.width}px`;
+            this.image.setAttribute("lore", this.lore); //see im helping
             if (this instanceof Quotidian_1.Quotidian) {
                 this.image.classList.add("shake"); //the living are never truly still
             }
@@ -6136,6 +6521,7 @@ const EyeKiller_1 = __webpack_require__(2937);
 const Peewee_1 = __webpack_require__(936);
 const Quotidian_1 = __webpack_require__(6387);
 const SnailFriend_1 = __webpack_require__(240);
+const JR_1 = __webpack_require__(7455);
 const Match_1 = __webpack_require__(7685);
 const Underscore_1 = __webpack_require__(9194);
 const Solemn_1 = __webpack_require__(5322);
@@ -6146,6 +6532,8 @@ const Yongki_1 = __webpack_require__(3908);
 const URLUtils_1 = __webpack_require__(389);
 const __1 = __webpack_require__(3607);
 const End_1 = __webpack_require__(8115);
+const Parker_1 = __webpack_require__(3873);
+const K_1 = __webpack_require__(1069);
 class Maze {
     constructor(ele, storySoFar, rand) {
         this.debug = false;
@@ -6200,7 +6588,9 @@ class Maze {
                 this.blorbos.push(new Devona_1.Devona(this.room, 150, 150));
                 this.blorbos.push(new Neville_1.Neville(this.room, 150, 150));
                 this.blorbos.push(new Yongki_1.Yongki(this.room, 150, 150));
-                //this.blorbos.push(new JR(this.room, 150, 150));
+                this.blorbos.push(new JR_1.JR(this.room, 150, 150));
+                this.blorbos.push(new K_1.Khana(this.room, 150, 150));
+                this.blorbos.push(new Parker_1.Parker(this.room, 150, 150));
             }
         };
         this.begin = () => {
@@ -6235,7 +6625,7 @@ class Maze {
                 return;
             }
             //const blorbosToTest = ["Camille", "Ria"];
-            const blorbosToTest = ["Vik", "Yongki"];
+            const blorbosToTest = ["Eye Killer", "Yongki"];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
                     for (let theme of blorbo.themes) {
@@ -10745,9 +11135,13 @@ exports.updateURLParams = updateURLParams;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.max_values_for_menus = exports.TRUTH = exports.CODE = exports.WARROOM = exports.RESISTANCES = exports.BACKSTORY = exports.LORE = exports.INVENTORY = exports.CITYBUILDING = exports.GODS = exports.COMPANIONS = exports.QUESTS = exports.OPTIONS = exports.ACHIEVEMENTS = exports.STATISTICS = exports.STATUS = exports.LOADING = exports.ACTUAL_GAME = exports.SKILLGRAPH = exports.THE_END_IS_NEVER = exports.HORROR_KEY = exports.TIME_KEY = void 0;
+exports.max_values_for_menus = exports.TRUTH = exports.CODE = exports.WARROOM = exports.RESISTANCES = exports.BACKSTORY = exports.LORE = exports.INVENTORY = exports.CITYBUILDING = exports.GODS = exports.COMPANIONS = exports.QUESTS = exports.OPTIONS = exports.ACHIEVEMENTS = exports.STATISTICS = exports.STATUS = exports.LOADING = exports.ACTUAL_GAME = exports.SKILLGRAPH = exports.THE_END_IS_NEVER = exports.HORROR_KEY = exports.TEMPERANCE = exports.JUDGEMENT = exports.PRUDENCE = exports.FORTITUDE = exports.TIME_KEY = void 0;
 //:) :) :)
 exports.TIME_KEY = "PlzHackTypingTimesToMakeThemAll_Zampanio";
+exports.FORTITUDE = "FORTITUDE";
+exports.PRUDENCE = "PRUDENCE";
+exports.JUDGEMENT = "JUDGEMENT";
+exports.TEMPERANCE = "TEMPERANCE";
 exports.HORROR_KEY = "zampanio_horror";
 exports.THE_END_IS_NEVER = "01010100 01001000 01000101 00100000 01000101 01001110 01000100 00100000 01001001 01010011 00100000 01001110 01000101 01010110 01000101 01010010 00100000 01010100 01001000 01000101 00100000 01000101 01001110 01000100 00100000 01001001 01010011 00100000 01001110 01000101 01010110 01000101 01010010";
 exports.SKILLGRAPH = "SKILLGRAPH"; //???
@@ -11056,6 +11450,7 @@ const handleClick = () => {
         }
         const audio = new Audio();
         audio.src = "audio/weirdmusic.mp3";
+        audio.volume = 0.5;
         audio.loop = true;
         audio.play();
         window.removeEventListener("click", handleClick);
@@ -13613,10 +14008,14 @@ var map = {
 	"./Objects/Entities/Blorbos/EyeKiller.ts": 2937,
 	"./Objects/Entities/Blorbos/JR": 7455,
 	"./Objects/Entities/Blorbos/JR.ts": 7455,
+	"./Objects/Entities/Blorbos/K": 1069,
+	"./Objects/Entities/Blorbos/K.ts": 1069,
 	"./Objects/Entities/Blorbos/Match": 7685,
 	"./Objects/Entities/Blorbos/Match.ts": 7685,
 	"./Objects/Entities/Blorbos/Neville": 3668,
 	"./Objects/Entities/Blorbos/Neville.ts": 3668,
+	"./Objects/Entities/Blorbos/Parker": 3873,
+	"./Objects/Entities/Blorbos/Parker.ts": 3873,
 	"./Objects/Entities/Blorbos/Peewee": 936,
 	"./Objects/Entities/Blorbos/Peewee.ts": 936,
 	"./Objects/Entities/Blorbos/Quotidian": 6387,
@@ -13647,12 +14046,16 @@ var map = {
 	"./Objects/Entities/TargetFilter/RandomTarget.ts": 9824,
 	"./Objects/Entities/TargetFilter/TargetExistsInAWorldWhereBlorboWithNameIsAlive": 4186,
 	"./Objects/Entities/TargetFilter/TargetExistsInAWorldWhereBlorboWithNameIsAlive.ts": 4186,
+	"./Objects/Entities/TargetFilter/TargetFortitudeLessThanAmount": 6000,
+	"./Objects/Entities/TargetFilter/TargetFortitudeLessThanAmount.ts": 6000,
 	"./Objects/Entities/TargetFilter/TargetHasObjectWithName": 4864,
 	"./Objects/Entities/TargetFilter/TargetHasObjectWithName.ts": 4864,
 	"./Objects/Entities/TargetFilter/TargetHasObjectWithTheme": 9093,
 	"./Objects/Entities/TargetFilter/TargetHasObjectWithTheme.ts": 9093,
 	"./Objects/Entities/TargetFilter/TargetHasTheme": 2615,
 	"./Objects/Entities/TargetFilter/TargetHasTheme.ts": 2615,
+	"./Objects/Entities/TargetFilter/TargetHighestStatIsX": 5362,
+	"./Objects/Entities/TargetFilter/TargetHighestStatIsX.ts": 5362,
 	"./Objects/Entities/TargetFilter/TargetIsAlive": 7064,
 	"./Objects/Entities/TargetFilter/TargetIsAlive.ts": 7064,
 	"./Objects/Entities/TargetFilter/TargetIsBlorboBox": 4068,
@@ -13673,10 +14076,16 @@ var map = {
 	"./Objects/Entities/TargetFilter/TargetIsWithinRadiusOfSelf.ts": 5535,
 	"./Objects/Entities/TargetFilter/TargetIstheKillerOfBlorboNamed": 7082,
 	"./Objects/Entities/TargetFilter/TargetIstheKillerOfBlorboNamed.ts": 7082,
+	"./Objects/Entities/TargetFilter/TargetJudgementLessThanAmount": 3678,
+	"./Objects/Entities/TargetFilter/TargetJudgementLessThanAmount.ts": 3678,
 	"./Objects/Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords": 4165,
 	"./Objects/Entities/TargetFilter/TargetNameIncludesAnyOfTheseWords.ts": 4165,
+	"./Objects/Entities/TargetFilter/TargetPrudenceLessThanAmount": 1877,
+	"./Objects/Entities/TargetFilter/TargetPrudenceLessThanAmount.ts": 1877,
 	"./Objects/Entities/TargetFilter/TargetStabilityLevelLessThanAmount": 3400,
 	"./Objects/Entities/TargetFilter/TargetStabilityLevelLessThanAmount.ts": 3400,
+	"./Objects/Entities/TargetFilter/TargetTemperenceLessThanAmount": 5159,
+	"./Objects/Entities/TargetFilter/TargetTemperenceLessThanAmount.ts": 5159,
 	"./Objects/Entities/TargetFilter/baseFilter": 9505,
 	"./Objects/Entities/TargetFilter/baseFilter.ts": 9505,
 	"./Objects/Entities/TargetFilter/test": 1522,

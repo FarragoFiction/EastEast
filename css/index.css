@@ -388,6 +388,17 @@ textarea{
 
 }
 
+#current-room-for-spooky-eyes{
+  height: 600px;
+  width: 400px;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 50px;
+  border: 10px solid #292929;
+  position: relative;
+}
+
 #current-room{
   height: 600px;
   width: 400px;
@@ -396,8 +407,8 @@ textarea{
   margin-right: auto;
   margin-bottom: 50px;
   background-image: url("../images/Walkabout/floor/woodfloor.png");
-  border: 10px solid #292929;
-  position: relative;
+  position: absolute;
+  top: 0px;
 }
 
 .storybeat{
