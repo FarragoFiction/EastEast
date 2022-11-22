@@ -46,7 +46,7 @@ export class Room {
     name = "???";
     pendingStoryBeats: StoryBeat[] = [];
     timer?: NodeJS.Timeout;
-  
+
 
 
     //objects
@@ -60,7 +60,7 @@ export class Room {
         this.init();
     }
 
-    eraseObject = (object: PhysicalObject)=>{
+    eraseObject = (object: PhysicalObject) => {
         removeItemOnce(this.blorbos, object);
         removeItemOnce(this.items, object);
         object.container.remove();
@@ -116,14 +116,14 @@ export class Room {
     }
 
     //if you give me a filter i'll remove it and nothing else (useful for when blorbos dies)
-    clearFilterPart = (filter: string)=>{
-        this.filterString = this.filterString.replaceAll(filter,"");
+    clearFilterPart = (filter: string) => {
+        this.filterString = this.filterString.replaceAll(filter, "");
         this.element.style.filter = this.filterString;
 
     }
 
-    applyFilter = (filter: string, overwrite = true)=>{
-        if(overwrite){
+    applyFilter = (filter: string, overwrite = true) => {
+        if (overwrite) {
             this.filterString = "";
         }
         this.filterString += filter;
@@ -137,7 +137,7 @@ export class Room {
         this.timesVisited++;
         await this.spawnChildrenIfNeeded();
         this.element.innerHTML = "";
-        if(this.peewee){
+        if (this.peewee) {
             this.peewee.horrorGame = false;
         }
         this.element.style.filter = this.filterString;
@@ -236,8 +236,13 @@ export class Room {
 
     addBlorbo = (blorbo: Quotidian) => {
         //so they don't spawn on a door
-        blorbo.x = 150;
-        blorbo.y = 350;
+        if (blorbo.name.toUpperCase().includes("PEEWEE")) {
+            blorbo.x = 150;
+            blorbo.y = 350;
+        } else { //they're already in the room
+            blorbo.x = this.rand.getRandomNumberBetween(0, this.width - 100);
+            blorbo.y = this.rand.getRandomNumberBetween(0, this.height - 100);
+        }
         this.blorbos.push(blorbo);
         blorbo.attachToParent(this.element);
         blorbo.room = this; //if they were spawning in a different room before, too bad
@@ -390,7 +395,7 @@ export class Room {
             if (!blorbo.dead) {
                 blorbo.tick(this.actionRate, this.beats);
             }
-            if(!this.peewee?.breaching){ //if he's breaching, all doors are locked
+            if (!this.peewee?.breaching) { //if he's breaching, all doors are locked
                 this.checkForDoors(blorbo);
             }
         }
@@ -406,7 +411,7 @@ export class Room {
             for (let item of this.items) {
                 if (artifact.name === item.name) {
                     object_found = true;
-                    this.maze.truthConsole(`${artifact.name.toUpperCase()} FOUND!`,`${artifact.name} found inside this room. Be cautious.`)
+                    this.maze.truthConsole(`${artifact.name.toUpperCase()} FOUND!`, `${artifact.name} found inside this room. Be cautious.`)
                 }
             }
             if (!object_found) {
@@ -414,7 +419,7 @@ export class Room {
                     for (let item of blorbo.inventory) {
                         if (artifact.name === item.name) {
                             object_found = true;
-                            this.maze.truthConsole(`${artifact.name.toUpperCase()} FOUND!`,`${artifact.name} found inside ${blorbo.processedName()}'s inventory. Be cautious.`)
+                            this.maze.truthConsole(`${artifact.name.toUpperCase()} FOUND!`, `${artifact.name} found inside ${blorbo.processedName()}'s inventory. Be cautious.`)
                         }
                     }
                 }
@@ -423,21 +428,21 @@ export class Room {
                 missingAny = true;
             }
         }
-        if(!missingAny){
-            this.maze.truthConsole(`All 9 Artifacts Found!`,`You were warned. No matter. Begining Apocalypse.`)
+        if (!missingAny) {
+            this.maze.truthConsole(`All 9 Artifacts Found!`, `You were warned. No matter. Begining Apocalypse.`)
             this.maze.apocalypse();
             this.stopTicking();
-    
+
             return true;
         }
 
     }
 
     //order is theme beats, then communcal ai
-    setupBeats = ()=>{
-        for(let theme of this.themes){
-            if(theme.beats && theme.beats.length > 0){
-                this.beats = [...theme.beats,...this.beats];
+    setupBeats = () => {
+        for (let theme of this.themes) {
+            if (theme.beats && theme.beats.length > 0) {
+                this.beats = [...theme.beats, ...this.beats];
             }
         }
         this.beats = [...this.beats, ...communal_ai];
@@ -529,9 +534,9 @@ export class Room {
 export const randomRoomWithThemes = async (maze: Maze, ele: HTMLElement, themes: Theme[], seededRandom: SeededRandom) => {
     const room = new Room(maze, themes, ele, seededRandom);
     const items1: RenderedItem[] = await spawnWallObjects(room.width, room.height, 0, WALLBACKGROUND, "BackWallObjects", seededRandom, themes);
-    const items3: RenderedItem[] = await spawnFloorObjects(maze,room.width, room.height, 0, FLOORBACKGROUND, "UnderFloorObjects", seededRandom, themes);
+    const items3: RenderedItem[] = await spawnFloorObjects(maze, room.width, room.height, 0, FLOORBACKGROUND, "UnderFloorObjects", seededRandom, themes);
     const items2: RenderedItem[] = await spawnWallObjects(room.width, room.height, 1, WALLFOREGROUND, "FrontWallObjects", seededRandom, themes);
-    const items4: RenderedItem[] = await spawnFloorObjects(maze,room.width, room.height, 1, FLOORFOREGROUND, "TopFloorObjects", seededRandom, themes);
+    const items4: RenderedItem[] = await spawnFloorObjects(maze, room.width, room.height, 1, FLOORFOREGROUND, "TopFloorObjects", seededRandom, themes);
     const items = items3.concat(items2.concat(items4));
     for (let item of items) {
         room.addItem(new PhysicalObject(room, item.name, item.x, item.y, item.width, item.height, item.themes, item.layer, item.src, item.flavorText))
@@ -568,7 +573,7 @@ export const spawnWallObjects = async (width: number, height: number, layer: num
 
 
 //has to be async because it checks the image size for positioning
-const spawnFloorObjects = async (maze:Maze,width: number, height: number, layer: number, key: string, folder: string, seededRandom: SeededRandom, themes: Theme[]) => {
+const spawnFloorObjects = async (maze: Maze, width: number, height: number, layer: number, key: string, folder: string, seededRandom: SeededRandom, themes: Theme[]) => {
     let current_x = 0;
     const floor_bottom = 140;
     let current_y = floor_bottom;

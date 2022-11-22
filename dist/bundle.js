@@ -6965,8 +6965,14 @@ class Room {
         };
         this.addBlorbo = (blorbo) => {
             //so they don't spawn on a door
-            blorbo.x = 150;
-            blorbo.y = 350;
+            if (blorbo.name.toUpperCase().includes("PEEWEE")) {
+                blorbo.x = 150;
+                blorbo.y = 350;
+            }
+            else {
+                blorbo.x = this.rand.getRandomNumberBetween(0, this.width - 100);
+                blorbo.y = this.rand.getRandomNumberBetween(0, this.height - 100);
+            }
             this.blorbos.push(blorbo);
             blorbo.attachToParent(this.element);
             blorbo.room = this; //if they were spawning in a different room before, too bad

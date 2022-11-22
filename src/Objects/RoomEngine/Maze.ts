@@ -80,7 +80,7 @@ export class Maze {
         this.changeRoom(this.room, false);
         initRabbitHole(this.room);
     }
-
+//GONCHAROV (not related to this, although it WOULD be fun to add him to the sim), just using it as a reminder
     initializeBlorbos = () => {
         if (this.room) {
             this.blorbos.push(new Vik(this.room, 150,150),
