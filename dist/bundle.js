@@ -6575,6 +6575,7 @@ class Maze {
             this.changeRoom(this.room, false);
             (0, PasswordStorage_1.initRabbitHole)(this.room);
         };
+        //GONCHAROV (not related to this, although it WOULD be fun to add him to the sim), just using it as a reminder
         this.initializeBlorbos = () => {
             if (this.room) {
                 this.blorbos.push(new Underscore_1.Vik(this.room, 150, 150), new Quotidian_1.Quotidian(this.room, "Quotidian", 150, 350, [Theme_1.all_themes[ThemeStorage_1.SPYING]], { default_src: { src: "humanoid_crow.gif", width: 50, height: 50 } }, "testing", []));
@@ -6969,7 +6970,7 @@ class Room {
                 blorbo.x = 150;
                 blorbo.y = 350;
             }
-            else {
+            else { //they're already in the room
                 blorbo.x = this.rand.getRandomNumberBetween(0, this.width - 100);
                 blorbo.y = this.rand.getRandomNumberBetween(0, this.height - 100);
             }
@@ -7680,6 +7681,7 @@ const constants_1 = __webpack_require__(8817);
 const ChangeMyStabilityLevelByAmount_1 = __webpack_require__(8801);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
+const TargetHighestStatIsX_1 = __webpack_require__(5362);
 const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
 const Memory_1 = __webpack_require__(7953);
 const Stat = __importStar(__webpack_require__(9137));
@@ -8158,10 +8160,18 @@ const initWallForegrounds = () => {
     wall_foregrounds[DEFENSE] =  ["Excalibur"] ;
     wall_foregrounds[QUESTING] = ["Satisfaction"] ;*/
 };
+//homoerotic anchovy scene
+//addiction scene
 const initBeatList = () => {
     exports.beat_list[exports.TWISTING] = [
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} clutches ${BaseBeat_1.SUBJECT_HIS_SCRIPT} head, ${BaseBeat_1.SUBJECT_HIS_SCRIPT} eyes spiralling in every direction. ${BaseBeat_1.SUBJECT_HE_SCRIPT} doesn't know how to parse what ${BaseBeat_1.SUBJECT_HE_SCRIPT} is experiencing. ${BaseBeat_1.SUBJECT_HIS_SCRIPT} mind cracks open the littlest bit in response. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true })], //don't go if you're already unstable
-        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30)
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} begins clutching their head and roaring in pain. You see murder in their eyes as they desperately try to parse what they are seeing in this terrible, terrible room.`], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.FORTITUDE)], //don't go if you're already unstable
+        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} begins clutching their head and whimpering in pain. They desperately try to flee the twisting spiralling chaos they are seeing in this terrible, terrible room.`], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.PRUDENCE)], //don't go if you're already unstable
+        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} begins clutching their head and grunting in pain. They freeze in place as they desperately try to process what they are seeing in this terrible, terrible room.`], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.PRUDENCE)], //don't go if you're already unstable
+        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} begins clutching their head and hissing in pain. They resolutely stare at the shifting, twisting, spiralling madness, refusing to let it defeat them.`], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.JUDGEMENT)], //don't go if you're already unstable
+        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30),
     ];
 };
 //no one said quotidians are locked into only mimicking HUMANS, just sapient things. 

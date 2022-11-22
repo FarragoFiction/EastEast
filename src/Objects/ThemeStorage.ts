@@ -1,4 +1,4 @@
-import { ACHIEVEMENTS, BACKSTORY, CITYBUILDING, CODE, COMPANIONS, FORTITUDE, GODS, INVENTORY, JUDGEMENT, LORE, OPTIONS, PRUDENCE, QUESTS, RESISTANCES, SKILLGRAPH, STATISTICS, STATUS, WARROOM } from '../Utils/constants';
+import { ACHIEVEMENTS, BACKSTORY, CITYBUILDING, CODE, COMPANIONS, FORTITUDE, GODS, INVENTORY, JUDGEMENT, LORE, OPTIONS, PRUDENCE, QUESTS, RESISTANCES, SKILLGRAPH, STATISTICS, STATUS, TEMPERANCE, WARROOM } from '../Utils/constants';
 import { ChangeMyStabilityLevelByAmount } from './Entities/Actions/ChangeMyStabilityLevelByAmount';
 import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from './Entities/StoryBeats/BaseBeat';
 import { SUBJECTSTRING } from './Entities/TargetFilter/baseFilter';
@@ -609,7 +609,7 @@ const initBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Degrade Stability`,
             [`${SUBJECTSTRING} begins clutching their head and grunting in pain. They freeze in place as they desperately try to process what they are seeing in this terrible, terrible room.`],
-            [new TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true }), new TargetHighestStatIsX(PRUDENCE)], //don't go if you're already unstable
+            [new TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true }), new TargetHighestStatIsX(TEMPERANCE)], //don't go if you're already unstable
             [new ChangeMyStabilityLevelByAmount(-13)],
             true,
             1000 * 30),
