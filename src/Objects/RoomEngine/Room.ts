@@ -41,7 +41,7 @@ export class Room {
     items: PhysicalObject[] = [];
     ticking = false;
     tickRate = 100;
-    actionRate = 200;
+    actionRate = 1000*10; //every ten seconds unless you have a fast follow
     children: Room[] = [];
     name = "???";
     pendingStoryBeats: StoryBeat[] = [];

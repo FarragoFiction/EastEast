@@ -47,21 +47,21 @@ Alt: Stranger of Fleshy Dreams
 Neighbor: Friend of Strange Doom
 Tyrfing: Warrior of Destroyed Hope
 NAM: Child of Fated Identities*/
-export const stats_values_mapping = (value:number) => {
+export const stats_values_mapping = (value: number) => {
     if (value === 1) {
-      return "I";
-    } else if (value ===2) {
-      return "II";
-    } else if (value ===3) {
-      return "III";
-    } else if (value ===4) {
-      return "IV";
-    } else if (value ===5) {
-      return "V";
-    }else{
+        return "I";
+    } else if (value === 2) {
+        return "II";
+    } else if (value === 3) {
+        return "III";
+    } else if (value === 4) {
+        return "IV";
+    } else if (value === 5) {
+        return "V";
+    } else {
         return "EX";
     }
-  }
+}
 
 
 export enum Direction {
@@ -219,44 +219,44 @@ export class Quotidian extends PhysicalObject {
         this.makeBeatsMyOwn(beats);
     }
 
-    highestStat = ()=>{
-        const checkIfStatIsHighestOrEqual = (stat: number)=>{
+    highestStat = () => {
+        const checkIfStatIsHighestOrEqual = (stat: number) => {
             return stat >= this.fortitude && stat >= this.prudence && stat >= this.temperance && stat > this.judgement;
         }
 
-        if(checkIfStatIsHighestOrEqual(this.fortitude)){
+        if (checkIfStatIsHighestOrEqual(this.fortitude)) {
             return FORTITUDE;
         }
 
-        if(checkIfStatIsHighestOrEqual(this.prudence)){
+        if (checkIfStatIsHighestOrEqual(this.prudence)) {
             return PRUDENCE;
         }
 
-        if(checkIfStatIsHighestOrEqual(this.temperance)){
+        if (checkIfStatIsHighestOrEqual(this.temperance)) {
             return TEMPERANCE;
         }
 
-        if(checkIfStatIsHighestOrEqual(this.judgement)){
+        if (checkIfStatIsHighestOrEqual(this.judgement)) {
             return JUDGEMENT;
         }
-  
+
     }
 
-    initStats = ()=>{
-        if(this.fortitude === 0){
-            this.fortitude = this.rand.getRandomNumberBetween(1,5);
+    initStats = () => {
+        if (this.fortitude === 0) {
+            this.fortitude = this.rand.getRandomNumberBetween(1, 5);
         }
 
-        if(this.prudence === 0){
-            this.prudence = this.rand.getRandomNumberBetween(1,5);
+        if (this.prudence === 0) {
+            this.prudence = this.rand.getRandomNumberBetween(1, 5);
         }
 
-        if(this.temperance === 0){
-            this.temperance = this.rand.getRandomNumberBetween(1,5);
+        if (this.temperance === 0) {
+            this.temperance = this.rand.getRandomNumberBetween(1, 5);
         }
 
-        if(this.judgement === 0){
-            this.judgement = this.rand.getRandomNumberBetween(1,5);
+        if (this.judgement === 0) {
+            this.judgement = this.rand.getRandomNumberBetween(1, 5);
         }
     }
 
@@ -537,8 +537,8 @@ export class Quotidian extends PhysicalObject {
     }
 
     //if a quotidian needs to do something special do it now
-    customSyncCode = ()=>{
-
+    customSyncCode = () => {
+        //nothing for default quotidians
     }
 
 
@@ -575,7 +575,7 @@ export class Quotidian extends PhysicalObject {
         return new Date().getTime() - this.timeOfLastBeat > actionRate;
     }
 
-    processAiBeat = (roomBeats: AiBeat[]) => {
+    processAiBeat = (roomBeats: AiBeat[], onlyFastFollow: boolean) => {
         const toRemove: AiBeat[] = [];
         let didSomething = false;
         //only does a room beat if all of my own ai does nothing
@@ -586,23 +586,24 @@ export class Quotidian extends PhysicalObject {
             allPossibilities.push(clonse); //IMPORTANT, need to set myself up as its owner for this tick
         }
         for (let beat of allPossibilities) {
-            if (beat.triggered(this.room)) {
+            if (onlyFastFollow && beat.canFastFollow || !onlyFastFollow) {
+                if (beat.triggered(this.room)) {
+                    didSomething = true;
+                    this.timeOfLastBeat = new Date().getTime();
+                    this.container.style.zIndex = `${30}`; //stand out
 
-                didSomething = true;
-                this.timeOfLastBeat = new Date().getTime();
-                this.container.style.zIndex = `${30}`; //stand out
-
-                beat.performActions(this.room);
-                for (let b of roomBeats) {
-                    if (beat.flavorText === b.flavorText) {
-                        b.timeOfLastBeat = this.timeOfLastBeat; //make it so room effects know when they were last done so everyone in it can't just spam it in lockstep
+                    beat.performActions(this.room);
+                    for (let b of roomBeats) {
+                        if (beat.flavorText === b.flavorText) {
+                            b.timeOfLastBeat = this.timeOfLastBeat; //make it so room effects know when they were last done so everyone in it can't just spam it in lockstep
+                        }
                     }
-                }
 
-                if (!beat.permanent) {
-                    toRemove.push(beat);
+                    if (!beat.permanent) {
+                        toRemove.push(beat);
+                    }
+                    break;
                 }
-                break;
             }
         }
 
@@ -643,9 +644,8 @@ export class Quotidian extends PhysicalObject {
             this.friend.tick();
         }
         //you can move quicker than you can think
-        if (this.itsBeenAwhileSinceLastBeat(actionRate)) {
-            this.processAiBeat(roomBeats);
-        }
+        this.processAiBeat(roomBeats, this.itsBeenAwhileSinceLastBeat(actionRate));
+
         this.movement_alg.tick();
         this.syncSpriteToDirection();
         this.updateRendering();
