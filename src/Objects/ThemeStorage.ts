@@ -3,8 +3,10 @@ import { ChangeMyStabilityLevelByAmount } from './Entities/Actions/ChangeMyStabi
 import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from './Entities/StoryBeats/BaseBeat';
 import { SUBJECTSTRING } from './Entities/TargetFilter/baseFilter';
 import { RandomTarget } from './Entities/TargetFilter/RandomTarget';
+import { TargetHasObjectWithName } from './Entities/TargetFilter/TargetHasObjectWithName';
 import { TargetHighestStatIsX } from './Entities/TargetFilter/TargetHighestStatIsX';
 import { TargetStabilityLevelLessThanAmount } from './Entities/TargetFilter/TargetStabilityLevelLessThanAmount';
+import { TargetTemperenceLessThanAmount } from './Entities/TargetFilter/TargetTemperenceLessThanAmount';
 import { Memory } from './Memory';
 import * as Stat from './Stat';
 
@@ -587,6 +589,32 @@ const initWallForegrounds = () => {
 //homoerotic anchovy scene
 //addiction scene
 const initBeatList = () => {
+    beat_list[ADDICTION] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Gamble Obsessively`,
+            [`${SUBJECTSTRING} knows they can win next time. Just one more time. One more time. They're due any minute now.`],
+            [new TargetTemperenceLessThanAmount(2, {singleTarget:true, kMode: true})], //you really can't control yourself can you
+            [new ChangeMyStabilityLevelByAmount(-13)],
+            true,
+            1000 * 30),
+
+            new AiBeat(
+                `${SUBJECTSTRING}: Scratch Coin`,
+                [`${SUBJECTSTRING}  They scratch rhythmically at the coin in their inventory, hoping to reveal a prize underneath its metal surface.`],//i had a dream like this. where a fae didn't understand what gambling was and took a coin flip to mean it was a scratch off ticket. don't judge me
+                [new TargetHasObjectWithName(["COIN"]), new TargetTemperenceLessThanAmount(2, {singleTarget:true, kMode: true})], //you really can't control yourself can you
+                [new ChangeMyStabilityLevelByAmount(-113)],
+                true,
+                1000 * 30),
+        new AiBeat(
+            `${SUBJECTSTRING}: Watch the Gambling`,
+            [`${SUBJECTSTRING} watches the ambient gambling in the room with equanimy. You can see in their eyes how much they'd prefer to join in. It would be easier, you think, to simply ignore the gambling. No. This is a test of will. They are proving to themself they can resist it indefinitely. `],
+            [new TargetTemperenceLessThanAmount(4, {singleTarget:true, kMode: true})], //you think self control is the highest virtue.
+            [new ChangeMyStabilityLevelByAmount(13)],
+            true,
+            1000 * 30),
+
+    ]
+
     beat_list[TWISTING] = [
 
         new AiBeat(
@@ -614,13 +642,13 @@ const initBeatList = () => {
             true,
             1000 * 30),
 
-            new AiBeat(
-                `${SUBJECTSTRING}: Degrade Stability`,
-                [`${SUBJECTSTRING} begins clutching their head and hissing in pain. They resolutely stare at the shifting, twisting, spiralling madness, refusing to let it defeat them.`],
-                [new TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true }), new TargetHighestStatIsX(JUDGEMENT)], //don't go if you're already unstable
-                [new ChangeMyStabilityLevelByAmount(-13)],
-                true,
-                1000 * 30),
+        new AiBeat(
+            `${SUBJECTSTRING}: Degrade Stability`,
+            [`${SUBJECTSTRING} begins clutching their head and hissing in pain. They resolutely stare at the shifting, twisting, spiralling madness, refusing to let it defeat them.`],
+            [new TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true }), new TargetHighestStatIsX(JUDGEMENT)], //don't go if you're already unstable
+            [new ChangeMyStabilityLevelByAmount(-13)],
+            true,
+            1000 * 30),
     ];
 }
 

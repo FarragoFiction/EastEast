@@ -128,7 +128,8 @@ export class EyeKiller extends Quotidian {
             [new TargetNameIncludesAnyOfTheseWords(["Egg"]), new TargetIsWithinRadiusOfSelf(5)],
             [new PickupObject()],
             true,
-            1000 * 60
+            1000 * 60,
+            true
         );
 
         //new IHaveObjectWithName(["Egg"], {invert: true}),new TargetHasObjectWithName(["Egg"], {invert: true}),
@@ -138,7 +139,8 @@ export class EyeKiller extends Quotidian {
             [new IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboOrBox(), new TargetIsAlive(), new TargetIsWithinRadiusOfSelf(5, { singleTarget: true })],
             [new MeleeKill("brutally stabs over and over"), new AddThemeToRoom(all_themes[KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet(all_themes[KILLING], `${TARGETSTRING}'s blood`, `Something very upsetting happened here to ${TARGETSTRING}.`)],
             true,
-            30 * 1000
+            30 * 1000,
+            true
         );
 
         const desecrateCorpse = new AiBeat(

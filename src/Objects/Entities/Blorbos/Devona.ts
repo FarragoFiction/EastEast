@@ -78,6 +78,7 @@ export class Devona extends Quotidian{
             [new PickupObject()],
             true,
             1000*90
+            ,true
         );
 
         //if devona has an object, she brings it to twinsey
@@ -96,7 +97,8 @@ export class Devona extends Quotidian{
             [new IHaveObjectWithName([]), new TargetNameIncludesAnyOfTheseWords(["Neville"], {singleTarget: true}), new TargetIsAlive(),new TargetIsWithinRadiusOfSelf(5,{singleTarget:true})],
             [new GiveRandomObjectToTarget()],
             true,
-            1000*60
+            1000*60,
+            true
         );
 
         const punishTheguilty = new AiBeat(
@@ -106,6 +108,7 @@ export class Devona extends Quotidian{
             [new IncrementMyState("no")],
             true,
             1000*60
+            ,true
         );
 
         const beats:AiBeat[] = [punishTheguilty, giveNevilleObject,approachNevilleWithObject,pickupObject,approachObject];

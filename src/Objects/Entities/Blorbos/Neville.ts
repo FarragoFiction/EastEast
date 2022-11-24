@@ -82,7 +82,8 @@ export class Neville extends Quotidian{
             [new TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsAlive({invert:true})],
             [new IncrementMyState("no")],
             true,
-            1000*60
+            1000*60,
+            true
         );
         
 

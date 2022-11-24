@@ -63,7 +63,8 @@ export class Yongki extends Quotidian{
             [new TargetHasTheme([all_themes[BUGS]],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
             [new FollowObject()],
             true,
-            1000*60
+            1000*60,
+            true
         );
 
         const watchSnail = new AiBeat(
@@ -72,7 +73,8 @@ export class Yongki extends Quotidian{
             [new TargetNameIncludesAnyOfTheseWords(["snail"],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
             [new FollowObject()],
             true,
-            1000*60
+            1000*60,
+            true
         );
 
         const reflectMirror = new AiBeat(
@@ -81,7 +83,8 @@ export class Yongki extends Quotidian{
             [new TargetNearObjectWithName(["mirror"],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
             [new IncrementMyState("")],
             true,
-            1000*60
+            1000*60,
+            true
         );
 
         const beats:AiBeat[] = [reflectMirror,watchSnail,watchBug,approachBug];
@@ -118,7 +121,8 @@ export class Captain extends Quotidian{
             [new TargetNearObjectWithName(["mirror"],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
             [new IncrementMyState("")],
             true,
-            1000*60
+            1000*60,
+            true
         );
 
         //yongki is zen enough to simply NOT listen to his body's cravings, unless he needs to defend himself
@@ -128,7 +132,8 @@ export class Captain extends Quotidian{
             [  new TargetIsBlorboOrBox(),new TargetIsAlive(), new TargetIsWithinRadiusOfSelf(5,{singleTarget: true})],
             [new MeleeKill("shifts position awkwardly and somehow ends up killing")],
             true,
-            30*1000
+            30*1000,
+            true
         ) ;
 
         const warnPeopleOff = new AiBeat(

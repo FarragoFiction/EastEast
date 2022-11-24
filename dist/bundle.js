@@ -7681,8 +7681,10 @@ const constants_1 = __webpack_require__(8817);
 const ChangeMyStabilityLevelByAmount_1 = __webpack_require__(8801);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
+const TargetHasObjectWithName_1 = __webpack_require__(4864);
 const TargetHighestStatIsX_1 = __webpack_require__(5362);
 const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
+const TargetTemperenceLessThanAmount_1 = __webpack_require__(5159);
 const Memory_1 = __webpack_require__(7953);
 const Stat = __importStar(__webpack_require__(9137));
 //categories within a theme
@@ -8163,12 +8165,21 @@ const initWallForegrounds = () => {
 //homoerotic anchovy scene
 //addiction scene
 const initBeatList = () => {
+    exports.beat_list[exports.ADDICTION] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Gamble Obsessively`, [`${baseFilter_1.SUBJECTSTRING} knows they can win next time. Just one more time. One more time. They're due any minute now.`], [new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(2, { singleTarget: true, kMode: true })], //you really can't control yourself can you
+        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Scratch Coin`, [`${baseFilter_1.SUBJECTSTRING}  They scratch rhythmically at the coin in their inventory, hoping to reveal a prize underneath its metal surface.`], //i had a dream like this. where a fae didn't understand what gambling was and took a coin flip to mean it was a scratch off ticket. don't judge me
+        [new TargetHasObjectWithName_1.TargetHasObjectWithName(["COIN"]), new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(2, { singleTarget: true, kMode: true })], //you really can't control yourself can you
+        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-113)], true, 1000 * 30),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Watch the Gambling`, [`${baseFilter_1.SUBJECTSTRING} watches the ambient gambling in the room with equanimy. You can see in their eyes how much they'd prefer to join in. It would be easier, you think, to simply ignore the gambling. No. This is a test of will. They are proving to themself they can resist it indefinitely. `], [new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(4, { singleTarget: true, kMode: true })], //you think self control is the highest virtue.
+        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13)], true, 1000 * 30),
+    ];
     exports.beat_list[exports.TWISTING] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} begins clutching their head and roaring in pain. You see murder in their eyes as they desperately try to parse what they are seeing in this terrible, terrible room.`], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.FORTITUDE)], //don't go if you're already unstable
         [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30),
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} begins clutching their head and whimpering in pain. They desperately try to flee the twisting spiralling chaos they are seeing in this terrible, terrible room.`], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.PRUDENCE)], //don't go if you're already unstable
         [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30),
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} begins clutching their head and grunting in pain. They freeze in place as they desperately try to process what they are seeing in this terrible, terrible room.`], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.PRUDENCE)], //don't go if you're already unstable
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} begins clutching their head and grunting in pain. They freeze in place as they desperately try to process what they are seeing in this terrible, terrible room.`], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.TEMPERANCE)], //don't go if you're already unstable
         [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30),
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Degrade Stability`, [`${baseFilter_1.SUBJECTSTRING} begins clutching their head and hissing in pain. They resolutely stare at the shifting, twisting, spiralling madness, refusing to let it defeat them.`], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.JUDGEMENT)], //don't go if you're already unstable
         [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30),

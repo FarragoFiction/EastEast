@@ -76,7 +76,8 @@ export class Chicken extends Quotidian{
             [new TargetHasTheme([all_themes[BUGS],all_themes[PLANTS]],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
             [new PickupObject()],
             true,
-            1000*60
+            1000*60,
+            true
         );
 
         const beats:AiBeat[] = [
