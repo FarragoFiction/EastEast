@@ -2270,7 +2270,7 @@ class Chicken extends Quotidian_1.Quotidian {
         const eatPlant = new BaseBeat_1.AiBeat("Chicken: Eat Plant", [`The chicken eats the ${baseFilter_1.TARGETSTRING}.`], [new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.PLANTS]], { kMode: true })], [new DestroyObjectInInventoryWithThemes_1.DestroyInventoryObjectWithThemes([Theme_1.all_themes[ThemeStorage_1.PLANTS]]), new SpawnObjectAtFeet_1.SpawnObjectAtFeet(egg)], true, 1000 * 60);
         const eatBug = new BaseBeat_1.AiBeat("Chicken: Eat Bug", [`The chicken eats the ${baseFilter_1.TARGETSTRING}.`], [new TargetHasObjectWithTheme_1.TargetHasObjectWithTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { kMode: true })], [new DestroyObjectInInventoryWithThemes_1.DestroyInventoryObjectWithThemes([Theme_1.all_themes[ThemeStorage_1.BUGS]]), new SpawnObjectAtFeet_1.SpawnObjectAtFeet(egg)], true, 1000 * 60);
         const approachPlantOrBug = new BaseBeat_1.AiBeat("Chicken: Investigate Food", [`The chicken's beady little eyes focus on the ${baseFilter_1.TARGETSTRING}.`], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS], Theme_1.all_themes[ThemeStorage_1.PLANTS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
-        const pickupPlantOrBug = new BaseBeat_1.AiBeat("Chicken: Peck Food", [`The chicken pecks at the ${baseFilter_1.TARGETSTRING}.`], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS], Theme_1.all_themes[ThemeStorage_1.PLANTS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60);
+        const pickupPlantOrBug = new BaseBeat_1.AiBeat("Chicken: Peck Food", [`The chicken pecks at the ${baseFilter_1.TARGETSTRING}.`], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS], Theme_1.all_themes[ThemeStorage_1.PLANTS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60, true);
         const beats = [
             eatBug,
             eatPlant,
@@ -2332,11 +2332,11 @@ class Devona extends Quotidian_1.Quotidian {
         //she's too nervous to pocket actual living creatures but if its dead or inanimate she will
         const approachObject = new BaseBeat_1.AiBeat("Devona: Investigate Object", [`Devona begins slinking towards the ${baseFilter_1.TARGETSTRING}.`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true, invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
         //devona! stop pickign up living creatures and putting them in your pocket! thats for breach mode
-        const pickupObject = new BaseBeat_1.AiBeat("Devona: Acquire Object", [`Devona's eyes dart from side to side as she pockets the ${baseFilter_1.TARGETSTRING}.`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new PickupObject_1.PickupObject()], true, 1000 * 90);
+        const pickupObject = new BaseBeat_1.AiBeat("Devona: Acquire Object", [`Devona's eyes dart from side to side as she pockets the ${baseFilter_1.TARGETSTRING}.`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new PickupObject_1.PickupObject()], true, 1000 * 90, true);
         //if devona has an object, she brings it to twinsey
         const approachNevilleWithObject = new BaseBeat_1.AiBeat("Devona: Bring Object to Twin", [`Devona calls out to Neville, telling him she has something for him to Analyze.`], [new IHaveObjectWithName_1.IHaveObjectWithName([]), new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true, invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 30);
-        const giveNevilleObject = new BaseBeat_1.AiBeat("Devona: Hand Over Object For Analysis", [`Handing over the ${BaseBeat_1.ITEMSTRING}, Devona smiles as she see's Neville's face light up under his sunglasses.`], [new IHaveObjectWithName_1.IHaveObjectWithName([]), new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"], { singleTarget: true }), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new GiveRandomObjectToTarget_1.GiveRandomObjectToTarget()], true, 1000 * 60);
-        const punishTheguilty = new BaseBeat_1.AiBeat("Devona: Punish Your Brother's Killer", [`With a deafening cry of grief and rage, Devona's body begins twisting and crunching until the Insightful Punishing Twin emerges.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60);
+        const giveNevilleObject = new BaseBeat_1.AiBeat("Devona: Hand Over Object For Analysis", [`Handing over the ${BaseBeat_1.ITEMSTRING}, Devona smiles as she see's Neville's face light up under his sunglasses.`], [new IHaveObjectWithName_1.IHaveObjectWithName([]), new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"], { singleTarget: true }), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new GiveRandomObjectToTarget_1.GiveRandomObjectToTarget()], true, 1000 * 60, true);
+        const punishTheguilty = new BaseBeat_1.AiBeat("Devona: Punish Your Brother's Killer", [`With a deafening cry of grief and rage, Devona's body begins twisting and crunching until the Insightful Punishing Twin emerges.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60, true);
         const beats = [punishTheguilty, giveNevilleObject, approachNevilleWithObject, pickupObject, approachObject];
         const states = [new InsightTwin(room, 0, 0)];
         super(room, "Devona", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Devona is staring at you.", beats, states);
@@ -2468,7 +2468,7 @@ class End extends Quotidian_1.Quotidian {
         const sprite = {
             default_src: { src: "theend.png", width: 56, height: 100 },
         };
-        const KillObject = new BaseBeat_1.AiBeat("End: End Them", [`The time has come. It was always going to end this way. All who are born die. ${baseFilter_1.TARGETSTRING} meets their end with one clean cut.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("being alive")], true, 2 * 60 * 1000);
+        const KillObject = new BaseBeat_1.AiBeat("End: End Them", [`The time has come. It was always going to end this way. All who are born die. ${baseFilter_1.TARGETSTRING} meets their end with one clean cut.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("being alive")], true, 2 * 60 * 1000, true);
         //she doesn't tend to change her mind
         const ObesssOverBlorbo = new BaseBeat_1.AiBeat("End: Pick Target", [`The shambling corpse of a long dead warrior begins calmly walking towards ${baseFilter_1.TARGETSTRING}.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()]);
         const beats = [ObesssOverBlorbo, KillObject];
@@ -2583,9 +2583,9 @@ class EyeKiller extends Quotidian_1.Quotidian {
             //hunting time
             const pickATarget = new BaseBeat_1.AiBeat("Killer: Hunt", [`The Eye Killer begins hunting ${baseFilter_1.TARGETSTRING}.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
             const approachEgg = new BaseBeat_1.AiBeat("Killer: Go Egg", [`The Eye Killer sees the ${baseFilter_1.TARGETSTRING}.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
-            const pickupEgg = new BaseBeat_1.AiBeat("Killer: Take Egg", [`The Eye Killer picks up the ${baseFilter_1.TARGETSTRING}.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60);
+            const pickupEgg = new BaseBeat_1.AiBeat("Killer: Take Egg", [`The Eye Killer picks up the ${baseFilter_1.TARGETSTRING}.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60, true);
             //new IHaveObjectWithName(["Egg"], {invert: true}),new TargetHasObjectWithName(["Egg"], {invert: true}),
-            const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat("Killer: Kill", [`The Eye Killer brutally stabs the  ${baseFilter_1.TARGETSTRING} over and over until they stop twitching.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING], `${baseFilter_1.TARGETSTRING}'s blood`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`)], true, 30 * 1000);
+            const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat("Killer: Kill", [`The Eye Killer brutally stabs the  ${baseFilter_1.TARGETSTRING} over and over until they stop twitching.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING], `${baseFilter_1.TARGETSTRING}'s blood`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`)], true, 30 * 1000, true);
             const desecrateCorpse = new BaseBeat_1.AiBeat("Killer: Do Art", [`The Eye Killer appears to creating some sort of art piece out of what remains of the ${baseFilter_1.TARGETSTRING}.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING], `${baseFilter_1.TARGETSTRING}'s blood`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`)], true, 30 * 1000);
             const beats = [
                 approachEgg,
@@ -2864,7 +2864,7 @@ class Neville extends Quotidian_1.Quotidian {
         when what he's supposed to do is passively allow the destruction of what is irrelevant in order to highlight the Most Important Thing about an object. pare it down to its essentials
         */
         const extractMeaningFromObject = new BaseBeat_1.AiBeat("Neville: Destroy and Extract Knowledge", [`Neville notices he has a(n) ${BaseBeat_1.ITEMSTRING}. He quickly erases it from existence and explains to anyone listening that "${BaseBeat_1.BONUSSTRING}" <p>He seems happy to understand the core of this item. He says ":)  I learned something!"</p>   `], [new IHaveObjectWithName_1.IHaveObjectWithName([])], [new DestroyRandomObjectInInventoryAndPhilosophise_1.DestroyRandomObjectInInventoryAndPhilosophize(), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
-        const punishTheguilty = new BaseBeat_1.AiBeat("Neville: Punish Your Sisters's Killer", [`With a silent scream of mute horror, Neville's body begins twisting and crunching until the Fortitudinous Punishing Twin emerges.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60);
+        const punishTheguilty = new BaseBeat_1.AiBeat("Neville: Punish Your Sisters's Killer", [`With a silent scream of mute horror, Neville's body begins twisting and crunching until the Fortitudinous Punishing Twin emerges.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60, true);
         const beats = [punishTheguilty, extractMeaningFromObject];
         const states = [new FortitudeTwin(room, 0, 0)];
         super(room, "Neville", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "Neville is staring into space.", beats, states);
@@ -3065,9 +3065,7 @@ class Peewee extends Quotidian_1.Quotidian {
                 this.friend.tick();
             }
             //you can move quicker than you can think
-            if (this.itsBeenAwhileSinceLastBeat(actionRate)) {
-                this.processAiBeat(roomBeats);
-            }
+            this.processAiBeat(roomBeats, this.itsBeenAwhileSinceLastBeat(actionRate));
             this.movement_alg.tick();
             this.syncSpriteToDirection();
             this.updateRendering();
@@ -3559,6 +3557,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         };
         //if a quotidian needs to do something special do it now
         this.customSyncCode = () => {
+            //nothing for default quotidians
         };
         this.syncSpriteToDirection = () => {
             //breached creatures look different, as a rule
@@ -3590,7 +3589,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.itsBeenAwhileSinceLastBeat = (actionRate) => {
             return new Date().getTime() - this.timeOfLastBeat > actionRate;
         };
-        this.processAiBeat = (roomBeats) => {
+        this.processAiBeat = (roomBeats, onlyFastFollow) => {
             const toRemove = [];
             let didSomething = false;
             //only does a room beat if all of my own ai does nothing
@@ -3601,20 +3600,22 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 allPossibilities.push(clonse); //IMPORTANT, need to set myself up as its owner for this tick
             }
             for (let beat of allPossibilities) {
-                if (beat.triggered(this.room)) {
-                    didSomething = true;
-                    this.timeOfLastBeat = new Date().getTime();
-                    this.container.style.zIndex = `${30}`; //stand out
-                    beat.performActions(this.room);
-                    for (let b of roomBeats) {
-                        if (beat.flavorText === b.flavorText) {
-                            b.timeOfLastBeat = this.timeOfLastBeat; //make it so room effects know when they were last done so everyone in it can't just spam it in lockstep
+                if (onlyFastFollow && beat.canFastFollow || !onlyFastFollow) {
+                    if (beat.triggered(this.room)) {
+                        didSomething = true;
+                        this.timeOfLastBeat = new Date().getTime();
+                        this.container.style.zIndex = `${30}`; //stand out
+                        beat.performActions(this.room);
+                        for (let b of roomBeats) {
+                            if (beat.flavorText === b.flavorText) {
+                                b.timeOfLastBeat = this.timeOfLastBeat; //make it so room effects know when they were last done so everyone in it can't just spam it in lockstep
+                            }
                         }
+                        if (!beat.permanent) {
+                            toRemove.push(beat);
+                        }
+                        break;
                     }
-                    if (!beat.permanent) {
-                        toRemove.push(beat);
-                    }
-                    break;
                 }
             }
             if (!didSomething) {
@@ -3649,9 +3650,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 this.friend.tick();
             }
             //you can move quicker than you can think
-            if (this.itsBeenAwhileSinceLastBeat(actionRate)) {
-                this.processAiBeat(roomBeats);
-            }
+            this.processAiBeat(roomBeats, this.itsBeenAwhileSinceLastBeat(actionRate));
             this.movement_alg.tick();
             this.syncSpriteToDirection();
             this.updateRendering();
@@ -3917,9 +3916,7 @@ class Vik extends Quotidian_1.Quotidian {
                 this.friend.tick();
             }
             //you can move quicker than you can think
-            if (this.itsBeenAwhileSinceLastBeat(actionRate)) {
-                this.processAiBeat(roomBeats);
-            }
+            this.processAiBeat(roomBeats, this.itsBeenAwhileSinceLastBeat(actionRate));
             this.movement_alg.tick();
             this.syncSpriteToDirection();
             this.updateRendering();
@@ -3980,9 +3977,9 @@ class Yongki extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/thereflection.png", width: 50, height: 50 },
         };
         const approachBug = new BaseBeat_1.AiBeat("Yongki: Follow Bug", [`Yongki looks across the room at the ${baseFilter_1.TARGETSTRING} and starts sneaking up on it.`, `Yongki catches sight of the ${baseFilter_1.TARGETSTRING}.`, `Yongki excitedly points out the ${baseFilter_1.TARGETSTRING}.`,], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true }), new RandomTarget_1.RandomTarget(0.5), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
-        const watchBug = new BaseBeat_1.AiBeat("Yongki: Look Bug", [`Yongki stares intently at the ${baseFilter_1.TARGETSTRING}.`, `Yongki ever so gently pokes the ${baseFilter_1.TARGETSTRING}.`, `Yongki hums a little tune for the ${baseFilter_1.TARGETSTRING}.`,], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new FollowObject_1.FollowObject()], true, 1000 * 60);
-        const watchSnail = new BaseBeat_1.AiBeat("Yongki: Look Snail", [`Yongki smiles and says "The ${baseFilter_1.TARGETSTRING} is effervescent.  That means sparkling or enthusiastic."`, `Yongki pets the  ${baseFilter_1.TARGETSTRING}."It's viscous!", he beams. "That means sitcky or slimey!"`, `Yongki hums a little tune for the ${baseFilter_1.TARGETSTRING}.`, "Yongki smiles at the snail and says 'Snails are like slugs, except they have little houses that are spirals.'."], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["snail"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new FollowObject_1.FollowObject()], true, 1000 * 60);
-        const reflectMirror = new BaseBeat_1.AiBeat("Yongki: Look Mirror", ["With almost no fanfair, Yongki catches sight of the Mirror. Captain is now in charge."], [new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60);
+        const watchBug = new BaseBeat_1.AiBeat("Yongki: Look Bug", [`Yongki stares intently at the ${baseFilter_1.TARGETSTRING}.`, `Yongki ever so gently pokes the ${baseFilter_1.TARGETSTRING}.`, `Yongki hums a little tune for the ${baseFilter_1.TARGETSTRING}.`,], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new FollowObject_1.FollowObject()], true, 1000 * 60, true);
+        const watchSnail = new BaseBeat_1.AiBeat("Yongki: Look Snail", [`Yongki smiles and says "The ${baseFilter_1.TARGETSTRING} is effervescent.  That means sparkling or enthusiastic."`, `Yongki pets the  ${baseFilter_1.TARGETSTRING}."It's viscous!", he beams. "That means sitcky or slimey!"`, `Yongki hums a little tune for the ${baseFilter_1.TARGETSTRING}.`, "Yongki smiles at the snail and says 'Snails are like slugs, except they have little houses that are spirals.'."], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["snail"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new FollowObject_1.FollowObject()], true, 1000 * 60, true);
+        const reflectMirror = new BaseBeat_1.AiBeat("Yongki: Look Mirror", ["With almost no fanfair, Yongki catches sight of the Mirror. Captain is now in charge."], [new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60, true);
         const beats = [reflectMirror, watchSnail, watchBug, approachBug];
         const states = [new Captain(room, 0, 0)];
         super(room, "Yongki", x, y, [Theme_1.all_themes[ThemeStorage_1.CLOWNS], Theme_1.all_themes[ThemeStorage_1.CHOICES], Theme_1.all_themes[ThemeStorage_1.DEFENSE], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Yongki, everyones favorite himbo!", beats, states);
@@ -4009,9 +4006,9 @@ class Captain extends Quotidian_1.Quotidian {
         const sprite = {
             default_src: { src: "Placeholders/captain.png", width: 50, height: 50 },
         };
-        const reflectMirror = new BaseBeat_1.AiBeat("Captain: Look Mirror", ["With almost no fanfair, Captain catches sight of the Mirror. Yongki is now in charge."], [new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60);
+        const reflectMirror = new BaseBeat_1.AiBeat("Captain: Look Mirror", ["With almost no fanfair, Captain catches sight of the Mirror. Yongki is now in charge."], [new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60, true);
         //yongki is zen enough to simply NOT listen to his body's cravings, unless he needs to defend himself
-        const killUncontrollably = new BaseBeat_1.AiBeat("Captain: Kill", [`With a sickening squelch and a mechanical whir, Captains body lashes out and destroys the ${baseFilter_1.TARGETSTRING}. He looks apologetic.`, `'Shit', Captain says, as his body reaches out and crushes the ${baseFilter_1.TARGETSTRING}.`, `Captain's body reaches out and crushes the ${baseFilter_1.TARGETSTRING}. He looks nauseated. You hear him mutter "How the hell does Yongki manage to keep this thing under control...".`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("shifts position awkwardly and somehow ends up killing")], true, 30 * 1000);
+        const killUncontrollably = new BaseBeat_1.AiBeat("Captain: Kill", [`With a sickening squelch and a mechanical whir, Captains body lashes out and destroys the ${baseFilter_1.TARGETSTRING}. He looks apologetic.`, `'Shit', Captain says, as his body reaches out and crushes the ${baseFilter_1.TARGETSTRING}.`, `Captain's body reaches out and crushes the ${baseFilter_1.TARGETSTRING}. He looks nauseated. You hear him mutter "How the hell does Yongki manage to keep this thing under control...".`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("shifts position awkwardly and somehow ends up killing")], true, 30 * 1000, true);
         const warnPeopleOff = new BaseBeat_1.AiBeat("Captain: Warn", [`Captain looks nervous. 'Hey!' he calls out. 'Just letting you know I can't exactly control how violent this body is. Stay away!'`, `Captain looks nervous.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(25, { singleTarget: true })], [new DeploySass_1.DeploySass("!")], true, 30 * 1000);
         const beats = [reflectMirror, warnPeopleOff, killUncontrollably];
         super(room, "Captain", x, y, [Theme_1.all_themes[ThemeStorage_1.CLOWNS], Theme_1.all_themes[ThemeStorage_1.SOUL], Theme_1.all_themes[ThemeStorage_1.DEFENSE], Theme_1.all_themes[ThemeStorage_1.GUIDING]], sprite, "Captain doesn't seem to be having a very good time.", beats);
@@ -4053,18 +4050,21 @@ exports.TARGET_HE_SCRIPT = "[TARGETHESCRIPT]";
 class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
     //some beats longer than others
-    constructor(command, flavorText, triggers, actions, permanent = false, timeBetweenBeats = 10000, debugFunction) {
+    constructor(command, flavorText, triggers, actions, permanent = false, timeBetweenBeats = 10000, canFastFollow = false, debugFunction) {
+        this.canFastFollow = false; //are you allowed to go less than a second after some other beat? (mostly for things like killing)
         //used for things like neville philosophizing
         this.bonusString = "";
         this.itemName = "ERROR: NO ITEM FOUND";
         this.targets = [];
-        this.timeOfLastBeat = new Date().getTime();
         this.itsBeenAwhileSinceLastBeat = () => {
-            return new Date().getTime() - this.timeOfLastBeat > this.timeBetweenBeats;
+            if (this.timeOfLastBeat) {
+                return new Date().getTime() - this.timeOfLastBeat > this.timeBetweenBeats;
+            }
+            return true; //if its the first time we're going, just DO something, don't wait thirty seconds or whatever
         };
         this.clone = (owner) => {
             //doesn't clone targets, those are set per beat when resolved..
-            const beat = new AiBeat(this.command, this.flavorText, this.filters, this.actions, this.permanent, this.timeBetweenBeats, this.debugFunction);
+            const beat = new AiBeat(this.command, this.flavorText, this.filters, this.actions, this.permanent, this.timeBetweenBeats, this.canFastFollow, this.debugFunction);
             beat.owner = owner;
             return beat;
         };
@@ -4169,6 +4169,7 @@ class AiBeat {
             return true;
         };
         this.filters = triggers;
+        this.canFastFollow = canFastFollow;
         this.command = command;
         this.actions = actions;
         this.debugFunction = debugFunction;
@@ -6155,7 +6156,6 @@ class PhysicalObject {
             absolute_bullshit.textContent = inadvisable_hacked_css_keyframe;
             const timing_functions = ["ease", "ease-in", "ease-out", "ease-in-out", "linear", "step-start", "step-end"];
             const animation = `${animation_name} ${(0, NonSeededRandUtils_1.getRandomNumberBetween)(0, 3) * Math.random()}s ${(0, NonSeededRandUtils_1.pickFrom)(timing_functions)} 0s ${time}`;
-            console.log("JR NOTE: animation is", animation);
             this.image.style.animation = animation;
         };
         this.attachToParent = (parent) => {
@@ -6809,7 +6809,7 @@ class Room {
         this.items = [];
         this.ticking = false;
         this.tickRate = 100;
-        this.actionRate = 200;
+        this.actionRate = 1000 * 10; //every ten seconds unless you have a fast follow
         this.children = [];
         this.name = "???";
         this.pendingStoryBeats = [];
@@ -6908,6 +6908,7 @@ class Room {
             this.renderEastDoor();
             this.renderSouthDoor();
             this.ticking = true;
+            await (0, misc_1.sleep)(5000); //don't just start up right away, give the Observer time to situate
             this.tick();
         };
         this.getNorth = () => {

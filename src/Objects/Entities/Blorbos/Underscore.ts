@@ -116,9 +116,8 @@ export class Vik extends Quotidian {
             this.friend.tick();
         }
         //you can move quicker than you can think
-        if (this.itsBeenAwhileSinceLastBeat(actionRate)) {
-            this.processAiBeat(roomBeats);
-        }
+        this.processAiBeat(roomBeats,this.itsBeenAwhileSinceLastBeat(actionRate));
+    
         this.movement_alg.tick();
         this.syncSpriteToDirection();
         this.updateRendering();

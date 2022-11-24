@@ -113,6 +113,7 @@ export class End extends Quotidian{
             [new MeleeKill("being alive")],
             true,
             2*60*1000
+            ,true
         );
 
         //she doesn't tend to change her mind

@@ -1,6 +1,6 @@
 import { all_themes, Theme } from "../Theme";
 import { ADJ, CLOWNS, FLOOR, FLOORBACKGROUND, FLOORFOREGROUND, KILLING, KNOWING, LOCATION, OBFUSCATION, SOUL, WALL, WALLBACKGROUND, WALLFOREGROUND } from "../ThemeStorage";
-import { boundingBoxesIntersect, createElementWithIdAndParent } from "../../Utils/misc";
+import { boundingBoxesIntersect, createElementWithIdAndParent, sleep } from "../../Utils/misc";
 import SeededRandom from "../../Utils/SeededRandom";
 import { PhysicalObject, RenderedItem } from "../PhysicalObject";
 import { addImageProcess } from "../../Utils/URLUtils";
@@ -168,6 +168,7 @@ export class Room {
 
 
         this.ticking = true;
+        await sleep(5000); //don't just start up right away, give the Observer time to situate
         this.tick();
     }
 

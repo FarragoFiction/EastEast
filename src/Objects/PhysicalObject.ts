@@ -243,7 +243,6 @@ export class PhysicalObject {
         absolute_bullshit.textContent = inadvisable_hacked_css_keyframe;
        const timing_functions = ["ease","ease-in","ease-out","ease-in-out","linear","step-start","step-end"];
        const animation = `${animation_name} ${getRandomNumberBetween(0,3)*Math.random()}s ${pickFrom(timing_functions)} 0s ${time}`;
-       console.log("JR NOTE: animation is", animation)
        this.image.style.animation = animation;
     }
 
