@@ -221,10 +221,10 @@ export class Quotidian extends PhysicalObject {
     }
 
     //not as important as your custom ai, but... you still are your constintuate parts. and npcs are nothing BUT that. hollow inside.
-    grabThemeBeats  = ()=>{
+    grabThemeBeats = () => {
         let beats: AiBeat[] = [];
-        for(let theme of this.themes){
-            if(theme.personal_beats){
+        for (let theme of this.themes) {
+            if (theme.personal_beats) {
                 beats = beats.concat(theme.personal_beats);
             }
         }
@@ -316,7 +316,7 @@ export class Quotidian extends PhysicalObject {
     }
 
     realizeIWantToSpendMyLifeWithTarget = (blorbo: Quotidian) => {
-        if(blorbo.name === this.name){
+        if (blorbo.name === this.name) {
             return;
         }
         const key: string = blorbo.aliases().join(",");
@@ -332,7 +332,7 @@ export class Quotidian extends PhysicalObject {
     }
 
     realizeIHaveASquishOnBlorbo = (blorbo: Quotidian) => {
-        if(blorbo.name === this.name){
+        if (blorbo.name === this.name) {
             return;
         }
         const key: string = blorbo.aliases().join(",");
@@ -349,7 +349,7 @@ export class Quotidian extends PhysicalObject {
     }
 
     realizeIHaveACrushOnBlorbo = (blorbo: Quotidian) => {
-        if(blorbo.name === this.name){
+        if (blorbo.name === this.name) {
             return;
         }
         const key: string = blorbo.aliases().join(",");
@@ -367,7 +367,7 @@ export class Quotidian extends PhysicalObject {
 
 
     makeItOfficialWithBlorbo = (blorbo: Quotidian) => {
-        if(blorbo.name === this.name){
+        if (blorbo.name === this.name) {
             return;
         }
         const key: string = blorbo.aliases().join(",");
@@ -387,7 +387,7 @@ export class Quotidian extends PhysicalObject {
 
 
     likeBlorboMore = (blorbo: Quotidian, amount: number) => {
-        if(blorbo.name === this.name){
+        if (blorbo.name === this.name) {
             return;
         }
         const key: string = blorbo.aliases().join(",");
@@ -400,7 +400,7 @@ export class Quotidian extends PhysicalObject {
     }
 
     likeBlorboLess = (blorbo: Quotidian, amount: number) => {
-        if(blorbo.name === this.name){
+        if (blorbo.name === this.name) {
             return;
         }
         const key: string = blorbo.aliases().join(",");
@@ -415,7 +415,7 @@ export class Quotidian extends PhysicalObject {
     //if they're already in my relationship matrix, escalate it, else initialize it to zero
     //make sure you handle your like/dislike modifiers
     intensifyFeelingsFor = (blorbo: Quotidian, amount: number) => {
-        if(blorbo.name === this.name){
+        if (blorbo.name === this.name) {
             return;
         }
         const key: string = blorbo.aliases().join(",");
@@ -431,7 +431,7 @@ export class Quotidian extends PhysicalObject {
     }
 
     de_escalateFeelingsFor = (blorbo: Quotidian, amount: number) => {
-        if(blorbo.name === this.name){
+        if (blorbo.name === this.name) {
             return;
         }
         const key: string = blorbo.aliases().join(",");
@@ -454,7 +454,6 @@ export class Quotidian extends PhysicalObject {
 
 
     die = (causeOfDeath: string, killerName: string) => {
-        console.log("JR NOTE: trying to kill", this.name, causeOfDeath)
         if (!this.dead) {
             this.room.clearFilterPart(this.filterStringAppliedToRoom);
             this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
@@ -610,7 +609,7 @@ export class Quotidian extends PhysicalObject {
         return new Date().getTime() - this.timeOfLastBeat > actionRate;
     }
 
-    processAiBeat = (roomBeats: AiBeat[], onlyFastFollow: boolean) => {
+    processAiBeat = (roomBeats: AiBeat[], canGoNormally: boolean) => {
         const toRemove: AiBeat[] = [];
         let didSomething = false;
         //only does a room beat if all of my own ai does nothing
@@ -621,16 +620,8 @@ export class Quotidian extends PhysicalObject {
             allPossibilities.push(clonse); //IMPORTANT, need to set myself up as its owner for this tick
         }
         for (let beat of allPossibilities) {
-            if(this.name.includes("G")){
-                console.log("JR NOTE: chekcing if beat", beat, "can fire",onlyFastFollow,beat.canFastFollow);
-
-            }
-            if ((onlyFastFollow && beat.canFastFollow || !onlyFastFollow) &&!didSomething) {
+            if ((!canGoNormally && beat.canFastFollow || canGoNormally) && !didSomething) {
                 if (beat.triggered(this.room)) {
-                    if(this.name.includes("G")){
-                        console.log("JR NOTE: it could");
-        
-                    }
                     didSomething = true;
                     this.timeOfLastBeat = new Date().getTime();
                     this.container.style.zIndex = `${30}`; //stand out

@@ -27,7 +27,6 @@ export class ILikeTargetMoreThanAmount extends TargetFilter {
         if (owner.owner && (target instanceof Quotidian)) {
             const relationship = owner.owner.getRelationshipWith(target);
             if(relationship && relationship.amount > this.amount){
-                console.log(`I (${owner.owner.name}) like ${target.name} ${relationship.amount} which is more than ${this.amount}`);
                 targetLocked = true;
             }
         }

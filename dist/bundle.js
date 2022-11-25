@@ -3661,9 +3661,11 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             this.customSyncCode();
         };
         this.itsBeenAwhileSinceLastBeat = (actionRate) => {
+            console.log(`JR NOTE: checking if its been a awhile for ${this.name}. ${new Date().getTime() - this.timeOfLastBeat > actionRate},currentTime is roughly ${new Date().getTime()}, last beat beat was ${this.timeOfLastBeat}, actionrate is ${actionRate} `);
             return new Date().getTime() - this.timeOfLastBeat > actionRate;
         };
-        this.processAiBeat = (roomBeats, onlyFastFollow) => {
+        this.processAiBeat = (roomBeats, canGoNormally) => {
+            console.log(`JR NOTE: processing ${this.name} ai beats for a single tick`);
             const toRemove = [];
             let didSomething = false;
             //only does a room beat if all of my own ai does nothing
@@ -3674,14 +3676,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 allPossibilities.push(clonse); //IMPORTANT, need to set myself up as its owner for this tick
             }
             for (let beat of allPossibilities) {
-                if (this.name.includes("G")) {
-                    console.log("JR NOTE: chekcing if beat", beat, "can fire", onlyFastFollow, beat.canFastFollow);
-                }
-                if ((onlyFastFollow && beat.canFastFollow || !onlyFastFollow) && !didSomething) {
+                if ((!canGoNormally && beat.canFastFollow || canGoNormally) && !didSomething) {
                     if (beat.triggered(this.room)) {
-                        if (this.name.includes("G")) {
-                            console.log("JR NOTE: it could");
-                        }
+                        console.log(`JR NOTE: I am ${this.name} ${beat.command} could fire, canGoNormally was ${canGoNormally}, and the potential override was ${new Date().toLocaleTimeString()}`);
                         didSomething = true;
                         this.timeOfLastBeat = new Date().getTime();
                         this.container.style.zIndex = `${30}`; //stand out
@@ -4450,7 +4447,6 @@ class ILikeTargetMoreThanAmount extends baseFilter_1.TargetFilter {
             if (owner.owner && (target instanceof Quotidian_1.Quotidian)) {
                 const relationship = owner.owner.getRelationshipWith(target);
                 if (relationship && relationship.amount > this.amount) {
-                    console.log(`I (${owner.owner.name}) like ${target.name} ${relationship.amount} which is more than ${this.amount}`);
                     targetLocked = true;
                 }
             }
