@@ -1,16 +1,23 @@
 import { ACHIEVEMENTS, BACKSTORY, CITYBUILDING, CODE, COMPANIONS, FORTITUDE, GODS, INVENTORY, JUDGEMENT, LORE, OPTIONS, PRUDENCE, QUESTS, RESISTANCES, SKILLGRAPH, STATISTICS, STATUS, TEMPERANCE, WARROOM } from '../Utils/constants';
 import { ChangeMyStabilityLevelByAmount } from './Entities/Actions/ChangeMyStabilityLevelByAmount';
+import { FollowObject } from './Entities/Actions/FollowObject';
+import { MoveRandomly } from './Entities/Actions/MoveRandomly';
+import { StopMoving } from './Entities/Actions/StopMoving';
 import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from './Entities/StoryBeats/BaseBeat';
 import { SUBJECTSTRING } from './Entities/TargetFilter/baseFilter';
+import { MyTemperenceLessThanAmount } from './Entities/TargetFilter/MyTemperenceLessThanAmount copy';
 import { RandomTarget } from './Entities/TargetFilter/RandomTarget';
 import { TargetFortitudeLessThanAmount } from './Entities/TargetFilter/TargetFortitudeLessThanAmount';
 import { TargetHasObjectWithName } from './Entities/TargetFilter/TargetHasObjectWithName';
 import { TargetHighestStatIsX } from './Entities/TargetFilter/TargetHighestStatIsX';
+import { TargetIsAlive } from './Entities/TargetFilter/TargetIsAlive';
+import { TargetIsBlorboOrBox } from './Entities/TargetFilter/TargetIsBlorboBox';
 import { TargetJudgementLessThanAmount } from './Entities/TargetFilter/TargetJudgementLessThanAmount';
 import { TargetPrudenceLessThanAmount } from './Entities/TargetFilter/TargetPrudenceLessThanAmount';
 import { TargetStabilityLevelLessThanAmount } from './Entities/TargetFilter/TargetStabilityLevelLessThanAmount';
 import { TargetTemperenceLessThanAmount } from './Entities/TargetFilter/TargetTemperenceLessThanAmount';
 import { Memory } from './Memory';
+import { RandomMovement } from './MovementAlgs/RandomMovement';
 import * as Stat from './Stat';
 
 //categories within a theme
@@ -595,6 +602,7 @@ const initWallForegrounds = () => {
 */
 
 const initPersonalBeatList = () => {
+    
     personal_beat_list[SOUL] = [
         new AiBeat(
             `${SUBJECTSTRING}: Introspect`,
@@ -602,7 +610,78 @@ const initPersonalBeatList = () => {
             [new RandomTarget(1.5, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(1)], //its fine
             true,
+            1000 * 60)
+    ]
+
+    personal_beat_list[WEB] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Think About Free Will`,
+            [`${SUBJECTSTRING} wonders briefly if any action they have ever taken could truly be called their own. They freeze in place, terrified of takng any action for a bit.`],
+            [new RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX(PRUDENCE, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(-1), new StopMoving()],
+            true,
             1000 * 60),
+        new AiBeat(
+            `${SUBJECTSTRING}: Think About Free Will`,
+            [`${SUBJECTSTRING} wonders briefly if any action they have ever taken could truly be called their own. They start moving around randomly, desperate to prove their choices matter.`],
+            [new RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX(FORTITUDE, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(-1), new MoveRandomly()],
+            true,
+            1000 * 60),
+        new AiBeat(
+            `${SUBJECTSTRING}: Think About Free Will`,
+            [`${SUBJECTSTRING} wonders briefly if any action they have ever taken could truly be called their own. They decide it doesn't matter and carry on as normal.`],
+            [new RandomTarget(1.5, { singleTarget: true, kMode: true }),new TargetHighestStatIsX(PRUDENCE, { singleTarget: true, kMode: true , invert: true}), new TargetHighestStatIsX(FORTITUDE, { singleTarget: true, kMode: true, invert:true })],
+            [new ChangeMyStabilityLevelByAmount(1)],
+            true,
+            1000 * 60)
+    ]
+
+
+    personal_beat_list[FAMILY] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Think About Family`,
+            [`${SUBJECTSTRING} remembers a different time, almost a different life. What would their family think about how far they've come. What they've had to do?`],
+            [new RandomTarget(1.5, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(1)],
+            true,
+            1000 * 60)
+    ]
+
+    personal_beat_list[LONELY] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Be So Very Alone`,
+            [`${SUBJECTSTRING} is suddenly aware of how alone they are. They shiver and hold themselves tightly. It might be time to start making friends.`],
+            [new TargetIsBlorboOrBox(), new TargetIsAlive(), new RandomTarget(.5, { singleTarget: true }), new TargetTemperenceLessThanAmount(2, { singleTarget: true, kMode: true })],
+            [new FollowObject(), new ChangeMyStabilityLevelByAmount(-1)],
+            true,
+            1000 * 60),
+        new AiBeat(
+            `${SUBJECTSTRING}: Be So Very Alone`,
+            [`${SUBJECTSTRING} is suddenly aware of how alone they are. It's fine. They prefer it this way, really. Don't need anyone.`],
+            [new RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetTemperenceLessThanAmount(4, { singleTarget: true, kMode: true, invert: true })],
+            [new ChangeMyStabilityLevelByAmount(-13)], //its not really fine
+            true,
+            1000 * 60)
+    ]
+
+
+
+    personal_beat_list[TIME] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Check the Time`,
+            [`${SUBJECTSTRING} glances at the stopwatch they always have on them. They seem anxious.`],
+            [new RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount(2, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(1)], //its fine
+            true,
+            1000 * 60),
+        new AiBeat(
+            `${SUBJECTSTRING}: Check the Time`,
+            [`${SUBJECTSTRING} glances at the stopwatch they always have on them. They seem satisfied. `],
+            [new RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount(4, { singleTarget: true, kMode: true, invert: true })],
+            [new ChangeMyStabilityLevelByAmount(1)], //its fine
+            true,
+            1000 * 60)
     ]
 }
 

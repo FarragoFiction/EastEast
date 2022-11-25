@@ -3737,7 +3737,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         }
         beats = beats.concat(this.grabThemeBeats());
         this.makeBeatsMyOwn(beats);
-        this.actionRateMutator = this.rand.getRandomNumberBetween(8, 11) / 10;
+        this.actionRateMutator = this.rand.getRandomNumberBetween(7, 13) / 10;
     }
 }
 exports.Quotidian = Quotidian;
@@ -6808,7 +6808,7 @@ class Maze {
             const beatele = (0, misc_1.createElementWithIdAndParent)("div", this.storySoFar, undefined, "storybeat");
             const commandele = (0, misc_1.createElementWithIdAndParent)("div", beatele, undefined, "historical-command");
             const responseele = (0, misc_1.createElementWithIdAndParent)("div", beatele, undefined, "response");
-            commandele.innerHTML = `>${beat.command} ${new Date().toLocaleTimeString()}`;
+            commandele.innerHTML = `>${beat.command} ${this.debug ? new Date().toLocaleTimeString() : ""}`;
             responseele.innerHTML = beat.response;
             this.checkEffects(beat);
             commandele.className = (beat.commandClass);
