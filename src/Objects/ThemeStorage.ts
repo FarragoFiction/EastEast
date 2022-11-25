@@ -5,7 +5,6 @@ import { MoveRandomly } from './Entities/Actions/MoveRandomly';
 import { StopMoving } from './Entities/Actions/StopMoving';
 import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from './Entities/StoryBeats/BaseBeat';
 import { SUBJECTSTRING } from './Entities/TargetFilter/baseFilter';
-import { MyTemperenceLessThanAmount } from './Entities/TargetFilter/MyTemperenceLessThanAmount copy';
 import { RandomTarget } from './Entities/TargetFilter/RandomTarget';
 import { TargetFortitudeLessThanAmount } from './Entities/TargetFilter/TargetFortitudeLessThanAmount';
 import { TargetHasObjectWithName } from './Entities/TargetFilter/TargetHasObjectWithName';

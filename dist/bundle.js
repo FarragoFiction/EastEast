@@ -1541,7 +1541,7 @@ class Look extends BaseAction_1.Action {
             }
             const lookcloser = current_room.rand.pickFrom(targets);
             const inventory = lookcloser.inventory.length > 0 ? (0, ArrayUtils_1.turnArrayIntoHumanSentence)(lookcloser.inventory.map((i) => i.processedName())) : "nothing";
-            let retSoFar = `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at${lookcloser instanceof Quotidian_1.Quotidian ? "" : " the"} ${lookcloser.processedName()}. ${lookcloser.flavorText} <p>They have ${inventory} in their inventory.</p> <p>Their movement algorithm is ${lookcloser.movement_alg ? lookcloser.movement_alg.constructor.name : "NONE"}</p>`;
+            let retSoFar = `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He filters ${lookcloser instanceof Quotidian_1.Quotidian ? "" : " the"} ${lookcloser.processedName()} through their cybernetic, wasted eyes.<br><p style="font-family: Courieri New;"> ${lookcloser.flavorText} <p>They have ${inventory} in their inventory.</p> <p>Their movement algorithm is ${lookcloser.movement_alg ? lookcloser.movement_alg.constructor.name : "NONE"}</p>`;
             if (lookcloser.relationshipMap && lookcloser.relationshipMap.keys().length !== 0) {
                 retSoFar += "<p>They have the following opinions about the other blorbos:</p> <ul style='padding:10px; border:1px solid pink; width: 500px;'>";
                 for (let relationshipPair of lookcloser.relationshipMap) {
@@ -1559,7 +1559,7 @@ class Look extends BaseAction_1.Action {
             <li>Prudence: ${((0, Quotidian_1.stats_values_mapping)(lookcloser.prudence))}</li>
             <li>Temperence: ${((0, Quotidian_1.stats_values_mapping)(lookcloser.temperance))}</li>
             <li>Judgement: ${((0, Quotidian_1.stats_values_mapping)(lookcloser.judgement))}</li>
-            </ul></p>`;
+            </ul></p></p>`;
             }
             return retSoFar;
         };
@@ -7759,11 +7759,16 @@ exports.miracles = exports.child_backstories = exports.general_backstories = exp
 exports.initThemes = exports.checkIfAllKeysPresent = exports.super_name_possibilities_map = exports.memories = exports.compliment_possibilities = exports.filter_possibilities = exports.theme_opinions = exports.floor_possibilities = exports.wall_possibilities = exports.song_possibilities = exports.insult_possibilities = exports.adj_possibilities = exports.menu_options = exports.effect_possibilities = exports.smell_possibilities = exports.feeling_possibilities = exports.taste_possibilities = exports.sound_possibilities = exports.monster_desc = exports.loc_desc = exports.philosophy = void 0;
 const constants_1 = __webpack_require__(8817);
 const ChangeMyStabilityLevelByAmount_1 = __webpack_require__(8801);
+const FollowObject_1 = __webpack_require__(744);
+const MoveRandomly_1 = __webpack_require__(4287);
+const StopMoving_1 = __webpack_require__(4469);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
 const RandomTarget_1 = __webpack_require__(9824);
 const TargetHasObjectWithName_1 = __webpack_require__(4864);
 const TargetHighestStatIsX_1 = __webpack_require__(5362);
+const TargetIsAlive_1 = __webpack_require__(7064);
+const TargetIsBlorboBox_1 = __webpack_require__(4068);
 const TargetJudgementLessThanAmount_1 = __webpack_require__(3678);
 const TargetPrudenceLessThanAmount_1 = __webpack_require__(1877);
 const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
@@ -8252,7 +8257,26 @@ const initWallForegrounds = () => {
 const initPersonalBeatList = () => {
     exports.personal_beat_list[exports.SOUL] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Introspect`, [`${baseFilter_1.SUBJECTSTRING} ponders the nature of their own being. What parts of themselves are stable? What parts are a product of circumstance? Who would they be if their life had been different?`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
+        true, 1000 * 60)
+    ];
+    exports.personal_beat_list[exports.WEB] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Free Will`, [`${baseFilter_1.SUBJECTSTRING} wonders briefly if any action they have ever taken could truly be called their own. They freeze in place, terrified of takng any action for a bit.`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.PRUDENCE, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-1), new StopMoving_1.StopMoving()], true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Free Will`, [`${baseFilter_1.SUBJECTSTRING} wonders briefly if any action they have ever taken could truly be called their own. They start moving around randomly, desperate to prove their choices matter.`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.FORTITUDE, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-1), new MoveRandomly_1.MoveRandomly()], true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Free Will`, [`${baseFilter_1.SUBJECTSTRING} wonders briefly if any action they have ever taken could truly be called their own. They decide it doesn't matter and carry on as normal.`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.PRUDENCE, { singleTarget: true, kMode: true, invert: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.FORTITUDE, { singleTarget: true, kMode: true, invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], true, 1000 * 60)
+    ];
+    exports.personal_beat_list[exports.FAMILY] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Family`, [`${baseFilter_1.SUBJECTSTRING} remembers a different time, almost a different life. What would their family think about how far they've come. What they've had to do?`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], true, 1000 * 60)
+    ];
+    exports.personal_beat_list[exports.LONELY] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Be So Very Alone`, [`${baseFilter_1.SUBJECTSTRING} is suddenly aware of how alone they are. They shiver and hold themselves tightly. It might be time to start making friends.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true }), new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(2, { singleTarget: true, kMode: true })], [new FollowObject_1.FollowObject(), new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-1)], true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Be So Very Alone`, [`${baseFilter_1.SUBJECTSTRING} is suddenly aware of how alone they are. It's fine. They prefer it this way, really. Don't need anyone.`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(4, { singleTarget: true, kMode: true, invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], //its not really fine
+        true, 1000 * 60)
+    ];
+    exports.personal_beat_list[exports.TIME] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Check the Time`, [`${baseFilter_1.SUBJECTSTRING} glances at the stopwatch they always have on them. They seem anxious.`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount_1.TargetPrudenceLessThanAmount(2, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
         true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Check the Time`, [`${baseFilter_1.SUBJECTSTRING} glances at the stopwatch they always have on them. They seem satisfied. `], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount_1.TargetPrudenceLessThanAmount(4, { singleTarget: true, kMode: true, invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
+        true, 1000 * 60)
     ];
 };
 //homoerotic anchovy scene
