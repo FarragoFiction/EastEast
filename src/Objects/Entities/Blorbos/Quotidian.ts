@@ -157,13 +157,13 @@ export class Quotidian extends PhysicalObject {
     friend?: FRIEND;
     killerName?: string;
     timeOfLastBeat = new Date().getTime();
-    //default everything to 1.0, everyone is perfectly bi and alloromantic
-    platonicFOdds = 1.0;
-    platonicMOdds = 1.0;
-    platonicNBOdds = 1.0;
-    romanticFOdds = 1.0;
-    romanticMOdds = 1.0;
-    romanticNBOdds = 1.0;
+    //default everything to  0.5;, everyone is perfectly bi and alloromantic
+    platonicFOdds = 0.5;
+    platonicMOdds =  0.5;
+    platonicNBOdds =  0.5;
+    romanticFOdds =  0.5;
+    romanticMOdds =  0.5;
+    romanticNBOdds =  0.5;
     actionRateMutator = 0.5;
     likeMultiplier = 1.0; //(effects how quickly they grow to like people in general)
     dislikeMultiplier = 1.0; //(effects how quickly they grow to dislike ppl in general)
