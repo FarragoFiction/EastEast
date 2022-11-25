@@ -34,7 +34,7 @@ export class Parker extends Quotidian {
 
     constructor(room: Room, x: number, y: number) {
         const sprite = {
-            default_src: { src: "theshot.png", width: 56, height: 100 },
+            default_src: { src: "Placeholders/theshot.png", width: 56, height: 100 },
 
         };
         const beats: AiBeat[] = [];

@@ -26,6 +26,7 @@ import { whiteNight } from "../..";
 import { Camille } from "../Entities/Blorbos/End";
 import { Parker } from "../Entities/Blorbos/Parker";
 import { Khana } from "../Entities/Blorbos/K";
+import { Goncharov } from "../Entities/Blorbos/Goncharov";
 export class Maze {
 
     rand: SeededRandom;
@@ -98,6 +99,7 @@ export class Maze {
             this.blorbos.push(new JR(this.room, 150, 150));
             this.blorbos.push(new Khana(this.room, 150, 150));
             this.blorbos.push(new Parker(this.room, 150, 150));
+            this.blorbos.push(new Goncharov(this.room, 150,150));
 
 
         }
@@ -137,7 +139,7 @@ export class Maze {
             return;
         }
         //const blorbosToTest = ["Camille", "Ria"];
-        const blorbosToTest:string[] = ["Eye Killer", "Yongki"];
+        const blorbosToTest:string[] = ["Goncharov"];
         for (let blorbo of this.blorbos) {
             if (!blorbo.owner) {//if you're in someones inventory, no spawning for you
                 for (let theme of blorbo.themes) {

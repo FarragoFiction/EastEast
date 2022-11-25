@@ -2585,8 +2585,8 @@ class EyeKiller extends Quotidian_1.Quotidian {
             const approachEgg = new BaseBeat_1.AiBeat("Killer: Go Egg", [`The Eye Killer sees the ${baseFilter_1.TARGETSTRING}.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
             const pickupEgg = new BaseBeat_1.AiBeat("Killer: Take Egg", [`The Eye Killer picks up the ${baseFilter_1.TARGETSTRING}.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60, true);
             //new IHaveObjectWithName(["Egg"], {invert: true}),new TargetHasObjectWithName(["Egg"], {invert: true}),
-            const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat("Killer: Kill", [`The Eye Killer brutally stabs the  ${baseFilter_1.TARGETSTRING} over and over until they stop twitching.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING], `${baseFilter_1.TARGETSTRING}'s blood`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`)], true, 30 * 1000, true);
-            const desecrateCorpse = new BaseBeat_1.AiBeat("Killer: Do Art", [`The Eye Killer appears to creating some sort of art piece out of what remains of the ${baseFilter_1.TARGETSTRING}.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING], `${baseFilter_1.TARGETSTRING}'s blood`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`)], true, 30 * 1000);
+            const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat("Killer: Kill", [`The Eye Killer brutally stabs  ${baseFilter_1.TARGETSTRING} over and over until they stop twitching.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING], `${baseFilter_1.TARGETSTRING}'s blood`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`)], true, 30 * 1000, true);
+            const desecrateCorpse = new BaseBeat_1.AiBeat("Killer: Do Art", [`The Eye Killer appears to creating some sort of art piece out of what remains of ${baseFilter_1.TARGETSTRING}.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING], `${baseFilter_1.TARGETSTRING}'s blood`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`)], true, 30 * 1000);
             const beats = [
                 approachEgg,
                 pickupEgg,
@@ -2652,6 +2652,46 @@ class Innocent extends Quotidian_1.Quotidian {
     }
 }
 exports.Innocent = Innocent;
+
+
+/***/ }),
+
+/***/ 3096:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Goncharov = void 0;
+const RandomMovement_1 = __webpack_require__(5997);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6387);
+//generic npcs have no inner ai, they just do whatever their themes and the room tell them too. they are hollow mockeries.
+class Goncharov extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/goncharov_down.gif", width: 50, height: 50 },
+            left_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/goncharov_left.gif", width: 50, height: 50 },
+            right_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/goncharov_right.gif", width: 50, height: 50 },
+            up_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/goncharov_up.gif", width: 50, height: 50 },
+            down_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/goncharov_down.gif", width: 50, height: 50 }
+        };
+        const beats = [];
+        super(room, "Goncharov", x, y, [Theme_1.all_themes[ThemeStorage_1.TIME], Theme_1.all_themes[ThemeStorage_1.FAMILY], Theme_1.all_themes[ThemeStorage_1.LONELY], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.SOUL]], sprite, "He's gonna gonch ya.", beats);
+        this.lore = "Wait. Who is this?";
+        this.fortitude = 2;
+        this.prudence = 5;
+        this.temperance = 5;
+        this.judgement = 5;
+        this.maxSpeed = 50;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+    }
+}
+exports.Goncharov = Goncharov;
 
 
 /***/ }),
@@ -2934,7 +2974,7 @@ const Relationship_1 = __webpack_require__(7739);
 class Parker extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "theshot.png", width: 56, height: 100 },
+            default_src: { src: "Placeholders/theshot.png", width: 56, height: 100 },
         };
         const beats = [];
         super(room, "Parker", x, y, [Theme_1.all_themes[ThemeStorage_1.BURIED], Theme_1.all_themes[ThemeStorage_1.STEALING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.SPYING]], sprite, "The Censorship is for your protection.", beats);
@@ -6534,6 +6574,7 @@ const __1 = __webpack_require__(3607);
 const End_1 = __webpack_require__(8115);
 const Parker_1 = __webpack_require__(3873);
 const K_1 = __webpack_require__(1069);
+const Goncharov_1 = __webpack_require__(3096);
 class Maze {
     constructor(ele, storySoFar, rand) {
         this.debug = false;
@@ -6592,6 +6633,7 @@ class Maze {
                 this.blorbos.push(new JR_1.JR(this.room, 150, 150));
                 this.blorbos.push(new K_1.Khana(this.room, 150, 150));
                 this.blorbos.push(new Parker_1.Parker(this.room, 150, 150));
+                this.blorbos.push(new Goncharov_1.Goncharov(this.room, 150, 150));
             }
         };
         this.begin = () => {
@@ -6626,7 +6668,7 @@ class Maze {
                 return;
             }
             //const blorbosToTest = ["Camille", "Ria"];
-            const blorbosToTest = ["Eye Killer", "Yongki"];
+            const blorbosToTest = ["Goncharov"];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
                     for (let theme of blorbo.themes) {
@@ -7682,6 +7724,7 @@ const constants_1 = __webpack_require__(8817);
 const ChangeMyStabilityLevelByAmount_1 = __webpack_require__(8801);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
+const RandomTarget_1 = __webpack_require__(9824);
 const TargetHasObjectWithName_1 = __webpack_require__(4864);
 const TargetHighestStatIsX_1 = __webpack_require__(5362);
 const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
@@ -8166,6 +8209,10 @@ const initWallForegrounds = () => {
 //homoerotic anchovy scene
 //addiction scene
 const initBeatList = () => {
+    exports.beat_list[exports.TIME] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Listen to the Ticking, to the Ticking of the Clocks`, [`${baseFilter_1.SUBJECTSTRING} listens intently to the ubiquitous ticking of the clocks in this room..`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
+        true, 1000 * 60),
+    ];
     exports.beat_list[exports.ADDICTION] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Gamble Obsessively`, [`${baseFilter_1.SUBJECTSTRING} knows they can win next time. Just one more time. One more time. They're due any minute now.`], [new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(2, { singleTarget: true, kMode: true })], //you really can't control yourself can you
         [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30),
@@ -10099,7 +10146,7 @@ exports.Slaughter = Slaughter;
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
 */
 /*
-
+LAPIN
 WHAT WILL YOU CREATE
 99 Rooms
 kINTSUGI
@@ -14034,6 +14081,8 @@ var map = {
 	"./Objects/Entities/Blorbos/End.ts": 8115,
 	"./Objects/Entities/Blorbos/EyeKiller": 2937,
 	"./Objects/Entities/Blorbos/EyeKiller.ts": 2937,
+	"./Objects/Entities/Blorbos/Goncharov": 3096,
+	"./Objects/Entities/Blorbos/Goncharov.ts": 3096,
 	"./Objects/Entities/Blorbos/JR": 7455,
 	"./Objects/Entities/Blorbos/JR.ts": 7455,
 	"./Objects/Entities/Blorbos/K": 1069,

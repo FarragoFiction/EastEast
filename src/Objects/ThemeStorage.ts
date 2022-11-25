@@ -589,6 +589,16 @@ const initWallForegrounds = () => {
 //homoerotic anchovy scene
 //addiction scene
 const initBeatList = () => {
+
+    beat_list[TIME] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Listen to the Ticking, to the Ticking of the Clocks`,
+            [`${SUBJECTSTRING} listens intently to the ubiquitous ticking of the clocks in this room.`],
+            [new RandomTarget(0.5, {singleTarget:true, kMode: true})],
+            [new ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
+            true,
+            1000 * 60),
+    ]
     beat_list[ADDICTION] = [
         new AiBeat(
             `${SUBJECTSTRING}: Gamble Obsessively`,
