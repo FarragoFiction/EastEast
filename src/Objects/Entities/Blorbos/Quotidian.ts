@@ -164,6 +164,7 @@ export class Quotidian extends PhysicalObject {
     romanticFOdds = 1.0;
     romanticMOdds = 1.0;
     romanticNBOdds = 1.0;
+    actionRateMutator = 0.5;
     likeMultiplier = 1.0; //(effects how quickly they grow to like people in general)
     dislikeMultiplier = 1.0; //(effects how quickly they grow to dislike ppl in general)
     relationshipMap = new Map<string, Relationship>(); //(keyed by array of all known names, csv)
@@ -218,6 +219,7 @@ export class Quotidian extends PhysicalObject {
         }
         beats = beats.concat(this.grabThemeBeats());
         this.makeBeatsMyOwn(beats);
+        this.actionRateMutator = this.rand.getRandomNumberBetween(7,13)/10;
     }
 
     //not as important as your custom ai, but... you still are your constintuate parts. and npcs are nothing BUT that. hollow inside.
@@ -678,7 +680,7 @@ export class Quotidian extends PhysicalObject {
             this.friend.tick();
         }
         //you can move quicker than you can think
-        this.processAiBeat(roomBeats, this.itsBeenAwhileSinceLastBeat(actionRate));
+        this.processAiBeat(roomBeats, this.itsBeenAwhileSinceLastBeat(actionRate*this.actionRateMutator));
 
         this.movement_alg.tick();
         this.syncSpriteToDirection();

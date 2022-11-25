@@ -3330,6 +3330,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.romanticFOdds = 1.0;
         this.romanticMOdds = 1.0;
         this.romanticNBOdds = 1.0;
+        this.actionRateMutator = 0.5;
         this.likeMultiplier = 1.0; //(effects how quickly they grow to like people in general)
         this.dislikeMultiplier = 1.0; //(effects how quickly they grow to dislike ppl in general)
         this.relationshipMap = new Map(); //(keyed by array of all known names, csv)
@@ -3538,7 +3539,6 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             return ret;
         };
         this.die = (causeOfDeath, killerName) => {
-            console.log("JR NOTE: trying to kill", this.name, causeOfDeath);
             if (!this.dead) {
                 this.room.clearFilterPart(this.filterStringAppliedToRoom);
                 this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
@@ -3661,11 +3661,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             this.customSyncCode();
         };
         this.itsBeenAwhileSinceLastBeat = (actionRate) => {
-            console.log(`JR NOTE: checking if its been a awhile for ${this.name}. ${new Date().getTime() - this.timeOfLastBeat > actionRate},currentTime is roughly ${new Date().getTime()}, last beat beat was ${this.timeOfLastBeat}, actionrate is ${actionRate} `);
             return new Date().getTime() - this.timeOfLastBeat > actionRate;
         };
         this.processAiBeat = (roomBeats, canGoNormally) => {
-            console.log(`JR NOTE: processing ${this.name} ai beats for a single tick`);
             const toRemove = [];
             let didSomething = false;
             //only does a room beat if all of my own ai does nothing
@@ -3678,7 +3676,6 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             for (let beat of allPossibilities) {
                 if ((!canGoNormally && beat.canFastFollow || canGoNormally) && !didSomething) {
                     if (beat.triggered(this.room)) {
-                        console.log(`JR NOTE: I am ${this.name} ${beat.command} could fire, canGoNormally was ${canGoNormally}, and the potential override was ${new Date().toLocaleTimeString()}`);
                         didSomething = true;
                         this.timeOfLastBeat = new Date().getTime();
                         this.container.style.zIndex = `${30}`; //stand out
@@ -3727,7 +3724,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 this.friend.tick();
             }
             //you can move quicker than you can think
-            this.processAiBeat(roomBeats, this.itsBeenAwhileSinceLastBeat(actionRate));
+            this.processAiBeat(roomBeats, this.itsBeenAwhileSinceLastBeat(actionRate * this.actionRateMutator));
             this.movement_alg.tick();
             this.syncSpriteToDirection();
             this.updateRendering();
@@ -3740,6 +3737,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         }
         beats = beats.concat(this.grabThemeBeats());
         this.makeBeatsMyOwn(beats);
+        this.actionRateMutator = this.rand.getRandomNumberBetween(8, 11) / 10;
     }
 }
 exports.Quotidian = Quotidian;
