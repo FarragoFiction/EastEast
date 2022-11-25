@@ -262,7 +262,7 @@ export class Maze {
         const beatele = createElementWithIdAndParent("div", this.storySoFar, undefined, "storybeat")
         const commandele = createElementWithIdAndParent("div", beatele, undefined, "historical-command")
         const responseele = createElementWithIdAndParent("div", beatele, undefined, "response")
-        commandele.innerHTML = `>${beat.command} ${new Date().toLocaleTimeString()}`;
+        commandele.innerHTML = `>${beat.command} ${this.debug ? new Date().toLocaleTimeString():""}`;
         responseele.innerHTML = beat.response;
         this.checkEffects(beat);
         commandele.className =(beat.commandClass);
