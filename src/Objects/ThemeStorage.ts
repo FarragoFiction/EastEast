@@ -590,6 +590,46 @@ const initWallForegrounds = () => {
 //addiction scene
 const initBeatList = () => {
 
+    beat_list[SOUL] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Introspect`,
+            [`${SUBJECTSTRING} ponders the nature of their own being. What parts of themselves are stable? What parts are a product of circumstance? Who would they be if their life had been different?`],
+            [new RandomTarget(0.5, {singleTarget:true, kMode: true})],
+            [new ChangeMyStabilityLevelByAmount(1)], //its fine
+            true,
+            1000 * 60),
+    ]
+    
+    beat_list[WEB] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Feel a Tickle`,
+            [`${SUBJECTSTRING} jerks suddenly, then brushes the spiderwebs that have drifted onto their body.`],
+            [new RandomTarget(0.5, {singleTarget:true, kMode: true})],
+            [new ChangeMyStabilityLevelByAmount(-1)], //not great
+            true,
+            1000 * 60),
+    ]
+
+    beat_list[LONELY] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Be Lonely`,
+            [`${SUBJECTSTRING} is suddenly aware that we all die alone. They feel so very, very Lonely.`],
+            [new RandomTarget(0.5, {singleTarget:true, kMode: true})],
+            [new ChangeMyStabilityLevelByAmount(-13)], //this is not a good place to be.
+            true,
+            1000 * 60),
+    ]
+
+    beat_list[FAMILY] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Think About Family`,
+            [`${SUBJECTSTRING} thinks wistfully of their family.`],
+            [new RandomTarget(0.5, {singleTarget:true, kMode: true})],
+            [new ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
+            true,
+            1000 * 60),
+    ]
+
     beat_list[TIME] = [
         new AiBeat(
             `${SUBJECTSTRING}: Listen to the Ticking, to the Ticking of the Clocks`,
