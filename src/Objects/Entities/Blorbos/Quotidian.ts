@@ -216,8 +216,7 @@ export class Quotidian extends PhysicalObject {
                 true
             ))
         }
-        beats.concat(this.grabThemeBeats());
-        console.log("JR NOTE: after theme beats, my beats are", beats);
+        beats = beats.concat(this.grabThemeBeats());
         this.makeBeatsMyOwn(beats);
     }
 
@@ -225,8 +224,9 @@ export class Quotidian extends PhysicalObject {
     grabThemeBeats  = ()=>{
         let beats: AiBeat[] = [];
         for(let theme of this.themes){
-            console.log("JR NOTE: my name is " + this.name + " checking theme", theme, "for beats.")
-            beats.concat(theme.personal_beats);
+            if(theme.personal_beats){
+                beats = beats.concat(theme.personal_beats);
+            }
         }
         return beats;
     }
@@ -621,8 +621,16 @@ export class Quotidian extends PhysicalObject {
             allPossibilities.push(clonse); //IMPORTANT, need to set myself up as its owner for this tick
         }
         for (let beat of allPossibilities) {
-            if (onlyFastFollow && beat.canFastFollow || !onlyFastFollow) {
+            if(this.name.includes("G")){
+                console.log("JR NOTE: chekcing if beat", beat, "can fire",onlyFastFollow,beat.canFastFollow);
+
+            }
+            if ((onlyFastFollow && beat.canFastFollow || !onlyFastFollow) &&!didSomething) {
                 if (beat.triggered(this.room)) {
+                    if(this.name.includes("G")){
+                        console.log("JR NOTE: it could");
+        
+                    }
                     didSomething = true;
                     this.timeOfLastBeat = new Date().getTime();
                     this.container.style.zIndex = `${30}`; //stand out

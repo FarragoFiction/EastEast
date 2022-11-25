@@ -139,7 +139,7 @@ export class Maze {
             return;
         }
         //const blorbosToTest = ["Camille", "Ria"];
-        const blorbosToTest:string[] = ["Goncharov"];
+        const blorbosToTest:string[] = [];
         for (let blorbo of this.blorbos) {
             if (!blorbo.owner) {//if you're in someones inventory, no spawning for you
                 for (let theme of blorbo.themes) {
@@ -262,7 +262,7 @@ export class Maze {
         const beatele = createElementWithIdAndParent("div", this.storySoFar, undefined, "storybeat")
         const commandele = createElementWithIdAndParent("div", beatele, undefined, "historical-command")
         const responseele = createElementWithIdAndParent("div", beatele, undefined, "response")
-        commandele.innerHTML = `>${beat.command}`;
+        commandele.innerHTML = `>${beat.command} ${new Date().toLocaleTimeString()}`;
         responseele.innerHTML = beat.response;
         this.checkEffects(beat);
         commandele.className =(beat.commandClass);

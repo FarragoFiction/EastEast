@@ -3350,8 +3350,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.grabThemeBeats = () => {
             let beats = [];
             for (let theme of this.themes) {
-                console.log("JR NOTE: my name is " + this.name + " checking theme", theme, "for beats.");
-                beats.concat(theme.personal_beats);
+                if (theme.personal_beats) {
+                    beats = beats.concat(theme.personal_beats);
+                }
             }
             return beats;
         };
@@ -3420,6 +3421,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             return this.relationshipMap.get(key);
         };
         this.realizeIWantToSpendMyLifeWithTarget = (blorbo) => {
+            if (blorbo.name === this.name) {
+                return;
+            }
             const key = blorbo.aliases().join(",");
             let relationship = this.relationshipMap.get(key);
             if (!relationship) {
@@ -3431,6 +3435,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             }
         };
         this.realizeIHaveASquishOnBlorbo = (blorbo) => {
+            if (blorbo.name === this.name) {
+                return;
+            }
             const key = blorbo.aliases().join(",");
             let relationship = this.relationshipMap.get(key);
             if (!relationship) {
@@ -3442,6 +3449,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             }
         };
         this.realizeIHaveACrushOnBlorbo = (blorbo) => {
+            if (blorbo.name === this.name) {
+                return;
+            }
             const key = blorbo.aliases().join(",");
             let relationship = this.relationshipMap.get(key);
             if (!relationship) {
@@ -3453,6 +3463,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             }
         };
         this.makeItOfficialWithBlorbo = (blorbo) => {
+            if (blorbo.name === this.name) {
+                return;
+            }
             const key = blorbo.aliases().join(",");
             let relationship = this.relationshipMap.get(key);
             if (!relationship) {
@@ -3464,6 +3477,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             }
         };
         this.likeBlorboMore = (blorbo, amount) => {
+            if (blorbo.name === this.name) {
+                return;
+            }
             const key = blorbo.aliases().join(",");
             const relationship = this.relationshipMap.get(key);
             if (relationship) {
@@ -3474,6 +3490,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             }
         };
         this.likeBlorboLess = (blorbo, amount) => {
+            if (blorbo.name === this.name) {
+                return;
+            }
             const key = blorbo.aliases().join(",");
             const relationship = this.relationshipMap.get(key);
             if (relationship) {
@@ -3486,6 +3505,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         //if they're already in my relationship matrix, escalate it, else initialize it to zero
         //make sure you handle your like/dislike modifiers
         this.intensifyFeelingsFor = (blorbo, amount) => {
+            if (blorbo.name === this.name) {
+                return;
+            }
             const key = blorbo.aliases().join(",");
             const relationship = this.relationshipMap.get(key);
             //console.log("JR NOTE: trying to intensify feelings for ", key, " by amount ", amount, "relationship is", relationship);
@@ -3497,6 +3519,9 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             }
         };
         this.de_escalateFeelingsFor = (blorbo, amount) => {
+            if (blorbo.name === this.name) {
+                return;
+            }
             const key = blorbo.aliases().join(",");
             const relationship = this.relationshipMap.get(key);
             if (relationship) {
@@ -3649,8 +3674,14 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
                 allPossibilities.push(clonse); //IMPORTANT, need to set myself up as its owner for this tick
             }
             for (let beat of allPossibilities) {
-                if (onlyFastFollow && beat.canFastFollow || !onlyFastFollow) {
+                if (this.name.includes("G")) {
+                    console.log("JR NOTE: chekcing if beat", beat, "can fire", onlyFastFollow, beat.canFastFollow);
+                }
+                if ((onlyFastFollow && beat.canFastFollow || !onlyFastFollow) && !didSomething) {
                     if (beat.triggered(this.room)) {
+                        if (this.name.includes("G")) {
+                            console.log("JR NOTE: it could");
+                        }
                         didSomething = true;
                         this.timeOfLastBeat = new Date().getTime();
                         this.container.style.zIndex = `${30}`; //stand out
@@ -3710,8 +3741,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         if (beats.length === 0 && name == "Quotidian") {
             beats.push(new BaseBeat_1.AiBeat("Quotidian: Be Bird Brained", [`The Quotidian is sqwawking at the ${baseFilter_1.TARGETSTRING}.`], [new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass("Gross!"), new PickupObject_1.PickupObject()], true));
         }
-        beats.concat(this.grabThemeBeats());
-        console.log("JR NOTE: after theme beats, my beats are", beats);
+        beats = beats.concat(this.grabThemeBeats());
         this.makeBeatsMyOwn(beats);
     }
 }
@@ -6679,7 +6709,7 @@ class Maze {
                 return;
             }
             //const blorbosToTest = ["Camille", "Ria"];
-            const blorbosToTest = ["Goncharov"];
+            const blorbosToTest = [];
             for (let blorbo of this.blorbos) {
                 if (!blorbo.owner) { //if you're in someones inventory, no spawning for you
                     for (let theme of blorbo.themes) {
@@ -6784,7 +6814,7 @@ class Maze {
             const beatele = (0, misc_1.createElementWithIdAndParent)("div", this.storySoFar, undefined, "storybeat");
             const commandele = (0, misc_1.createElementWithIdAndParent)("div", beatele, undefined, "historical-command");
             const responseele = (0, misc_1.createElementWithIdAndParent)("div", beatele, undefined, "response");
-            commandele.innerHTML = `>${beat.command}`;
+            commandele.innerHTML = `>${beat.command} ${new Date().toLocaleTimeString()}`;
             responseele.innerHTML = beat.response;
             this.checkEffects(beat);
             commandele.className = (beat.commandClass);
@@ -8222,9 +8252,12 @@ const initWallForegrounds = () => {
     wall_foregrounds[DEFENSE] =  ["Excalibur"] ;
     wall_foregrounds[QUESTING] = ["Satisfaction"] ;*/
 };
+/*
+* In Zampanio Sim, Lord Dark's daughter Kasane creates this as a backup plan if she doesn't get nuclear warheads or legions of doom fast enough. The virus is very similar to the Matrix example above, it makes people vomit a sticky light pink liquid that covers their body, and then [[Clone by Conversion converts them into Kasane, except with added cat ears and a cat tail, that have the goo dripping off of them.
+*/
 const initPersonalBeatList = () => {
     exports.personal_beat_list[exports.SOUL] = [
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Introspect`, [`${baseFilter_1.SUBJECTSTRING} ponders the nature of their own being. What parts of themselves are stable? What parts are a product of circumstance? Who would they be if their life had been different?`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Introspect`, [`${baseFilter_1.SUBJECTSTRING} ponders the nature of their own being. What parts of themselves are stable? What parts are a product of circumstance? Who would they be if their life had been different?`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
         true, 1000 * 60),
     ];
 };

@@ -590,12 +590,16 @@ const initWallForegrounds = () => {
     wall_foregrounds[QUESTING] = ["Satisfaction"] ;*/
 }
 
+/*
+* In Zampanio Sim, Lord Dark's daughter Kasane creates this as a backup plan if she doesn't get nuclear warheads or legions of doom fast enough. The virus is very similar to the Matrix example above, it makes people vomit a sticky light pink liquid that covers their body, and then [[Clone by Conversion converts them into Kasane, except with added cat ears and a cat tail, that have the goo dripping off of them.
+*/
+
 const initPersonalBeatList = () => {
     personal_beat_list[SOUL] = [
         new AiBeat(
             `${SUBJECTSTRING}: Introspect`,
             [`${SUBJECTSTRING} ponders the nature of their own being. What parts of themselves are stable? What parts are a product of circumstance? Who would they be if their life had been different?`],
-            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
+            [new RandomTarget(1.5, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(1)], //its fine
             true,
             1000 * 60),
