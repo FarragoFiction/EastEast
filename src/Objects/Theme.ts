@@ -30,14 +30,16 @@ export class Theme {
     etc etc
     */
     string_possibilities: PossibilitiesListMap;
-    beats: AiBeat[];
+    beats: AiBeat[]; //rooms use these
+    personal_beats: AiBeat[]; //quotidians  use these
+
     memories: Memory[];
     opinions: ThemeStorage.ThemePossibilitiesNumberMap;
 
     tier: number;
 
 
-    constructor(key: string, tier: number, stats: Stat.StatMap, string_possibilities: PossibilitiesListMap, opinions: ThemeStorage.ThemePossibilitiesNumberMap, memories: Memory[], beats: AiBeat[]) {
+    constructor(key: string, tier: number, stats: Stat.StatMap, string_possibilities: PossibilitiesListMap, opinions: ThemeStorage.ThemePossibilitiesNumberMap, memories: Memory[], beats: AiBeat[], personal_beats: AiBeat[]) {
         this.key = key;
         this.tier = tier;
         this.initStats(stats);
@@ -45,6 +47,7 @@ export class Theme {
         this.memories = memories;
         this.opinions = opinions;
         all_themes[key] = this;
+        this.personal_beats = personal_beats;
         this.beats = beats;
     }
 
@@ -159,9 +162,10 @@ export function initThemes() {
 
         const opinions = ThemeStorage.theme_opinions[key];
         const beats =  ThemeStorage.beat_list[key];
+        const personal_beats =  ThemeStorage.personal_beat_list[key];
 
         const memories = ThemeStorage.memories[key] ? ThemeStorage.memories[key] : [];
-        new Theme(key, 0, Stat.WrapStatsToStatMap(ThemeStorage.stats_map[key]), string_possibilities, opinions, memories, beats);
+        new Theme(key, 0, Stat.WrapStatsToStatMap(ThemeStorage.stats_map[key]), string_possibilities, opinions, memories, beats, personal_beats);
     }
 
 

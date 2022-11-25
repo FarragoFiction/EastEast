@@ -1541,7 +1541,7 @@ class Look extends BaseAction_1.Action {
             }
             const lookcloser = current_room.rand.pickFrom(targets);
             const inventory = lookcloser.inventory.length > 0 ? (0, ArrayUtils_1.turnArrayIntoHumanSentence)(lookcloser.inventory.map((i) => i.processedName())) : "nothing";
-            let retSoFar = `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at the ${lookcloser.processedName()}. ${lookcloser.flavorText} <p>They have ${inventory} in their inventory.</p> <p>Their movement algorithm is ${lookcloser.movement_alg ? lookcloser.movement_alg.constructor.name : "NONE"}</p>`;
+            let retSoFar = `${subject.processedName()} looks at ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((e) => e.processedName()))}. He sees an aura of ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(thingsHeard)}. He looks closer at${lookcloser instanceof Quotidian_1.Quotidian ? "" : " the"} ${lookcloser.processedName()}. ${lookcloser.flavorText} <p>They have ${inventory} in their inventory.</p> <p>Their movement algorithm is ${lookcloser.movement_alg ? lookcloser.movement_alg.constructor.name : "NONE"}</p>`;
             if (lookcloser.relationshipMap && lookcloser.relationshipMap.keys().length !== 0) {
                 retSoFar += "<p>They have the following opinions about the other blorbos:</p> <ul style='padding:10px; border:1px solid pink; width: 500px;'>";
                 for (let relationshipPair of lookcloser.relationshipMap) {
@@ -3346,6 +3346,15 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
+        //not as important as your custom ai, but... you still are your constintuate parts. and npcs are nothing BUT that. hollow inside.
+        this.grabThemeBeats = () => {
+            let beats = [];
+            for (let theme of this.themes) {
+                console.log("JR NOTE: my name is " + this.name + " checking theme", theme, "for beats.");
+                beats.concat(theme.personal_beats);
+            }
+            return beats;
+        };
         this.highestStat = () => {
             const checkIfStatIsHighestOrEqual = (stat) => {
                 return stat >= this.fortitude && stat >= this.prudence && stat >= this.temperance && stat > this.judgement;
@@ -3395,7 +3404,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             return `I really like their ${blorbo.getRandomThemeConcept(ThemeStorage_1.INSULT)} nature.`;
         };
         this.generateImportantOpinion = (blorbo) => {
-            return `They are more important to me than any ${this.getRandomThemeConcept(ThemeStorage_1.OBJECT)}`;
+            return `They are more important to me than any ${this.getRandomThemeConcept(ThemeStorage_1.OBJECT)}.`;
         };
         this.generateRomanticOpinion = (blorbo) => {
             return "I think about kissing them a lot.";
@@ -3701,6 +3710,8 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         if (beats.length === 0 && name == "Quotidian") {
             beats.push(new BaseBeat_1.AiBeat("Quotidian: Be Bird Brained", [`The Quotidian is sqwawking at the ${baseFilter_1.TARGETSTRING}.`], [new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass("Gross!"), new PickupObject_1.PickupObject()], true));
         }
+        beats.concat(this.grabThemeBeats());
+        console.log("JR NOTE: after theme beats, my beats are", beats);
         this.makeBeatsMyOwn(beats);
     }
 }
@@ -7565,7 +7576,7 @@ const ThemeStorage = __importStar(__webpack_require__(1288));
 //auto populated by creating themes. 
 exports.all_themes = {};
 class Theme {
-    constructor(key, tier, stats, string_possibilities, opinions, memories, beats) {
+    constructor(key, tier, stats, string_possibilities, opinions, memories, beats, personal_beats) {
         this.stats = {};
         this.getOpinionOfTheme = (key) => {
             if (!this.opinions) {
@@ -7621,6 +7632,7 @@ class Theme {
         this.memories = memories;
         this.opinions = opinions;
         exports.all_themes[key] = this;
+        this.personal_beats = personal_beats;
         this.beats = beats;
     }
 }
@@ -7679,8 +7691,9 @@ function initThemes() {
         string_possibilities[ThemeStorage.FILTERS] = ThemeStorage.filter_possibilities[key];
         const opinions = ThemeStorage.theme_opinions[key];
         const beats = ThemeStorage.beat_list[key];
+        const personal_beats = ThemeStorage.personal_beat_list[key];
         const memories = ThemeStorage.memories[key] ? ThemeStorage.memories[key] : [];
-        new Theme(key, 0, Stat.WrapStatsToStatMap(ThemeStorage.stats_map[key]), string_possibilities, opinions, memories, beats);
+        new Theme(key, 0, Stat.WrapStatsToStatMap(ThemeStorage.stats_map[key]), string_possibilities, opinions, memories, beats, personal_beats);
     }
 }
 exports.initThemes = initThemes;
@@ -7718,8 +7731,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.GUIDING = exports.CRAFTING = exports.LANGUAGE = exports.BUGS = exports.QUESTING = exports.DEFENSE = exports.MUSIC = exports.KILLING = exports.DARKNESS = exports.CENSORSHIP = exports.OBFUSCATION = exports.DOLLS = exports.HEALING = exports.SPYING = exports.ADDICTION = exports.NULL = exports.BEATS = exports.SPRITES = exports.FLOORFOREGROUND = exports.FLOORBACKGROUND = exports.WALLFOREGROUND = exports.WALLBACKGROUND = exports.THEME_OPINIONS = exports.FILTERS = exports.FLOOR = exports.WALL = exports.EFFECTS = exports.SOUND = exports.FEELING = exports.TASTE = exports.SMELL = exports.MONSTER_DESC = exports.LOC_DESC = exports.PHILOSOPHY = exports.SONG = exports.MIRACLE = exports.GENERALBACKSTORY = exports.CHILDBACKSTORY = exports.CITYNAME = exports.ASPECT = exports.CLASS = exports.MENU = exports.MEMORIES = exports.LOCATION = exports.OBJECT = exports.SUPERMOVE = exports.INSULT = exports.COMPLIMENT = exports.ADJ = exports.PERSON = void 0;
-exports.philosophy = exports.miracles = exports.child_backstories = exports.general_backstories = exports.location_possibilities = exports.object_possibilities = exports.person_posibilities = exports.stats_map = exports.beat_list = exports.sprite_possibilities = exports.floor_foregrounds = exports.floor_backgrounds = exports.wall_backgrounds = exports.wall_foregrounds = exports.keys = exports.TECHNOLOGY = exports.ART = exports.TIME = exports.SPACE = exports.OCEAN = exports.LONELY = exports.FIRE = exports.FREEDOM = exports.STEALING = exports.BURIED = exports.FLESH = exports.SCIENCE = exports.MATH = exports.TWISTING = exports.DEATH = exports.APOCALYPSE = exports.WASTE = exports.SERVICE = exports.FAMILY = exports.MAGIC = exports.LIGHT = exports.ANGELS = exports.HUNTING = exports.CLOWNS = exports.PLANTS = exports.DECAY = exports.CHOICES = exports.ZAP = exports.LOVE = exports.SOUL = exports.ANGER = exports.WEB = exports.ROYALTY = exports.ENDINGS = exports.KNOWING = void 0;
-exports.initThemes = exports.checkIfAllKeysPresent = exports.super_name_possibilities_map = exports.memories = exports.compliment_possibilities = exports.filter_possibilities = exports.theme_opinions = exports.floor_possibilities = exports.wall_possibilities = exports.song_possibilities = exports.insult_possibilities = exports.adj_possibilities = exports.menu_options = exports.effect_possibilities = exports.smell_possibilities = exports.feeling_possibilities = exports.taste_possibilities = exports.sound_possibilities = exports.monster_desc = exports.loc_desc = void 0;
+exports.miracles = exports.child_backstories = exports.general_backstories = exports.location_possibilities = exports.object_possibilities = exports.person_posibilities = exports.stats_map = exports.personal_beat_list = exports.beat_list = exports.sprite_possibilities = exports.floor_foregrounds = exports.floor_backgrounds = exports.wall_backgrounds = exports.wall_foregrounds = exports.keys = exports.TECHNOLOGY = exports.ART = exports.TIME = exports.SPACE = exports.OCEAN = exports.LONELY = exports.FIRE = exports.FREEDOM = exports.STEALING = exports.BURIED = exports.FLESH = exports.SCIENCE = exports.MATH = exports.TWISTING = exports.DEATH = exports.APOCALYPSE = exports.WASTE = exports.SERVICE = exports.FAMILY = exports.MAGIC = exports.LIGHT = exports.ANGELS = exports.HUNTING = exports.CLOWNS = exports.PLANTS = exports.DECAY = exports.CHOICES = exports.ZAP = exports.LOVE = exports.SOUL = exports.ANGER = exports.WEB = exports.ROYALTY = exports.ENDINGS = exports.KNOWING = void 0;
+exports.initThemes = exports.checkIfAllKeysPresent = exports.super_name_possibilities_map = exports.memories = exports.compliment_possibilities = exports.filter_possibilities = exports.theme_opinions = exports.floor_possibilities = exports.wall_possibilities = exports.song_possibilities = exports.insult_possibilities = exports.adj_possibilities = exports.menu_options = exports.effect_possibilities = exports.smell_possibilities = exports.feeling_possibilities = exports.taste_possibilities = exports.sound_possibilities = exports.monster_desc = exports.loc_desc = exports.philosophy = void 0;
 const constants_1 = __webpack_require__(8817);
 const ChangeMyStabilityLevelByAmount_1 = __webpack_require__(8801);
 const BaseBeat_1 = __webpack_require__(1708);
@@ -7727,6 +7740,8 @@ const baseFilter_1 = __webpack_require__(9505);
 const RandomTarget_1 = __webpack_require__(9824);
 const TargetHasObjectWithName_1 = __webpack_require__(4864);
 const TargetHighestStatIsX_1 = __webpack_require__(5362);
+const TargetJudgementLessThanAmount_1 = __webpack_require__(3678);
+const TargetPrudenceLessThanAmount_1 = __webpack_require__(1877);
 const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
 const TargetTemperenceLessThanAmount_1 = __webpack_require__(5159);
 const Memory_1 = __webpack_require__(7953);
@@ -7826,6 +7841,7 @@ exports.floor_backgrounds = {};
 exports.floor_foregrounds = {};
 exports.sprite_possibilities = {};
 exports.beat_list = {};
+exports.personal_beat_list = {};
 exports.stats_map = {};
 exports.person_posibilities = {};
 exports.object_possibilities = {};
@@ -8206,11 +8222,37 @@ const initWallForegrounds = () => {
     wall_foregrounds[DEFENSE] =  ["Excalibur"] ;
     wall_foregrounds[QUESTING] = ["Satisfaction"] ;*/
 };
+const initPersonalBeatList = () => {
+    exports.personal_beat_list[exports.SOUL] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Introspect`, [`${baseFilter_1.SUBJECTSTRING} ponders the nature of their own being. What parts of themselves are stable? What parts are a product of circumstance? Who would they be if their life had been different?`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
+        true, 1000 * 60),
+    ];
+};
 //homoerotic anchovy scene
 //addiction scene
 const initBeatList = () => {
+    exports.beat_list[exports.SOUL] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Second guess self.`, [`Something about this room just has ${baseFilter_1.SUBJECTSTRING} thinking about who they are as a person. God. Have they even made the right decisions? How would they even be able to tell? They're probably the worst possible version of themself...`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount_1.TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], //its fine
+        true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Meditate on Self.`, [`Something about this room just has ${baseFilter_1.SUBJECTSTRING} thinking about who they are as a person. Man. They're pretty happy with how far they've come. They're confident they've made the right decisions everywhere they could. This is nice.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount_1.TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
+        true, 1000 * 60),
+    ];
+    exports.beat_list[exports.WEB] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Panic About Spiders`, [`${baseFilter_1.SUBJECTSTRING} jerks suddenly in a panic, then frantically brushes the spiderwebs that have drifted onto their body from up above. God, this room sucks.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount_1.TargetPrudenceLessThanAmount(2, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], //not great
+        true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Feel a Tickle`, [`${baseFilter_1.SUBJECTSTRING} calmly brushes off the spiderwebs that have drifted onto their body.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount_1.TargetPrudenceLessThanAmount(4, { singleTarget: true, kMode: true, invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-1)], //not great
+        true, 1000 * 60),
+    ];
+    exports.beat_list[exports.LONELY] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Be Lonely`, [`${baseFilter_1.SUBJECTSTRING} is suddenly aware that we all die alone. They feel so very, very Lonely.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], //this is not a good place to be.
+        true, 1000 * 60),
+    ];
+    exports.beat_list[exports.FAMILY] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Family`, [`${baseFilter_1.SUBJECTSTRING} thinks wistfully of their family.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
+        true, 1000 * 60),
+    ];
     exports.beat_list[exports.TIME] = [
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Listen to the Ticking, to the Ticking of the Clocks`, [`${baseFilter_1.SUBJECTSTRING} listens intently to the ubiquitous ticking of the clocks in this room..`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Listen to the Ticking, to the Ticking of the Clocks`, [`${baseFilter_1.SUBJECTSTRING} listens intently to the ubiquitous ticking of the clocks in this room.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
         true, 1000 * 60),
     ];
     exports.beat_list[exports.ADDICTION] = [
@@ -9614,6 +9656,7 @@ const initThemes = () => {
     initSpritePossibilities();
     initFilters();
     initBeatList();
+    initPersonalBeatList();
 };
 exports.initThemes = initThemes;
 

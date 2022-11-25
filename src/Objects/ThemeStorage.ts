@@ -3,8 +3,11 @@ import { ChangeMyStabilityLevelByAmount } from './Entities/Actions/ChangeMyStabi
 import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from './Entities/StoryBeats/BaseBeat';
 import { SUBJECTSTRING } from './Entities/TargetFilter/baseFilter';
 import { RandomTarget } from './Entities/TargetFilter/RandomTarget';
+import { TargetFortitudeLessThanAmount } from './Entities/TargetFilter/TargetFortitudeLessThanAmount';
 import { TargetHasObjectWithName } from './Entities/TargetFilter/TargetHasObjectWithName';
 import { TargetHighestStatIsX } from './Entities/TargetFilter/TargetHighestStatIsX';
+import { TargetJudgementLessThanAmount } from './Entities/TargetFilter/TargetJudgementLessThanAmount';
+import { TargetPrudenceLessThanAmount } from './Entities/TargetFilter/TargetPrudenceLessThanAmount';
 import { TargetStabilityLevelLessThanAmount } from './Entities/TargetFilter/TargetStabilityLevelLessThanAmount';
 import { TargetTemperenceLessThanAmount } from './Entities/TargetFilter/TargetTemperenceLessThanAmount';
 import { Memory } from './Memory';
@@ -159,6 +162,7 @@ export let floor_backgrounds: ImageWithDescMap = {}
 export let floor_foregrounds: ImageWithDescMap = {}
 export let sprite_possibilities: SpriteWithDirectionsMap = {}
 export let beat_list: BeatMap = {}
+export let personal_beat_list: BeatMap = {}
 
 export let stats_map: ThemeStatMap = {};
 export let person_posibilities: ThemePossibilitiesMap = {};
@@ -586,25 +590,52 @@ const initWallForegrounds = () => {
     wall_foregrounds[QUESTING] = ["Satisfaction"] ;*/
 }
 
+const initPersonalBeatList = () => {
+    personal_beat_list[SOUL] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Introspect`,
+            [`${SUBJECTSTRING} ponders the nature of their own being. What parts of themselves are stable? What parts are a product of circumstance? Who would they be if their life had been different?`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(1)], //its fine
+            true,
+            1000 * 60),
+    ]
+}
+
 //homoerotic anchovy scene
 //addiction scene
 const initBeatList = () => {
 
     beat_list[SOUL] = [
         new AiBeat(
-            `${SUBJECTSTRING}: Introspect`,
-            [`${SUBJECTSTRING} ponders the nature of their own being. What parts of themselves are stable? What parts are a product of circumstance? Who would they be if their life had been different?`],
-            [new RandomTarget(0.5, {singleTarget:true, kMode: true})],
+            `${SUBJECTSTRING}: Second guess self.`,
+            [`Something about this room just has ${SUBJECTSTRING} thinking about who they are as a person. God. Have they even made the right decisions? How would they even be able to tell? They're probably the worst possible version of themself...`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(-13)], //its fine
+            true,
+            1000 * 60),
+
+        new AiBeat(
+            `${SUBJECTSTRING}: Meditate on Self.`,
+            [`Something about this room just has ${SUBJECTSTRING} thinking about who they are as a person. Man. They're pretty happy with how far they've come. They're confident they've made the right decisions everywhere they could. This is nice.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(1)], //its fine
             true,
             1000 * 60),
     ]
-    
+
     beat_list[WEB] = [
         new AiBeat(
+            `${SUBJECTSTRING}: Panic About Spiders`,
+            [`${SUBJECTSTRING} jerks suddenly in a panic, then frantically brushes the spiderwebs that have drifted onto their body from up above. God, this room sucks.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount(2, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(-13)], //not great
+            true,
+            1000 * 60),
+        new AiBeat(
             `${SUBJECTSTRING}: Feel a Tickle`,
-            [`${SUBJECTSTRING} jerks suddenly, then brushes the spiderwebs that have drifted onto their body.`],
-            [new RandomTarget(0.5, {singleTarget:true, kMode: true})],
+            [`${SUBJECTSTRING} calmly brushes off the spiderwebs that have drifted onto their body.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount(4, { singleTarget: true, kMode: true, invert: true })],
             [new ChangeMyStabilityLevelByAmount(-1)], //not great
             true,
             1000 * 60),
@@ -614,7 +645,7 @@ const initBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Be Lonely`,
             [`${SUBJECTSTRING} is suddenly aware that we all die alone. They feel so very, very Lonely.`],
-            [new RandomTarget(0.5, {singleTarget:true, kMode: true})],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(-13)], //this is not a good place to be.
             true,
             1000 * 60),
@@ -624,7 +655,7 @@ const initBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Think About Family`,
             [`${SUBJECTSTRING} thinks wistfully of their family.`],
-            [new RandomTarget(0.5, {singleTarget:true, kMode: true})],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
             true,
             1000 * 60),
@@ -634,7 +665,7 @@ const initBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Listen to the Ticking, to the Ticking of the Clocks`,
             [`${SUBJECTSTRING} listens intently to the ubiquitous ticking of the clocks in this room.`],
-            [new RandomTarget(0.5, {singleTarget:true, kMode: true})],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
             true,
             1000 * 60),
@@ -643,22 +674,22 @@ const initBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Gamble Obsessively`,
             [`${SUBJECTSTRING} knows they can win next time. Just one more time. One more time. They're due any minute now.`],
-            [new TargetTemperenceLessThanAmount(2, {singleTarget:true, kMode: true})], //you really can't control yourself can you
+            [new TargetTemperenceLessThanAmount(2, { singleTarget: true, kMode: true })], //you really can't control yourself can you
             [new ChangeMyStabilityLevelByAmount(-13)],
             true,
             1000 * 30),
 
-            new AiBeat(
-                `${SUBJECTSTRING}: Scratch Coin`,
-                [`${SUBJECTSTRING}  They scratch rhythmically at the coin in their inventory, hoping to reveal a prize underneath its metal surface.`],//i had a dream like this. where a fae didn't understand what gambling was and took a coin flip to mean it was a scratch off ticket. don't judge me
-                [new TargetHasObjectWithName(["COIN"]), new TargetTemperenceLessThanAmount(2, {singleTarget:true, kMode: true})], //you really can't control yourself can you
-                [new ChangeMyStabilityLevelByAmount(-113)],
-                true,
-                1000 * 30),
+        new AiBeat(
+            `${SUBJECTSTRING}: Scratch Coin`,
+            [`${SUBJECTSTRING}  They scratch rhythmically at the coin in their inventory, hoping to reveal a prize underneath its metal surface.`],//i had a dream like this. where a fae didn't understand what gambling was and took a coin flip to mean it was a scratch off ticket. don't judge me
+            [new TargetHasObjectWithName(["COIN"]), new TargetTemperenceLessThanAmount(2, { singleTarget: true, kMode: true })], //you really can't control yourself can you
+            [new ChangeMyStabilityLevelByAmount(-113)],
+            true,
+            1000 * 30),
         new AiBeat(
             `${SUBJECTSTRING}: Watch the Gambling`,
             [`${SUBJECTSTRING} watches the ambient gambling in the room with equanimy. You can see in their eyes how much they'd prefer to join in. It would be easier, you think, to simply ignore the gambling. No. This is a test of will. They are proving to themself they can resist it indefinitely. `],
-            [new TargetTemperenceLessThanAmount(4, {singleTarget:true, kMode: true})], //you think self control is the highest virtue.
+            [new TargetTemperenceLessThanAmount(4, { singleTarget: true, kMode: true })], //you think self control is the highest virtue.
             [new ChangeMyStabilityLevelByAmount(13)],
             true,
             1000 * 30),
@@ -2163,5 +2194,6 @@ export const initThemes = () => {
     initSpritePossibilities();
     initFilters();
     initBeatList();
+    initPersonalBeatList();
 
 }

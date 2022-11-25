@@ -216,7 +216,19 @@ export class Quotidian extends PhysicalObject {
                 true
             ))
         }
+        beats.concat(this.grabThemeBeats());
+        console.log("JR NOTE: after theme beats, my beats are", beats);
         this.makeBeatsMyOwn(beats);
+    }
+
+    //not as important as your custom ai, but... you still are your constintuate parts. and npcs are nothing BUT that. hollow inside.
+    grabThemeBeats  = ()=>{
+        let beats: AiBeat[] = [];
+        for(let theme of this.themes){
+            console.log("JR NOTE: my name is " + this.name + " checking theme", theme, "for beats.")
+            beats.concat(theme.personal_beats);
+        }
+        return beats;
     }
 
     highestStat = () => {
@@ -283,7 +295,7 @@ export class Quotidian extends PhysicalObject {
     }
 
     generateImportantOpinion = (blorbo: Quotidian) => {
-        return `They are more important to me than any ${this.getRandomThemeConcept(OBJECT)}`;
+        return `They are more important to me than any ${this.getRandomThemeConcept(OBJECT)}.`;
     }
 
     generateRomanticOpinion = (blorbo: Quotidian) => {
@@ -304,6 +316,9 @@ export class Quotidian extends PhysicalObject {
     }
 
     realizeIWantToSpendMyLifeWithTarget = (blorbo: Quotidian) => {
+        if(blorbo.name === this.name){
+            return;
+        }
         const key: string = blorbo.aliases().join(",");
         let relationship = this.relationshipMap.get(key);
         if (!relationship) {
@@ -317,6 +332,9 @@ export class Quotidian extends PhysicalObject {
     }
 
     realizeIHaveASquishOnBlorbo = (blorbo: Quotidian) => {
+        if(blorbo.name === this.name){
+            return;
+        }
         const key: string = blorbo.aliases().join(",");
         let relationship = this.relationshipMap.get(key);
         if (!relationship) {
@@ -331,6 +349,9 @@ export class Quotidian extends PhysicalObject {
     }
 
     realizeIHaveACrushOnBlorbo = (blorbo: Quotidian) => {
+        if(blorbo.name === this.name){
+            return;
+        }
         const key: string = blorbo.aliases().join(",");
         let relationship = this.relationshipMap.get(key);
         if (!relationship) {
@@ -346,6 +367,9 @@ export class Quotidian extends PhysicalObject {
 
 
     makeItOfficialWithBlorbo = (blorbo: Quotidian) => {
+        if(blorbo.name === this.name){
+            return;
+        }
         const key: string = blorbo.aliases().join(",");
         let relationship = this.relationshipMap.get(key);
         if (!relationship) {
@@ -363,6 +387,9 @@ export class Quotidian extends PhysicalObject {
 
 
     likeBlorboMore = (blorbo: Quotidian, amount: number) => {
+        if(blorbo.name === this.name){
+            return;
+        }
         const key: string = blorbo.aliases().join(",");
         const relationship = this.relationshipMap.get(key);
         if (relationship) {
@@ -373,6 +400,9 @@ export class Quotidian extends PhysicalObject {
     }
 
     likeBlorboLess = (blorbo: Quotidian, amount: number) => {
+        if(blorbo.name === this.name){
+            return;
+        }
         const key: string = blorbo.aliases().join(",");
         const relationship = this.relationshipMap.get(key);
         if (relationship) {
@@ -385,7 +415,9 @@ export class Quotidian extends PhysicalObject {
     //if they're already in my relationship matrix, escalate it, else initialize it to zero
     //make sure you handle your like/dislike modifiers
     intensifyFeelingsFor = (blorbo: Quotidian, amount: number) => {
-
+        if(blorbo.name === this.name){
+            return;
+        }
         const key: string = blorbo.aliases().join(",");
 
         const relationship = this.relationshipMap.get(key);
@@ -399,6 +431,9 @@ export class Quotidian extends PhysicalObject {
     }
 
     de_escalateFeelingsFor = (blorbo: Quotidian, amount: number) => {
+        if(blorbo.name === this.name){
+            return;
+        }
         const key: string = blorbo.aliases().join(",");
         const relationship = this.relationshipMap.get(key);
         if (relationship) {
