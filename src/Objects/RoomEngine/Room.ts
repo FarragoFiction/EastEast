@@ -41,7 +41,7 @@ export class Room {
     items: PhysicalObject[] = [];
     ticking = false;
     tickRate = 100;
-    actionRate = 1000*10; //every ten seconds unless you have a fast follow
+    actionRate = 1000 * 10; //every ten seconds unless you have a fast follow
     children: Room[] = [];
     name = "???";
     pendingStoryBeats: StoryBeat[] = [];
@@ -168,7 +168,7 @@ export class Room {
 
 
         this.ticking = true;
-        await sleep(5000); //don't just start up right away, give the Observer time to situate
+        await sleep(1000); //don't just start up right away, give the Observer time to situate
         this.tick();
     }
 
@@ -273,9 +273,12 @@ export class Room {
 
     //if any blorbo is near a door, move them into the room whose door they are near.
     checkForDoors = (blorbo: Quotidian) => {
-        this.checkNorthDoor(blorbo);
-        this.checkSouthDoor(blorbo);
-        this.checkEastDoor(blorbo);
+        //if you let blorbos leave you can't play with them :( :( :(
+        if (blorbo.aliases().join(",").includes("Peewee")) {
+            this.checkNorthDoor(blorbo);
+            this.checkSouthDoor(blorbo);
+            this.checkEastDoor(blorbo);
+        }
     }
 
     checkNorthDoor = (blorbo: Quotidian) => {

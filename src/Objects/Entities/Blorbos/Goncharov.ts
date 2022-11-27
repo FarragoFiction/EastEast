@@ -8,7 +8,7 @@ import { AiBeat } from "../StoryBeats/BaseBeat";
 
 import { Quotidian, Direction, NB } from "./Quotidian";
 
-
+//Linda Codega of Gizmodo remarked on the enthusiasm around the meme as "an inspiring example of collective storytelling and spontaneous fandom generation, inspired by the community itself. Essentially, Goncharov (1973) is not a film, but a game. And only Tumblr knows the rules, because the rules of Goncharov (1973) are the rules of Tumblr itself."
 //generic npcs have no inner ai, they just do whatever their themes and the room tell them too. they are hollow mockeries.
 export class Goncharov extends Quotidian {
     lore = "Wait. Who is this?";

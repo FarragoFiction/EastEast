@@ -35,7 +35,7 @@ export class Yongki extends Quotidian{
     fortitude = 13; //all other stats ar erandom because of the mirror
     maxSpeed = 100;
     minSpeed = 5;
-    currentSpeed = 25;
+    currentSpeed = 15;
     relationshipMap = new Map<string, Relationship>([
         ["Snail Friend", new Relationship("Snail Friend",1000,"I really like how viscous it is! That means its having a thick, sticky consistency between solid and liquid; having a high viscosity.","Why must Snail Friends die so easily :(","It even has a little house!","Captain says that romance might happen naturally between people who spend a lot of time together but a snail is not people.","This is the best pet ever!",true,false,true)]
     ]);
@@ -82,7 +82,7 @@ export class Yongki extends Quotidian{
         const reflectMirror = new AiBeat(
             "Yongki: Look Mirror",
             ["With almost no fanfair, Yongki catches sight of the Mirror. With a scream of pure anguish, he ceases to exist in a meaningful way. Everyone caught in his reflection is dragged from their bodies, replaced with Strangers. Will you even be able to tell?  <p>Captain is now in charge.</p>"],
-            [new TargetNearObjectWithName(["mirror"],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
+            [new TargetNearObjectWithName(["mirror"],{singleTarget:true, kMode: true})],
             [new RandomizeMe(), new RandomizeEveryone(), new IncrementMyState("")],
             true,
             1000*60,
@@ -119,8 +119,8 @@ export class Captain extends Quotidian{
 
         const reflectMirror = new AiBeat(
             "Captain: Look Mirror",
-            ["With almost no fanfair, Captain catches sight of the Mirror. Yongki is now in charge."],
-            [new TargetNearObjectWithName(["mirror"],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
+            ["With almost no fanfair, Captain catches sight of the Mirror. Yongki is now in charge. Since Captain is not the Reflection, no one else is caught in it."],
+            [new TargetNearObjectWithName(["mirror"],{singleTarget:true, kMode: true})],
             [new IncrementMyState("")],
             true,
             1000*60,

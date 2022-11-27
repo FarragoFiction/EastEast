@@ -1734,6 +1734,98 @@ exports.PickupObject = PickupObject;
 
 /***/ }),
 
+/***/ 2447:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RandomizeEveryone = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const BaseAction_1 = __webpack_require__(7042);
+class RandomizeEveryone extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            let ret = "";
+            for (let target of current_room.blorbos) {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    target.randomize();
+                    ret += `${target.processedName()} gains a different soul. `;
+                }
+            }
+            return ret;
+        };
+    }
+}
+exports.RandomizeEveryone = RandomizeEveryone;
+
+
+/***/ }),
+
+/***/ 7735:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RandomizeMe = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+class RandomizeMe extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room || !beat.owner) {
+                return "";
+            }
+            beat.owner.randomize();
+            return "Randomizes.";
+        };
+    }
+}
+exports.RandomizeMe = RandomizeMe;
+
+
+/***/ }),
+
+/***/ 3045:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RandomizeTarget = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const BaseAction_1 = __webpack_require__(7042);
+class RandomizeTarget extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            let ret = "";
+            for (let target of beat.targets) {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    target.randomize();
+                    ret += `${target.processedName()} gains a different soul. `;
+                }
+            }
+            return ret;
+        };
+    }
+}
+exports.RandomizeTarget = RandomizeTarget;
+
+
+/***/ }),
+
 /***/ 9418:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2707,6 +2799,7 @@ const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const Quotidian_1 = __webpack_require__(6387);
+//Linda Codega of Gizmodo remarked on the enthusiasm around the meme as "an inspiring example of collective storytelling and spontaneous fandom generation, inspired by the community itself. Essentially, Goncharov (1973) is not a film, but a game. And only Tumblr knows the rules, because the rules of Goncharov (1973) are the rules of Tumblr itself."
 //generic npcs have no inner ai, they just do whatever their themes and the room tell them too. they are hollow mockeries.
 class Goncharov extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
@@ -3262,6 +3355,7 @@ const NonSeededRandUtils_1 = __webpack_require__(8258);
 const NoMovement_1 = __webpack_require__(4956);
 const RandomMovement_1 = __webpack_require__(5997);
 const PhysicalObject_1 = __webpack_require__(8466);
+const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const DeploySass_1 = __webpack_require__(4237);
 const PickupObject_1 = __webpack_require__(9936);
@@ -3611,6 +3705,24 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             else {
                 this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, amount));
             }
+        };
+        //mostly only yongki and his reflection ability will do this, but maybe generic quotidians will too
+        //true random
+        this.randomize = () => {
+            //every thhing that makes you you is lost. 
+            this.beats = [];
+            this.themes = [];
+            //fortitude doesn't change. yongki can't effect that. 
+            this.prudence = 0;
+            this.temperance = 0;
+            this.judgement = 0;
+            this.initStats();
+            const theme_number = (0, NonSeededRandUtils_1.getRandomNumberBetween)(3, 6);
+            for (let i = 0; i < theme_number; i++) {
+                this.themes.push((0, NonSeededRandUtils_1.pickFrom)(Object.values(Theme_1.all_themes)));
+            }
+            let beats = this.grabThemeBeats();
+            this.makeBeatsMyOwn(beats);
         };
         //NOTE to avoid recursion does not clone states
         this.clone = () => {
@@ -4116,6 +4228,8 @@ const DeploySass_1 = __webpack_require__(4237);
 const FollowObject_1 = __webpack_require__(744);
 const IncrementMyState_1 = __webpack_require__(9211);
 const MeleeKill_1 = __webpack_require__(2900);
+const RandomizeEveryone_1 = __webpack_require__(2447);
+const RandomizeMe_1 = __webpack_require__(7735);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
 const RandomTarget_1 = __webpack_require__(9824);
@@ -4135,7 +4249,7 @@ class Yongki extends Quotidian_1.Quotidian {
         const approachBug = new BaseBeat_1.AiBeat("Yongki: Follow Bug", [`Yongki looks across the room at the ${baseFilter_1.TARGETSTRING} and starts sneaking up on it.`, `Yongki catches sight of the ${baseFilter_1.TARGETSTRING}.`, `Yongki excitedly points out the ${baseFilter_1.TARGETSTRING}.`,], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true }), new RandomTarget_1.RandomTarget(0.5), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
         const watchBug = new BaseBeat_1.AiBeat("Yongki: Look Bug", [`Yongki stares intently at the ${baseFilter_1.TARGETSTRING}.`, `Yongki ever so gently pokes the ${baseFilter_1.TARGETSTRING}.`, `Yongki hums a little tune for the ${baseFilter_1.TARGETSTRING}.`,], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new FollowObject_1.FollowObject()], true, 1000 * 60, true);
         const watchSnail = new BaseBeat_1.AiBeat("Yongki: Look Snail", [`Yongki smiles and says "The ${baseFilter_1.TARGETSTRING} is effervescent.  That means sparkling or enthusiastic."`, `Yongki pets the  ${baseFilter_1.TARGETSTRING}."It's viscous!", he beams. "That means sitcky or slimey!"`, `Yongki hums a little tune for the ${baseFilter_1.TARGETSTRING}.`, "Yongki smiles at the snail and says 'Snails are like slugs, except they have little houses that are spirals.'."], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["snail"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new FollowObject_1.FollowObject()], true, 1000 * 60, true);
-        const reflectMirror = new BaseBeat_1.AiBeat("Yongki: Look Mirror", ["With almost no fanfair, Yongki catches sight of the Mirror. Captain is now in charge."], [new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60, true);
+        const reflectMirror = new BaseBeat_1.AiBeat("Yongki: Look Mirror", ["With almost no fanfair, Yongki catches sight of the Mirror. With a scream of pure anguish, he ceases to exist in a meaningful way. Everyone caught in his reflection is dragged from their bodies, replaced with Strangers. Will you even be able to tell?  <p>Captain is now in charge.</p>"], [new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true, kMode: true })], [new RandomizeMe_1.RandomizeMe(), new RandomizeEveryone_1.RandomizeEveryone(), new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60, true);
         const beats = [reflectMirror, watchSnail, watchBug, approachBug];
         const states = [new Captain(room, 0, 0)];
         super(room, "Yongki", x, y, [Theme_1.all_themes[ThemeStorage_1.CLOWNS], Theme_1.all_themes[ThemeStorage_1.CHOICES], Theme_1.all_themes[ThemeStorage_1.DEFENSE], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "Yongki, everyones favorite himbo!", beats, states);
@@ -4143,7 +4257,7 @@ class Yongki extends Quotidian_1.Quotidian {
         this.fortitude = 13; //all other stats ar erandom because of the mirror
         this.maxSpeed = 100;
         this.minSpeed = 5;
-        this.currentSpeed = 25;
+        this.currentSpeed = 15;
         this.relationshipMap = new Map([
             ["Snail Friend", new Relationship_1.Relationship("Snail Friend", 1000, "I really like how viscous it is! That means its having a thick, sticky consistency between solid and liquid; having a high viscosity.", "Why must Snail Friends die so easily :(", "It even has a little house!", "Captain says that romance might happen naturally between people who spend a lot of time together but a snail is not people.", "This is the best pet ever!", true, false, true)]
         ]);
@@ -4162,7 +4276,7 @@ class Captain extends Quotidian_1.Quotidian {
         const sprite = {
             default_src: { src: "Placeholders/captain.png", width: 50, height: 50 },
         };
-        const reflectMirror = new BaseBeat_1.AiBeat("Captain: Look Mirror", ["With almost no fanfair, Captain catches sight of the Mirror. Yongki is now in charge."], [new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60, true);
+        const reflectMirror = new BaseBeat_1.AiBeat("Captain: Look Mirror", ["With almost no fanfair, Captain catches sight of the Mirror. Yongki is now in charge. Since Captain is not the Reflection, no one else is caught in it."], [new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60, true);
         //yongki is zen enough to simply NOT listen to his body's cravings, unless he needs to defend himself
         const killUncontrollably = new BaseBeat_1.AiBeat("Captain: Kill", [`With a sickening squelch and a mechanical whir, Captains body lashes out and destroys the ${baseFilter_1.TARGETSTRING}. He looks apologetic.`, `'Shit', Captain says, as his body reaches out and crushes the ${baseFilter_1.TARGETSTRING}.`, `Captain's body reaches out and crushes the ${baseFilter_1.TARGETSTRING}. He looks nauseated. You hear him mutter "How the hell does Yongki manage to keep this thing under control...".`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("shifts position awkwardly and somehow ends up killing")], true, 30 * 1000, true);
         const warnPeopleOff = new BaseBeat_1.AiBeat("Captain: Warn", [`Captain looks nervous. 'Hey!' he calls out. 'Just letting you know I can't exactly control how violent this body is. Stay away!'`, `Captain looks nervous.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(25, { singleTarget: true })], [new DeploySass_1.DeploySass("!")], true, 30 * 1000);
@@ -6580,7 +6694,7 @@ class FRIEND {
             `, `
             ${this.start}
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
-            <ol><li>The Corporation had a Mirror that would bring an alternate you into your body. <li>The Mirror would send the original you to a new place.</li><li>It could only do it once per Universe.</li><li>Yongki is what happens when you run out of Universes but keep beign exposed to the Mirror.</li><li>Zampanio's gift to Yongki is that he takes the Mirror wherver he goes in his Reflection now.</li></ol> </p>
+            <ol><li>The Corporation had a Mirror that would bring an alternate you into your body. <li>The Mirror would send the original you to a new place.</li><li>It could only do it once per Universe.</li><li>Yongki is what happens when you run out of Universes but keep being exposed to the Mirror.</li><li>Zampanio's gift to Yongki is that he takes the Mirror wherever he goes in his Reflection now.</li></ol> </p>
             ${this.end}`, "It seems IC enjoys multiple souls in a single body as a narrative conceit.  D follows the same path, though has not yet been Focused on by the Observers. Yongki is associated with the MIRROR of REFLECTION. He is a STRANGER to everyone, even himself.", [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Yongki"], { singleTarget: true }), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["Mirror"], { singleTarget: true })], []);
             const putMirrorNearCaptain = new FriendlyAiBeat_1.FriendlyAiBeat(`
             ${this.start}
@@ -7069,7 +7183,7 @@ class Room {
             this.renderEastDoor();
             this.renderSouthDoor();
             this.ticking = true;
-            await (0, misc_1.sleep)(5000); //don't just start up right away, give the Observer time to situate
+            await (0, misc_1.sleep)(1000); //don't just start up right away, give the Observer time to situate
             this.tick();
         };
         this.getNorth = () => {
@@ -10354,6 +10468,7 @@ class Slaughter {
     }
 }
 exports.Slaughter = Slaughter;
+//https://youtu.be/m5eyhShxn5M
 //https://archiveofourown.org/works/40961847
 /*
 each password has a cctv feed (or at least a list of animation frames loaders (src and duration)?), an optional voice section, an optional text section (print out under cctv ffed)
@@ -14088,6 +14203,117 @@ No I can't.
 
 /***/ }),
 
+/***/ 234:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+In the Magnus Archives, which heavily influences my branch of Zampanio...
+
+There's this concept of Choice.
+
+You can be the VICTIM of a fear, no consent needed.
+
+But to become the Avatar of a fear you need to both viscerally fear it AND constantly choose to enable it. 
+
+I'll give you an example. My life has strong Corruption themes. Love ends up betraying me a lot, left abandoned in a literally rotting house, with a body that betrays me just as much. 
+
+Feeling the stress moderating farrago's discord server build up and up and up. 
+
+I had a Choice there. I could have corrupted that server. Turned into a despot. Taken something good and made it harmful. 
+
+Instead I backed the hell off. 
+
+Same thing with some jobs I've had. I've felt it seeping into my bones, the exhaustion, the burn out. I've felt how it could turn me into a toxic worker. 
+
+Instead, I leave. 
+
+If things suck, hit the bricks, etc etc.
+
+So that's an example where my instinctive and immediate response to an opportutnity to choose toxcity and corruption has me on the side of the angels.
+
+
+But I am not always, and I don't think you are, either, Observer.
+
+So let me tell you about Who Is Shogun.
+
+As originally designed, its job was to be a trap. To SEEM like a normal farrago puzzle but lead no where and have no pay off, and that was the joke.
+
+Eventually it HAD to end, as all things do, so its ending was a request to expand on the structure. To join me in coming up with new riddles for it. 
+
+And then, I don't remember how or why (again, I'm not on farrago's discord server anymore, so the history is lost to me), I had the idea to give it a FAKE ending.
+
+One that gave you a way to access a channel, and gain a role that LOOKED the same as anyone else who had beaten it but... was not.
+
+Locked you into only one of the TWO Who Is Shogun channels. 
+
+And in that channel, everyone who HAD solved that puzzle would gigglesnort to you and slowly lead you to the dawning realization that you HADN'T actually solved it. And then help you get to the real ending.
+
+
+So. 
+
+Uh.
+
+That dawning realization, in my head, would be one of excitement. It's not over! Goody! More content!
+
+Took a few loops for me to realize that it was DAWNING HORROR in most victims instead.
+
+I literally could not parse there being anything fucked up about putting people in a room full of other people lying to them about how smart they were.
+
+SO!
+
+We changed the channel to EXPLICITLY spell out that actually this was another step in the puzzle, the ending was a false wall, adn now you'd get any tips or help you needed to keep going.
+
+At least one person asked me to tear down the puzzle entirely. That asking people to expand it was evil. 
+
+I refused, but if I recall correctly, that's what lead to the rework of the gaslight ending. 
+
+But that's my point right. Not just that I DID do harm. But that I could not PARSE that harm AS harm.
+
+I'm terrified at betrayal, false friends, being gaslit, being lied to. I'm terrified of being ACCUSED of doing those things.
+
+But somehow all that fear just turned off when it was part of a creative project?
+
+So yeah. There's a reason I present myself as an Avatar of the Spiral.  Not just cause I like the vibes. 
+
+If I were to ever discover I've done capital E evil, I would expect it to be related to that. 
+
+And in the mean time, I try to logic out places I need to be cautious. Warn people that those who seem most harmed by what I create are the ones that obsess.  Give it spooky vibes like a poisonous snake has bright colors. BEWARE, my branch screams. BEWARE. 
+
+I'll still hurt people. You can't live your life without hurting someone. 
+
+But I can try to make sure I take steps to minimize that harm. To warn off those who might be especially susceptible to it. 
+
+But seriously.
+
+Uh. 
+
+If I learned that say, Tumblrs obsession with Columbo was gaslighting. If I learned Columbo just Did Not Exist the way Goncharov doesn't.
+
+Honestly?
+
+I'd be THRILLED.
+
+My interest would immediately multiply by ten and I would dive into finding out everything I could. 
+
+It's why I can't quite parse the #unreality tag surrounding Goncharov as being necessary. 
+
+You can't even say its because I'm naive. I had a really good friend in highschool who had hallucinations and reality problems. 
+
+And yet my instincts still say "fun".
+
+So yeah. 
+
+Observer beware you're in for a scare.
+
+`;
+
+/***/ }),
+
 /***/ 8791:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -14266,6 +14492,12 @@ var map = {
 	"./Objects/Entities/Actions/PauseSimulation.ts": 4359,
 	"./Objects/Entities/Actions/PickupObject": 9936,
 	"./Objects/Entities/Actions/PickupObject.ts": 9936,
+	"./Objects/Entities/Actions/RandomizeEveryone": 2447,
+	"./Objects/Entities/Actions/RandomizeEveryone.ts": 2447,
+	"./Objects/Entities/Actions/RandomizeMe": 7735,
+	"./Objects/Entities/Actions/RandomizeMe.ts": 7735,
+	"./Objects/Entities/Actions/RandomizeTarget": 3045,
+	"./Objects/Entities/Actions/RandomizeTarget.ts": 3045,
 	"./Objects/Entities/Actions/RemoveThemeFromObject": 9418,
 	"./Objects/Entities/Actions/RemoveThemeFromObject.ts": 9418,
 	"./Objects/Entities/Actions/RemoveThemeFromRoom": 7337,
@@ -14540,6 +14772,8 @@ var map = {
 	"./Secrets/Content/60.js": 5593,
 	"./Secrets/Content/61": 110,
 	"./Secrets/Content/61.js": 110,
+	"./Secrets/Content/62": 234,
+	"./Secrets/Content/62.js": 234,
 	"./Secrets/Content/7": 8791,
 	"./Secrets/Content/7.js": 8791,
 	"./Secrets/Content/8": 4997,

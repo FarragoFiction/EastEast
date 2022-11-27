@@ -199,7 +199,7 @@ export class FRIEND{
             `
             ${this.start}
             <p style="color: #a10000;font-family: blood2">All lore below is true. FRIEND never willingly seek to obfuscate the truth.
-            <ol><li>The Corporation had a Mirror that would bring an alternate you into your body. <li>The Mirror would send the original you to a new place.</li><li>It could only do it once per Universe.</li><li>Yongki is what happens when you run out of Universes but keep beign exposed to the Mirror.</li><li>Zampanio's gift to Yongki is that he takes the Mirror wherver he goes in his Reflection now.</li></ol> </p>
+            <ol><li>The Corporation had a Mirror that would bring an alternate you into your body. <li>The Mirror would send the original you to a new place.</li><li>It could only do it once per Universe.</li><li>Yongki is what happens when you run out of Universes but keep being exposed to the Mirror.</li><li>Zampanio's gift to Yongki is that he takes the Mirror wherever he goes in his Reflection now.</li></ol> </p>
             ${this.end}`,
             "It seems IC enjoys multiple souls in a single body as a narrative conceit.  D follows the same path, though has not yet been Focused on by the Observers. Yongki is associated with the MIRROR of REFLECTION. He is a STRANGER to everyone, even himself.",
             [new TargetNameIncludesAnyOfTheseWords(["Yongki"],{singleTarget:true}),new TargetNearObjectWithName(["Mirror"],{singleTarget:true})],
