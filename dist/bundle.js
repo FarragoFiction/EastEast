@@ -41,8 +41,9 @@ exports.AddThemeToObject = AddThemeToObject;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AddThemeToRoom = void 0;
 const BaseAction_1 = __webpack_require__(7042);
+const Theme_1 = __webpack_require__(9702);
 class AddThemeToRoom extends BaseAction_1.Action {
-    constructor(theme) {
+    constructor(theme_key) {
         super();
         this.recognizedCommands = [];
         this.applyAction = (beat) => {
@@ -52,12 +53,12 @@ class AddThemeToRoom extends BaseAction_1.Action {
             }
             const target = beat.targets;
             if (target.length < 1) {
-                return `${subject.processedName()} can't see anything to modify with ${this.theme.key}...`;
+                return `${subject.processedName()} can't see anything to modify with ${this.theme_key}...`;
             }
-            subject.room.themes.push(this.theme);
-            return `${subject.processedName()} modifies the  ${subject.room.name} to be more ${this.theme.key}.`;
+            subject.room.themes.push(Theme_1.all_themes[this.theme_key]);
+            return `${subject.processedName()} modifies the  ${subject.room.name} to be more ${this.theme_key}.`;
         };
-        this.theme = theme;
+        this.theme_key = theme_key;
     }
 }
 exports.AddThemeToRoom = AddThemeToRoom;
@@ -1552,7 +1553,7 @@ class Look extends BaseAction_1.Action {
             }
             if (lookcloser instanceof Quotidian_1.Quotidian) {
                 retSoFar += `<br>Their stability level is: ${lookcloser.stabilityLevel}`;
-                retSoFar += `<br>Their themes is is: ${(Object.keys(lookcloser.themes).join(","))}`;
+                retSoFar += `<br>Their themes are : ${(lookcloser.themes).map((i) => i.key).join(",")}`;
                 retSoFar += `<br>Their AI is is: ${(lookcloser.beats.join(","))}`;
                 retSoFar += `<br>Their stats are: <ul> 
             <li>Fortitude: ${((0, Quotidian_1.stats_values_mapping)(lookcloser.fortitude))}</li>
@@ -2047,9 +2048,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SpawnObjectFromThemeUnderFloorAtFeet = void 0;
 const BaseAction_1 = __webpack_require__(7042);
 const PhysicalObject_1 = __webpack_require__(8466);
+const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 class SpawnObjectFromThemeUnderFloorAtFeet extends BaseAction_1.Action {
-    constructor(theme, name, flavorText) {
+    constructor(theme_key, name, flavorText) {
         super();
         this.recognizedCommands = [];
         this.applyAction = (beat) => {
@@ -2057,12 +2059,13 @@ class SpawnObjectFromThemeUnderFloorAtFeet extends BaseAction_1.Action {
             if (!subject) {
                 return "";
             }
+            const theme = Theme_1.all_themes[this.theme_key];
             // const image: any = await addImageProcess(`images/Walkabout/Objects/UnderFloorObjects/${item.src}`) as HTMLImageElement;
             for (let target of beat.targets) {
-                const raw_item = this.theme.pickPossibilityFor(subject.rand, ThemeStorage_1.FLOORBACKGROUND);
+                const raw_item = theme.pickPossibilityFor(subject.rand, ThemeStorage_1.FLOORBACKGROUND);
                 const image = document.createElement("img");
                 image.src = `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`;
-                const item = new PhysicalObject_1.PhysicalObject(subject.room, this.name, 0, 0, image.width, image.height, [this.theme], 0, `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`, this.flavorText);
+                const item = new PhysicalObject_1.PhysicalObject(subject.room, this.name, 0, 0, image.width, image.height, [theme], 0, `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`, this.flavorText);
                 console.log("JR NOTE: trying to spawn ", item);
                 image.onload = () => {
                     console.log("JR NOTE: item loaded ", item);
@@ -2083,7 +2086,7 @@ class SpawnObjectFromThemeUnderFloorAtFeet extends BaseAction_1.Action {
             }
             return `${subject.processedName()} drops a(n) thing.`;
         };
-        this.theme = theme;
+        this.theme_key = theme_key;
         this.name = name;
         this.flavorText = flavorText;
     }
@@ -2102,9 +2105,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SpawnObjectFromThemeUnderFloorAtMyFeet = void 0;
 const BaseAction_1 = __webpack_require__(7042);
 const PhysicalObject_1 = __webpack_require__(8466);
+const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 class SpawnObjectFromThemeUnderFloorAtMyFeet extends BaseAction_1.Action {
-    constructor(theme, name, flavorText) {
+    constructor(theme_key, name, flavorText) {
         super();
         this.recognizedCommands = [];
         this.applyAction = (beat) => {
@@ -2117,10 +2121,11 @@ class SpawnObjectFromThemeUnderFloorAtMyFeet extends BaseAction_1.Action {
             if (!target) {
                 return "";
             }
-            const raw_item = this.theme.pickPossibilityFor(subject.rand, ThemeStorage_1.FLOORBACKGROUND);
+            const theme = Theme_1.all_themes[this.theme_key];
+            const raw_item = theme.pickPossibilityFor(subject.rand, ThemeStorage_1.FLOORBACKGROUND);
             const image = document.createElement("img");
             image.src = `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`;
-            const item = new PhysicalObject_1.PhysicalObject(subject.room, this.name, 0, 0, image.width, image.height, [this.theme], 0, `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`, this.flavorText);
+            const item = new PhysicalObject_1.PhysicalObject(subject.room, this.name, 0, 0, image.width, image.height, [theme], 0, `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`, this.flavorText);
             console.log("JR NOTE: trying to spawn ", item);
             image.onload = () => {
                 console.log("JR NOTE: item loaded ", item);
@@ -2140,7 +2145,7 @@ class SpawnObjectFromThemeUnderFloorAtMyFeet extends BaseAction_1.Action {
             item.y = target.y;
             return `${subject.processedName()} drops a(n) thing.`;
         };
-        this.theme = theme;
+        this.theme_key = theme_key;
         this.name = name;
         this.flavorText = flavorText;
     }
@@ -2718,8 +2723,8 @@ class EyeKiller extends Quotidian_1.Quotidian {
             const approachEgg = new BaseBeat_1.AiBeat("Killer: Go Egg", [`The Eye Killer sees the ${baseFilter_1.TARGETSTRING}.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
             const pickupEgg = new BaseBeat_1.AiBeat("Killer: Take Egg", [`The Eye Killer picks up the ${baseFilter_1.TARGETSTRING}.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Egg"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new PickupObject_1.PickupObject()], true, 1000 * 60, true);
             //new IHaveObjectWithName(["Egg"], {invert: true}),new TargetHasObjectWithName(["Egg"], {invert: true}),
-            const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat("Killer: Kill", [`The Eye Killer brutally stabs  ${baseFilter_1.TARGETSTRING} over and over until they stop twitching.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over"), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING], `${baseFilter_1.TARGETSTRING}'s blood`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`)], true, 30 * 1000, true);
-            const desecrateCorpse = new BaseBeat_1.AiBeat("Killer: Do Art", [`The Eye Killer appears to creating some sort of art piece out of what remains of ${baseFilter_1.TARGETSTRING}.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.KILLING], `${baseFilter_1.TARGETSTRING}'s blood`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`)], true, 30 * 1000);
+            const killUnlessYouHaveAnEggOrTheyDo = new BaseBeat_1.AiBeat("Killer: Kill", [`The Eye Killer brutally stabs  ${baseFilter_1.TARGETSTRING} over and over until they stop twitching.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("brutally stabs over and over"), new AddThemeToRoom_1.AddThemeToRoom(ThemeStorage_1.KILLING), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(ThemeStorage_1.KILLING, `${baseFilter_1.TARGETSTRING}'s blood`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`)], true, 30 * 1000, true);
+            const desecrateCorpse = new BaseBeat_1.AiBeat("Killer: Do Art", [`The Eye Killer appears to creating some sort of art piece out of what remains of ${baseFilter_1.TARGETSTRING}.`], [new IHaveObjectWithName_1.IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName_1.TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new AddThemeToRoom_1.AddThemeToRoom(ThemeStorage_1.KILLING), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(ThemeStorage_1.KILLING, `${baseFilter_1.TARGETSTRING}'s blood`, `Something very upsetting happened here to ${baseFilter_1.TARGETSTRING}.`)], true, 30 * 1000);
             const beats = [
                 approachEgg,
                 pickupEgg,
@@ -3012,7 +3017,7 @@ class Match extends Quotidian_1.Quotidian {
             default_src: { src: "Placeholders/match.png", width: 50, height: 50 },
         };
         //yes, she will even burn fire. 
-        const BurnObject = new BaseBeat_1.AiBeat("Match: Burn It All", [`'It MUST be enough!', you hear the fire around the lit Match sing, 'One day I will burn enough that it will all come back!' the Match sings through the flames. The ${baseFilter_1.TARGETSTRING} burn.`, `With a sound like laughter and music, the Match girl burns away the ${baseFilter_1.TARGETSTRING}  to fire and ashes and smoke.`, ` The Match girl appears to be smiling and crying all at once as she burns ${baseFilter_1.TARGETSTRING} all away.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Match"], { invert: true })], [new SpawnObjectFromThemeUnderFloorAtMyFeet_1.SpawnObjectFromThemeUnderFloorAtMyFeet(Theme_1.all_themes[ThemeStorage_1.FIRE], "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(Theme_1.all_themes[ThemeStorage_1.FIRE], "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[ThemeStorage_1.FIRE]), new DestroyObject_1.DestroyObject()], true, 1000);
+        const BurnObject = new BaseBeat_1.AiBeat("Match: Burn It All", [`'It MUST be enough!', you hear the fire around the lit Match sing, 'One day I will burn enough that it will all come back!' the Match sings through the flames. The ${baseFilter_1.TARGETSTRING} burn.`, `With a sound like laughter and music, the Match girl burns away the ${baseFilter_1.TARGETSTRING}  to fire and ashes and smoke.`, ` The Match girl appears to be smiling and crying all at once as she burns ${baseFilter_1.TARGETSTRING} all away.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Match"], { invert: true })], [new SpawnObjectFromThemeUnderFloorAtMyFeet_1.SpawnObjectFromThemeUnderFloorAtMyFeet(ThemeStorage_1.FIRE, "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(ThemeStorage_1.FIRE, "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new AddThemeToRoom_1.AddThemeToRoom(ThemeStorage_1.FIRE), new DestroyObject_1.DestroyObject()], true, 1000);
         const beats = [BurnObject];
         super(room, "Match", x, y, [Theme_1.all_themes[ThemeStorage_1.FIRE], Theme_1.all_themes[ThemeStorage_1.MUSIC], Theme_1.all_themes[ThemeStorage_1.WEB], Theme_1.all_themes[ThemeStorage_1.ADDICTION], Theme_1.all_themes[ThemeStorage_1.ANGER], Theme_1.all_themes[ThemeStorage_1.KILLING]], sprite, "The Match is burning...", beats);
         this.lore = "She burns because there is no more hope for this Universe. She tried so hard and gave so much and finally there is nothing left at all of her but ashes and heat. There is no hope. Time to give in to Rage and start over from scratch.";
@@ -7982,7 +7987,6 @@ const TargetStabilityLevelLessThanAmount_1 = __webpack_require__(3400);
 const TargetTemperenceLessThanAmount_1 = __webpack_require__(5159);
 const Memory_1 = __webpack_require__(7953);
 const Stat = __importStar(__webpack_require__(9137));
-const Theme_1 = __webpack_require__(9702);
 //categories within a theme
 exports.PERSON = "person";
 exports.ADJ = "adj";
@@ -8465,7 +8469,7 @@ const initWallForegrounds = () => {
 const initPersonalBeatList = () => {
     //new SpawnObjectFromThemeUnderFloorAtMyFeet(all_themes[FIRE]
     exports.personal_beat_list[exports.FIRE] = [
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Start Small Fire`, [`${baseFilter_1.SUBJECTSTRING}  fiddles with the lighter they always keep on them. Suddenly, a small fire starts. It's probably fine.`], [new RandomTarget_1.RandomTarget(0.1, { singleTarget: true, kMode: true })], [new SpawnObjectFromThemeUnderFloorAtMyFeet_1.SpawnObjectFromThemeUnderFloorAtMyFeet(Theme_1.all_themes[exports.FIRE], "Small Flame", "There really was no need for this."), new AddThemeToRoom_1.AddThemeToRoom(Theme_1.all_themes[exports.FIRE])], //its fine
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Start Small Fire`, [`${baseFilter_1.SUBJECTSTRING}  fiddles with the lighter they always keep on them. Suddenly, a small fire starts. It's probably fine.`], [new RandomTarget_1.RandomTarget(0.1, { singleTarget: true, kMode: true })], [new SpawnObjectFromThemeUnderFloorAtMyFeet_1.SpawnObjectFromThemeUnderFloorAtMyFeet(exports.FIRE, "Small Flame", "There really was no need for this."), new AddThemeToRoom_1.AddThemeToRoom(exports.FIRE)], //its fine
         true, 1000 * 60),
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Fiddle with ligher.`, [`${baseFilter_1.SUBJECTSTRING} fiddles with the lighter they always keep on them.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-1)], //its fine
         true, 1000 * 60)

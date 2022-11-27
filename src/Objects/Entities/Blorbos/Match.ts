@@ -110,7 +110,7 @@ export class Match extends Quotidian {
             "Match: Burn It All",
             [`'It MUST be enough!', you hear the fire around the lit Match sing, 'One day I will burn enough that it will all come back!' the Match sings through the flames. The ${TARGETSTRING} burn.`,`With a sound like laughter and music, the Match girl burns away the ${TARGETSTRING}  to fire and ashes and smoke.`, ` The Match girl appears to be smiling and crying all at once as she burns ${TARGETSTRING} all away.`],
             [new TargetNameIncludesAnyOfTheseWords(["Match"], {invert:true})],
-            [new SpawnObjectFromThemeUnderFloorAtMyFeet(FIRE,"Despairing Flame","Surely if this burns enough something new can grow in its place."),new SpawnObjectFromThemeUnderFloorAtFeet(FIRE,"Despairing Flame","Surely if this burns enough something new can grow in its place."), new AddThemeToRoom(all_themes[FIRE]),new DestroyObject() ],
+            [new SpawnObjectFromThemeUnderFloorAtMyFeet(FIRE,"Despairing Flame","Surely if this burns enough something new can grow in its place."),new SpawnObjectFromThemeUnderFloorAtFeet(FIRE,"Despairing Flame","Surely if this burns enough something new can grow in its place."), new AddThemeToRoom(FIRE),new DestroyObject() ],
             true,
             1000
         );

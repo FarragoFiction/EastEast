@@ -613,7 +613,7 @@ const initPersonalBeatList = () => {
             `${SUBJECTSTRING}: Start Small Fire`,
             [`${SUBJECTSTRING}  fiddles with the lighter they always keep on them. Suddenly, a small fire starts. It's probably fine.`],
             [new RandomTarget(0.1, { singleTarget: true, kMode: true })],
-            [new SpawnObjectFromThemeUnderFloorAtMyFeet(FIRE, "Small Flame", "There really was no need for this."), new AddThemeToRoom(all_themes[FIRE])], //its fine
+            [new SpawnObjectFromThemeUnderFloorAtMyFeet(FIRE, "Small Flame", "There really was no need for this."), new AddThemeToRoom(FIRE)], //its fine
             true,
             1000 * 60),
 

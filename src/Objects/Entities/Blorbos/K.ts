@@ -32,7 +32,7 @@ export class Khana extends Quotidian {
 
     constructor(room: Room, x: number, y: number) {
         const sprite = {
-            default_src: { src: "k.png", width: 56, height: 100 },
+            default_src: { src: "Placeholders/k.png", width: 56, height: 100 },
 
         };
         const beats: AiBeat[] = [];

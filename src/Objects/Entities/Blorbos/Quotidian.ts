@@ -451,6 +451,7 @@ export class Quotidian extends PhysicalObject {
         //every thhing that makes you you is lost. 
        this.beats = [];
        this.themes = [];
+       this.relationshipMap = new Map<string, Relationship>();//you don't recognize anyone
        //fortitude doesn't change. yongki can't effect that. 
        this.prudence = 0;
        this.temperance = 0;

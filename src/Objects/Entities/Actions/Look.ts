@@ -94,8 +94,8 @@ export class Look extends Action {
             retSoFar += "</ul>"
         }
         if(lookcloser instanceof Quotidian){
-            retSoFar += `<br>Their stability level is: ${lookcloser.stabilityLevel}`
-            retSoFar += `<br>Their themes is is: ${(Object.keys(lookcloser.themes).join(","))}`
+            retSoFar += `<br>${lookcloser.name}'s stability level is: ${lookcloser.stabilityLevel}`
+            retSoFar += `<br>Their themes are : ${(lookcloser.themes).map((i)=>i.key).join(",")}`
 
             retSoFar += `<br>Their AI is is: ${(lookcloser.beats.join(","))}`
             retSoFar += `<br>Their stats are: <ul> 
