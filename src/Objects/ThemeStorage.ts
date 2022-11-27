@@ -2,15 +2,17 @@ import { ACHIEVEMENTS, BACKSTORY, CITYBUILDING, CODE, COMPANIONS, FORTITUDE, GOD
 import { ChangeMyStabilityLevelByAmount } from './Entities/Actions/ChangeMyStabilityLevelByAmount';
 import { FollowObject } from './Entities/Actions/FollowObject';
 import { MoveRandomly } from './Entities/Actions/MoveRandomly';
+import { PickupObject } from './Entities/Actions/PickupObject';
 import { StopMoving } from './Entities/Actions/StopMoving';
 import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from './Entities/StoryBeats/BaseBeat';
-import { SUBJECTSTRING } from './Entities/TargetFilter/baseFilter';
+import { SUBJECTSTRING, TARGETSTRING } from './Entities/TargetFilter/baseFilter';
 import { RandomTarget } from './Entities/TargetFilter/RandomTarget';
 import { TargetFortitudeLessThanAmount } from './Entities/TargetFilter/TargetFortitudeLessThanAmount';
 import { TargetHasObjectWithName } from './Entities/TargetFilter/TargetHasObjectWithName';
 import { TargetHighestStatIsX } from './Entities/TargetFilter/TargetHighestStatIsX';
 import { TargetIsAlive } from './Entities/TargetFilter/TargetIsAlive';
 import { TargetIsBlorboOrBox } from './Entities/TargetFilter/TargetIsBlorboBox';
+import { TargetIsWithinRadiusOfSelf } from './Entities/TargetFilter/TargetIsWithinRadiusOfSelf';
 import { TargetJudgementLessThanAmount } from './Entities/TargetFilter/TargetJudgementLessThanAmount';
 import { TargetPrudenceLessThanAmount } from './Entities/TargetFilter/TargetPrudenceLessThanAmount';
 import { TargetStabilityLevelLessThanAmount } from './Entities/TargetFilter/TargetStabilityLevelLessThanAmount';
@@ -601,6 +603,16 @@ const initWallForegrounds = () => {
 */
 
 const initPersonalBeatList = () => {
+
+    personal_beat_list[STEALING] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Take Things`,
+            [`${SUBJECTSTRING}  absently pockets the ${TARGETSTRING}. They might need it later.`],
+            [new TargetIsAlive({invert: true}), new TargetIsWithinRadiusOfSelf(5, {singleTarget:true})],
+            [new PickupObject()], //its fine
+            true,
+            1000 * 60)
+    ]
     
     personal_beat_list[SOUL] = [
         new AiBeat(
