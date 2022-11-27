@@ -1,8 +1,10 @@
 import { ACHIEVEMENTS, BACKSTORY, CITYBUILDING, CODE, COMPANIONS, FORTITUDE, GODS, INVENTORY, JUDGEMENT, LORE, OPTIONS, PRUDENCE, QUESTS, RESISTANCES, SKILLGRAPH, STATISTICS, STATUS, TEMPERANCE, WARROOM } from '../Utils/constants';
+import { AddThemeToRoom } from './Entities/Actions/AddThemeToRoom';
 import { ChangeMyStabilityLevelByAmount } from './Entities/Actions/ChangeMyStabilityLevelByAmount';
 import { FollowObject } from './Entities/Actions/FollowObject';
 import { MoveRandomly } from './Entities/Actions/MoveRandomly';
 import { PickupObject } from './Entities/Actions/PickupObject';
+import { SpawnObjectFromThemeUnderFloorAtMyFeet } from './Entities/Actions/SpawnObjectFromThemeUnderFloorAtMyFeet';
 import { StopMoving } from './Entities/Actions/StopMoving';
 import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from './Entities/StoryBeats/BaseBeat';
 import { SUBJECTSTRING, TARGETSTRING } from './Entities/TargetFilter/baseFilter';
@@ -20,6 +22,7 @@ import { TargetTemperenceLessThanAmount } from './Entities/TargetFilter/TargetTe
 import { Memory } from './Memory';
 import { RandomMovement } from './MovementAlgs/RandomMovement';
 import * as Stat from './Stat';
+import { all_themes } from './Theme';
 
 //categories within a theme
 export const PERSON = "person";
@@ -603,6 +606,25 @@ const initWallForegrounds = () => {
 */
 
 const initPersonalBeatList = () => {
+    //new SpawnObjectFromThemeUnderFloorAtMyFeet(all_themes[FIRE]
+
+    personal_beat_list[FIRE] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Start Small Fire`,
+            [`${SUBJECTSTRING}  fiddles with the lighter they always keep on them. Suddenly, a small fire starts. It's probably fine.`],
+            [new RandomTarget(0.1, { singleTarget: true, kMode: true })],
+            [new SpawnObjectFromThemeUnderFloorAtMyFeet(all_themes[FIRE],"Small Flame","There really was no need for this."), new AddThemeToRoom(all_themes[FIRE]) ], //its fine
+            true,
+            1000 * 60),
+
+            new AiBeat(
+                `${SUBJECTSTRING}: Fiddle with ligher.`,
+                [`${SUBJECTSTRING} fiddles with the lighter they always keep on them.`],
+                [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
+                [new ChangeMyStabilityLevelByAmount(-1)], //its fine
+                true,
+                1000 * 60)
+    ]
 
     personal_beat_list[STEALING] = [
         new AiBeat(
@@ -613,12 +635,40 @@ const initPersonalBeatList = () => {
             true,
             1000 * 60)
     ]
+
+    
+    personal_beat_list[SPYING] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Spy on Things`,
+            [`${SUBJECTSTRING} decides they need to learn more about the ${TARGETSTRING}. `],
+            [new RandomTarget(0.5), new TargetIsWithinRadiusOfSelf(5, {singleTarget:true, invert: true})],
+            [new FollowObject()], 
+            true,
+            1000 * 60)
+    ]
+
+    personal_beat_list[DEATH] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Think about Death`,
+            [`${SUBJECTSTRING} thinks about how all who are born die. They tremble in fear.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }),new TargetPrudenceLessThanAmount(4, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(-13)], //its fine
+            true,
+            1000 * 60),
+            new AiBeat(
+                `${SUBJECTSTRING}: Think about Death`,
+                [`${SUBJECTSTRING} thinks about how all who are born die. They meet this thought with equanimy. They have done what needed to be done with their life and have no regrets.`],
+                [new RandomTarget(0.5, { singleTarget: true, kMode: true }),new TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true, invert: true })],
+                [new ChangeMyStabilityLevelByAmount(13)], //its fine
+                true,
+                1000 * 60)
+    ]
     
     personal_beat_list[SOUL] = [
         new AiBeat(
             `${SUBJECTSTRING}: Introspect`,
             [`${SUBJECTSTRING} ponders the nature of their own being. What parts of themselves are stable? What parts are a product of circumstance? Who would they be if their life had been different?`],
-            [new RandomTarget(1.5, { singleTarget: true, kMode: true })],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(1)], //its fine
             true,
             1000 * 60)
@@ -699,6 +749,33 @@ const initPersonalBeatList = () => {
 //homoerotic anchovy scene
 //addiction scene
 const initBeatList = () => {
+
+    personal_beat_list[DEATH] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Think about Death`,
+            [`${SUBJECTSTRING} can't help but think about their fundamental mortality in this room. They tremble in fear.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }),new TargetPrudenceLessThanAmount(4, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(-13)], //its fine
+            true,
+            1000 * 60),
+            new AiBeat(
+                `${SUBJECTSTRING}: Think about Death`,
+                [`${SUBJECTSTRING} can't help but think about their fundamental mortality in this room. They meet this thought with equanimy. They have done what needed to be done with their life and have no regrets.`],
+                [new RandomTarget(0.5, { singleTarget: true, kMode: true }),new TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true, invert: true })],
+                [new ChangeMyStabilityLevelByAmount(13)], //its fine
+                true,
+                1000 * 60)
+    ]
+
+    personal_beat_list[STEALING] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Take Things`,
+            [`${SUBJECTSTRING}  feels the weirdest urge to pocket the ${TARGETSTRING}. They have no idea why they wanted it... it just... Felt shiny?`],
+            [new TargetIsAlive({invert: true}), new TargetIsWithinRadiusOfSelf(5, {singleTarget:true})],
+            [new PickupObject()], //its fine
+            true,
+            1000 * 60)
+    ]
 
     beat_list[SOUL] = [
         new AiBeat(
