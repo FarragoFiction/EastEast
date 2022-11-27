@@ -161,7 +161,7 @@ export class Quotidian extends PhysicalObject {
     platonicFOdds = 0.5;
     platonicMOdds =  0.5;
     platonicNBOdds =  0.5;
-    romanticFOdds =  0.5;
+    romanticFOdds =  0.5; //if we really were in love, you wouldn't have missed
     romanticMOdds =  0.5;
     romanticNBOdds =  0.5;
     actionRateMutator = 0.5;
