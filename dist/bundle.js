@@ -1552,6 +1552,7 @@ class Look extends BaseAction_1.Action {
             }
             if (lookcloser instanceof Quotidian_1.Quotidian) {
                 retSoFar += `<br>Their stability level is: ${lookcloser.stabilityLevel}`;
+                retSoFar += `<br>Their themes is is: ${(Object.keys(lookcloser.themes).join(","))}`;
                 retSoFar += `<br>Their AI is is: ${(lookcloser.beats.join(","))}`;
                 retSoFar += `<br>Their stats are: <ul> 
             <li>Fortitude: ${((0, Quotidian_1.stats_values_mapping)(lookcloser.fortitude))}</li>
@@ -4276,7 +4277,8 @@ class Captain extends Quotidian_1.Quotidian {
         const sprite = {
             default_src: { src: "Placeholders/captain.png", width: 50, height: 50 },
         };
-        const reflectMirror = new BaseBeat_1.AiBeat("Captain: Look Mirror", ["With almost no fanfair, Captain catches sight of the Mirror. Yongki is now in charge. Since Captain is not the Reflection, no one else is caught in it."], [new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60, true);
+        //give captain at least a little while to run around before seeing the mirror
+        const reflectMirror = new BaseBeat_1.AiBeat("Captain: Look Mirror", ["With almost no fanfair, Captain catches sight of the Mirror. Yongki is now in charge. Since Captain is not the Reflection, no one else is caught in it."], [new RandomTarget_1.RandomTarget(0.013), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60, true);
         //yongki is zen enough to simply NOT listen to his body's cravings, unless he needs to defend himself
         const killUncontrollably = new BaseBeat_1.AiBeat("Captain: Kill", [`With a sickening squelch and a mechanical whir, Captains body lashes out and destroys the ${baseFilter_1.TARGETSTRING}. He looks apologetic.`, `'Shit', Captain says, as his body reaches out and crushes the ${baseFilter_1.TARGETSTRING}.`, `Captain's body reaches out and crushes the ${baseFilter_1.TARGETSTRING}. He looks nauseated. You hear him mutter "How the hell does Yongki manage to keep this thing under control...".`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new MeleeKill_1.MeleeKill("shifts position awkwardly and somehow ends up killing")], true, 30 * 1000, true);
         const warnPeopleOff = new BaseBeat_1.AiBeat("Captain: Warn", [`Captain looks nervous. 'Hey!' he calls out. 'Just letting you know I can't exactly control how violent this body is. Stay away!'`, `Captain looks nervous.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(25, { singleTarget: true })], [new DeploySass_1.DeploySass("!")], true, 30 * 1000);
@@ -7274,9 +7276,12 @@ class Room {
         };
         //if any blorbo is near a door, move them into the room whose door they are near.
         this.checkForDoors = (blorbo) => {
-            this.checkNorthDoor(blorbo);
-            this.checkSouthDoor(blorbo);
-            this.checkEastDoor(blorbo);
+            //if you let blorbos leave you can't play with them :( :( :(
+            if (blorbo.aliases().join(",").includes("Peewee")) {
+                this.checkNorthDoor(blorbo);
+                this.checkSouthDoor(blorbo);
+                this.checkEastDoor(blorbo);
+            }
         };
         this.checkNorthDoor = (blorbo) => {
             if (!this.getNorth()) {

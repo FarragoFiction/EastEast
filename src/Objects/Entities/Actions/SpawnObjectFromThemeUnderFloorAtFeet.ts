@@ -3,20 +3,20 @@ import { Action } from "./BaseAction";
 
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { PhysicalObject } from "../../PhysicalObject";
-import { Theme } from "../../Theme";
+import { all_themes, Theme } from "../../Theme";
 import { FLOORBACKGROUND } from "../../ThemeStorage";
 import { TARGETSTRING } from "../TargetFilter/baseFilter";
 
 export class SpawnObjectFromThemeUnderFloorAtFeet extends Action { //lawsuit
 
     recognizedCommands: string[] = []
-    theme: Theme;
+    theme_key: string;
     flavorText: string;
     name: string;
 
-    constructor(theme: Theme, name: string, flavorText: string) {
+    constructor(theme_key: string, name: string, flavorText: string) {
         super();
-        this.theme = theme;
+        this.theme_key = theme_key;
         this.name = name;
         this.flavorText = flavorText;
     }
@@ -27,17 +27,17 @@ export class SpawnObjectFromThemeUnderFloorAtFeet extends Action { //lawsuit
         if (!subject) {
             return "";
         }
-
+        const theme = all_themes[this.theme_key];
 
         // const image: any = await addImageProcess(`images/Walkabout/Objects/UnderFloorObjects/${item.src}`) as HTMLImageElement;
  
         for(let target of beat.targets){
-            const raw_item = this.theme.pickPossibilityFor(subject.rand, FLOORBACKGROUND)
+            const raw_item = theme.pickPossibilityFor(subject.rand, FLOORBACKGROUND)
 
             const image = document.createElement("img");
 
             image.src = `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`;
-            const item = new PhysicalObject(subject.room, this.name, 0, 0, image.width, image.height, [this.theme], 0, `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`, this.flavorText);
+            const item = new PhysicalObject(subject.room, this.name, 0, 0, image.width, image.height, [theme], 0, `images/Walkabout/Objects/UnderFloorObjects/${raw_item.src}`, this.flavorText);
             console.log("JR NOTE: trying to spawn ",item)
 
             image.onload = () => {

@@ -116,11 +116,11 @@ export class Captain extends Quotidian{
             default_src:{src:"Placeholders/captain.png",width:50,height:50},
         };
 
-
+        //give captain at least a little while to run around before seeing the mirror
         const reflectMirror = new AiBeat(
             "Captain: Look Mirror",
             ["With almost no fanfair, Captain catches sight of the Mirror. Yongki is now in charge. Since Captain is not the Reflection, no one else is caught in it."],
-            [new TargetNearObjectWithName(["mirror"],{singleTarget:true, kMode: true})],
+            [new RandomTarget(0.013), new TargetNearObjectWithName(["mirror"],{singleTarget:true, kMode: true})],
             [new IncrementMyState("")],
             true,
             1000*60,

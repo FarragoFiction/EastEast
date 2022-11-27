@@ -613,36 +613,36 @@ const initPersonalBeatList = () => {
             `${SUBJECTSTRING}: Start Small Fire`,
             [`${SUBJECTSTRING}  fiddles with the lighter they always keep on them. Suddenly, a small fire starts. It's probably fine.`],
             [new RandomTarget(0.1, { singleTarget: true, kMode: true })],
-            [new SpawnObjectFromThemeUnderFloorAtMyFeet(all_themes[FIRE],"Small Flame","There really was no need for this."), new AddThemeToRoom(all_themes[FIRE]) ], //its fine
+            [new SpawnObjectFromThemeUnderFloorAtMyFeet(FIRE, "Small Flame", "There really was no need for this."), new AddThemeToRoom(all_themes[FIRE])], //its fine
             true,
             1000 * 60),
 
-            new AiBeat(
-                `${SUBJECTSTRING}: Fiddle with ligher.`,
-                [`${SUBJECTSTRING} fiddles with the lighter they always keep on them.`],
-                [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
-                [new ChangeMyStabilityLevelByAmount(-1)], //its fine
-                true,
-                1000 * 60)
+        new AiBeat(
+            `${SUBJECTSTRING}: Fiddle with ligher.`,
+            [`${SUBJECTSTRING} fiddles with the lighter they always keep on them.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(-1)], //its fine
+            true,
+            1000 * 60)
     ]
 
     personal_beat_list[STEALING] = [
         new AiBeat(
             `${SUBJECTSTRING}: Take Things`,
             [`${SUBJECTSTRING}  absently pockets the ${TARGETSTRING}. They might need it later.`],
-            [new TargetIsAlive({invert: true}), new TargetIsWithinRadiusOfSelf(5, {singleTarget:true})],
+            [new TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf(5, { singleTarget: true })],
             [new PickupObject()], //its fine
             true,
             1000 * 60)
     ]
 
-    
+
     personal_beat_list[SPYING] = [
         new AiBeat(
             `${SUBJECTSTRING}: Spy on Things`,
             [`${SUBJECTSTRING} decides they need to learn more about the ${TARGETSTRING}. `],
-            [new RandomTarget(0.5), new TargetIsWithinRadiusOfSelf(5, {singleTarget:true, invert: true})],
-            [new FollowObject()], 
+            [new RandomTarget(0.5), new TargetIsWithinRadiusOfSelf(5, { singleTarget: true, invert: true })],
+            [new FollowObject()],
             true,
             1000 * 60)
     ]
@@ -651,19 +651,19 @@ const initPersonalBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Think about Death`,
             [`${SUBJECTSTRING} thinks about how all who are born die. They tremble in fear.`],
-            [new RandomTarget(0.5, { singleTarget: true, kMode: true }),new TargetPrudenceLessThanAmount(4, { singleTarget: true, kMode: true })],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount(4, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(-13)], //its fine
             true,
             1000 * 60),
-            new AiBeat(
-                `${SUBJECTSTRING}: Think about Death`,
-                [`${SUBJECTSTRING} thinks about how all who are born die. They meet this thought with equanimy. They have done what needed to be done with their life and have no regrets.`],
-                [new RandomTarget(0.5, { singleTarget: true, kMode: true }),new TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true, invert: true })],
-                [new ChangeMyStabilityLevelByAmount(13)], //its fine
-                true,
-                1000 * 60)
+        new AiBeat(
+            `${SUBJECTSTRING}: Think about Death`,
+            [`${SUBJECTSTRING} thinks about how all who are born die. They meet this thought with equanimy. They have done what needed to be done with their life and have no regrets.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true, invert: true })],
+            [new ChangeMyStabilityLevelByAmount(13)], //its fine
+            true,
+            1000 * 60)
     ]
-    
+
     personal_beat_list[SOUL] = [
         new AiBeat(
             `${SUBJECTSTRING}: Introspect`,
@@ -692,7 +692,7 @@ const initPersonalBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Think About Free Will`,
             [`${SUBJECTSTRING} wonders briefly if any action they have ever taken could truly be called their own. They decide it doesn't matter and carry on as normal.`],
-            [new RandomTarget(1.5, { singleTarget: true, kMode: true }),new TargetHighestStatIsX(PRUDENCE, { singleTarget: true, kMode: true , invert: true}), new TargetHighestStatIsX(FORTITUDE, { singleTarget: true, kMode: true, invert:true })],
+            [new RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX(PRUDENCE, { singleTarget: true, kMode: true, invert: true }), new TargetHighestStatIsX(FORTITUDE, { singleTarget: true, kMode: true, invert: true })],
             [new ChangeMyStabilityLevelByAmount(1)],
             true,
             1000 * 60)
@@ -754,24 +754,24 @@ const initBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Think about Death`,
             [`${SUBJECTSTRING} can't help but think about their fundamental mortality in this room. They tremble in fear.`],
-            [new RandomTarget(0.5, { singleTarget: true, kMode: true }),new TargetPrudenceLessThanAmount(4, { singleTarget: true, kMode: true })],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount(4, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(-13)], //its fine
             true,
             1000 * 60),
-            new AiBeat(
-                `${SUBJECTSTRING}: Think about Death`,
-                [`${SUBJECTSTRING} can't help but think about their fundamental mortality in this room. They meet this thought with equanimy. They have done what needed to be done with their life and have no regrets.`],
-                [new RandomTarget(0.5, { singleTarget: true, kMode: true }),new TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true, invert: true })],
-                [new ChangeMyStabilityLevelByAmount(13)], //its fine
-                true,
-                1000 * 60)
+        new AiBeat(
+            `${SUBJECTSTRING}: Think about Death`,
+            [`${SUBJECTSTRING} can't help but think about their fundamental mortality in this room. They meet this thought with equanimy. They have done what needed to be done with their life and have no regrets.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true, invert: true })],
+            [new ChangeMyStabilityLevelByAmount(13)], //its fine
+            true,
+            1000 * 60)
     ]
 
     personal_beat_list[STEALING] = [
         new AiBeat(
             `${SUBJECTSTRING}: Take Things`,
             [`${SUBJECTSTRING}  feels the weirdest urge to pocket the ${TARGETSTRING}. They have no idea why they wanted it... it just... Felt shiny?`],
-            [new TargetIsAlive({invert: true}), new TargetIsWithinRadiusOfSelf(5, {singleTarget:true})],
+            [new TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf(5, { singleTarget: true })],
             [new PickupObject()], //its fine
             true,
             1000 * 60)

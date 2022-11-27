@@ -137,7 +137,7 @@ export class EyeKiller extends Quotidian {
             "Killer: Kill",
             [`The Eye Killer brutally stabs  ${TARGETSTRING} over and over until they stop twitching.`],
             [new IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboOrBox(), new TargetIsAlive(), new TargetIsWithinRadiusOfSelf(5, { singleTarget: true })],
-            [new MeleeKill("brutally stabs over and over"), new AddThemeToRoom(all_themes[KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet(all_themes[KILLING], `${TARGETSTRING}'s blood`, `Something very upsetting happened here to ${TARGETSTRING}.`)],
+            [new MeleeKill("brutally stabs over and over"), new AddThemeToRoom(all_themes[KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet(KILLING, `${TARGETSTRING}'s blood`, `Something very upsetting happened here to ${TARGETSTRING}.`)],
             true,
             30 * 1000,
             true
@@ -147,7 +147,7 @@ export class EyeKiller extends Quotidian {
             "Killer: Do Art",
             [`The Eye Killer appears to creating some sort of art piece out of what remains of ${TARGETSTRING}.`],
             [new IHaveObjectWithName(["Egg"], { invert: true }), new TargetHasObjectWithName(["Egg"], { invert: true }), new TargetIsBlorboOrBox(), new TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf(5, { singleTarget: true })],
-            [new AddThemeToRoom(all_themes[KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet(all_themes[KILLING], `${TARGETSTRING}'s blood`, `Something very upsetting happened here to ${TARGETSTRING}.`)],
+            [new AddThemeToRoom(all_themes[KILLING]), new SpawnObjectFromThemeUnderFloorAtFeet(KILLING, `${TARGETSTRING}'s blood`, `Something very upsetting happened here to ${TARGETSTRING}.`)],
             true,
             30 * 1000
         );
