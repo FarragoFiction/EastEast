@@ -154,6 +154,8 @@ export interface PasswordMap {
 export interface SlaughterMap {
     [details: string]: Slaughter;
 }
+//https://youtu.be/m5eyhShxn5M
+
 //https://archiveofourown.org/works/40961847
 
 /*

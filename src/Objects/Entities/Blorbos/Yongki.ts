@@ -10,6 +10,8 @@ import { DeploySass } from "../Actions/DeploySass";
 import { FollowObject } from "../Actions/FollowObject";
 import { IncrementMyState } from "../Actions/IncrementMyState";
 import { MeleeKill } from "../Actions/MeleeKill";
+import { RandomizeEveryone } from "../Actions/RandomizeEveryone";
+import { RandomizeMe } from "../Actions/RandomizeMe";
 import { StopMoving } from "../Actions/StopMoving";
 
 import { AiBeat } from "../StoryBeats/BaseBeat";
@@ -79,9 +81,9 @@ export class Yongki extends Quotidian{
 
         const reflectMirror = new AiBeat(
             "Yongki: Look Mirror",
-            ["With almost no fanfair, Yongki catches sight of the Mirror. Captain is now in charge."],
+            ["With almost no fanfair, Yongki catches sight of the Mirror. With a scream of pure anguish, he ceases to exist in a meaningful way. Everyone caught in his reflection is dragged from their bodies, replaced with Strangers. Will you even be able to tell?  <p>Captain is now in charge.</p>"],
             [new TargetNearObjectWithName(["mirror"],{singleTarget:true}),new TargetIsWithinRadiusOfSelf(5)],
-            [new IncrementMyState("")],
+            [new RandomizeMe(), new RandomizeEveryone(), new IncrementMyState("")],
             true,
             1000*60,
             true

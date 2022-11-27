@@ -3,14 +3,14 @@
 import { removeItemOnce } from "../../../Utils/ArrayUtils"
 import { FORTITUDE, JUDGEMENT, PRUDENCE, TEMPERANCE } from "../../../Utils/constants"
 import { createElementWithIdAndParent, distanceWithinRadius } from "../../../Utils/misc"
-import { pickFrom } from "../../../Utils/NonSeededRandUtils"
+import { getRandomNumberBetween, pickFrom } from "../../../Utils/NonSeededRandUtils"
 import { Movement } from "../../MovementAlgs/BaseMovement"
 import { NoMovement } from "../../MovementAlgs/NoMovement"
 import { RandomMovement } from "../../MovementAlgs/RandomMovement"
 import { PhysicalObject } from "../../PhysicalObject"
 import { FRIEND } from "../../RoomEngine/FRIEND/FRIEND"
 import { Room } from "../../RoomEngine/Room"
-import { Theme } from "../../Theme"
+import { all_themes, Theme } from "../../Theme"
 import { COMPLIMENT, FILTERS, INSULT, OBJECT } from "../../ThemeStorage"
 import { DeploySass } from "../Actions/DeploySass"
 import { PickupObject } from "../Actions/PickupObject"
@@ -443,6 +443,26 @@ export class Quotidian extends PhysicalObject {
         } else {
             this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, amount));
         }
+    }
+
+    //mostly only yongki and his reflection ability will do this, but maybe generic quotidians will too
+    //true random
+    randomize = ()=>{
+        //every thhing that makes you you is lost. 
+       this.beats = [];
+       this.themes = [];
+       //fortitude doesn't change. yongki can't effect that. 
+       this.prudence = 0;
+       this.temperance = 0;
+       this.judgement = 0;
+       this.initStats();
+       const theme_number = getRandomNumberBetween(3,6);
+       for(let i = 0; i< theme_number; i++){
+        this.themes.push(pickFrom(Object.values(all_themes)))
+       }
+
+       let beats = this.grabThemeBeats();
+       this.makeBeatsMyOwn(beats);
     }
 
 
