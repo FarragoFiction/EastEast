@@ -3,6 +3,7 @@ import { PhysicalObject } from "../../PhysicalObject";
 import { Maze } from "../../RoomEngine/Maze";
 import { Room } from "../../RoomEngine/Room";
 import { StoryBeat } from "../../RoomEngine/StoryBeat";
+import { SMELL } from "../../ThemeStorage";
 import { Action } from "../Actions/BaseAction";
 import { heProunon, hisProunon, NB, Quotidian } from "../Blorbos/Quotidian";
 import { SUBJECTSTRING, TargetFilter, TARGETSTRING } from "../TargetFilter/baseFilter";
@@ -16,6 +17,8 @@ export const SUBJECT_HE_SCRIPT = "[SUBJECTHESCRIPT]"
 export const TARGET_HIS_SCRIPT = "[TARGETHISSCRIPT]"
 export const TARGET_HIM_SCRIPT = "[TARGETHIMSCRIPT]"
 export const TARGET_HE_SCRIPT = "[TARGETHESCRIPT]"
+export const ROOM_SMELL_SCRIPT = "[ROOM_SMELL_SCRIPT]"
+export const TARGET_SMELL_SCRIPT = "[TARGET_SMELL_SCRIPT]"
 
 
 export class AiBeat {
@@ -99,6 +102,13 @@ export class AiBeat {
                 ret = ret.replaceAll(TARGET_HIM_SCRIPT, heProunon(NB));
                 ret = ret.replaceAll(TARGET_HIM_SCRIPT, hisProunon(NB));
             }
+
+            const room_smell = this.targets[0].room.getRandomThemeConcept(SMELL);
+            ret = ret.replaceAll(ROOM_SMELL_SCRIPT, room_smell);
+
+            const target_smell = this.targets[0].getRandomThemeConcept(SMELL);
+            ret = ret.replaceAll(TARGET_SMELL_SCRIPT, target_smell);
+
         }
 
 

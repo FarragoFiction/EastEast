@@ -29,6 +29,7 @@ import { Khana } from "../Entities/Blorbos/K";
 import { Goncharov } from "../Entities/Blorbos/Goncharov";
 import { Andre } from "../Entities/Blorbos/Andre";
 import { Katya } from "../Entities/Blorbos/Katya";
+import { Mario } from "../Entities/Blorbos/Mario";
 export class Maze {
 
     rand: SeededRandom;
@@ -104,6 +105,7 @@ export class Maze {
             this.blorbos.push(new Goncharov(this.room, 150,150));
             this.blorbos.push(new Andre(this.room, 150,150));
             this.blorbos.push(new Katya(this.room, 150,150));
+            this.blorbos.push(new Mario(this.room, 150,150));
 
 
         }

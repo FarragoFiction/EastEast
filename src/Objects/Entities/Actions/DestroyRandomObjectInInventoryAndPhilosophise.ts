@@ -7,8 +7,6 @@ import { OBFUSCATION, PHILOSOPHY } from "../../ThemeStorage";
 
 export class DestroyRandomObjectInInventoryAndPhilosophize extends Action { //lawsuit
 
-
-
     recognizedCommands: string[] = []
 
     applyAction = (beat: AiBeat) => {
@@ -33,7 +31,7 @@ export class DestroyRandomObjectInInventoryAndPhilosophize extends Action { //la
             beat.bonusString = "Reality is a shitty simulation. All of us are fake. Fake even within the simulation. Copies of copies of copies until all is sanded smooth and only a parody remains of what made us Unique, all in service to the dread Universe in which we live."
         }
 
-        return `${target.processedName()}destroys the ${item.name} and talks about philosophy`;
+        return `${target.processedName()} destroys the ${item.name} and talks about philosophy`;
 
     }
 

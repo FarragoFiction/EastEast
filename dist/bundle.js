@@ -109,6 +109,45 @@ exports.Action = Action;
 
 /***/ }),
 
+/***/ 8325:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BefriendTargetByAmount = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const BaseAction_1 = __webpack_require__(7042);
+//do you want to be a Thing (whether romantic or platonic?)
+class BefriendTargetByAmount extends BaseAction_1.Action {
+    constructor(amount) {
+        super();
+        this.importantReturn = true;
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            for (let target of beat.targets) {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    subject.likeBlorboMore(target, this.amount);
+                }
+            }
+            return "";
+        };
+        this.amount = amount;
+    }
+}
+exports.BefriendTargetByAmount = BefriendTargetByAmount;
+
+
+/***/ }),
+
 /***/ 8801:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -1552,7 +1591,7 @@ class Look extends BaseAction_1.Action {
                 retSoFar += "</ul>";
             }
             if (lookcloser instanceof Quotidian_1.Quotidian) {
-                retSoFar += `<br>Their stability level is: ${lookcloser.stabilityLevel}`;
+                retSoFar += `<br>${lookcloser.name}'s stability level is: ${lookcloser.stabilityLevel}`;
                 retSoFar += `<br>Their themes are : ${(lookcloser.themes).map((i) => i.key).join(",")}`;
                 retSoFar += `<br>Their AI is is: ${(lookcloser.beats.join(","))}`;
                 retSoFar += `<br>Their stats are: <ul> 
@@ -1585,6 +1624,78 @@ class Look extends BaseAction_1.Action {
     }
 }
 exports.Look = Look;
+
+
+/***/ }),
+
+/***/ 1929:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MakeImportant = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const BaseAction_1 = __webpack_require__(7042);
+class MakeImportant extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            for (let target of beat.targets) {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    subject.realizeIHaveASquishOnBlorbo(target);
+                }
+            }
+            return "";
+        };
+    }
+}
+exports.MakeImportant = MakeImportant;
+
+
+/***/ }),
+
+/***/ 8694:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MakeRomantic = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const BaseAction_1 = __webpack_require__(7042);
+class MakeRomantic extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            for (let target of beat.targets) {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    subject.realizeIHaveACrushOnBlorbo(target);
+                }
+            }
+            return "";
+        };
+    }
+}
+exports.MakeRomantic = MakeRomantic;
 
 
 /***/ }),
@@ -2886,7 +2997,7 @@ const Quotidian_1 = __webpack_require__(6387);
 class Khana extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "k.png", width: 56, height: 100 },
+            default_src: { src: "Placeholders/k.png", width: 56, height: 100 },
         };
         const beats = [];
         //funny how similar he is, on a suface level, to parker
@@ -2944,6 +3055,46 @@ class Katya extends Quotidian_1.Quotidian {
     }
 }
 exports.Katya = Katya;
+
+
+/***/ }),
+
+/***/ 3849:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Mario = void 0;
+const RandomMovement_1 = __webpack_require__(5997);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6387);
+//generic npcs have no inner ai, they just do whatever their themes and the room tell them too. they are hollow mockeries.
+class Mario extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/mario_down.gif", width: 50, height: 50 },
+            left_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/mario_left.gif", width: 50, height: 50 },
+            right_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/mario_right.gif", width: 50, height: 50 },
+            up_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/mario_up.gif", width: 50, height: 50 },
+            down_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/mario_down.gif", width: 50, height: 50 }
+        };
+        const beats = [];
+        super(room, "Mario", x, y, [Theme_1.all_themes[ThemeStorage_1.ADDICTION], Theme_1.all_themes[ThemeStorage_1.SERVICE], Theme_1.all_themes[ThemeStorage_1.CLOWNS], Theme_1.all_themes[ThemeStorage_1.DECAY], Theme_1.all_themes[ThemeStorage_1.CRAFTING]], sprite, "He is so afraid.", beats);
+        this.lore = "Wait. Who is this?";
+        this.fortitude = 2;
+        this.prudence = 5;
+        this.temperance = 5;
+        this.judgement = 5;
+        this.maxSpeed = 50;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+    }
+}
+exports.Mario = Mario;
 
 
 /***/ }),
@@ -3718,6 +3869,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             //every thhing that makes you you is lost. 
             this.beats = [];
             this.themes = [];
+            this.relationshipMap = new Map(); //you don't recognize anyone
             //fortitude doesn't change. yongki can't effect that. 
             this.prudence = 0;
             this.temperance = 0;
@@ -4311,9 +4463,10 @@ exports.Captain = Captain;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AiBeat = exports.TARGET_HE_SCRIPT = exports.TARGET_HIM_SCRIPT = exports.TARGET_HIS_SCRIPT = exports.SUBJECT_HE_SCRIPT = exports.SUBJECT_HIM_SCRIPT = exports.SUBJECT_HIS_SCRIPT = exports.BONUSSTRING = exports.ITEMSTRING = void 0;
+exports.AiBeat = exports.ROOM_SMELL_SCRIPT = exports.TARGET_HE_SCRIPT = exports.TARGET_HIM_SCRIPT = exports.TARGET_HIS_SCRIPT = exports.SUBJECT_HE_SCRIPT = exports.SUBJECT_HIM_SCRIPT = exports.SUBJECT_HIS_SCRIPT = exports.BONUSSTRING = exports.ITEMSTRING = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const StoryBeat_1 = __webpack_require__(5504);
+const ThemeStorage_1 = __webpack_require__(1288);
 const Quotidian_1 = __webpack_require__(6387);
 const baseFilter_1 = __webpack_require__(9505);
 exports.ITEMSTRING = "ITEMSTRING";
@@ -4324,6 +4477,7 @@ exports.SUBJECT_HE_SCRIPT = "[SUBJECTHESCRIPT]";
 exports.TARGET_HIS_SCRIPT = "[TARGETHISSCRIPT]";
 exports.TARGET_HIM_SCRIPT = "[TARGETHIMSCRIPT]";
 exports.TARGET_HE_SCRIPT = "[TARGETHESCRIPT]";
+exports.ROOM_SMELL_SCRIPT = "[ROOM_SMELL_SCRIPT]";
 class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
     //some beats longer than others
@@ -4376,6 +4530,8 @@ class AiBeat {
                     ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.heProunon)(Quotidian_1.NB));
                     ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.hisProunon)(Quotidian_1.NB));
                 }
+                const smell = this.targets[0].getRandomThemeConcept(ThemeStorage_1.SMELL);
+                ret = ret.replaceAll(exports.ROOM_SMELL_SCRIPT, smell);
             }
             return ret;
         };
@@ -4660,6 +4816,49 @@ class ILikeTargetMoreThanAmount extends baseFilter_1.TargetFilter {
     }
 }
 exports.ILikeTargetMoreThanAmount = ILikeTargetMoreThanAmount;
+
+
+/***/ }),
+
+/***/ 5160:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MyHighestStatIsX = void 0;
+const Quotidian_1 = __webpack_require__(6387);
+const baseFilter_1 = __webpack_require__(9505);
+class MyHighestStatIsX extends baseFilter_1.TargetFilter {
+    //this is not a place of honor
+    constructor(stat, options = { singleTarget: false, invert: false, kMode: false }) {
+        super(options);
+        this.toString = () => {
+            //format this like it might start with either because or and
+            return `${baseFilter_1.TARGETSTRING}'s highest stat is ${this.invert ? "not" : ""}   ${this.stat}}`;
+        };
+        this.applyFilterToSingleTarget = (owner, target) => {
+            let targetLocked = false;
+            if (!owner.owner) {
+                console.error("INVALID TO CALL A BEAT WITHOUT AN OWNER");
+                return null;
+            }
+            if (owner instanceof Quotidian_1.Quotidian) {
+                if (owner.highestStat() === this.stat) {
+                    targetLocked = true;
+                }
+            }
+            if (targetLocked) {
+                return this.invert ? null : target;
+            }
+            else {
+                return this.invert ? target : null;
+            }
+        };
+        this.stat = stat;
+    }
+}
+exports.MyHighestStatIsX = MyHighestStatIsX;
 
 
 /***/ }),
@@ -6813,6 +7012,7 @@ const K_1 = __webpack_require__(1069);
 const Goncharov_1 = __webpack_require__(3096);
 const Andre_1 = __webpack_require__(5878);
 const Katya_1 = __webpack_require__(3670);
+const Mario_1 = __webpack_require__(3849);
 class Maze {
     constructor(ele, storySoFar, rand) {
         this.debug = false;
@@ -6874,6 +7074,7 @@ class Maze {
                 this.blorbos.push(new Goncharov_1.Goncharov(this.room, 150, 150));
                 this.blorbos.push(new Andre_1.Andre(this.room, 150, 150));
                 this.blorbos.push(new Katya_1.Katya(this.room, 150, 150));
+                this.blorbos.push(new Mario_1.Mario(this.room, 150, 150));
             }
         };
         this.begin = () => {
@@ -7967,19 +8168,25 @@ exports.miracles = exports.child_backstories = exports.general_backstories = exp
 exports.initThemes = exports.checkIfAllKeysPresent = exports.super_name_possibilities_map = exports.memories = exports.compliment_possibilities = exports.filter_possibilities = exports.theme_opinions = exports.floor_possibilities = exports.wall_possibilities = exports.song_possibilities = exports.insult_possibilities = exports.adj_possibilities = exports.menu_options = exports.effect_possibilities = exports.smell_possibilities = exports.feeling_possibilities = exports.taste_possibilities = exports.sound_possibilities = exports.monster_desc = exports.loc_desc = exports.philosophy = void 0;
 const constants_1 = __webpack_require__(8817);
 const AddThemeToRoom_1 = __webpack_require__(8072);
+const BefriendTargetByAmount_1 = __webpack_require__(8325);
 const ChangeMyStabilityLevelByAmount_1 = __webpack_require__(8801);
 const FollowObject_1 = __webpack_require__(744);
+const MakeImportant_1 = __webpack_require__(1929);
+const MakeRomantic_1 = __webpack_require__(8694);
 const MoveRandomly_1 = __webpack_require__(4287);
 const PickupObject_1 = __webpack_require__(9936);
 const SpawnObjectFromThemeUnderFloorAtMyFeet_1 = __webpack_require__(1483);
 const StopMoving_1 = __webpack_require__(4469);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
+const ILikeTargetMoreThanAmount_1 = __webpack_require__(8898);
+const MyHighestStatIsX_1 = __webpack_require__(5160);
 const RandomTarget_1 = __webpack_require__(9824);
 const TargetHasObjectWithName_1 = __webpack_require__(4864);
 const TargetHighestStatIsX_1 = __webpack_require__(5362);
 const TargetIsAlive_1 = __webpack_require__(7064);
 const TargetIsBlorboBox_1 = __webpack_require__(4068);
+const TargetIsRomanticToMe_1 = __webpack_require__(7705);
 const TargetIsWithinRadiusOfSelf_1 = __webpack_require__(5535);
 const TargetJudgementLessThanAmount_1 = __webpack_require__(3678);
 const TargetPrudenceLessThanAmount_1 = __webpack_require__(1877);
@@ -8497,12 +8704,28 @@ const initPersonalBeatList = () => {
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Free Will`, [`${baseFilter_1.SUBJECTSTRING} wonders briefly if any action they have ever taken could truly be called their own. They decide it doesn't matter and carry on as normal.`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.PRUDENCE, { singleTarget: true, kMode: true, invert: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.FORTITUDE, { singleTarget: true, kMode: true, invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], true, 1000 * 60)
     ];
     exports.personal_beat_list[exports.FAMILY] = [
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Family`, [`${baseFilter_1.SUBJECTSTRING} remembers a different time, almost a different life. What would their family think about how far they've come. What they've had to do?`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], true, 1000 * 60)
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Family`, [`${baseFilter_1.SUBJECTSTRING} remembers a different time, almost a different life. What would their family think about how far they've come. What they've had to do?`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], true, 1000 * 60)
+    ];
+    exports.personal_beat_list[exports.CLOWNS] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Do a Sick Backflip`, [`Out of nowhere, ${baseFilter_1.SUBJECTSTRING} does a sick backflip. You can't help but clap.`], [new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.FORTITUDE), new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13)], true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Tell a Funny Joke`, [`${baseFilter_1.SUBJECTSTRING} tells anyone who will listen a long, rambling joke. Its pretty funny.`], [new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.FORTITUDE, { invert: true }), new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13)], true, 1000 * 60)
+    ];
+    exports.personal_beat_list[exports.SERVICE] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Swear Service`, [`${baseFilter_1.SUBJECTSTRING} swears their undying loyalty to ${baseFilter_1.TARGETSTRING}. `], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true }), new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.JUDGEMENT)], //just go for it, nothing held back
+        [new BefriendTargetByAmount_1.BefriendTargetByAmount(113), new MakeImportant_1.MakeImportant()], true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Evaluate Friends`, [`${baseFilter_1.SUBJECTSTRING} really wishes they could swear loyalty to ${baseFilter_1.TARGETSTRING} but they just aren't sure... `], [new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.JUDGEMENT, { invert: true }), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { invert: true }), new RandomTarget_1.RandomTarget(0.5, { singleTarget: true })], [new BefriendTargetByAmount_1.BefriendTargetByAmount(13)], true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Swear Service`, [`${baseFilter_1.SUBJECTSTRING} finally makes their decision, and swears undying loyalty to ${baseFilter_1.TARGETSTRING}. `], [new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.JUDGEMENT, { invert: true }), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100), new RandomTarget_1.RandomTarget(0.5, { singleTarget: true })], [new BefriendTargetByAmount_1.BefriendTargetByAmount(13)], true, 1000 * 60)
     ];
     exports.personal_beat_list[exports.LONELY] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Be So Very Alone`, [`${baseFilter_1.SUBJECTSTRING} is suddenly aware of how alone they are. They shiver and hold themselves tightly. It might be time to start making friends.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new RandomTarget_1.RandomTarget(.5, { singleTarget: true }), new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(2, { singleTarget: true, kMode: true })], [new FollowObject_1.FollowObject(), new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-1)], true, 1000 * 60),
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Be So Very Alone`, [`${baseFilter_1.SUBJECTSTRING} is suddenly aware of how alone they are. It's fine. They prefer it this way, really. Don't need anyone.`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(4, { singleTarget: true, kMode: true, invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], //its not really fine
         true, 1000 * 60)
+    ];
+    exports.personal_beat_list[exports.ADDICTION] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Take a Swig`, [`${baseFilter_1.SUBJECTSTRING} pulls out a small flask and takes a swig of something so strong you can smell it from here.`], [new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(2, { singleTarget: true, kMode: true })], //you really can't control yourself can you
+        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Pull Out Your Flask`, [`${baseFilter_1.SUBJECTSTRING} pulls out a small silver flask and regards it coldly. There's a longing in their eyes that you can watch them, beat by beat, master. they put the flask back, unopened.`], [new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(4, { singleTarget: true, kMode: true })], //you think self control is the highest virtue.
+        [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13)], true, 1000 * 30),
     ];
     exports.personal_beat_list[exports.TIME] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Check the Time`, [`${baseFilter_1.SUBJECTSTRING} glances at the stopwatch they always have on them. They seem anxious.`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount_1.TargetPrudenceLessThanAmount(2, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
@@ -8514,14 +8737,18 @@ const initPersonalBeatList = () => {
 //homoerotic anchovy scene
 //addiction scene
 const initBeatList = () => {
-    exports.personal_beat_list[exports.DEATH] = [
+    exports.beat_list[exports.DEATH] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think about Death`, [`${baseFilter_1.SUBJECTSTRING} can't help but think about their fundamental mortality in this room. They tremble in fear.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount_1.TargetPrudenceLessThanAmount(4, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], //its fine
         true, 1000 * 60),
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think about Death`, [`${baseFilter_1.SUBJECTSTRING} can't help but think about their fundamental mortality in this room. They meet this thought with equanimy. They have done what needed to be done with their life and have no regrets.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount_1.TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true, invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13)], //its fine
         true, 1000 * 60)
     ];
-    exports.personal_beat_list[exports.STEALING] = [
+    exports.beat_list[exports.STEALING] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Take Things`, [`${baseFilter_1.SUBJECTSTRING}  feels the weirdest urge to pocket the ${baseFilter_1.TARGETSTRING}. They have no idea why they wanted it... it just... Felt shiny?`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new PickupObject_1.PickupObject()], //its fine
+        true, 1000 * 60)
+    ];
+    exports.beat_list[exports.DECAY] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Try Not To Breathe`, [`The smell of ${BaseBeat_1.ROOM_SMELL_SCRIPT} is so thick you can practically taste it.`, `${baseFilter_1.SUBJECTSTRING} tries not to breathe in the smell of ${BaseBeat_1.ROOM_SMELL_SCRIPT}.`, `The sheer stench of this room nauseats ${baseFilter_1.SUBJECTSTRING}. Who knew the smell of ${BaseBeat_1.ROOM_SMELL_SCRIPT} could be so bad?`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], //its fine
         true, 1000 * 60)
     ];
     exports.beat_list[exports.SOUL] = [
@@ -8537,11 +8764,25 @@ const initBeatList = () => {
         true, 1000 * 60),
     ];
     exports.beat_list[exports.LONELY] = [
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Be Lonely`, [`${baseFilter_1.SUBJECTSTRING} is suddenly aware that we all die alone. They feel so very, very Lonely.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], //this is not a good place to be.
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Be Lonely`, [`${baseFilter_1.SUBJECTSTRING} is suddenly aware that we all die alone. They feel so very, very Lonely. They worry ${baseFilter_1.TARGETSTRING} isn't really their friend...`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13), new BefriendTargetByAmount_1.BefriendTargetByAmount(-13)], //this is not a good place to be.
+        true, 1000 * 60),
+    ];
+    exports.beat_list[exports.SERVICE] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Be Friendly`, [`${baseFilter_1.SUBJECTSTRING} spends time with ${baseFilter_1.TARGETSTRING}. They are so glad that they can be here in this room with their friends.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13), new BefriendTargetByAmount_1.BefriendTargetByAmount(13)], //nice
+        true, 1000 * 60),
+    ];
+    exports.beat_list[exports.LOVE] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Fall In Love`, [`Something about this room drives ${baseFilter_1.SUBJECTSTRING} to realize they are in love with ${baseFilter_1.TARGETSTRING}. Huh. HUH. Hope that works out for them!`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true }), new TargetIsRomanticToMe_1.TargetIsRomanticToMe({ invert: true, singleTarget: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13), new MakeRomantic_1.MakeRomantic()], //good luck with that
         true, 1000 * 60),
     ];
     exports.beat_list[exports.FAMILY] = [
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Family`, [`${baseFilter_1.SUBJECTSTRING} thinks wistfully of their family.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Family`, [`${baseFilter_1.SUBJECTSTRING} thinks wistfully of their family.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.TEMPERANCE, { invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
+        true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Family`, [`${baseFilter_1.SUBJECTSTRING} thinks wistfully of their family.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.TEMPERANCE)], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-1)], //just a bit more sane
+        true, 1000 * 60),
+    ];
+    exports.beat_list[exports.CLOWNS] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Listen to the Circus Music`, [`${baseFilter_1.SUBJECTSTRING} sways gently in time to the distant organ music.`], [new RandomTarget_1.RandomTarget(0.1, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
         true, 1000 * 60),
     ];
     exports.beat_list[exports.TIME] = [
@@ -14431,6 +14672,8 @@ var map = {
 	"./Objects/Entities/Actions/AddThemeToRoom.ts": 8072,
 	"./Objects/Entities/Actions/BaseAction": 7042,
 	"./Objects/Entities/Actions/BaseAction.ts": 7042,
+	"./Objects/Entities/Actions/BefriendTargetByAmount": 8325,
+	"./Objects/Entities/Actions/BefriendTargetByAmount.ts": 8325,
 	"./Objects/Entities/Actions/ChangeMyStabilityLevelByAmount": 8801,
 	"./Objects/Entities/Actions/ChangeMyStabilityLevelByAmount.ts": 8801,
 	"./Objects/Entities/Actions/ChangeStabilityLevelByAmount": 6729,
@@ -14493,6 +14736,10 @@ var map = {
 	"./Objects/Entities/Actions/Listen.ts": 7576,
 	"./Objects/Entities/Actions/Look": 2741,
 	"./Objects/Entities/Actions/Look.ts": 2741,
+	"./Objects/Entities/Actions/MakeImportant": 1929,
+	"./Objects/Entities/Actions/MakeImportant.ts": 1929,
+	"./Objects/Entities/Actions/MakeRomantic": 8694,
+	"./Objects/Entities/Actions/MakeRomantic.ts": 8694,
 	"./Objects/Entities/Actions/MeleeKill": 2900,
 	"./Objects/Entities/Actions/MeleeKill.ts": 2900,
 	"./Objects/Entities/Actions/MoveRandomly": 4287,
@@ -14545,6 +14792,8 @@ var map = {
 	"./Objects/Entities/Blorbos/K.ts": 1069,
 	"./Objects/Entities/Blorbos/Katya": 3670,
 	"./Objects/Entities/Blorbos/Katya.ts": 3670,
+	"./Objects/Entities/Blorbos/Mario": 3849,
+	"./Objects/Entities/Blorbos/Mario.ts": 3849,
 	"./Objects/Entities/Blorbos/Match": 7685,
 	"./Objects/Entities/Blorbos/Match.ts": 7685,
 	"./Objects/Entities/Blorbos/Neville": 3668,
@@ -14577,6 +14826,8 @@ var map = {
 	"./Objects/Entities/TargetFilter/IHaveObjectWithTheme.ts": 2146,
 	"./Objects/Entities/TargetFilter/ILikeTargetMoreThanAmount": 8898,
 	"./Objects/Entities/TargetFilter/ILikeTargetMoreThanAmount.ts": 8898,
+	"./Objects/Entities/TargetFilter/MyHighestStatIsX": 5160,
+	"./Objects/Entities/TargetFilter/MyHighestStatIsX.ts": 5160,
 	"./Objects/Entities/TargetFilter/RandomTarget": 9824,
 	"./Objects/Entities/TargetFilter/RandomTarget.ts": 9824,
 	"./Objects/Entities/TargetFilter/TargetExistsInAWorldWhereBlorboWithNameIsAlive": 4186,

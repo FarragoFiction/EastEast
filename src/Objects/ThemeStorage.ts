@@ -1,19 +1,29 @@
 import { ACHIEVEMENTS, BACKSTORY, CITYBUILDING, CODE, COMPANIONS, FORTITUDE, GODS, INVENTORY, JUDGEMENT, LORE, OPTIONS, PRUDENCE, QUESTS, RESISTANCES, SKILLGRAPH, STATISTICS, STATUS, TEMPERANCE, WARROOM } from '../Utils/constants';
 import { AddThemeToRoom } from './Entities/Actions/AddThemeToRoom';
+import { BefriendTargetByAmount } from './Entities/Actions/BefriendTargetByAmount';
 import { ChangeMyStabilityLevelByAmount } from './Entities/Actions/ChangeMyStabilityLevelByAmount';
+import { DeploySass } from './Entities/Actions/DeploySass';
+import { DestroyInventoryObjectWithThemes } from './Entities/Actions/DestroyObjectInInventoryWithThemes';
+import { DestroyRandomObjectInInventoryAndPhilosophize } from './Entities/Actions/DestroyRandomObjectInInventoryAndPhilosophise';
 import { FollowObject } from './Entities/Actions/FollowObject';
+import { MakeImportant } from './Entities/Actions/MakeImportant';
+import { MakeRomantic } from './Entities/Actions/MakeRomantic';
 import { MoveRandomly } from './Entities/Actions/MoveRandomly';
 import { PickupObject } from './Entities/Actions/PickupObject';
 import { SpawnObjectFromThemeUnderFloorAtMyFeet } from './Entities/Actions/SpawnObjectFromThemeUnderFloorAtMyFeet';
 import { StopMoving } from './Entities/Actions/StopMoving';
-import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from './Entities/StoryBeats/BaseBeat';
+import { AiBeat, ITEMSTRING, ROOM_SMELL_SCRIPT, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT, TARGET_SMELL_SCRIPT } from './Entities/StoryBeats/BaseBeat';
 import { SUBJECTSTRING, TARGETSTRING } from './Entities/TargetFilter/baseFilter';
+import { IHaveObjectWithName } from './Entities/TargetFilter/IHaveObjectWithName';
+import { ILikeTargetMoreThanAmount } from './Entities/TargetFilter/ILikeTargetMoreThanAmount';
+import { MyHighestStatIsX } from './Entities/TargetFilter/MyHighestStatIsX';
 import { RandomTarget } from './Entities/TargetFilter/RandomTarget';
 import { TargetFortitudeLessThanAmount } from './Entities/TargetFilter/TargetFortitudeLessThanAmount';
 import { TargetHasObjectWithName } from './Entities/TargetFilter/TargetHasObjectWithName';
 import { TargetHighestStatIsX } from './Entities/TargetFilter/TargetHighestStatIsX';
 import { TargetIsAlive } from './Entities/TargetFilter/TargetIsAlive';
 import { TargetIsBlorboOrBox } from './Entities/TargetFilter/TargetIsBlorboBox';
+import { TargetIsRomanticToMe } from './Entities/TargetFilter/TargetIsRomanticToMe';
 import { TargetIsWithinRadiusOfSelf } from './Entities/TargetFilter/TargetIsWithinRadiusOfSelf';
 import { TargetJudgementLessThanAmount } from './Entities/TargetFilter/TargetJudgementLessThanAmount';
 import { TargetPrudenceLessThanAmount } from './Entities/TargetFilter/TargetPrudenceLessThanAmount';
@@ -703,11 +713,53 @@ const initPersonalBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Think About Family`,
             [`${SUBJECTSTRING} remembers a different time, almost a different life. What would their family think about how far they've come. What they've had to do?`],
-            [new RandomTarget(1.5, { singleTarget: true, kMode: true })],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(1)],
             true,
             1000 * 60)
     ]
+
+    personal_beat_list[CLOWNS] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Do a Sick Backflip`,
+            [`Out of nowhere, ${SUBJECTSTRING} does a sick backflip. You can't help but clap.`],
+            [new MyHighestStatIsX(FORTITUDE), new RandomTarget(0.5, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(13), new DeploySass(":)")],
+            true,
+            1000 * 60),
+        new AiBeat(
+            `${SUBJECTSTRING}: Tell a Funny Joke`,
+            [`${SUBJECTSTRING} tells anyone who will listen a long, rambling joke. Its pretty funny.`],
+            [new MyHighestStatIsX(FORTITUDE, { invert: true }), new RandomTarget(0.5, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(13), new DeploySass(":)")],
+            true,
+            1000 * 60)
+    ]
+
+    personal_beat_list[SERVICE] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Swear Service`,
+            [`${SUBJECTSTRING} swears their undying loyalty to ${TARGETSTRING}. `],
+            [new RandomTarget(0.5, { singleTarget: true }), new MyHighestStatIsX(JUDGEMENT)], //just go for it, nothing held back
+            [new BefriendTargetByAmount(113), new MakeImportant()],
+            true,
+            1000 * 60),
+        new AiBeat(
+            `${SUBJECTSTRING}: Evaluate Friends`,
+            [`${SUBJECTSTRING} really wishes they could swear loyalty to ${TARGETSTRING} but they just aren't sure... `],
+            [new MyHighestStatIsX(JUDGEMENT, { invert: true }), new ILikeTargetMoreThanAmount(100, { invert: true }), new RandomTarget(0.5, { singleTarget: true })],
+            [new BefriendTargetByAmount(13)],
+            true,
+            1000 * 60),
+        new AiBeat(
+            `${SUBJECTSTRING}: Swear Service`,
+            [`${SUBJECTSTRING} finally makes their decision, and swears undying loyalty to ${TARGETSTRING}. `],
+            [new MyHighestStatIsX(JUDGEMENT, { invert: true }), new ILikeTargetMoreThanAmount(100), new RandomTarget(0.5, { singleTarget: true })],
+            [new BefriendTargetByAmount(13)],
+            true,
+            1000 * 60)
+    ]
+
 
     personal_beat_list[LONELY] = [
         new AiBeat(
@@ -724,6 +776,43 @@ const initPersonalBeatList = () => {
             [new ChangeMyStabilityLevelByAmount(-13)], //its not really fine
             true,
             1000 * 60)
+    ]
+
+    personal_beat_list[ADDICTION] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Take a Swig`,
+            [`${SUBJECTSTRING} pulls out a small flask and takes a swig of something so strong you can smell it from here.`],
+            [new TargetTemperenceLessThanAmount(2, { singleTarget: true, kMode: true })], //you really can't control yourself can you
+            [new ChangeMyStabilityLevelByAmount(-13)],
+            true,
+            1000 * 30),
+
+        new AiBeat(
+            `${SUBJECTSTRING}: Pull Out Your Flask`,
+            [`${SUBJECTSTRING} pulls out a small silver flask and regards it coldly. There's a longing in their eyes that you can watch them, beat by beat, master. they put the flask back, unopened.`],
+            [new TargetTemperenceLessThanAmount(4, { singleTarget: true, kMode: true })], //you think self control is the highest virtue.
+            [new ChangeMyStabilityLevelByAmount(13)],
+            true,
+            1000 * 30),
+
+    ]
+
+    personal_beat_list[DECAY] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Smell Check`,
+            [`${SUBJECTSTRING} cautiously sniffs at themself. ${TARGET_SMELL_SCRIPT}. Could be worse.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(1)], //its fine
+            true,
+            1000 * 60),
+        new AiBeat(
+            `${SUBJECTSTRING}: Notice Inventory Rotting `,
+            [`${SUBJECTSTRING} watches with dismay as their ${ITEMSTRING} rots away to nothing.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }),new IHaveObjectWithName([])],
+            [new DestroyRandomObjectInInventoryAndPhilosophize()], //its fine
+            true,
+            1000 * 60),
+
     ]
 
 
@@ -750,7 +839,7 @@ const initPersonalBeatList = () => {
 //addiction scene
 const initBeatList = () => {
 
-    personal_beat_list[DEATH] = [
+    beat_list[DEATH] = [
         new AiBeat(
             `${SUBJECTSTRING}: Think about Death`,
             [`${SUBJECTSTRING} can't help but think about their fundamental mortality in this room. They tremble in fear.`],
@@ -767,12 +856,22 @@ const initBeatList = () => {
             1000 * 60)
     ]
 
-    personal_beat_list[STEALING] = [
+    beat_list[STEALING] = [
         new AiBeat(
             `${SUBJECTSTRING}: Take Things`,
             [`${SUBJECTSTRING}  feels the weirdest urge to pocket the ${TARGETSTRING}. They have no idea why they wanted it... it just... Felt shiny?`],
             [new TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf(5, { singleTarget: true })],
             [new PickupObject()], //its fine
+            true,
+            1000 * 60)
+    ]
+
+    beat_list[DECAY] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Try Not To Breathe`,
+            [`The smell of ${ROOM_SMELL_SCRIPT} is so thick you can practically taste it.`, `${SUBJECTSTRING} tries not to breathe in the smell of ${ROOM_SMELL_SCRIPT}.`, `The sheer stench of this room nauseates ${SUBJECTSTRING}. Who knew the smell of ${ROOM_SMELL_SCRIPT} could be so bad?`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(-13)], //its fine
             true,
             1000 * 60)
     ]
@@ -815,18 +914,56 @@ const initBeatList = () => {
     beat_list[LONELY] = [
         new AiBeat(
             `${SUBJECTSTRING}: Be Lonely`,
-            [`${SUBJECTSTRING} is suddenly aware that we all die alone. They feel so very, very Lonely.`],
-            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
-            [new ChangeMyStabilityLevelByAmount(-13)], //this is not a good place to be.
+            [`${SUBJECTSTRING} is suddenly aware that we all die alone. They feel so very, very Lonely. They worry ${TARGETSTRING} isn't really their friend...`],
+            [new RandomTarget(0.5, { singleTarget: true })],
+            [new ChangeMyStabilityLevelByAmount(-13), new BefriendTargetByAmount(-13)], //this is not a good place to be.
             true,
             1000 * 60),
     ]
+
+    beat_list[SERVICE] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Be Friendly`,
+            [`${SUBJECTSTRING} spends time with ${TARGETSTRING}. They are so glad that they can be here in this room with their friends.`],
+            [new RandomTarget(0.5, { singleTarget: true })],
+            [new ChangeMyStabilityLevelByAmount(13), new BefriendTargetByAmount(13)], //nice
+            true,
+            1000 * 60),
+    ]
+
+    beat_list[LOVE] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Fall In Love`,
+            [`Something about this room drives ${SUBJECTSTRING} to realize they are in love with ${TARGETSTRING}. Huh. HUH. Hope that works out for them!`],
+            [new RandomTarget(0.5, { singleTarget: true }), new TargetIsRomanticToMe({ invert: true, singleTarget: true })],
+            [new ChangeMyStabilityLevelByAmount(-13), new MakeRomantic()], //good luck with that
+            true,
+            1000 * 60),
+    ]
+
 
     beat_list[FAMILY] = [
         new AiBeat(
             `${SUBJECTSTRING}: Think About Family`,
             [`${SUBJECTSTRING} thinks wistfully of their family.`],
-            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new MyHighestStatIsX(TEMPERANCE, { invert: true })],
+            [new ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
+            true,
+            1000 * 60),
+        new AiBeat(
+            `${SUBJECTSTRING}: Think About Family`,
+            [`${SUBJECTSTRING} thinks wistfully of their family.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new MyHighestStatIsX(TEMPERANCE)],
+            [new ChangeMyStabilityLevelByAmount(-1)], //just a bit more sane
+            true,
+            1000 * 60),
+    ]
+
+    beat_list[CLOWNS] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Listen to the Circus Music`,
+            [`${SUBJECTSTRING} sways gently in time to the distant organ music.`],
+            [new RandomTarget(0.1, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
             true,
             1000 * 60),
