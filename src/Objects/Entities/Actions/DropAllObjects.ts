@@ -3,6 +3,7 @@ import { Action } from "./BaseAction";
 
 import { AiBeat } from "../StoryBeats/BaseBeat";
 import { Quotidian } from "../Blorbos/Quotidian";
+import { turnArrayIntoHumanSentence } from "../../../Utils/ArrayUtils";
 
 
 export class DropAllObjects extends Action { //lawsuit
@@ -23,19 +24,20 @@ export class DropAllObjects extends Action { //lawsuit
         let items = [];
         if (target[0].inventory.length > 0) {
             for (let item of target[0].inventory) {
+                items.push(item);
                 target[0].dropObject(item);
             }
 
             if (target instanceof Quotidian) {
                 target.emitSass("!")
             }
-            return `${subject.processedName()} startles the  ${target[0].processedName()} and they drop some of their items.`;
+            return `${subject.processedName()} startles  ${target[0].processedName()} and they drop the ${turnArrayIntoHumanSentence(items.map((item)=>item.name))}.`;
 
         } else {
             if (target instanceof Quotidian) {
                 target.emitSass("!")
             }
-            return `${subject.processedName()} startles the  ${target[0].processedName()} for no particular reason.`;
+            return `${subject.processedName()} startles  ${target[0].processedName()} for no particular reason.`;
 
         }
     }

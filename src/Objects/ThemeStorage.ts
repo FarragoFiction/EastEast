@@ -719,6 +719,16 @@ const initPersonalBeatList = () => {
             1000 * 60)
     ]
 
+    personal_beat_list[CRAFTING] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Think About Creation`,
+            [`${SUBJECTSTRING} wishes they could make something with their own two hands right now. They pull out a small jewlers hammer and stare at it for a while.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(-1)],
+            true,
+            1000 * 60)
+    ]
+
     personal_beat_list[CLOWNS] = [
         new AiBeat(
             `${SUBJECTSTRING}: Do a Sick Backflip`,
@@ -800,7 +810,7 @@ const initPersonalBeatList = () => {
     personal_beat_list[DECAY] = [
         new AiBeat(
             `${SUBJECTSTRING}: Smell Check`,
-            [`${SUBJECTSTRING} cautiously sniffs at themself. ${TARGET_SMELL_SCRIPT}. Could be worse.`],
+            [`${SUBJECTSTRING} cautiously sniffs at themself. The smell of ${TARGET_SMELL_SCRIPT}. Could be worse.`],
             [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(1)], //its fine
             true,

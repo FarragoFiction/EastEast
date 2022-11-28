@@ -11,7 +11,7 @@ import { PhysicalObject } from "../../PhysicalObject"
 import { FRIEND } from "../../RoomEngine/FRIEND/FRIEND"
 import { Room } from "../../RoomEngine/Room"
 import { all_themes, Theme } from "../../Theme"
-import { COMPLIMENT, FILTERS, INSULT, OBJECT } from "../../ThemeStorage"
+import { COMPLIMENT, FILTERS, FLOORFOREGROUND, ImageWithDesc, ImageWithDescMap, INSULT, OBJECT } from "../../ThemeStorage"
 import { DeploySass } from "../Actions/DeploySass"
 import { PickupObject } from "../Actions/PickupObject"
 import { AiBeat } from "../StoryBeats/BaseBeat"
@@ -219,7 +219,22 @@ export class Quotidian extends PhysicalObject {
         }
         beats = beats.concat(this.grabThemeBeats());
         this.makeBeatsMyOwn(beats);
+        this.spawnRandomItemInInventory();
         this.actionRateMutator = this.rand.getRandomNumberBetween(7,13)/10;
+    }
+
+    spawnRandomItemInInventory = ()=>{
+        const theme = this.rand.pickFrom(this.themes);
+        const raw_item:ImageWithDesc= theme.pickPossibilityFor(this.rand, FLOORFOREGROUND)
+
+        const image = document.createElement("img");
+
+        image.src = `images/Walkabout/Objects/TopFloorObjects/${raw_item.src}`;
+        image.onload = ()=>{
+            const item = new PhysicalObject(this.room, raw_item.name? raw_item.name : "Mystery Object", 0, 0, image.width, image.height, [theme], 0, `images/Walkabout/Objects/TopFloorObjects/${raw_item.src}`, raw_item.desc);
+            this.pickupObject(item);
+        }
+
     }
 
     //not as important as your custom ai, but... you still are your constintuate parts. and npcs are nothing BUT that. hollow inside.

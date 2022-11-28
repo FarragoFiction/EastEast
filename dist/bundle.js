@@ -510,6 +510,38 @@ exports.DestroyInventoryObjectWithThemes = DestroyInventoryObjectWithThemes;
 
 /***/ }),
 
+/***/ 1960:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DestroyRandomObjectInInventory = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+class DestroyRandomObjectInInventory extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const targets = beat.targets;
+            const target = targets[0];
+            const item = subject.rand.pickFrom(subject.inventory);
+            const theme = subject.rand.pickFrom(item.themes);
+            beat.itemName = item.name;
+            subject.destroyObject(item);
+            return `${target.processedName()} destroys the ${item.name} and talks about philosophy`;
+        };
+    }
+}
+exports.DestroyRandomObjectInInventory = DestroyRandomObjectInInventory;
+
+
+/***/ }),
+
 /***/ 4516:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -543,7 +575,7 @@ class DestroyRandomObjectInInventoryAndPhilosophize extends BaseAction_1.Action 
                 */
                 beat.bonusString = "Reality is a shitty simulation. All of us are fake. Fake even within the simulation. Copies of copies of copies until all is sanded smooth and only a parody remains of what made us Unique, all in service to the dread Universe in which we live.";
             }
-            return `${target.processedName()}destroys the ${item.name} and talks about philosophy`;
+            return `${target.processedName()} destroys the ${item.name} and talks about philosophy`;
         };
     }
 }
@@ -561,6 +593,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DropAllObjects = void 0;
 const BaseAction_1 = __webpack_require__(7042);
 const Quotidian_1 = __webpack_require__(6387);
+const ArrayUtils_1 = __webpack_require__(3907);
 class DropAllObjects extends BaseAction_1.Action {
     constructor() {
         super(...arguments);
@@ -577,12 +610,13 @@ class DropAllObjects extends BaseAction_1.Action {
             let items = [];
             if (target[0].inventory.length > 0) {
                 for (let item of target[0].inventory) {
+                    items.push(item);
                     target[0].dropObject(item);
                 }
                 if (target instanceof Quotidian_1.Quotidian) {
                     target.emitSass("!");
                 }
-                return `${subject.processedName()} startles the  ${target[0].processedName()} and they drop some of their items.`;
+                return `${subject.processedName()} startles the  ${target[0].processedName()} and they drop ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(items.map((item) => item.name))}.`;
             }
             else {
                 if (target instanceof Quotidian_1.Quotidian) {
@@ -3678,6 +3712,16 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
+        this.spawnRandomItemInInventory = () => {
+            const theme = this.rand.pickFrom(this.themes);
+            const raw_item = theme.pickPossibilityFor(this.rand, ThemeStorage_1.FLOORFOREGROUND);
+            const image = document.createElement("img");
+            image.src = `images/Walkabout/Objects/TopFloorObjects/${raw_item.src}`;
+            image.onload = () => {
+                const item = new PhysicalObject_1.PhysicalObject(this.room, raw_item.name ? raw_item.name : "Mystery Object", 0, 0, image.width, image.height, [theme], 0, `images/Walkabout/Objects/TopFloorObjects/${raw_item.src}`, raw_item.desc);
+                this.pickupObject(item);
+            };
+        };
         //not as important as your custom ai, but... you still are your constintuate parts. and npcs are nothing BUT that. hollow inside.
         this.grabThemeBeats = () => {
             let beats = [];
@@ -4087,6 +4131,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         }
         beats = beats.concat(this.grabThemeBeats());
         this.makeBeatsMyOwn(beats);
+        this.spawnRandomItemInInventory();
         this.actionRateMutator = this.rand.getRandomNumberBetween(7, 13) / 10;
     }
 }
@@ -4463,7 +4508,7 @@ exports.Captain = Captain;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AiBeat = exports.ROOM_SMELL_SCRIPT = exports.TARGET_HE_SCRIPT = exports.TARGET_HIM_SCRIPT = exports.TARGET_HIS_SCRIPT = exports.SUBJECT_HE_SCRIPT = exports.SUBJECT_HIM_SCRIPT = exports.SUBJECT_HIS_SCRIPT = exports.BONUSSTRING = exports.ITEMSTRING = void 0;
+exports.AiBeat = exports.TARGET_SMELL_SCRIPT = exports.ROOM_SMELL_SCRIPT = exports.TARGET_HE_SCRIPT = exports.TARGET_HIM_SCRIPT = exports.TARGET_HIS_SCRIPT = exports.SUBJECT_HE_SCRIPT = exports.SUBJECT_HIM_SCRIPT = exports.SUBJECT_HIS_SCRIPT = exports.BONUSSTRING = exports.ITEMSTRING = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const StoryBeat_1 = __webpack_require__(5504);
 const ThemeStorage_1 = __webpack_require__(1288);
@@ -4478,6 +4523,7 @@ exports.TARGET_HIS_SCRIPT = "[TARGETHISSCRIPT]";
 exports.TARGET_HIM_SCRIPT = "[TARGETHIMSCRIPT]";
 exports.TARGET_HE_SCRIPT = "[TARGETHESCRIPT]";
 exports.ROOM_SMELL_SCRIPT = "[ROOM_SMELL_SCRIPT]";
+exports.TARGET_SMELL_SCRIPT = "[TARGET_SMELL_SCRIPT]";
 class AiBeat {
     //IMPORTANT. ALL IMPORTANT INFORMATION FOR RESOLVING A TRIGGER/ACTION SHOULD BE STORED HERE, SO IT CAN BE CLONED.
     //some beats longer than others
@@ -4530,8 +4576,10 @@ class AiBeat {
                     ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.heProunon)(Quotidian_1.NB));
                     ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.hisProunon)(Quotidian_1.NB));
                 }
-                const smell = this.targets[0].getRandomThemeConcept(ThemeStorage_1.SMELL);
-                ret = ret.replaceAll(exports.ROOM_SMELL_SCRIPT, smell);
+                const room_smell = this.targets[0].room.getRandomThemeConcept(ThemeStorage_1.SMELL);
+                ret = ret.replaceAll(exports.ROOM_SMELL_SCRIPT, room_smell);
+                const target_smell = this.targets[0].getRandomThemeConcept(ThemeStorage_1.SMELL);
+                ret = ret.replaceAll(exports.TARGET_SMELL_SCRIPT, target_smell);
             }
             return ret;
         };
@@ -8170,6 +8218,8 @@ const constants_1 = __webpack_require__(8817);
 const AddThemeToRoom_1 = __webpack_require__(8072);
 const BefriendTargetByAmount_1 = __webpack_require__(8325);
 const ChangeMyStabilityLevelByAmount_1 = __webpack_require__(8801);
+const DeploySass_1 = __webpack_require__(4237);
+const DestroyRandomObjectInInventoryAndPhilosophise_1 = __webpack_require__(4516);
 const FollowObject_1 = __webpack_require__(744);
 const MakeImportant_1 = __webpack_require__(1929);
 const MakeRomantic_1 = __webpack_require__(8694);
@@ -8179,6 +8229,7 @@ const SpawnObjectFromThemeUnderFloorAtMyFeet_1 = __webpack_require__(1483);
 const StopMoving_1 = __webpack_require__(4469);
 const BaseBeat_1 = __webpack_require__(1708);
 const baseFilter_1 = __webpack_require__(9505);
+const IHaveObjectWithName_1 = __webpack_require__(6274);
 const ILikeTargetMoreThanAmount_1 = __webpack_require__(8898);
 const MyHighestStatIsX_1 = __webpack_require__(5160);
 const RandomTarget_1 = __webpack_require__(9824);
@@ -8707,8 +8758,8 @@ const initPersonalBeatList = () => {
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Family`, [`${baseFilter_1.SUBJECTSTRING} remembers a different time, almost a different life. What would their family think about how far they've come. What they've had to do?`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], true, 1000 * 60)
     ];
     exports.personal_beat_list[exports.CLOWNS] = [
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Do a Sick Backflip`, [`Out of nowhere, ${baseFilter_1.SUBJECTSTRING} does a sick backflip. You can't help but clap.`], [new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.FORTITUDE), new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13)], true, 1000 * 60),
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Tell a Funny Joke`, [`${baseFilter_1.SUBJECTSTRING} tells anyone who will listen a long, rambling joke. Its pretty funny.`], [new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.FORTITUDE, { invert: true }), new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13)], true, 1000 * 60)
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Do a Sick Backflip`, [`Out of nowhere, ${baseFilter_1.SUBJECTSTRING} does a sick backflip. You can't help but clap.`], [new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.FORTITUDE), new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13), new DeploySass_1.DeploySass(":)")], true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Tell a Funny Joke`, [`${baseFilter_1.SUBJECTSTRING} tells anyone who will listen a long, rambling joke. Its pretty funny.`], [new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.FORTITUDE, { invert: true }), new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13), new DeploySass_1.DeploySass(":)")], true, 1000 * 60)
     ];
     exports.personal_beat_list[exports.SERVICE] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Swear Service`, [`${baseFilter_1.SUBJECTSTRING} swears their undying loyalty to ${baseFilter_1.TARGETSTRING}. `], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true }), new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.JUDGEMENT)], //just go for it, nothing held back
@@ -8726,6 +8777,12 @@ const initPersonalBeatList = () => {
         [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30),
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Pull Out Your Flask`, [`${baseFilter_1.SUBJECTSTRING} pulls out a small silver flask and regards it coldly. There's a longing in their eyes that you can watch them, beat by beat, master. they put the flask back, unopened.`], [new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(4, { singleTarget: true, kMode: true })], //you think self control is the highest virtue.
         [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13)], true, 1000 * 30),
+    ];
+    exports.personal_beat_list[exports.DECAY] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Smell Check`, [`${baseFilter_1.SUBJECTSTRING} cautiously sniffs at themself. ${BaseBeat_1.TARGET_SMELL_SCRIPT}. Could be worse.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
+        true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Notice Inventory Rotting `, [`${baseFilter_1.SUBJECTSTRING} watches with dismay as their ${BaseBeat_1.ITEMSTRING} rots away to nothing.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new IHaveObjectWithName_1.IHaveObjectWithName([])], [new DestroyRandomObjectInInventoryAndPhilosophise_1.DestroyRandomObjectInInventoryAndPhilosophize()], //its fine
+        true, 1000 * 60),
     ];
     exports.personal_beat_list[exports.TIME] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Check the Time`, [`${baseFilter_1.SUBJECTSTRING} glances at the stopwatch they always have on them. They seem anxious.`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount_1.TargetPrudenceLessThanAmount(2, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
@@ -8748,7 +8805,7 @@ const initBeatList = () => {
         true, 1000 * 60)
     ];
     exports.beat_list[exports.DECAY] = [
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Try Not To Breathe`, [`The smell of ${BaseBeat_1.ROOM_SMELL_SCRIPT} is so thick you can practically taste it.`, `${baseFilter_1.SUBJECTSTRING} tries not to breathe in the smell of ${BaseBeat_1.ROOM_SMELL_SCRIPT}.`, `The sheer stench of this room nauseats ${baseFilter_1.SUBJECTSTRING}. Who knew the smell of ${BaseBeat_1.ROOM_SMELL_SCRIPT} could be so bad?`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], //its fine
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Try Not To Breathe`, [`The smell of ${BaseBeat_1.ROOM_SMELL_SCRIPT} is so thick you can practically taste it.`, `${baseFilter_1.SUBJECTSTRING} tries not to breathe in the smell of ${BaseBeat_1.ROOM_SMELL_SCRIPT}.`, `The sheer stench of this room nauseates ${baseFilter_1.SUBJECTSTRING}. Who knew the smell of ${BaseBeat_1.ROOM_SMELL_SCRIPT} could be so bad?`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], //its fine
         true, 1000 * 60)
     ];
     exports.beat_list[exports.SOUL] = [
@@ -14692,6 +14749,8 @@ var map = {
 	"./Objects/Entities/Actions/DestroyObject.ts": 3693,
 	"./Objects/Entities/Actions/DestroyObjectInInventoryWithThemes": 457,
 	"./Objects/Entities/Actions/DestroyObjectInInventoryWithThemes.ts": 457,
+	"./Objects/Entities/Actions/DestroyRandomObjectInInventory": 1960,
+	"./Objects/Entities/Actions/DestroyRandomObjectInInventory.ts": 1960,
 	"./Objects/Entities/Actions/DestroyRandomObjectInInventoryAndPhilosophise": 4516,
 	"./Objects/Entities/Actions/DestroyRandomObjectInInventoryAndPhilosophise.ts": 4516,
 	"./Objects/Entities/Actions/DropAllObjects": 4102,
