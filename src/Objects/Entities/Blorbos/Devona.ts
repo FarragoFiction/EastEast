@@ -185,7 +185,8 @@ export class InsightTwin extends Quotidian{
             [new TargetIsWithinRadiusOfSelf(5)],
             [new MeleeKill("being eaten by the Insightful Punishing Twin"), new DeploySass(":)")],
             true,
-            1000*60
+            1000*60,
+            true
         );
 
         const unbreach = new AiBeat(

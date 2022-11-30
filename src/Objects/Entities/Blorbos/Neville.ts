@@ -152,7 +152,8 @@ export class FortitudeTwin extends Quotidian{
             [new TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsWithinRadiusOfSelf(5)],
             [new MeleeKill("being eaten by the Fortitudinous Punishing Twin"), new DeploySass(":)")],
             true,
-            1000*60
+            1000*60,
+            true
         );
 
         const unbreach = new AiBeat(

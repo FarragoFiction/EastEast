@@ -800,7 +800,7 @@ const initPersonalBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Pull Out Your Flask`,
             [`${SUBJECTSTRING} pulls out a small silver flask and regards it coldly. There's a longing in their eyes that you can watch them, beat by beat, master. they put the flask back, unopened.`],
-            [new TargetTemperenceLessThanAmount(4, { singleTarget: true, kMode: true })], //you think self control is the highest virtue.
+            [new TargetTemperenceLessThanAmount(4, { singleTarget: true, kMode: true, invert: true })], //you think self control is the highest virtue.
             [new ChangeMyStabilityLevelByAmount(13)],
             true,
             1000 * 30),
@@ -966,13 +966,33 @@ const initBeatList = () => {
             [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new MyHighestStatIsX(TEMPERANCE)],
             [new ChangeMyStabilityLevelByAmount(-1)], //just a bit more sane
             true,
-            1000 * 60),
+            3000 * 60),
     ]
 
     beat_list[CLOWNS] = [
         new AiBeat(
             `${SUBJECTSTRING}: Listen to the Circus Music`,
             [`${SUBJECTSTRING} sways gently in time to the distant organ music.`],
+            [new RandomTarget(0.1, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
+            true,
+            3000 * 60),
+    ]
+
+    beat_list[MUSIC] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Listen to Music`,
+            [`${SUBJECTSTRING} sways gently in time to the distant  music.`],
+            [new RandomTarget(0.1, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
+            true,
+            3000 * 60),
+    ]
+
+    beat_list[ART] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Take In The Beauty`,
+            [`${SUBJECTSTRING} is suddenly captivated by the way the light hits the walls and floors. Everything is beautiful and nothing hurts.`],
             [new RandomTarget(0.1, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
             true,

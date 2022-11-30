@@ -7,6 +7,8 @@ import {FAMILY, LONELY, WEB, SOUL, TIME } from "../../ThemeStorage";
 import { AiBeat } from "../StoryBeats/BaseBeat";
 
 import { Quotidian, Direction, NB } from "./Quotidian";
+//https://at.tumblr.com/jadedresearcher/remember-to-hydrate/cdr353ii19xv
+//if you like goncharov, how about this game I found about a fandom that does't exist? https://ifarchive.org/if-archive/games/competition2021/Games/A%20Paradox%20Between%20Worlds/index.html
 
 //Linda Codega of Gizmodo remarked on the enthusiasm around the meme as "an inspiring example of collective storytelling and spontaneous fandom generation, inspired by the community itself. Essentially, Goncharov (1973) is not a film, but a game. And only Tumblr knows the rules, because the rules of Goncharov (1973) are the rules of Tumblr itself."
 //generic npcs have no inner ai, they just do whatever their themes and the room tell them too. they are hollow mockeries.
