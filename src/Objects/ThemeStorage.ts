@@ -8,6 +8,7 @@ import { DestroyRandomObjectInInventoryAndPhilosophize } from './Entities/Action
 import { FollowObject } from './Entities/Actions/FollowObject';
 import { MakeImportant } from './Entities/Actions/MakeImportant';
 import { MakeRomantic } from './Entities/Actions/MakeRomantic';
+import { MeleeKill } from './Entities/Actions/MeleeKill';
 import { MoveRandomly } from './Entities/Actions/MoveRandomly';
 import { PickupObject } from './Entities/Actions/PickupObject';
 import { SpawnObjectFromThemeInInventory } from './Entities/Actions/SpawnObjectFromThemeInInventory';
@@ -714,11 +715,54 @@ const initPersonalBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Root Around In the Dust and  Dirt`,
             [`${SUBJECTSTRING} scrabbles about in the dirt for a bit and finds a ${ITEMSTRING} half buried and quickly pockets it.`],
-            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX(TEMPERANCE, { singleTarget: true, kMode: true, invert: true })],
             [new SpawnObjectFromThemeInInventory(BURIED, "Dusty Object")],
+            true,
+            1000 * 60),
+        new AiBeat(
+            `${SUBJECTSTRING}: Ignore the Obvious Hidden Treasure`,
+            [`${SUBJECTSTRING} is very aware how many objects are hidden under the floor boards, in the soft soft earth. They are simply resolving to ignore this fact. They do not need filthy floor treasure.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX(TEMPERANCE, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(-13)],
             true,
             1000 * 60)
     ]
+
+    personal_beat_list[TWISTING] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Distrust Senses`,
+            [`${SUBJECTSTRING} is suddenly unsure if they've been in this room before. They lick their lips nervously. Actually, was that something moving just then? Was... was that ${TARGETSTRING} always there? They aren't sure of anything anymore...`],
+            [new TargetIsBlorboOrBox({ invert: true }),new RandomTarget(0.5, { singleTarget: true }), new TargetHighestStatIsX(JUDGEMENT, { singleTarget: true, kMode: true, invert: true })],
+            [new ChangeMyStabilityLevelByAmount(-13)],
+            true,
+            1000 * 60),
+        new AiBeat(
+            `${SUBJECTSTRING}: Ignore Senses`,
+            [`${SUBJECTSTRING} see's a ${TARGETSTRING} twist and waver in front of their very eyes. They ignore it. That's not possible, therefore its simply not happening.`],
+            [new TargetIsBlorboOrBox({ invert: true }),new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX(JUDGEMENT, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(13)],
+            true,
+            1000 * 60)
+    ]
+
+    personal_beat_list[KILLING] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Kill.`,
+            [`${SUBJECTSTRING} lashes out at ${TARGETSTRING} in a sudden display of violence. They couldn't tell you why they did it. Only that it had to happen.`],
+            [new TargetIsBlorboOrBox(), new TargetIsAlive(), new TargetIsWithinRadiusOfSelf(5, { singleTarget: true }), new MyHighestStatIsX(TEMPERANCE, { singleTarget: true, invert: true })],
+            [new MeleeKill("")],
+            true,
+            1000 * 60),
+        new AiBeat(
+            `${SUBJECTSTRING}: Ignore the Bloodlust`,
+            [`${SUBJECTSTRING} is very aware  of how easy it would be to kill ${TARGETSTRING}. Easy as breathing. Knife goes in, blood comes out. But they will not. They are better than this. They will control themself. For now.`],
+            [new TargetIsBlorboOrBox(), new TargetIsAlive(), new TargetIsWithinRadiusOfSelf(5, { singleTarget: true }), new MyHighestStatIsX(TEMPERANCE, { singleTarget: true, invert: true })],
+            [new ChangeMyStabilityLevelByAmount(-13)],
+            true,
+            1000 * 60)
+    ]
+
+
 
     personal_beat_list[FAMILY] = [
         new AiBeat(
@@ -829,7 +873,7 @@ const initPersonalBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Notice Inventory Rotting `,
             [`${SUBJECTSTRING} watches with dismay as their ${ITEMSTRING} rots away to nothing.`],
-            [new RandomTarget(0.5, { singleTarget: true, kMode: true }),new IHaveObjectWithName([])],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new IHaveObjectWithName([])],
             [new DestroyRandomObjectInInventoryAndPhilosophize()], //its fine
             true,
             1000 * 60),
@@ -887,6 +931,16 @@ const initBeatList = () => {
             1000 * 60)
     ]
 
+    beat_list[KILLING] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Smell Blood `,
+            [`${SUBJECTSTRING}  smells blood on the air. They can't quite figure out where its coming from...`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(-1)], //its fine
+            true,
+            1000 * 60)
+    ]
+
     beat_list[DECAY] = [
         new AiBeat(
             `${SUBJECTSTRING}: Try Not To Breathe`,
@@ -909,7 +963,7 @@ const initBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Meditate on Self.`,
             [`Something about this room just has ${SUBJECTSTRING} thinking about who they are as a person. Man. They're pretty happy with how far they've come. They're confident they've made the right decisions everywhere they could. This is nice.`],
-            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount(4, { singleTarget: true, kMode: true , invert: true})],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount(4, { singleTarget: true, kMode: true, invert: true })],
             [new ChangeMyStabilityLevelByAmount(1)], //its fine
             true,
             1000 * 60),
