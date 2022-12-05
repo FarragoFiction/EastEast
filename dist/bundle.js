@@ -2184,6 +2184,41 @@ exports.SpawnObjectAtFeet = SpawnObjectAtFeet;
 
 /***/ }),
 
+/***/ 4465:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SpawnObjectFromThemeInInventory = void 0;
+const BaseAction_1 = __webpack_require__(7042);
+const Theme_1 = __webpack_require__(9702);
+class SpawnObjectFromThemeInInventory extends BaseAction_1.Action {
+    constructor(theme_key, name) {
+        super();
+        this.recognizedCommands = [];
+        this.applyAction = (beat) => {
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            const theme = Theme_1.all_themes[this.theme_key];
+            // const image: any = await addImageProcess(`images/Walkabout/Objects/UnderFloorObjects/${item.src}`) as HTMLImageElement;
+            for (let target of beat.targets) {
+                const name = target.spawnRandomItemInInventory([Theme_1.all_themes[this.theme_key]], this.name ? beat.processTags(this.name) : undefined);
+                beat.itemName = name;
+            }
+            return `${subject.processedName()} finds a thing.`;
+        };
+        this.theme_key = theme_key;
+        this.name = name;
+    }
+}
+exports.SpawnObjectFromThemeInInventory = SpawnObjectFromThemeInInventory;
+
+
+/***/ }),
+
 /***/ 2888:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -2982,6 +3017,46 @@ exports.Goncharov = Goncharov;
 
 /***/ }),
 
+/***/ 8835:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.IcePickJoe = void 0;
+const RandomMovement_1 = __webpack_require__(5997);
+const Theme_1 = __webpack_require__(9702);
+const ThemeStorage_1 = __webpack_require__(1288);
+const Quotidian_1 = __webpack_require__(6387);
+//generic npcs have no inner ai, they just do whatever their themes and the room tell them too. they are hollow mockeries.
+class IcePickJoe extends Quotidian_1.Quotidian {
+    constructor(room, x, y) {
+        const sprite = {
+            default_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/icepickjoe_down.gif", width: 50, height: 50 },
+            left_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/icepickjoe_left.gif", width: 50, height: 50 },
+            right_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/icepickjoe_right.gif", width: 50, height: 50 },
+            up_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/icepickjoe_up.gif", width: 50, height: 50 },
+            down_src: { src: "npcs/_PrettyLittlePixel_Characters_1_/icepickjoe_down.gif", width: 50, height: 50 }
+        };
+        const beats = [];
+        super(room, "Icepick Joe", x, y, [Theme_1.all_themes[ThemeStorage_1.TWISTING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.CLOWNS], Theme_1.all_themes[ThemeStorage_1.SOUL], Theme_1.all_themes[ThemeStorage_1.BURIED]], sprite, "He won't go back to the asylum.", beats);
+        this.lore = "Wait. Who is this?";
+        this.fortitude = 2;
+        this.prudence = 5;
+        this.temperance = 5;
+        this.judgement = 5;
+        this.maxSpeed = 50;
+        this.minSpeed = 5;
+        this.currentSpeed = 5;
+        this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
+    }
+}
+exports.IcePickJoe = IcePickJoe;
+
+
+/***/ }),
+
 /***/ 7455:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -3037,7 +3112,7 @@ class Khana extends Quotidian_1.Quotidian {
         };
         const beats = [];
         //funny how similar he is, on a suface level, to parker
-        super(room, "K", x, y, [Theme_1.all_themes[ThemeStorage_1.ANGER], Theme_1.all_themes[ThemeStorage_1.LIGHT], Theme_1.all_themes[ThemeStorage_1.STEALING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.SPYING]], sprite, "The Censorship is for your protection.", beats);
+        super(room, "K", x, y, [Theme_1.all_themes[ThemeStorage_1.ANGER], Theme_1.all_themes[ThemeStorage_1.LIGHT], Theme_1.all_themes[ThemeStorage_1.STEALING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.SPYING]], sprite, "He wants to be looked at. Give him attention. Now!", beats);
         this.lore = "Parker says he has the soul of a mosquito. Something tiny and vulnerable, who has no CHOICE but to risk annoying you for the very chance to live. ";
         this.fortitude = 1;
         this.prudence = 3;
@@ -3714,16 +3789,6 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
         this.direction = Direction.DOWN; //movement algorithm can change or use this.
         this.possible_random_move_algs = [new RandomMovement_1.RandomMovement(this)];
         this.movement_alg = (0, NonSeededRandUtils_1.pickFrom)(this.possible_random_move_algs);
-        this.spawnRandomItemInInventory = () => {
-            const theme = this.rand.pickFrom(this.themes);
-            const raw_item = theme.pickPossibilityFor(this.rand, ThemeStorage_1.FLOORFOREGROUND);
-            const image = document.createElement("img");
-            image.src = `images/Walkabout/Objects/TopFloorObjects/${raw_item.src}`;
-            image.onload = () => {
-                const item = new PhysicalObject_1.PhysicalObject(this.room, raw_item.name ? raw_item.name : "Mystery Object", 0, 0, image.width, image.height, [theme], 0, `images/Walkabout/Objects/TopFloorObjects/${raw_item.src}`, raw_item.desc);
-                this.pickupObject(item);
-            };
-        };
         //not as important as your custom ai, but... you still are your constintuate parts. and npcs are nothing BUT that. hollow inside.
         this.grabThemeBeats = () => {
             let beats = [];
@@ -6637,6 +6702,24 @@ class PhysicalObject {
             (0, ArrayUtils_1.removeItemOnce)(this.inventory, object);
             object.owner = undefined;
         };
+        this.spawnRandomItemInInventory = (chosen_themes, name_override) => {
+            const theme = chosen_themes ? this.rand.pickFrom(chosen_themes) : this.rand.pickFrom(this.themes);
+            const raw_item = theme.pickPossibilityFor(this.rand, ThemeStorage_1.FLOORFOREGROUND);
+            const image = document.createElement("img");
+            let name;
+            if (name_override) {
+                name = name_override;
+            }
+            else {
+                name = raw_item.name ? raw_item.name : "Mystery Object";
+            }
+            image.src = `images/Walkabout/Objects/TopFloorObjects/${raw_item.src}`;
+            image.onload = () => {
+                const item = new PhysicalObject(this.room, name, 0, 0, image.width, image.height, [theme], 0, `images/Walkabout/Objects/TopFloorObjects/${raw_item.src}`, raw_item.desc);
+                this.pickupObject(item);
+            };
+            return name;
+        };
         this.pickupObject = (object) => {
             this.inventory.push(object);
             if (this.name.includes("Peewee") && object.src.includes("Zampanio_Artifact_")) {
@@ -7063,6 +7146,7 @@ const Goncharov_1 = __webpack_require__(3096);
 const Andre_1 = __webpack_require__(5878);
 const Katya_1 = __webpack_require__(3670);
 const Mario_1 = __webpack_require__(3849);
+const IcePickJoe_1 = __webpack_require__(8835);
 class Maze {
     constructor(ele, storySoFar, rand) {
         this.debug = false;
@@ -7125,6 +7209,7 @@ class Maze {
                 this.blorbos.push(new Andre_1.Andre(this.room, 150, 150));
                 this.blorbos.push(new Katya_1.Katya(this.room, 150, 150));
                 this.blorbos.push(new Mario_1.Mario(this.room, 150, 150));
+                this.blorbos.push(new IcePickJoe_1.IcePickJoe(this.room, 150, 150));
             }
         };
         this.begin = () => {
@@ -8225,8 +8310,10 @@ const DestroyRandomObjectInInventoryAndPhilosophise_1 = __webpack_require__(4516
 const FollowObject_1 = __webpack_require__(744);
 const MakeImportant_1 = __webpack_require__(1929);
 const MakeRomantic_1 = __webpack_require__(8694);
+const MeleeKill_1 = __webpack_require__(2900);
 const MoveRandomly_1 = __webpack_require__(4287);
 const PickupObject_1 = __webpack_require__(9936);
+const SpawnObjectFromThemeInInventory_1 = __webpack_require__(4465);
 const SpawnObjectFromThemeUnderFloorAtMyFeet_1 = __webpack_require__(1483);
 const StopMoving_1 = __webpack_require__(4469);
 const BaseBeat_1 = __webpack_require__(1708);
@@ -8756,6 +8843,18 @@ const initPersonalBeatList = () => {
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Free Will`, [`${baseFilter_1.SUBJECTSTRING} wonders briefly if any action they have ever taken could truly be called their own. They start moving around randomly, desperate to prove their choices matter.`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.FORTITUDE, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-1), new MoveRandomly_1.MoveRandomly()], true, 1000 * 60),
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Free Will`, [`${baseFilter_1.SUBJECTSTRING} wonders briefly if any action they have ever taken could truly be called their own. They decide it doesn't matter and carry on as normal.`], [new RandomTarget_1.RandomTarget(1.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.PRUDENCE, { singleTarget: true, kMode: true, invert: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.FORTITUDE, { singleTarget: true, kMode: true, invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], true, 1000 * 60)
     ];
+    exports.personal_beat_list[exports.BURIED] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Root Around In the Dust and  Dirt`, [`${baseFilter_1.SUBJECTSTRING} scrabbles about in the dirt for a bit and finds a ${BaseBeat_1.ITEMSTRING} half buried and quickly pockets it.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.TEMPERANCE, { singleTarget: true, kMode: true, invert: true })], [new SpawnObjectFromThemeInInventory_1.SpawnObjectFromThemeInInventory(exports.BURIED, "Dusty Object")], true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Ignore the Obvious Hidden Treasure`, [`${baseFilter_1.SUBJECTSTRING} is very aware how many objects are hidden under the floor boards, in the soft soft earth. They are simply resolving to ignore this fact. They do not need filthy floor treasure.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true }), new TargetHighestStatIsX_1.TargetHighestStatIsX(constants_1.TEMPERANCE, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 60)
+    ];
+    exports.personal_beat_list[exports.TWISTING] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Distrust Senses`, [`${baseFilter_1.SUBJECTSTRING} is suddenly unsure if they've been in this room before. They lick their lips nervously. Actually, was that something moving just then? Was... was that ${baseFilter_1.TARGETSTRING} always there? They aren't sure of anything anymore...`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new RandomTarget_1.RandomTarget(0.5, { singleTarget: true }), new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.JUDGEMENT, { singleTarget: true, invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Ignore Senses`, [`${baseFilter_1.SUBJECTSTRING} see's a ${baseFilter_1.TARGETSTRING} twist and waver in front of their very eyes. They ignore it. That's not possible, therefore its simply not happening.`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.JUDGEMENT, { singleTarget: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13)], true, 1000 * 60)
+    ];
+    exports.personal_beat_list[exports.KILLING] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Kill.`, [`${baseFilter_1.SUBJECTSTRING} lashes out at ${baseFilter_1.TARGETSTRING} in a sudden display of violence. They couldn't tell you why they did it. Only that it had to happen.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true }), new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.TEMPERANCE, { singleTarget: true, invert: true })], [new MeleeKill_1.MeleeKill("")], true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Ignore the Bloodlust`, [`${baseFilter_1.SUBJECTSTRING} is very aware  of how easy it would be to kill ${baseFilter_1.TARGETSTRING}. Easy as breathing. Knife goes in, blood comes out. But they will not. They are better than this. They will control themself. For now.`], [new TargetIsBlorboBox_1.TargetIsBlorboOrBox(), new TargetIsAlive_1.TargetIsAlive(), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true }), new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.TEMPERANCE, { singleTarget: true, invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 60)
+    ];
     exports.personal_beat_list[exports.FAMILY] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Family`, [`${baseFilter_1.SUBJECTSTRING} remembers a different time, almost a different life. What would their family think about how far they've come. What they've had to do?`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], true, 1000 * 60)
     ];
@@ -8809,6 +8908,10 @@ const initBeatList = () => {
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Take Things`, [`${baseFilter_1.SUBJECTSTRING}  feels the weirdest urge to pocket the ${baseFilter_1.TARGETSTRING}. They have no idea why they wanted it... it just... Felt shiny?`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true })], [new PickupObject_1.PickupObject()], //its fine
         true, 1000 * 60)
     ];
+    exports.beat_list[exports.KILLING] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Smell Blood `, [`${baseFilter_1.SUBJECTSTRING}  smells blood on the air. They can't quite figure out where its coming from...`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-1)], //its fine
+        true, 1000 * 60)
+    ];
     exports.beat_list[exports.DECAY] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Try Not To Breathe`, [`The smell of ${BaseBeat_1.ROOM_SMELL_SCRIPT} is so thick you can practically taste it.`, `${baseFilter_1.SUBJECTSTRING} tries not to breathe in the smell of ${BaseBeat_1.ROOM_SMELL_SCRIPT}.`, `The sheer stench of this room nauseates ${baseFilter_1.SUBJECTSTRING}. Who knew the smell of ${BaseBeat_1.ROOM_SMELL_SCRIPT} could be so bad?`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], //its fine
         true, 1000 * 60)
@@ -8816,7 +8919,13 @@ const initBeatList = () => {
     exports.beat_list[exports.SOUL] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Second guess self.`, [`Something about this room just has ${baseFilter_1.SUBJECTSTRING} thinking about who they are as a person. God. Have they even made the right decisions? How would they even be able to tell? They're probably the worst possible version of themself...`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount_1.TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], //its fine
         true, 1000 * 60),
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Meditate on Self.`, [`Something about this room just has ${baseFilter_1.SUBJECTSTRING} thinking about who they are as a person. Man. They're pretty happy with how far they've come. They're confident they've made the right decisions everywhere they could. This is nice.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount_1.TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Meditate on Self.`, [`Something about this room just has ${baseFilter_1.SUBJECTSTRING} thinking about who they are as a person. Man. They're pretty happy with how far they've come. They're confident they've made the right decisions everywhere they could. This is nice.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount_1.TargetJudgementLessThanAmount(4, { singleTarget: true, kMode: true, invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
+        true, 1000 * 60),
+    ];
+    exports.beat_list[exports.BURIED] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Be Claustrophobic.`, [`Something about this room just has ${baseFilter_1.SUBJECTSTRING} feeling like the walls are every so slowly closing in on them. Is it hot in here? Man, why aren't there any windows...`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount_1.TargetPrudenceLessThanAmount(2, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], //its fine
+        true, 1000 * 60),
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Feel Cozy.`, [`${baseFilter_1.SUBJECTSTRING} really is enjoying how nice and cozy it is in here. Almost like the walls are giving them a little hug. :)`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount_1.TargetPrudenceLessThanAmount(4, { singleTarget: true, kMode: true, invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
         true, 1000 * 60),
     ];
     exports.beat_list[exports.WEB] = [
@@ -10675,6 +10784,8 @@ Misleading through piles upon piles of information is p much the core of Zampani
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.text = exports.docSlaughtersFiles = exports.passwords = exports.Slaughter = exports.Secret = exports.initRabbitHole = exports.translate = exports.albhed_map = void 0;
 const Transcript_1 = __webpack_require__(8122);
+//https://verbosebabbler.tumblr.com/post/691448067434676224/is-zampanio-real-and-does-it-matter
+//https://verbosebabbler.tumblr.com/post/693198522796965888/zampanio-and-the-history-of-games
 //look, okay, al bhed from ffx is something that for *some* percent of the population feels in their bones
 //so this will drive home a nagging sense of familiarity, that it MUST be important
 //at the same time when you look at it in writing it's gibberish
@@ -10717,7 +10828,7 @@ exports.albhed_map = {
     "4": "http://farragofiction.com/PerfectHeist/",
     "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers (The Watcher says they won't spell it out)",
     "7": "https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane",
-    "8": "https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",
+    "8": "https://verbosebabbler.tumblr.com/post/691448067434676224/is-zampanio-real-and-does-it-matter",
     "9": "https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers",
     "!": "http://farragofiction.com/DocSlaughterFileServer",
     "?": "http://farragofiction.com/ParkerLotLost/",
@@ -10731,6 +10842,7 @@ exports.albhed_map = {
     //https://jadedresearcher.tumblr.com/post/692341174641606656
     //https://jadedresearcher.tumblr.com/post/692340754690015232/but-like-italians-are-real-and-arent-all
 };
+//the watcher gives us help https://archive.org/details/house-of-leaves-by-mark-z.-danielewski/mode/2up
 const translate = (word) => {
     let ret = word.toLowerCase();
     let done = "";
@@ -14836,6 +14948,8 @@ var map = {
 	"./Objects/Entities/Actions/Smell.ts": 3834,
 	"./Objects/Entities/Actions/SpawnObjectAtFeet": 8884,
 	"./Objects/Entities/Actions/SpawnObjectAtFeet.ts": 8884,
+	"./Objects/Entities/Actions/SpawnObjectFromThemeInInventory": 4465,
+	"./Objects/Entities/Actions/SpawnObjectFromThemeInInventory.ts": 4465,
 	"./Objects/Entities/Actions/SpawnObjectFromThemeUnderFloorAtFeet": 2888,
 	"./Objects/Entities/Actions/SpawnObjectFromThemeUnderFloorAtFeet.ts": 2888,
 	"./Objects/Entities/Actions/SpawnObjectFromThemeUnderFloorAtMyFeet": 1483,
@@ -14858,6 +14972,8 @@ var map = {
 	"./Objects/Entities/Blorbos/EyeKiller.ts": 2937,
 	"./Objects/Entities/Blorbos/Goncharov": 3096,
 	"./Objects/Entities/Blorbos/Goncharov.ts": 3096,
+	"./Objects/Entities/Blorbos/IcePickJoe": 8835,
+	"./Objects/Entities/Blorbos/IcePickJoe.ts": 8835,
 	"./Objects/Entities/Blorbos/JR": 7455,
 	"./Objects/Entities/Blorbos/JR.ts": 7455,
 	"./Objects/Entities/Blorbos/K": 1069,

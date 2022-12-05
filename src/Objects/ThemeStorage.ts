@@ -715,14 +715,14 @@ const initPersonalBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Root Around In the Dust and  Dirt`,
             [`${SUBJECTSTRING} scrabbles about in the dirt for a bit and finds a ${ITEMSTRING} half buried and quickly pockets it.`],
-            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX(TEMPERANCE, { singleTarget: true, kMode: true, invert: true })],
+            [new RandomTarget(0.5, { singleTarget: true }), new TargetHighestStatIsX(TEMPERANCE, { singleTarget: true, kMode: true, invert: true })],
             [new SpawnObjectFromThemeInInventory(BURIED, "Dusty Object")],
             true,
             1000 * 60),
         new AiBeat(
             `${SUBJECTSTRING}: Ignore the Obvious Hidden Treasure`,
             [`${SUBJECTSTRING} is very aware how many objects are hidden under the floor boards, in the soft soft earth. They are simply resolving to ignore this fact. They do not need filthy floor treasure.`],
-            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX(TEMPERANCE, { singleTarget: true, kMode: true })],
+            [new RandomTarget(0.5, { singleTarget: true }), new TargetHighestStatIsX(TEMPERANCE, { singleTarget: true, kMode: true })],
             [new ChangeMyStabilityLevelByAmount(-13)],
             true,
             1000 * 60)
@@ -732,14 +732,14 @@ const initPersonalBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Distrust Senses`,
             [`${SUBJECTSTRING} is suddenly unsure if they've been in this room before. They lick their lips nervously. Actually, was that something moving just then? Was... was that ${TARGETSTRING} always there? They aren't sure of anything anymore...`],
-            [new TargetIsBlorboOrBox({ invert: true }),new RandomTarget(0.5, { singleTarget: true }), new TargetHighestStatIsX(JUDGEMENT, { singleTarget: true, kMode: true, invert: true })],
+            [new TargetIsAlive({ invert: true }),new RandomTarget(0.5, { singleTarget: true }), new MyHighestStatIsX(JUDGEMENT, { singleTarget: true, invert: true })],
             [new ChangeMyStabilityLevelByAmount(-13)],
             true,
             1000 * 60),
         new AiBeat(
             `${SUBJECTSTRING}: Ignore Senses`,
             [`${SUBJECTSTRING} see's a ${TARGETSTRING} twist and waver in front of their very eyes. They ignore it. That's not possible, therefore its simply not happening.`],
-            [new TargetIsBlorboOrBox({ invert: true }),new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetHighestStatIsX(JUDGEMENT, { singleTarget: true, kMode: true })],
+            [new TargetIsAlive({ invert: true }),new RandomTarget(0.5, { singleTarget: true, kMode: true }), new MyHighestStatIsX(JUDGEMENT, { singleTarget: true })],
             [new ChangeMyStabilityLevelByAmount(13)],
             true,
             1000 * 60)

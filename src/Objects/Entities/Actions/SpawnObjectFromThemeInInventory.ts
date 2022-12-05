@@ -30,7 +30,8 @@ export class SpawnObjectFromThemeInInventory extends Action { //lawsuit
         // const image: any = await addImageProcess(`images/Walkabout/Objects/UnderFloorObjects/${item.src}`) as HTMLImageElement;
  
         for(let target of beat.targets){
-            target.spawnRandomItemInInventory([all_themes[this.theme_key]], this.name? beat.processTags(this.name):undefined);
+            const name = target.spawnRandomItemInInventory([all_themes[this.theme_key]], this.name? beat.processTags(this.name):undefined);
+            beat.itemName = name;
         }
 
  
