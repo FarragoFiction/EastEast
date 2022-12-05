@@ -616,13 +616,13 @@ class DropAllObjects extends BaseAction_1.Action {
                 if (target instanceof Quotidian_1.Quotidian) {
                     target.emitSass("!");
                 }
-                return `${subject.processedName()} startles the  ${target[0].processedName()} and they drop ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(items.map((item) => item.name))}.`;
+                return `${subject.processedName()} startles  ${target[0].processedName()} and they drop the ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(items.map((item) => item.name))}.`;
             }
             else {
                 if (target instanceof Quotidian_1.Quotidian) {
                     target.emitSass("!");
                 }
-                return `${subject.processedName()} startles the  ${target[0].processedName()} for no particular reason.`;
+                return `${subject.processedName()} startles  ${target[0].processedName()} for no particular reason.`;
             }
         };
     }
@@ -2658,7 +2658,7 @@ class InsightTwin extends Quotidian_1.Quotidian {
         const unbreachBecauseYouAreLeTired = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Exhaust yourself", [`The Insightful Punishing Twin rages and thrashes around and seems to completely tire itself out.  Devona emerges, unconscious, tears streaming down her sleeping face.`], [new RandomTarget_1.RandomTarget(0.0003)], [new IncrementMyState_1.IncrementMyState("no"), new StopMoving_1.StopMoving()], true, 1000 * 60 * 3);
         const mourn = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} paws gently at ${baseFilter_1.TARGETSTRING}... It looks so sad...`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new DeploySass_1.DeploySass(":(")], true, 1000 * 60);
         const visitGrave = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} howls with sadness... and begins making a destructive bee line back to the ${baseFilter_1.TARGETSTRING}`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Neville"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: false }), new RandomTarget_1.RandomTarget(0.5)], [new FollowObject_1.FollowObject()], true, 1000 * 60);
-        const kill = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Punish Blindly", [`The ${baseFilter_1.SUBJECTSTRING} is lashing out blindly. The torso of the ${baseFilter_1.SUBJECTSTRING} opens with a meaty squelch and crunches down on the ${baseFilter_1.TARGETSTRING}. Shreds of them are all that remain.`], [new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new MeleeKill_1.MeleeKill("being eaten by the Insightful Punishing Twin"), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
+        const kill = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Punish Blindly", [`The ${baseFilter_1.SUBJECTSTRING} is lashing out blindly. The torso of the ${baseFilter_1.SUBJECTSTRING} opens with a meaty squelch and crunches down on the ${baseFilter_1.TARGETSTRING}. Shreds of them are all that remain.`], [new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new MeleeKill_1.MeleeKill("being eaten by the Insightful Punishing Twin"), new DeploySass_1.DeploySass(":)")], true, 1000 * 60, true);
         const unbreach = new BaseBeat_1.AiBeat("Insightful Punishing Twin: Relax", [`The Insightful Punishing Twin withers into itself, and Devona emerges once more. She appears to be unconcious, but there is a slight smile on her blood soaked face. Her brother is avenged.`], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60);
         const beats = [kill, hunt, mourn, visitGrave, unbreach, unbreachBecauseYouAreLeTired];
         super(room, "Insightful Punishing Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.KNOWING]], sprite, "The Insightful Punishing Twin is hunting.", beats);
@@ -2950,6 +2950,8 @@ const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const Quotidian_1 = __webpack_require__(6387);
+//https://at.tumblr.com/jadedresearcher/remember-to-hydrate/cdr353ii19xv
+//if you like goncharov, how about this game I found about a fandom that does't exist? https://ifarchive.org/if-archive/games/competition2021/Games/A%20Paradox%20Between%20Worlds/index.html
 //Linda Codega of Gizmodo remarked on the enthusiasm around the meme as "an inspiring example of collective storytelling and spontaneous fandom generation, inspired by the community itself. Essentially, Goncharov (1973) is not a film, but a game. And only Tumblr knows the rules, because the rules of Goncharov (1973) are the rules of Tumblr itself."
 //generic npcs have no inner ai, they just do whatever their themes and the room tell them too. they are hollow mockeries.
 class Goncharov extends Quotidian_1.Quotidian {
@@ -3305,7 +3307,7 @@ class FortitudeTwin extends Quotidian_1.Quotidian {
         const hunt = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Hunt for the Killer of Your Twin", [`The ${baseFilter_1.SUBJECTSTRING} is aimlessly searching for the Killer of Devona. You don't get the impression that it's very good at it. It seems to just kinda be moving around at random and sqwawking in frustration.  It never gets tired though...`], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive_1.TargetIsAlive(), new RandomTarget_1.RandomTarget(0.5)], [new MoveRandomly_1.MoveRandomly(), new DeploySass_1.DeploySass("!?")], true, 1000 * 60);
         const mourn = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} paws gently at ${baseFilter_1.TARGETSTRING}... It looks so sad...`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(10)], [new DeploySass_1.DeploySass(":(")], true, 1000 * 60);
         const visitGrave = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Mourn your Twin", [`The ${baseFilter_1.SUBJECTSTRING} whimpers with sadness... and begins making a bee line back to the ${baseFilter_1.TARGETSTRING}`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Devona"]), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { singleTarget: true, invert: true }), new RandomTarget_1.RandomTarget(0.5)], [new FollowObject_1.FollowObject()], true, 1000 * 60);
-        const kill = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Punish the Killer of Your Twin", [`The torso of the ${baseFilter_1.SUBJECTSTRING} opens with a meaty squelch and crunches down on the ${baseFilter_1.TARGETSTRING}. Shreds of them are all that remain. The Fortitudinous Punishing Twin appears to be satisfied.`], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new MeleeKill_1.MeleeKill("being eaten by the Fortitudinous Punishing Twin"), new DeploySass_1.DeploySass(":)")], true, 1000 * 60);
+        const kill = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Punish the Killer of Your Twin", [`The torso of the ${baseFilter_1.SUBJECTSTRING} opens with a meaty squelch and crunches down on the ${baseFilter_1.TARGETSTRING}. Shreds of them are all that remain. The Fortitudinous Punishing Twin appears to be satisfied.`], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new MeleeKill_1.MeleeKill("being eaten by the Fortitudinous Punishing Twin"), new DeploySass_1.DeploySass(":)")], true, 1000 * 60, true);
         const unbreach = new BaseBeat_1.AiBeat("Fortitudinous Punishing Twin: Relax", [`The Fortitudinous Punishing Twin withers into itself, and Neville emerges once more. He falls onto his knees, tears streaming down his face. His twin is dead, and nothing will ever bring her back. But at least she is avenged.   `], [new TargetIstheKillerOfBlorboNamed_1.TargetIsTheKillerOfBlorboNamed("Devona"), new TargetIsAlive_1.TargetIsAlive({ invert: true })], [new IncrementMyState_1.IncrementMyState("no")], true, 1000 * 60);
         const beats = [kill, mourn, hunt, visitGrave, unbreach];
         super(room, "Fortitudinous Punishing Twin", x, y, [Theme_1.all_themes[ThemeStorage_1.HUNTING], Theme_1.all_themes[ThemeStorage_1.SPYING], Theme_1.all_themes[ThemeStorage_1.OBFUSCATION], Theme_1.all_themes[ThemeStorage_1.MATH]], sprite, "The Fortitude Punishing Twin is hunting.", beats);
@@ -8757,6 +8759,9 @@ const initPersonalBeatList = () => {
     exports.personal_beat_list[exports.FAMILY] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Family`, [`${baseFilter_1.SUBJECTSTRING} remembers a different time, almost a different life. What would their family think about how far they've come. What they've had to do?`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], true, 1000 * 60)
     ];
+    exports.personal_beat_list[exports.CRAFTING] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Creation`, [`${baseFilter_1.SUBJECTSTRING} wishes they could make something with their own two hands right now. They pull out a small jewlers hammer and stare at it for a while.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-1)], true, 1000 * 60)
+    ];
     exports.personal_beat_list[exports.CLOWNS] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Do a Sick Backflip`, [`Out of nowhere, ${baseFilter_1.SUBJECTSTRING} does a sick backflip. You can't help but clap.`], [new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.FORTITUDE), new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13), new DeploySass_1.DeploySass(":)")], true, 1000 * 60),
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Tell a Funny Joke`, [`${baseFilter_1.SUBJECTSTRING} tells anyone who will listen a long, rambling joke. Its pretty funny.`], [new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.FORTITUDE, { invert: true }), new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13), new DeploySass_1.DeploySass(":)")], true, 1000 * 60)
@@ -8775,11 +8780,11 @@ const initPersonalBeatList = () => {
     exports.personal_beat_list[exports.ADDICTION] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Take a Swig`, [`${baseFilter_1.SUBJECTSTRING} pulls out a small flask and takes a swig of something so strong you can smell it from here.`], [new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(2, { singleTarget: true, kMode: true })], //you really can't control yourself can you
         [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13)], true, 1000 * 30),
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Pull Out Your Flask`, [`${baseFilter_1.SUBJECTSTRING} pulls out a small silver flask and regards it coldly. There's a longing in their eyes that you can watch them, beat by beat, master. they put the flask back, unopened.`], [new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(4, { singleTarget: true, kMode: true })], //you think self control is the highest virtue.
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Pull Out Your Flask`, [`${baseFilter_1.SUBJECTSTRING} pulls out a small silver flask and regards it coldly. There's a longing in their eyes that you can watch them, beat by beat, master. they put the flask back, unopened.`], [new TargetTemperenceLessThanAmount_1.TargetTemperenceLessThanAmount(4, { singleTarget: true, kMode: true, invert: true })], //you think self control is the highest virtue.
         [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(13)], true, 1000 * 30),
     ];
     exports.personal_beat_list[exports.DECAY] = [
-        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Smell Check`, [`${baseFilter_1.SUBJECTSTRING} cautiously sniffs at themself. ${BaseBeat_1.TARGET_SMELL_SCRIPT}. Could be worse.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Smell Check`, [`${baseFilter_1.SUBJECTSTRING} cautiously sniffs at themself. The smell of ${BaseBeat_1.TARGET_SMELL_SCRIPT}. Could be worse.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //its fine
         true, 1000 * 60),
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Notice Inventory Rotting `, [`${baseFilter_1.SUBJECTSTRING} watches with dismay as their ${BaseBeat_1.ITEMSTRING} rots away to nothing.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new IHaveObjectWithName_1.IHaveObjectWithName([])], [new DestroyRandomObjectInInventoryAndPhilosophise_1.DestroyRandomObjectInInventoryAndPhilosophize()], //its fine
         true, 1000 * 60),
@@ -8836,10 +8841,18 @@ const initBeatList = () => {
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Family`, [`${baseFilter_1.SUBJECTSTRING} thinks wistfully of their family.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.TEMPERANCE, { invert: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
         true, 1000 * 60),
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Think About Family`, [`${baseFilter_1.SUBJECTSTRING} thinks wistfully of their family.`], [new RandomTarget_1.RandomTarget(0.5, { singleTarget: true, kMode: true }), new MyHighestStatIsX_1.MyHighestStatIsX(constants_1.TEMPERANCE)], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-1)], //just a bit more sane
-        true, 1000 * 60),
+        true, 3000 * 60),
     ];
     exports.beat_list[exports.CLOWNS] = [
         new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Listen to the Circus Music`, [`${baseFilter_1.SUBJECTSTRING} sways gently in time to the distant organ music.`], [new RandomTarget_1.RandomTarget(0.1, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
+        true, 3000 * 60),
+    ];
+    exports.beat_list[exports.MUSIC] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Listen to Music`, [`${baseFilter_1.SUBJECTSTRING} sways gently in time to the distant  music.`], [new RandomTarget_1.RandomTarget(0.1, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
+        true, 3000 * 60),
+    ];
+    exports.beat_list[exports.ART] = [
+        new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Take In The Beauty`, [`${baseFilter_1.SUBJECTSTRING} is suddenly captivated by the way the light hits the walls and floors. Everything is beautiful and nothing hurts.`], [new RandomTarget_1.RandomTarget(0.1, { singleTarget: true, kMode: true })], [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(1)], //just a bit more sane
         true, 1000 * 60),
     ];
     exports.beat_list[exports.TIME] = [

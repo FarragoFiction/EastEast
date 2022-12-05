@@ -37,6 +37,6 @@ export class Khana extends Quotidian {
         };
         const beats: AiBeat[] = [];
         //funny how similar he is, on a suface level, to parker
-        super(room, "K", x, y, [all_themes[ANGER],all_themes[LIGHT], all_themes[STEALING], all_themes[KILLING], all_themes[SPYING]], sprite, "The Censorship is for your protection.", beats);
+        super(room, "K", x, y, [all_themes[ANGER],all_themes[LIGHT], all_themes[STEALING], all_themes[KILLING], all_themes[SPYING]], sprite, "He wants to be looked at. Give him attention. Now!", beats);
     }
 }

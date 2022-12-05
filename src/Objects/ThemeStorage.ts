@@ -10,6 +10,7 @@ import { MakeImportant } from './Entities/Actions/MakeImportant';
 import { MakeRomantic } from './Entities/Actions/MakeRomantic';
 import { MoveRandomly } from './Entities/Actions/MoveRandomly';
 import { PickupObject } from './Entities/Actions/PickupObject';
+import { SpawnObjectFromThemeInInventory } from './Entities/Actions/SpawnObjectFromThemeInInventory';
 import { SpawnObjectFromThemeUnderFloorAtMyFeet } from './Entities/Actions/SpawnObjectFromThemeUnderFloorAtMyFeet';
 import { StopMoving } from './Entities/Actions/StopMoving';
 import { AiBeat, ITEMSTRING, ROOM_SMELL_SCRIPT, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT, TARGET_SMELL_SCRIPT } from './Entities/StoryBeats/BaseBeat';
@@ -709,6 +710,16 @@ const initPersonalBeatList = () => {
     ]
 
 
+    personal_beat_list[BURIED] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Root Around In the Dust and  Dirt`,
+            [`${SUBJECTSTRING} scrabbles about in the dirt for a bit and finds a ${ITEMSTRING} half buried and quickly pockets it.`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true })],
+            [new SpawnObjectFromThemeInInventory(BURIED, "Dusty Object")],
+            true,
+            1000 * 60)
+    ]
+
     personal_beat_list[FAMILY] = [
         new AiBeat(
             `${SUBJECTSTRING}: Think About Family`,
@@ -898,7 +909,25 @@ const initBeatList = () => {
         new AiBeat(
             `${SUBJECTSTRING}: Meditate on Self.`,
             [`Something about this room just has ${SUBJECTSTRING} thinking about who they are as a person. Man. They're pretty happy with how far they've come. They're confident they've made the right decisions everywhere they could. This is nice.`],
-            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount(2, { singleTarget: true, kMode: true })],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetJudgementLessThanAmount(4, { singleTarget: true, kMode: true , invert: true})],
+            [new ChangeMyStabilityLevelByAmount(1)], //its fine
+            true,
+            1000 * 60),
+    ]
+
+    beat_list[BURIED] = [
+        new AiBeat(
+            `${SUBJECTSTRING}: Be Claustrophobic.`,
+            [`Something about this room just has ${SUBJECTSTRING} feeling like the walls are every so slowly closing in on them. Is it hot in here? Man, why aren't there any windows...`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount(2, { singleTarget: true, kMode: true })],
+            [new ChangeMyStabilityLevelByAmount(-13)], //its fine
+            true,
+            1000 * 60),
+
+        new AiBeat(
+            `${SUBJECTSTRING}: Feel Cozy.`,
+            [`${SUBJECTSTRING} really is enjoying how nice and cozy it is in here. Almost like the walls are giving them a little hug. :)`],
+            [new RandomTarget(0.5, { singleTarget: true, kMode: true }), new TargetPrudenceLessThanAmount(4, { singleTarget: true, kMode: true, invert: true })],
             [new ChangeMyStabilityLevelByAmount(1)], //its fine
             true,
             1000 * 60),

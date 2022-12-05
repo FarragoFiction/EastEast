@@ -8,7 +8,7 @@ import SeededRandom from "../Utils/SeededRandom";
 import { Quotidian } from "./Entities/Blorbos/Quotidian";
 import { Room } from "./RoomEngine/Room";
 import { all_themes, Theme } from "./Theme";
-import { OBFUSCATION, PHILOSOPHY } from "./ThemeStorage";
+import { FLOORFOREGROUND, ImageWithDesc, OBFUSCATION, PHILOSOPHY } from "./ThemeStorage";
 
 
 //from East
@@ -195,6 +195,24 @@ export class PhysicalObject {
     destroyObject  = (object: PhysicalObject) => {
         removeItemOnce(this.inventory, object);
         object.owner = undefined;
+    }
+
+    spawnRandomItemInInventory = (chosen_themes?: Theme[], name_override?: string)=>{
+
+        const theme =chosen_themes? this.rand.pickFrom(chosen_themes) : this.rand.pickFrom(this.themes);
+        const raw_item:ImageWithDesc= theme.pickPossibilityFor(this.rand, FLOORFOREGROUND)
+
+        const image = document.createElement("img");
+        const name = raw_item.name? raw_item.name : name_override? name_override: "Mystery Object";
+
+        image.src = `images/Walkabout/Objects/TopFloorObjects/${raw_item.src}`;
+        image.onload = ()=>{
+            //yeah lets do nested trinaries, i LOVE seeing those at work
+            const item = new PhysicalObject(this.room, name, 0, 0, image.width, image.height, [theme], 0, `images/Walkabout/Objects/TopFloorObjects/${raw_item.src}`, raw_item.desc);
+            this.pickupObject(item);
+        }
+        return name;
+
     }
 
     pickupObject = (object: PhysicalObject) => {

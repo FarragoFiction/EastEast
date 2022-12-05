@@ -10,6 +10,10 @@ import { Room } from "../Objects/RoomEngine/Room";
 import { TranscriptEngine } from "./Transcript";
 
 
+//https://verbosebabbler.tumblr.com/post/691448067434676224/is-zampanio-real-and-does-it-matter
+//https://verbosebabbler.tumblr.com/post/693198522796965888/zampanio-and-the-history-of-games
+
+
 //look, okay, al bhed from ffx is something that for *some* percent of the population feels in their bones
 //so this will drive home a nagging sense of familiarity, that it MUST be important
 //at the same time when you look at it in writing it's gibberish
@@ -52,7 +56,7 @@ export const albhed_map = {
     "4": "http://farragofiction.com/PerfectHeist/",
     "5": "https://theobscuregame.tumblr.com/   the waste's arc number, except without numbers (The Watcher says they won't spell it out)",
     "7": "https://www.royalroad.com/fiction/56715/the-encyclopedia-arcane",//yellow,
-    "8": "https://figuringoutnothing.tumblr.com/post/691448067434676224/so-uh-i-might-have-gone-into-a-fugue-state-and",//but now the guide of hunters
+    "8": "https://verbosebabbler.tumblr.com/post/691448067434676224/is-zampanio-real-and-does-it-matter",//but now the guide of hunters
     "9": "https://scratch.mit.edu/projects/719496869/ Taxonomist of Strangers",
     "!": "http://farragofiction.com/DocSlaughterFileServer",
     "?": "http://farragofiction.com/ParkerLotLost/",
@@ -67,6 +71,7 @@ export const albhed_map = {
     //https://jadedresearcher.tumblr.com/post/692341174641606656
     //https://jadedresearcher.tumblr.com/post/692340754690015232/but-like-italians-are-real-and-arent-all
 }
+//the watcher gives us help https://archive.org/details/house-of-leaves-by-mark-z.-danielewski/mode/2up
 
 export const translate = (word: string) => {
     let ret = word.toLowerCase();

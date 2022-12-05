@@ -223,19 +223,7 @@ export class Quotidian extends PhysicalObject {
         this.actionRateMutator = this.rand.getRandomNumberBetween(7,13)/10;
     }
 
-    spawnRandomItemInInventory = ()=>{
-        const theme = this.rand.pickFrom(this.themes);
-        const raw_item:ImageWithDesc= theme.pickPossibilityFor(this.rand, FLOORFOREGROUND)
 
-        const image = document.createElement("img");
-
-        image.src = `images/Walkabout/Objects/TopFloorObjects/${raw_item.src}`;
-        image.onload = ()=>{
-            const item = new PhysicalObject(this.room, raw_item.name? raw_item.name : "Mystery Object", 0, 0, image.width, image.height, [theme], 0, `images/Walkabout/Objects/TopFloorObjects/${raw_item.src}`, raw_item.desc);
-            this.pickupObject(item);
-        }
-
-    }
 
     //not as important as your custom ai, but... you still are your constintuate parts. and npcs are nothing BUT that. hollow inside.
     grabThemeBeats = () => {
