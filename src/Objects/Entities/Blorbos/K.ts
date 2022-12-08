@@ -1,6 +1,7 @@
 import { getRandomNumberBetween } from "../../../Utils/NonSeededRandUtils";
 import { Movement } from "../../MovementAlgs/BaseMovement";
 import { NoMovement } from "../../MovementAlgs/NoMovement";
+import { RandomMovement } from "../../MovementAlgs/RandomMovement";
 import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { OBFUSCATION, DECAY, LOVE, FLESH, DARKNESS, CENSORSHIP, BURIED, STEALING, DOLLS, ANGER, KILLING, SPYING, LIGHT } from "../../ThemeStorage";
@@ -11,7 +12,7 @@ import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from "../StoryBeats/Bas
 import { SUBJECTSTRING } from "../TargetFilter/baseFilter";
 import { TargetIsBreeching } from "../TargetFilter/TargetIsBreaching";
 import { TargetStabilityLevelLessThanAmount } from "../TargetFilter/TargetStabilityLevelLessThanAmount";
-import { Quotidian, Direction, NB } from "./Quotidian";
+import { Quotidian, Direction, NB, blorboSpriteLocation } from "./Quotidian";
 import { Relationship } from "./Relationship";
 
 
@@ -28,11 +29,11 @@ export class Khana extends Quotidian {
     currentSpeed = 5;
 
     direction = Direction.DOWN; //movement algorithm can change or use this.
-    movement_alg: Movement = new NoMovement(this);
+    movement_alg: Movement = new RandomMovement(this);
 
     constructor(room: Room, x: number, y: number) {
         const sprite = {
-            default_src: { src: "Placeholders/k.png", width: 56, height: 100 },
+            default_src: { src: `${blorboSpriteLocation()}/k.png`, width: 56, height: 100 },
 
         };
         const beats: AiBeat[] = [];

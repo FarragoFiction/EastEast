@@ -20,7 +20,7 @@ import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsTheKillerOfBlorboNamed } from "../TargetFilter/TargetIstheKillerOfBlorboNamed";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
-import { Quotidian, Direction, MALE } from "./Quotidian";
+import { Quotidian, Direction, MALE, blorboSpriteLocation } from "./Quotidian";
 import { Relationship } from "./Relationship";
 
 
@@ -48,7 +48,7 @@ export class Neville extends Quotidian{
 
     constructor(room: Room, x: number, y:number){
         const sprite = {
-            default_src:{src:"Placeholders/thetwins2.png",width:50,height:50},
+            default_src:{src:`${blorboSpriteLocation()}/thetwins2.png`,width:50,height:50},
 
         };
 

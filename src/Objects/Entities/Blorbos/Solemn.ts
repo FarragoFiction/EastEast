@@ -31,7 +31,7 @@ export class Solemn extends Quotidian{
 
     constructor(room: Room, x: number, y:number){
         const sprite = {
-            default_src:{src:"Placeholders/thesolemn.png",width:50,height:50},
+            default_src:{src:`${blorboSpriteLocation()}/thesolemn.png`,width:50,height:50},
 
         };
 

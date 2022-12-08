@@ -22,7 +22,7 @@ import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsTheKillerOfBlorboNamed } from "../TargetFilter/TargetIstheKillerOfBlorboNamed";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
-import { Quotidian, Direction, FEMALE } from "./Quotidian";
+import { Quotidian, Direction, FEMALE, blorboSpriteLocation } from "./Quotidian";
 import { Relationship } from "./Relationship";
 
 
@@ -51,7 +51,7 @@ export class Devona extends Quotidian{
 
     constructor(room: Room, x: number, y:number){
         const sprite = {
-            default_src:{src:"Placeholders/thetwins1.png",width:50,height:50},
+            default_src:{src:`${blorboSpriteLocation()}/thetwins1.png`,width:50,height:50},
 
         };
 

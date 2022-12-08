@@ -12,7 +12,7 @@ import { RandomTarget } from "../TargetFilter/RandomTarget";
 import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
-import { Quotidian, Direction, FEMALE } from "./Quotidian";
+import { Quotidian, Direction, FEMALE, blorboSpriteLocation } from "./Quotidian";
 import { Relationship } from "./Relationship";
 
 
@@ -44,7 +44,7 @@ export class Camille extends Quotidian{
 
     constructor(room: Room, x: number, y:number){
         const sprite = {
-            default_src:{src:"the_end2.png",width:56,height:100},
+            default_src:{src:`${blorboSpriteLocation()}/the_end2.png`,width:56,height:100},
 
         };
         const start = "<span class='asl'>"

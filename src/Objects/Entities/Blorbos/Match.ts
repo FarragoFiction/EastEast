@@ -18,7 +18,7 @@ import { TargetIsAlive } from "../TargetFilter/TargetIsAlive";
 import { TargetIsBlorboOrBox } from "../TargetFilter/TargetIsBlorboBox";
 import { TargetIsBreeching } from "../TargetFilter/TargetIsBreaching";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
-import { Quotidian, Direction } from "./Quotidian";
+import { Quotidian, Direction, blorboSpriteLocation } from "./Quotidian";
 import { Relationship } from "./Relationship";
 
 /*
@@ -100,7 +100,7 @@ export class Match extends Quotidian {
 
     constructor(room: Room, x: number, y: number) {
         const sprite = {
-            default_src: { src: "Placeholders/match.png", width: 50, height: 50 },
+            default_src: { src: `${blorboSpriteLocation()}/match.png`, width: 50, height: 50 },
 
         };
 

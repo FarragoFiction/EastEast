@@ -11,7 +11,7 @@ import { AiBeat, SUBJECT_HE_SCRIPT, SUBJECT_HIS_SCRIPT } from "../StoryBeats/Bas
 import { SUBJECTSTRING } from "../TargetFilter/baseFilter";
 import { TargetIsBreeching } from "../TargetFilter/TargetIsBreaching";
 import { TargetStabilityLevelLessThanAmount } from "../TargetFilter/TargetStabilityLevelLessThanAmount";
-import { Quotidian, Direction, NB } from "./Quotidian";
+import { Quotidian, Direction, NB, blorboSpriteLocation } from "./Quotidian";
 import { Relationship } from "./Relationship";
 
 
@@ -34,7 +34,7 @@ export class Parker extends Quotidian {
 
     constructor(room: Room, x: number, y: number) {
         const sprite = {
-            default_src: { src: "Placeholders/theshot.png", width: 56, height: 100 },
+            default_src: { src: `${blorboSpriteLocation()}/theshot.png`, width: 56, height: 100 },
 
         };
         const beats: AiBeat[] = [];

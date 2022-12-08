@@ -113,7 +113,7 @@ export class Captain extends Quotidian{
 
     constructor(room: Room, x: number, y:number){
         const sprite = {
-            default_src:{src:"Placeholders/captain.png",width:50,height:50},
+            default_src:{src:`${blorboSpriteLocation()}/captain.png`,width:50,height:50},
         };
 
         //give captain at least a little while to run around before seeing the mirror
