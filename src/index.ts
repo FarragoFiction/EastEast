@@ -54,7 +54,7 @@ export const whiteNight = () => {
 }
 
 export const renderNineCommentsOnScreen = ()=>{
-    console.log("JR NOTE: rendeirng 9 comments on screen")
+    console.log("JR NOTE: rendering 9 comments on screen")
     const body = document.querySelector("body");
     const comments = (window as any).comments;
     if(!body){
@@ -82,8 +82,18 @@ const tryComments = () => {
     }
 }
 
+const checkIfGuideOfHuntersMode= ()=>{
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const guide = urlParams.get('guide'); //guide mode or not
+    if(guide){
+        (window as any).guideOfHunters=true;
+    }
+}
+
 window.onload = async () => {
     tryComments();
+    checkIfGuideOfHuntersMode();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const apocalypse = urlParams.get('apocalypse');

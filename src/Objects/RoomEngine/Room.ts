@@ -353,7 +353,6 @@ export class Room {
         //always the same room from the same item, is what matters.
         const room = await randomRoomWithThemes(this.maze, this.element, [...obj.themes], new SeededRandom(obj.processedName().length));
         room.totemObject = obj;
-        console.log("JR NOTE: what is the object I'm being sucked into?", obj)
         room.name = `${obj.processedName()}'s Innerworld`;
         room.children = [this, this, this];//do NOT trigger the auto leadback;
         return room;
@@ -363,7 +362,7 @@ export class Room {
     processDeath = (blorbo: Quotidian) => {
         let deathMessage = `${blorbo.name} has died.`;
         if (!this.hasEnd()) {
-            deathMessage = `Drawn by their fated end, The End has come for the ${blorbo.name}.`;
+            deathMessage = `Drawn by their fated end, The End has come for ${blorbo.name}.`;
             const end = new Camille(this, blorbo.x, blorbo.y)
             this.addBlorbo(end);
             end.attachToParent(this.element);

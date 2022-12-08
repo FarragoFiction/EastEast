@@ -24,7 +24,7 @@ import { TargetNearObjectWithName } from "../TargetFilter/TargetIsNearObjectWith
 import { TargetIsWithinRadiusOfSelf } from "../TargetFilter/TargetIsWithinRadiusOfSelf";
 import { TargetNameIncludesAnyOfTheseWords } from "../TargetFilter/TargetNameIncludesAnyOfTheseWords";
 
-import { Quotidian, Direction, MALE } from "./Quotidian";
+import { Quotidian, Direction, MALE, blorboSpriteLocation } from "./Quotidian";
 import { Relationship } from "./Relationship";
 import { Snail } from "./SnailFriend";
 
@@ -45,7 +45,7 @@ export class Yongki extends Quotidian{
     likeMultiplier = 10.3; //yongki is so happy
     constructor(room: Room, x: number, y:number){
         const sprite = {
-            default_src:{src:"Placeholders/thereflection.png",width:50,height:50},
+            default_src:{src:`${blorboSpriteLocation()}/thereflection.png`,width:50,height:50},
 
         };
 

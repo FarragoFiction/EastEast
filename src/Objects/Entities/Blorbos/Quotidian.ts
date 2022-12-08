@@ -63,6 +63,8 @@ export const stats_values_mapping = (value: number) => {
     }
 }
 
+export const blorboSpriteLocation  = ()=>(window as any).guideOfHunters ? "GuideOfHunterSprites/": "Placeholders/";
+
 
 export enum Direction {
     UP = 1,

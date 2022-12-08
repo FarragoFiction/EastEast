@@ -3615,7 +3615,7 @@ exports.BreachedPeewee = BreachedPeewee;
 
 //base level Entity object. quotidians can turn into anything
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Quotidian = exports.himPronoun = exports.heProunon = exports.hisProunon = exports.NB = exports.MALE = exports.FEMALE = exports.Direction = exports.stats_values_mapping = void 0;
+exports.Quotidian = exports.himPronoun = exports.heProunon = exports.hisProunon = exports.NB = exports.MALE = exports.FEMALE = exports.Direction = exports.blorboSpriteLocation = exports.stats_values_mapping = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const constants_1 = __webpack_require__(8817);
 const misc_1 = __webpack_require__(4079);
@@ -3676,6 +3676,8 @@ const stats_values_mapping = (value) => {
     }
 };
 exports.stats_values_mapping = stats_values_mapping;
+const blorboSpriteLocation = () => window.guideOfHunters ? "GuideOfHunterSprites/" : "Placeholders/";
+exports.blorboSpriteLocation = blorboSpriteLocation;
 var Direction;
 (function (Direction) {
     Direction[Direction["UP"] = 1] = "UP";
@@ -4514,7 +4516,7 @@ const Relationship_1 = __webpack_require__(7739);
 class Yongki extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "Placeholders/thereflection.png", width: 50, height: 50 },
+            default_src: { src: `${(0, Quotidian_1.blorboSpriteLocation)()}/thereflection.png`, width: 50, height: 50 },
         };
         const approachBug = new BaseBeat_1.AiBeat("Yongki: Follow Bug", [`Yongki looks across the room at the ${baseFilter_1.TARGETSTRING} and starts sneaking up on it.`, `Yongki catches sight of the ${baseFilter_1.TARGETSTRING}.`, `Yongki excitedly points out the ${baseFilter_1.TARGETSTRING}.`,], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true }), new RandomTarget_1.RandomTarget(0.5), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5, { invert: true })], [new FollowObject_1.FollowObject()], true, 1000 * 60);
         const watchBug = new BaseBeat_1.AiBeat("Yongki: Look Bug", [`Yongki stares intently at the ${baseFilter_1.TARGETSTRING}.`, `Yongki ever so gently pokes the ${baseFilter_1.TARGETSTRING}.`, `Yongki hums a little tune for the ${baseFilter_1.TARGETSTRING}.`,], [new TargetHasTheme_1.TargetHasTheme([Theme_1.all_themes[ThemeStorage_1.BUGS]], { singleTarget: true }), new TargetIsWithinRadiusOfSelf_1.TargetIsWithinRadiusOfSelf(5)], [new FollowObject_1.FollowObject()], true, 1000 * 60, true);
@@ -7693,7 +7695,6 @@ class Room {
             //always the same room from the same item, is what matters.
             const room = await (0, exports.randomRoomWithThemes)(this.maze, this.element, [...obj.themes], new SeededRandom_1.default(obj.processedName().length));
             room.totemObject = obj;
-            console.log("JR NOTE: what is the object I'm being sucked into?", obj);
             room.name = `${obj.processedName()}'s Innerworld`;
             room.children = [this, this, this]; //do NOT trigger the auto leadback;
             return room;
@@ -7701,7 +7702,7 @@ class Room {
         this.processDeath = (blorbo) => {
             let deathMessage = `${blorbo.name} has died.`;
             if (!this.hasEnd()) {
-                deathMessage = `Drawn by their fated end, The End has come for the ${blorbo.name}.`;
+                deathMessage = `Drawn by their fated end, The End has come for ${blorbo.name}.`;
                 const end = new End_1.Camille(this, blorbo.x, blorbo.y);
                 this.addBlorbo(end);
                 end.attachToParent(this.element);
@@ -12311,7 +12312,7 @@ const whiteNight = () => {
 };
 exports.whiteNight = whiteNight;
 const renderNineCommentsOnScreen = () => {
-    console.log("JR NOTE: rendeirng 9 comments on screen");
+    console.log("JR NOTE: rendering 9 comments on screen");
     const body = document.querySelector("body");
     const comments = window.comments;
     if (!body) {
@@ -12339,8 +12340,17 @@ const tryComments = () => {
         console.error("??? why can't i load the comments?");
     }
 };
+const checkIfGuideOfHuntersMode = () => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const guide = urlParams.get('guide'); //guide mode or not
+    if (guide) {
+        window.guideOfHunters = true;
+    }
+};
 window.onload = async () => {
     tryComments();
+    checkIfGuideOfHuntersMode();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const apocalypse = urlParams.get('apocalypse');
