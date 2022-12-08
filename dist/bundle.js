@@ -3242,7 +3242,7 @@ was reading this chapter of A Practical Guide to Evil and it seemed perfect for 
 class Ria extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "Placeholders/thematch.png", width: 50, height: 50 },
+            default_src: { src: `${(0, Quotidian_1.blorboSpriteLocation)()}/thematch.png`, width: 50, height: 50 },
         };
         const shallIGiveYouThisPear = new BaseBeat_1.AiBeat("Ria: Long For A Better Universe", [`Her eyes lock with horror on the ${baseFilter_1.TARGETSTRING}. "No....no..." She moans, sinking to her knees. "How could..." A giggle escapes her, like steam from a kettle... "How could any Universe allow this? How could..." Her voice is chocked out by flames and smoke as her body begins to ignite.  The sound of the flames sounds like music. 'If we burn it all~' they say, 'We can start anew! Won't you help me reset everything?`], [new TargetIsAlive_1.TargetIsAlive({ invert: true }), new TargetIsBlorboBox_1.TargetIsBlorboOrBox()], [new IncrementMyState_1.IncrementMyState("no")], false, //she only breaches the once
         1000 * 10);
@@ -3276,7 +3276,7 @@ exports.Ria = Ria;
 class Match extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: `${(0, Quotidian_1.blorboSpriteLocation)()}/match.png`, width: 50, height: 50 },
+            default_src: { src: "Placeholders/match.png", width: 50, height: 50 },
         };
         //yes, she will even burn fire. 
         const BurnObject = new BaseBeat_1.AiBeat("Match: Burn It All", [`'It MUST be enough!', you hear the fire around the lit Match sing, 'One day I will burn enough that it will all come back!' the Match sings through the flames. The ${baseFilter_1.TARGETSTRING} burn.`, `With a sound like laughter and music, the Match girl burns away the ${baseFilter_1.TARGETSTRING}  to fire and ashes and smoke.`, ` The Match girl appears to be smiling and crying all at once as she burns ${baseFilter_1.TARGETSTRING} all away.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Match"], { invert: true })], [new SpawnObjectFromThemeUnderFloorAtMyFeet_1.SpawnObjectFromThemeUnderFloorAtMyFeet(ThemeStorage_1.FIRE, "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(ThemeStorage_1.FIRE, "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new AddThemeToRoom_1.AddThemeToRoom(ThemeStorage_1.FIRE), new DestroyObject_1.DestroyObject()], true, 1000);
