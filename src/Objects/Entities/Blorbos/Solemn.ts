@@ -6,7 +6,7 @@ import { Room } from "../../RoomEngine/Room";
 import { all_themes } from "../../Theme";
 import { HUNTING, KILLING, FAMILY, DARKNESS, FIRE, ANGELS, WEB, ADDICTION, MUSIC, LONELY, SERVICE, STEALING } from "../../ThemeStorage";
 import { AiBeat } from "../StoryBeats/BaseBeat";
-import { Quotidian, Direction, MALE } from "./Quotidian";
+import { Quotidian, Direction, MALE, blorboSpriteLocation } from "./Quotidian";
 
 
 
