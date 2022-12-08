@@ -58,7 +58,7 @@ export class Ria extends Quotidian {
 
     constructor(room: Room, x: number, y: number) {
         const sprite = {
-            default_src: { src: "Placeholders/thematch.png", width: 50, height: 50 },
+            default_src: { src: `${blorboSpriteLocation()}/thematch.png`, width: 50, height: 50 },
 
         };
 
@@ -100,7 +100,7 @@ export class Match extends Quotidian {
 
     constructor(room: Room, x: number, y: number) {
         const sprite = {
-            default_src: { src: `${blorboSpriteLocation()}/match.png`, width: 50, height: 50 },
+            default_src: { src: "Placeholders/match.png", width: 50, height: 50 },
 
         };
 

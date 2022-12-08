@@ -2642,7 +2642,7 @@ const Relationship_1 = __webpack_require__(7739);
 class Devona extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "Placeholders/thetwins1.png", width: 50, height: 50 },
+            default_src: { src: `${(0, Quotidian_1.blorboSpriteLocation)()}/thetwins1.png`, width: 50, height: 50 },
         };
         const breachedSprite = {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
@@ -2735,7 +2735,7 @@ const Relationship_1 = __webpack_require__(7739);
 class Camille extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "the_end2.png", width: 56, height: 100 },
+            default_src: { src: `${(0, Quotidian_1.blorboSpriteLocation)()}/the_end2.png`, width: 56, height: 100 },
         };
         const start = "<span class='asl'>";
         const end = "</span>";
@@ -3101,14 +3101,14 @@ exports.JR = JR;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Khana = void 0;
-const NoMovement_1 = __webpack_require__(4956);
+const RandomMovement_1 = __webpack_require__(5997);
 const Theme_1 = __webpack_require__(9702);
 const ThemeStorage_1 = __webpack_require__(1288);
 const Quotidian_1 = __webpack_require__(6387);
 class Khana extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "Placeholders/k.png", width: 56, height: 100 },
+            default_src: { src: `${(0, Quotidian_1.blorboSpriteLocation)()}/k.png`, width: 56, height: 100 },
         };
         const beats = [];
         //funny how similar he is, on a suface level, to parker
@@ -3122,7 +3122,7 @@ class Khana extends Quotidian_1.Quotidian {
         this.minSpeed = 5;
         this.currentSpeed = 5;
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
-        this.movement_alg = new NoMovement_1.NoMovement(this);
+        this.movement_alg = new RandomMovement_1.RandomMovement(this);
     }
 }
 exports.Khana = Khana;
@@ -3276,7 +3276,7 @@ exports.Ria = Ria;
 class Match extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "Placeholders/match.png", width: 50, height: 50 },
+            default_src: { src: `${(0, Quotidian_1.blorboSpriteLocation)()}/match.png`, width: 50, height: 50 },
         };
         //yes, she will even burn fire. 
         const BurnObject = new BaseBeat_1.AiBeat("Match: Burn It All", [`'It MUST be enough!', you hear the fire around the lit Match sing, 'One day I will burn enough that it will all come back!' the Match sings through the flames. The ${baseFilter_1.TARGETSTRING} burn.`, `With a sound like laughter and music, the Match girl burns away the ${baseFilter_1.TARGETSTRING}  to fire and ashes and smoke.`, ` The Match girl appears to be smiling and crying all at once as she burns ${baseFilter_1.TARGETSTRING} all away.`], [new TargetNameIncludesAnyOfTheseWords_1.TargetNameIncludesAnyOfTheseWords(["Match"], { invert: true })], [new SpawnObjectFromThemeUnderFloorAtMyFeet_1.SpawnObjectFromThemeUnderFloorAtMyFeet(ThemeStorage_1.FIRE, "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new SpawnObjectFromThemeUnderFloorAtFeet_1.SpawnObjectFromThemeUnderFloorAtFeet(ThemeStorage_1.FIRE, "Despairing Flame", "Surely if this burns enough something new can grow in its place."), new AddThemeToRoom_1.AddThemeToRoom(ThemeStorage_1.FIRE), new DestroyObject_1.DestroyObject()], true, 1000);
@@ -3332,7 +3332,7 @@ const Relationship_1 = __webpack_require__(7739);
 class Neville extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "Placeholders/thetwins2.png", width: 50, height: 50 },
+            default_src: { src: `${(0, Quotidian_1.blorboSpriteLocation)()}/thetwins2.png`, width: 50, height: 50 },
         };
         const breachedSprite = {
             default_src: { src: "Placeholders/twins.png", width: 50, height: 50 },
@@ -3415,7 +3415,7 @@ const Relationship_1 = __webpack_require__(7739);
 class Parker extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "Placeholders/theshot.png", width: 56, height: 100 },
+            default_src: { src: `${(0, Quotidian_1.blorboSpriteLocation)()}/theshot.png`, width: 56, height: 100 },
         };
         const beats = [];
         super(room, "Parker", x, y, [Theme_1.all_themes[ThemeStorage_1.BURIED], Theme_1.all_themes[ThemeStorage_1.STEALING], Theme_1.all_themes[ThemeStorage_1.KILLING], Theme_1.all_themes[ThemeStorage_1.SPYING]], sprite, "The Censorship is for your protection.", beats);
@@ -4335,7 +4335,7 @@ const Quotidian_1 = __webpack_require__(6387);
 class Solemn extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "Placeholders/thesolemn.png", width: 50, height: 50 },
+            default_src: { src: `${(0, Quotidian_1.blorboSpriteLocation)()}/thesolemn.png`, width: 50, height: 50 },
         };
         const breachedSprite = {
             default_src: { src: "Placeholders/solemn.png", width: 50, height: 50 },
@@ -4391,7 +4391,7 @@ const Relationship_1 = __webpack_require__(7739);
 class Vik extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "Placeholders/_.png", width: 56, height: 100 },
+            default_src: { src: `${(0, Quotidian_1.blorboSpriteLocation)()}/_.png`, width: 56, height: 100 },
         };
         const becomeHungry = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Become Hungry`, [`${baseFilter_1.SUBJECTSTRING}'s many eyes all close briefly. When they open again, something is wrong. `], [new TargetStabilityLevelLessThanAmount_1.TargetStabilityLevelLessThanAmount(0, { invert: true, singleTarget: true, kMode: true })], //don't go if you're already unstable
         [new ChangeMyStabilityLevelByAmount_1.ChangeMyStabilityLevelByAmount(-13), new FuckShitUp_1.FuckShitUp("1")], true, 1000 * 30);
@@ -4546,7 +4546,7 @@ exports.Yongki = Yongki;
 class Captain extends Quotidian_1.Quotidian {
     constructor(room, x, y) {
         const sprite = {
-            default_src: { src: "Placeholders/captain.png", width: 50, height: 50 },
+            default_src: { src: `${(0, Quotidian_1.blorboSpriteLocation)()}/captain.png`, width: 50, height: 50 },
         };
         //give captain at least a little while to run around before seeing the mirror
         const reflectMirror = new BaseBeat_1.AiBeat("Captain: Look Mirror", ["With almost no fanfair, Captain catches sight of the Mirror. Yongki is now in charge. Since Captain is not the Reflection, no one else is caught in it."], [new RandomTarget_1.RandomTarget(0.013), new TargetIsNearObjectWithName_1.TargetNearObjectWithName(["mirror"], { singleTarget: true, kMode: true })], [new IncrementMyState_1.IncrementMyState("")], true, 1000 * 60, true);
@@ -4631,18 +4631,18 @@ class AiBeat {
             ret = ret.replaceAll(exports.BONUSSTRING, this.bonusString);
             if (this.owner) {
                 ret = ret.replaceAll(exports.SUBJECT_HE_SCRIPT, (0, Quotidian_1.heProunon)(this.owner.gender));
-                ret = ret.replaceAll(exports.SUBJECT_HIM_SCRIPT, (0, Quotidian_1.heProunon)(this.owner.gender));
+                ret = ret.replaceAll(exports.SUBJECT_HIM_SCRIPT, (0, Quotidian_1.himPronoun)(this.owner.gender));
                 ret = ret.replaceAll(exports.SUBJECT_HIS_SCRIPT, (0, Quotidian_1.hisProunon)(this.owner.gender));
             }
             if (this.targets) {
                 if (this.targets.length === 1 && this.targets[0] instanceof Quotidian_1.Quotidian) {
                     ret = ret.replaceAll(exports.TARGET_HE_SCRIPT, (0, Quotidian_1.heProunon)(this.targets[0].gender));
-                    ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.heProunon)(this.targets[0].gender));
+                    ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.himPronoun)(this.targets[0].gender));
                     ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.hisProunon)(this.targets[0].gender));
                 }
                 else {
                     ret = ret.replaceAll(exports.TARGET_HE_SCRIPT, (0, Quotidian_1.heProunon)(Quotidian_1.NB));
-                    ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.heProunon)(Quotidian_1.NB));
+                    ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.himPronoun)(Quotidian_1.NB));
                     ret = ret.replaceAll(exports.TARGET_HIM_SCRIPT, (0, Quotidian_1.hisProunon)(Quotidian_1.NB));
                 }
                 const room_smell = this.targets[0].room.getRandomThemeConcept(ThemeStorage_1.SMELL);
