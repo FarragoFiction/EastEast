@@ -5,7 +5,7 @@ import { Room } from "../../RoomEngine/Room";
 import { StoryBeat } from "../../RoomEngine/StoryBeat";
 import { SMELL } from "../../ThemeStorage";
 import { Action } from "../Actions/BaseAction";
-import { heProunon, hisProunon, NB, Quotidian } from "../Blorbos/Quotidian";
+import { heProunon,himPronoun, hisProunon, NB, Quotidian } from "../Blorbos/Quotidian";
 import { SUBJECTSTRING, TargetFilter, TARGETSTRING } from "../TargetFilter/baseFilter";
 
 export const ITEMSTRING = "ITEMSTRING";
@@ -89,17 +89,17 @@ export class AiBeat {
 
         if (this.owner) {
             ret = ret.replaceAll(SUBJECT_HE_SCRIPT, heProunon(this.owner.gender));
-            ret = ret.replaceAll(SUBJECT_HIM_SCRIPT, heProunon(this.owner.gender));
+            ret = ret.replaceAll(SUBJECT_HIM_SCRIPT, himPronoun(this.owner.gender));
             ret = ret.replaceAll(SUBJECT_HIS_SCRIPT, hisProunon(this.owner.gender));
         }
         if (this.targets) {
             if (this.targets.length === 1 && this.targets[0] instanceof Quotidian) {
                 ret = ret.replaceAll(TARGET_HE_SCRIPT, heProunon(this.targets[0].gender));
-                ret = ret.replaceAll(TARGET_HIM_SCRIPT, heProunon(this.targets[0].gender));
+                ret = ret.replaceAll(TARGET_HIM_SCRIPT, himPronoun(this.targets[0].gender));
                 ret = ret.replaceAll(TARGET_HIM_SCRIPT, hisProunon(this.targets[0].gender));
             } else {
                 ret = ret.replaceAll(TARGET_HE_SCRIPT, heProunon(NB));
-                ret = ret.replaceAll(TARGET_HIM_SCRIPT, heProunon(NB));
+                ret = ret.replaceAll(TARGET_HIM_SCRIPT, himPronoun(NB));
                 ret = ret.replaceAll(TARGET_HIM_SCRIPT, hisProunon(NB));
             }
 
