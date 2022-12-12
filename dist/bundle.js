@@ -1112,7 +1112,7 @@ class GlitchDeath extends BaseAction_1.Action {
             let killed = false;
             for (let target of targets) {
                 if (target instanceof Quotidian_1.Quotidian) {
-                    target.die("a glitch", "Peewee");
+                    target.die("a glitch", subject);
                     killed = true;
                 }
             }
@@ -1881,7 +1881,7 @@ class MeleeKill extends BaseAction_1.Action {
             let killed = false;
             for (let target of targets) {
                 if (target instanceof Quotidian_1.Quotidian) {
-                    target.die(this.causeOfDeath, subject.name);
+                    target.die(this.causeOfDeath, subject);
                     killed = true;
                 }
             }
@@ -2889,11 +2889,12 @@ class Camille extends Quotidian_1.Quotidian {
         this.judgement = 5;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
-        this.die = (causeOfDeath) => {
+        this.die = (causeOfDeath, killer) => {
             console.warn(`JR NOTE: whoops. Looks like Camille...lost her head! 🥁 `);
             this.incrementState();
             this.breaching = true;
             this.image.classList.remove("shake"); //she's not breathing anymore
+            killer.sufferConsequencesForKilling(this);
         };
     }
 }
@@ -3658,7 +3659,7 @@ class Peewee extends Quotidian_1.Quotidian {
                 this.checkFilters();
             }
             if (this.horrorGame) {
-                const css = `radial-gradient(circle at ${this.x + 90}px ${this.y + 90}px, black 0%,  10%, rgba(0, 0, 0, 0.15) 25%)`;
+                const css = `radial-gradient(circle at ${this.x + this.image.width / 2}px ${this.y + this.image.height / 2}px, black 0%,  10%, rgba(0, 0, 0, 0.15) 25%)`;
                 this.room.element.style.webkitMaskImage = css;
                 this.room.element.style.maskImage = css;
             }
@@ -4127,15 +4128,37 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             ret.movement_alg = this.movement_alg.clone(this);
             return ret;
         };
-        this.die = (causeOfDeath, killerName) => {
+        this.die = (causeOfDeath, killer) => {
             if (!this.dead) {
+                console.log("JR NOTE: ...");
+                killer.sufferConsequencesForKilling(this);
                 this.room.clearFilterPart(this.filterStringAppliedToRoom);
                 this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
                 this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
                 this.room.processDeath(this);
                 this.dead = true;
-                this.killerName = killerName;
+                this.killerName = killer.name;
                 this.container.style.zIndex = `${12}`; //fade into the background
+            }
+        };
+        this.sufferConsequencesForKilling = (blorbo) => {
+            console.log(`JR NOTE: Hi, yes, hello, ${this.name} should suffer for killing ${blorbo.name}.`);
+            //for each relationship your victim had, they now hate you by the same amount they liked them
+            //so if they hated them, they now like you
+            //IMPORTANT, this only works if they knew you
+            for (let key of blorbo.relationshipMap.keys()) {
+                console.log("JR NOTE: TODO there should be consequecnes to ", this.name, "for killing", blorbo.name);
+                const entity = this.room.maze.findBlorboNamed(key.split(",")[0]); //find them by the first name you know them by
+                if (entity) {
+                    const how_they_felt_about_victim = entity.getRelationshipWith(blorbo);
+                    const how_they_feel_about_killer = entity.getRelationshipWith(this);
+                    console.log("JR NOTE: how they felt about  the victim: ", how_they_felt_about_victim?.amount);
+                    console.log("JR NOTE: how they felt about  the killer before: ", how_they_feel_about_killer?.amount);
+                    if (how_they_felt_about_victim) {
+                        entity.likeBlorboLess(this, how_they_felt_about_victim.amount);
+                        console.log("JR NOTE: how they feel about  the killer now: ", how_they_feel_about_killer?.amount);
+                    }
+                }
             }
         };
         this.live = () => {
@@ -4543,7 +4566,7 @@ class Vik extends Quotidian_1.Quotidian {
         this.dislikeMultiplier = 3.0;
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
-        this.die = (causeOfDeath, killerName) => {
+        this.die = (causeOfDeath, killer) => {
             if (!this.dead) {
                 //things do NOT stop being censored just because vik is dead. if anything, they get worse. 
                 this.room.applyFilter(`blur(500) hue-rotate(681deg) brightness(60%)`, true);
@@ -4551,7 +4574,7 @@ class Vik extends Quotidian_1.Quotidian {
                 this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
                 this.room.processDeath(this);
                 this.dead = true;
-                this.killerName = killerName;
+                this.killerName = killer.name;
                 this.container.style.zIndex = `${12}`; //fade into the background
             }
         };
@@ -4687,8 +4710,9 @@ class Captain extends Quotidian_1.Quotidian {
         this.direction = Quotidian_1.Direction.UP; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
         this.lore = "Parker says that the Captain has the soul of a monkey. Violence and social mimicking all in one package. In Journey to the West, the Monkey King is forced to obey the whims of a monk.  Yongki is no monk, but there is no denying Captain serves him.  Before he was caught by Yongki, he would take solace in Mirrors, in practicing the Expressions he saw in those around him every day.  Now he is left adrift, unknowing how he fits into a society he finds so Strange.";
-        this.die = (causeOfDeath) => {
+        this.die = (causeOfDeath, killer) => {
             console.log(`JR NOTE: actually, it says right here in the code, Yongki wins...and since Captain is USING Yongki's body... If you think you're going to ${causeOfDeath}, you're wrong. Hope this helps.`);
+            killer.sufferConsequencesForKilling(this); //vik'll still kill you for it, tho
         };
     }
 }

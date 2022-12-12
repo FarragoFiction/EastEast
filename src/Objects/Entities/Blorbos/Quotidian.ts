@@ -483,6 +483,7 @@ export class Quotidian extends PhysicalObject {
 
     die = (causeOfDeath: string, killer: Quotidian) => {
         if (!this.dead) {
+            console.log("JR NOTE: ...")
             killer.sufferConsequencesForKilling(this);
             this.room.clearFilterPart(this.filterStringAppliedToRoom);
             this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
@@ -499,19 +500,14 @@ export class Quotidian extends PhysicalObject {
         //so if they hated them, they now like you
         //IMPORTANT, this only works if they knew you
         for(let key of blorbo.relationshipMap.keys()){
-            console.log("JR NOTE: TODO there should be consequecnes to ", this, "for killing", blorbo);
             const entity = this.room.maze.findBlorboNamed(key.split(",")[0]);//find them by the first name you know them by
             if(entity){
                 const how_they_felt_about_victim = entity.getRelationshipWith(blorbo);
-                const how_they_feel_about_killer= entity.getRelationshipWith(this);
+                //const how_they_feel_about_killer= entity.getRelationshipWith(this);
 
-                console.log("JR NOTE: how they felt about  the victim: ",how_they_felt_about_victim );
-                console.log("JR NOTE: how they felt about  the killer before: ",how_they_feel_about_killer );
 
                 if(how_they_felt_about_victim){
                     entity.likeBlorboLess(this,how_they_felt_about_victim.amount )
-                    console.log("JR NOTE: how they feel about  the killer now: ",how_they_feel_about_killer );
-
                 }
                 
             }

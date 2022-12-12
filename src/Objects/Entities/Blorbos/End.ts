@@ -21,7 +21,7 @@ export class Camille extends Quotidian{
     lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
     relationshipMap = new Map<string, Relationship>([
         ["Ria,Match", new Relationship("Ria,Match",1000000,"I really admire her dedication.","...","She's the smartest person I've ever met and just lights up  a room.","She's so cute when she's really excited about something she's talking about.","I can't imagine a life without her in some capacity.",true,true,false)]
-        ,["Peewee Puppet,Glitch of Doom", new Relationship("Peewee Puppet,Glitch of Doom",-1000000,"I have to admit, he never gives up.","I really wish he'd stop trying to destroy the Universe. That's probably why he's so Doomed.","I kind of feel bad for him. It's not his fault he's tied up like this.","<3","I never thought we'd end up like this.",false,false,false)]
+        ,["Peewee Puppet,Glitch of Doom", new Relationship("Peewee Puppet,Glitch of Doom",-1000,"I have to admit, he never gives up.","I really wish he'd stop trying to destroy the Universe. That's probably why he's so Doomed.","I kind of feel bad for him. It's not his fault he's tied up like this.","<3","I never thought we'd end up like this.",false,false,false)]
 
     ]); //(keyed by array of all known names, csv)
     //camille just likes making friends :), absolute shit attachment stat
@@ -72,11 +72,13 @@ export class Camille extends Quotidian{
         super(room,"Camille", x,y,[all_themes[ENDINGS],all_themes[KILLING],all_themes[QUESTING],all_themes[LONELY]],sprite,"The End Comes For Us All", beats, states);
     }
 
-    die = (causeOfDeath: string) => {
+    die = (causeOfDeath: string, killer: Quotidian) => {
         console.warn(`JR NOTE: whoops. Looks like Camille...lost her head! 🥁 `);
         this.incrementState();
         this.breaching  = true;
         this.image.classList.remove("shake");//she's not breathing anymore
+        killer.sufferConsequencesForKilling(this);
+
     }
 }
 
