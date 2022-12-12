@@ -298,7 +298,7 @@ export class Quotidian extends PhysicalObject {
     }
 
     generateNegativeOpinion = (blorbo: Quotidian) => {
-        return `I really like their ${blorbo.getRandomThemeConcept(INSULT)} nature.`
+        return `I really dislike their ${blorbo.getRandomThemeConcept(INSULT)} nature.`
     }
 
     generateImportantOpinion = (blorbo: Quotidian) => {
@@ -413,7 +413,7 @@ export class Quotidian extends PhysicalObject {
         const key: string = blorbo.aliases().join(",");
         const relationship = this.relationshipMap.get(key);
         if (relationship) {
-            relationship.weaken(amount, this.dislikeMultiplier);
+            relationship.weaken(amount*-1, this.dislikeMultiplier);
         } else {
             this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, -1 * amount));
         }

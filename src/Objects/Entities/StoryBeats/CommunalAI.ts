@@ -30,7 +30,7 @@ const botherEnemey = new AiBeat(
 //if they're not already important to me, hang out just as bros
 const hangOutWithFriend = new AiBeat(
     `${SUBJECTSTRING}: Hang out with ${TARGETSTRING}`,
-    [`${SUBJECTSTRING} and ${TARGETSTRING} hang out for a while. They both have a pretty good time. `],
+    [`${SUBJECTSTRING} and ${TARGETSTRING} hang out for a while. They both have a pretty good time. `, `${SUBJECTSTRING} and ${TARGETSTRING} chill for a while. It's nice. `],
     [ new TargetIsAlive(), new ILikeTargetMoreThanAmount(100, {singleTarget: true}),new TargetIsImportantToMe({invert: true, singleTarget: true})],
     [new ConsiderWhetherTargetIsImportantToYou()],
     true,

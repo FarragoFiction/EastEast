@@ -66,6 +66,66 @@ exports.AddThemeToRoom = AddThemeToRoom;
 
 /***/ }),
 
+/***/ 5238:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GlitchAnnoy = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const BaseAction_1 = __webpack_require__(7042);
+const Quotidian_1 = __webpack_require__(6387);
+//assume only peewee can do this
+//hi!!! Did you know peewee is wasted? And a doom player?
+class GlitchAnnoy extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.hidden = true;
+        this.recognizedCommands = ["ANNOY", "IRRITATE", "PESTER"];
+        this.noTarget = (beat, current_room, subject) => {
+            return `${subject.processedName()} doesn't see anyone to annoy.`;
+        };
+        this.withTargets = (beat, current_room, subject, targets) => {
+            let killed = false;
+            for (let target of targets) {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    target.likeBlorboLess(subject, 13);
+                    subject.likeBlorboLess(target, 13);
+                }
+                killed = true;
+            }
+            if (!killed) {
+                return this.noTarget(beat, current_room, subject);
+            }
+            return `${subject.name} spends just way too much time and effort annoying ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((item => item.name)))}. `;
+        };
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            let targets = beat.targets;
+            if (targets.length === 0) {
+                targets = [...current_room.blorbos];
+                (0, ArrayUtils_1.removeItemOnce)(targets, subject); //unless you're specifically
+                return this.withTargets(beat, current_room, subject, targets); //boy sure hope you don't accidentally type kill as part of another word with no targets :) :) :)
+            }
+            else {
+                return this.withTargets(beat, current_room, subject, targets);
+            }
+        };
+    }
+}
+exports.GlitchAnnoy = GlitchAnnoy;
+
+
+/***/ }),
+
 /***/ 7042:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -271,6 +331,8 @@ class ConsiderWhetherTargetIsImportantToYou extends BaseAction_1.Action {
             if (!subject || !target || !(target instanceof Quotidian_1.Quotidian)) {
                 return "";
             }
+            subject.intensifyFeelingsFor(target, 13);
+            target.intensifyFeelingsFor(subject, 13);
             let odds = 0.0;
             if (target.gender === Quotidian_1.FEMALE) {
                 odds = subject.platonicFOdds;
@@ -320,6 +382,8 @@ class ConsiderWhetherTargetIsRomanticToYou extends BaseAction_1.Action {
             if (!subject || !target || !(target instanceof Quotidian_1.Quotidian)) {
                 return "";
             }
+            subject.intensifyFeelingsFor(target, 13);
+            target.intensifyFeelingsFor(subject, 13);
             let odds = 0.0;
             if (target.gender === Quotidian_1.FEMALE) {
                 odds = subject.romanticFOdds + subject.platonicFOdds;
@@ -1079,6 +1143,66 @@ class GlitchDeath extends BaseAction_1.Action {
     }
 }
 exports.GlitchDeath = GlitchDeath;
+
+
+/***/ }),
+
+/***/ 2858:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GlitchHangout = void 0;
+const ArrayUtils_1 = __webpack_require__(3907);
+const BaseAction_1 = __webpack_require__(7042);
+const Quotidian_1 = __webpack_require__(6387);
+//assume only peewee can do this
+//hi!!! Did you know peewee is wasted? And a doom player?
+class GlitchHangout extends BaseAction_1.Action {
+    constructor() {
+        super(...arguments);
+        this.hidden = true;
+        this.recognizedCommands = ["HANGOUT", "BEFRIEND", "CHILL"];
+        this.noTarget = (beat, current_room, subject) => {
+            return `${subject.processedName()} doesn't see anyone to hang out with.`;
+        };
+        this.withTargets = (beat, current_room, subject, targets) => {
+            let killed = false;
+            for (let target of targets) {
+                if (target instanceof Quotidian_1.Quotidian) {
+                    target.likeBlorboMore(subject, 13);
+                    subject.likeBlorboMore(target, 13);
+                }
+                killed = true;
+            }
+            if (!killed) {
+                return this.noTarget(beat, current_room, subject);
+            }
+            return `${subject.name} and ${(0, ArrayUtils_1.turnArrayIntoHumanSentence)(targets.map((item => item.name)))} hang out for a while. They both have a pretty good time. `;
+        };
+        this.applyAction = (beat) => {
+            const current_room = beat.owner?.room;
+            if (!current_room) {
+                return "";
+            }
+            const subject = beat.owner;
+            if (!subject) {
+                return "";
+            }
+            let targets = beat.targets;
+            if (targets.length === 0) {
+                targets = [...current_room.blorbos];
+                (0, ArrayUtils_1.removeItemOnce)(targets, subject); //unless you're specifically
+                return this.withTargets(beat, current_room, subject, targets); //boy sure hope you don't accidentally type kill as part of another word with no targets :) :) :)
+            }
+            else {
+                return this.withTargets(beat, current_room, subject, targets);
+            }
+        };
+    }
+}
+exports.GlitchHangout = GlitchHangout;
 
 
 /***/ }),
@@ -3482,6 +3606,8 @@ const GiveObjectWithNameToTarget_1 = __webpack_require__(6290);
 const MoveRandomly_1 = __webpack_require__(4287);
 const RandomMovement_1 = __webpack_require__(5997);
 const Hack_1 = __webpack_require__(6139);
+const GlitchHangout_1 = __webpack_require__(2858);
+const Annoy_1 = __webpack_require__(5238);
 //what, did you think any real being could be so formulaic? 
 //regarding the real peewee, wanda is actually quite THRILLED there is a competing parasite in the Echidna distracting the immune system (and tbf, preventing an immune disorder in the form of the eye killer)
 //the universe is AWARE of the dangers to it and endlessly expands its immune system response
@@ -3517,7 +3643,7 @@ class Peewee extends Quotidian_1.Quotidian {
         this.currentSpeed = 10;
         this.stabilityLevel = 113;
         //only for peewee
-        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new MoveRandomly_1.MoveRandomly(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new GiveObjectWithNameToTarget_1.GiveObjectWithName(""), new DropObjectWithName_1.DropObjectWithName(""), new EnterObject_1.EnterObject(), new CheckInventory_1.CheckInventory(), new FollowObject_1.FollowObject(), new PickupObject_1.PickupObject(), new DropAllObjects_1.DropAllObjects(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
+        this.possibleActions = [new PauseSimulation_1.PauseSimulation(), new ResumeSimulation_1.ResumeSimulation(), new StopMoving_1.StopMoving(), new MoveRandomly_1.MoveRandomly(), new GoNorth_1.GoNorth(), new GoEast_1.GoEast(), new GoSouth_1.GoSouth(), new GoWest_1.GoWest(), new GlitchHangout_1.GlitchHangout(), new Annoy_1.GlitchAnnoy(), new GiveObjectWithNameToTarget_1.GiveObjectWithName(""), new DropObjectWithName_1.DropObjectWithName(""), new EnterObject_1.EnterObject(), new CheckInventory_1.CheckInventory(), new FollowObject_1.FollowObject(), new PickupObject_1.PickupObject(), new DropAllObjects_1.DropAllObjects(), new GlitchDeath_1.GlitchDeath(), new GlitchLife_1.GlitchLife(), new GlitchBreach_1.GlitchBreach(), new Think_1.Think(), new Look_1.Look(), new Listen_1.Listen(), new Smell_1.Smell(), new Feel_1.Feel(), new Help_1.Help(), new Taste_1.Taste()]; //ordered by priority
         //TODO: things in here peewee should do automatically, based on ai triggers. things like him reacting to items.
         this.direction = Quotidian_1.Direction.DOWN; //movement algorithm can change or use this.
         this.movement_alg = new NoMovement_1.NoMovement(this);
@@ -3847,7 +3973,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             return `I really like their ${blorbo.getRandomThemeConcept(ThemeStorage_1.COMPLIMENT)} nature.`;
         };
         this.generateNegativeOpinion = (blorbo) => {
-            return `I really like their ${blorbo.getRandomThemeConcept(ThemeStorage_1.INSULT)} nature.`;
+            return `I really dislike their ${blorbo.getRandomThemeConcept(ThemeStorage_1.INSULT)} nature.`;
         };
         this.generateImportantOpinion = (blorbo) => {
             return `They are more important to me than any ${this.getRandomThemeConcept(ThemeStorage_1.OBJECT)}.`;
@@ -3941,7 +4067,7 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             const key = blorbo.aliases().join(",");
             const relationship = this.relationshipMap.get(key);
             if (relationship) {
-                relationship.weaken(amount, this.dislikeMultiplier);
+                relationship.weaken(amount * -1, this.dislikeMultiplier);
             }
             else {
                 this.relationshipMap.set(key, this.initializeRelationship(key, blorbo, -1 * amount));
@@ -4760,7 +4886,7 @@ const debugAiBeat = (beat) => {
 exports.debugAiBeat = debugAiBeat;
 const botherEnemey = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Annoy ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} dedicates a chunk of time to annoying the ever loving shit out of ${baseFilter_1.TARGETSTRING}. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(-100, { singleTarget: true, invert: true }), new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true, singleTarget: true })], [new ConsiderIfIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30);
 //if they're not already important to me, hang out just as bros
-const hangOutWithFriend = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }), new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true, singleTarget: true })], [new ConsiderIfIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30);
+const hangOutWithFriend = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `, `${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} chill for a while. It's nice. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }), new TargetIsImportantToMe_1.TargetIsImportantToMe({ invert: true, singleTarget: true })], [new ConsiderIfIsImportantToMe_1.ConsiderWhetherTargetIsImportantToYou()], true, 1000 * 30);
 const hangOutWithPotentialCrush = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} hang out for a while. They both have a pretty good time. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(100, { singleTarget: true }), new TargetIsRomanticToMe_1.TargetIsRomanticToMe({ invert: true, singleTarget: true })], [new ConsiderIfIsRomantic_1.ConsiderWhetherTargetIsRomanticToYou()], true, 1000 * 30);
 //in theory you can make someone a life partner who isn't even important to you, and they were roommates
 const hangOutWithPotentialLifePartner = new BaseBeat_1.AiBeat(`${baseFilter_1.SUBJECTSTRING}: Hang out with ${baseFilter_1.TARGETSTRING}`, [`${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} spend hours talking together about their hopes and dreams. `, `${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} are really enjoying spending time together. `, `${baseFilter_1.SUBJECTSTRING} and ${baseFilter_1.TARGETSTRING} are in a very silly debate together. `], [new TargetIsAlive_1.TargetIsAlive(), new ILikeTargetMoreThanAmount_1.ILikeTargetMoreThanAmount(500, { singleTarget: true }), new TargetIsOfficialToMe_1.TargetIsOfficialToMe({ invert: true, singleTarget: true })], [new ConsiderIfOfficial_1.ConsiderWhetherTargetIsOfficialToYou()], true, 1000 * 30);
@@ -10844,6 +10970,7 @@ exports.albhed_map = {
     //https://jadedresearcher.tumblr.com/post/692340754690015232/but-like-italians-are-real-and-arent-all
 };
 //the watcher gives us help https://archive.org/details/house-of-leaves-by-mark-z.-danielewski/mode/2up
+//https://online.fliphtml5.com/yumtb/jvtz/
 const translate = (word) => {
     let ret = word.toLowerCase();
     let done = "";
@@ -14862,6 +14989,8 @@ var map = {
 	"./Objects/Entities/Actions/AddThemeToObject.ts": 1617,
 	"./Objects/Entities/Actions/AddThemeToRoom": 8072,
 	"./Objects/Entities/Actions/AddThemeToRoom.ts": 8072,
+	"./Objects/Entities/Actions/Annoy": 5238,
+	"./Objects/Entities/Actions/Annoy.ts": 5238,
 	"./Objects/Entities/Actions/BaseAction": 7042,
 	"./Objects/Entities/Actions/BaseAction.ts": 7042,
 	"./Objects/Entities/Actions/BefriendTargetByAmount": 8325,
@@ -14908,6 +15037,8 @@ var map = {
 	"./Objects/Entities/Actions/GlitchBreach.ts": 3674,
 	"./Objects/Entities/Actions/GlitchDeath": 6315,
 	"./Objects/Entities/Actions/GlitchDeath.ts": 6315,
+	"./Objects/Entities/Actions/GlitchHangout": 2858,
+	"./Objects/Entities/Actions/GlitchHangout.ts": 2858,
 	"./Objects/Entities/Actions/GlitchLife": 6357,
 	"./Objects/Entities/Actions/GlitchLife.ts": 6357,
 	"./Objects/Entities/Actions/GoEast": 7192,

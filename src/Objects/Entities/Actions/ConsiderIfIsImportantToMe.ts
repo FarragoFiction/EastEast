@@ -21,11 +21,15 @@ export class ConsiderWhetherTargetIsImportantToYou extends Action {
             return "";
         }
         const subject = beat.owner;
+  
         let target = beat.targets[0];
 
         if(!subject || !target || !(target instanceof Quotidian)){
             return "";
         }
+        subject.intensifyFeelingsFor(target,13);
+        target.intensifyFeelingsFor(subject,13);
+
         let odds = 0.0;
         if(target.gender === FEMALE){
             odds = subject.platonicFOdds;

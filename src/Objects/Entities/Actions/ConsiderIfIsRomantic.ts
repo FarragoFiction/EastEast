@@ -26,6 +26,9 @@ export class ConsiderWhetherTargetIsRomanticToYou extends Action {
         if(!subject || !target || !(target instanceof Quotidian)){
             return "";
         }
+        subject.intensifyFeelingsFor(target,13);
+        target.intensifyFeelingsFor(subject,13);
+
         let odds = 0.0;
         if(target.gender === FEMALE){
             odds = subject.romanticFOdds + subject.platonicFOdds;

@@ -73,6 +73,7 @@ export const albhed_map = {
 }
 //the watcher gives us help https://archive.org/details/house-of-leaves-by-mark-z.-danielewski/mode/2up
 
+//https://online.fliphtml5.com/yumtb/jvtz/
 export const translate = (word: string) => {
     let ret = word.toLowerCase();
     let done = "";
