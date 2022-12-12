@@ -3658,12 +3658,12 @@ class Peewee extends Quotidian_1.Quotidian {
                 this.checkFilters();
             }
             if (this.horrorGame) {
-                const css = `radial-gradient(ellipse at ${this.x}px ${this.y}px, black 0%,  10%, rgba(0, 0, 0, 0.15) 25%)`;
+                const css = `radial-gradient(circle at ${this.x + 90}px ${this.y + 90}px, black 0%,  10%, rgba(0, 0, 0, 0.15) 25%)`;
                 this.room.element.style.webkitMaskImage = css;
                 this.room.element.style.maskImage = css;
             }
             else {
-                const css = `radial-gradient(ellipse at ${this.x}px ${this.y}px, black 0%,  10%, rgba(0, 0, 0, 0.65) 25%)`;
+                const css = `radial-gradient(ellipse at ${this.x + this.image.width / 2}px ${this.y + this.image.height / 2}px, black 0%,  10%, rgba(0, 0, 0, 0.65) 25%)`;
                 this.room.element.style.webkitMaskImage = css;
                 this.room.element.style.maskImage = css;
             }
