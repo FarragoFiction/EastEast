@@ -71,7 +71,7 @@ export class Vik extends Quotidian {
 
 
 
-    die = (causeOfDeath: string, killerName: string) => {
+    die = (causeOfDeath: string, killer: Quotidian) => {
         if (!this.dead) {
             //things do NOT stop being censored just because vik is dead. if anything, they get worse. 
 
@@ -80,7 +80,7 @@ export class Vik extends Quotidian {
             this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
             this.room.processDeath(this);
             this.dead = true;
-            this.killerName = killerName;
+            this.killerName = killer.name;
             this.container.style.zIndex = `${12}`; //fade into the background
 
         }

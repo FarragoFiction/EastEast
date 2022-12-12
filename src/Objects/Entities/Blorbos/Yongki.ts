@@ -152,8 +152,10 @@ export class Captain extends Quotidian{
         super(room,"Captain", x,y,[all_themes[CLOWNS],all_themes[SOUL],all_themes[DEFENSE],all_themes[GUIDING]],sprite,"Captain doesn't seem to be having a very good time.", beats);
     }
 
-    die = (causeOfDeath: string) => {
+    die = (causeOfDeath: string, killer: Quotidian) => {
         console.log(`JR NOTE: actually, it says right here in the code, Yongki wins...and since Captain is USING Yongki's body... If you think you're going to ${causeOfDeath}, you're wrong. Hope this helps.`);
+        killer.sufferConsequencesForKilling(this); //vik'll still kill you for it, tho
+ 
     }
 
 

@@ -481,18 +481,41 @@ export class Quotidian extends PhysicalObject {
 
 
 
-    die = (causeOfDeath: string, killerName: string) => {
+    die = (causeOfDeath: string, killer: Quotidian) => {
         if (!this.dead) {
+            killer.sufferConsequencesForKilling(this);
             this.room.clearFilterPart(this.filterStringAppliedToRoom);
             this.flavorText = `Here lies ${this.name}.  They died of ${causeOfDeath}.`;
             this.image.src = `images/Walkabout/Objects/TopFloorObjects/grave.png`;
             this.room.processDeath(this);
             this.dead = true;
-            this.killerName = killerName;
+            this.killerName = killer.name;
             this.container.style.zIndex = `${12}`; //fade into the background
-
         }
+    }
 
+    sufferConsequencesForKilling = (blorbo: Quotidian)=>{
+        //for each relationship your victim had, they now hate you by the same amount they liked them
+        //so if they hated them, they now like you
+        //IMPORTANT, this only works if they knew you
+        for(let key of blorbo.relationshipMap.keys()){
+            console.log("JR NOTE: TODO there should be consequecnes to ", this, "for killing", blorbo);
+            const entity = this.room.maze.findBlorboNamed(key.split(",")[0]);//find them by the first name you know them by
+            if(entity){
+                const how_they_felt_about_victim = entity.getRelationshipWith(blorbo);
+                const how_they_feel_about_killer= entity.getRelationshipWith(this);
+
+                console.log("JR NOTE: how they felt about  the victim: ",how_they_felt_about_victim );
+                console.log("JR NOTE: how they felt about  the killer before: ",how_they_feel_about_killer );
+
+                if(how_they_felt_about_victim){
+                    entity.likeBlorboLess(this,how_they_felt_about_victim.amount )
+                    console.log("JR NOTE: how they feel about  the killer now: ",how_they_feel_about_killer );
+
+                }
+                
+            }
+        }
     }
 
     live = () => {

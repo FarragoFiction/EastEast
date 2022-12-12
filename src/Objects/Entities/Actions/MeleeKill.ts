@@ -28,7 +28,7 @@ export class MeleeKill extends Action {
         let killed = false;
         for(let target of targets){
            if(target instanceof Quotidian){
-                (target as Quotidian).die(this.causeOfDeath, subject.name);
+                (target as Quotidian).die(this.causeOfDeath, subject);
                 killed = true;
            }
         }
