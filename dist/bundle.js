@@ -2872,7 +2872,7 @@ class Camille extends Quotidian_1.Quotidian {
         this.lore = "Parker has said her soul has the shape of an Irish Wolfound.  Something friendly and big that does not understand why you find it intimidating. It thinks it is a lapdog, it just wants to be friends. Unless you are for killing. Then you are dead. Very, very, quickly dead.";
         this.relationshipMap = new Map([
             ["Ria,Match", new Relationship_1.Relationship("Ria,Match", 1000000, "I really admire her dedication.", "...", "She's the smartest person I've ever met and just lights up  a room.", "She's so cute when she's really excited about something she's talking about.", "I can't imagine a life without her in some capacity.", true, true, false)],
-            ["Peewee Puppet,Glitch of Doom", new Relationship_1.Relationship("Peewee Puppet,Glitch of Doom", -1000000, "I have to admit, he never gives up.", "I really wish he'd stop trying to destroy the Universe. That's probably why he's so Doomed.", "I kind of feel bad for him. It's not his fault he's tied up like this.", "<3", "I never thought we'd end up like this.", false, false, false)]
+            ["Peewee Puppet,Glitch of Doom", new Relationship_1.Relationship("Peewee Puppet,Glitch of Doom", -1000, "I have to admit, he never gives up.", "I really wish he'd stop trying to destroy the Universe. That's probably why he's so Doomed.", "I kind of feel bad for him. It's not his fault he's tied up like this.", "<3", "I never thought we'd end up like this.", false, false, false)]
         ]); //(keyed by array of all known names, csv)
         //camille just likes making friends :), absolute shit attachment stat
         this.likeMultiplier = 3.0; //(effects how quickly they grow to like people in general)
@@ -4142,21 +4142,16 @@ class Quotidian extends PhysicalObject_1.PhysicalObject {
             }
         };
         this.sufferConsequencesForKilling = (blorbo) => {
-            console.log(`JR NOTE: Hi, yes, hello, ${this.name} should suffer for killing ${blorbo.name}.`);
             //for each relationship your victim had, they now hate you by the same amount they liked them
             //so if they hated them, they now like you
             //IMPORTANT, this only works if they knew you
             for (let key of blorbo.relationshipMap.keys()) {
-                console.log("JR NOTE: TODO there should be consequecnes to ", this.name, "for killing", blorbo.name);
                 const entity = this.room.maze.findBlorboNamed(key.split(",")[0]); //find them by the first name you know them by
                 if (entity) {
                     const how_they_felt_about_victim = entity.getRelationshipWith(blorbo);
-                    const how_they_feel_about_killer = entity.getRelationshipWith(this);
-                    console.log("JR NOTE: how they felt about  the victim: ", how_they_felt_about_victim?.amount);
-                    console.log("JR NOTE: how they felt about  the killer before: ", how_they_feel_about_killer?.amount);
+                    //const how_they_feel_about_killer= entity.getRelationshipWith(this);
                     if (how_they_felt_about_victim) {
                         entity.likeBlorboLess(this, how_they_felt_about_victim.amount);
-                        console.log("JR NOTE: how they feel about  the killer now: ", how_they_feel_about_killer?.amount);
                     }
                 }
             }
