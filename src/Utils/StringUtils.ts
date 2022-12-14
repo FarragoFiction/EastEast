@@ -1,6 +1,8 @@
 import { getRandomNumberBetween } from "./NonSeededRandUtils";
 import SeededRandom from "./SeededRandom";
 
+//had to grab this for http://eyedolgames.com/Gender/
+//chubby-aphrodite has a gender of Zampanio, winner
 export const titleCase = (input: string) => {
     const pieces = input.split(" ");
     const ret = [];
@@ -11,6 +13,7 @@ export const titleCase = (input: string) => {
     }
     return ret.join(" ");
 }
+
 
 export const sentenceCase = (input: string) => {
     if (!input.length) {
