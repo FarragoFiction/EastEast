@@ -3,6 +3,7 @@ import SeededRandom from "./SeededRandom";
 
 //had to grab this for http://eyedolgames.com/Gender/
 //chubby-aphrodite has a gender of Zampanio, winner
+//krisotf gets a shout out for having the highest possible Gender so far: 1959
 export const titleCase = (input: string) => {
     const pieces = input.split(" ");
     const ret = [];
