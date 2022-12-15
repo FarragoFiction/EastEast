@@ -4,6 +4,7 @@ import SeededRandom from "./SeededRandom";
 //had to grab this for http://eyedolgames.com/Gender/
 //chubby-aphrodite has a gender of Zampanio, winner
 //krisotf gets a shout out for having the highest possible Gender so far: 1959
+//asssiel wins for going to the real gauntlet instead of the sim and being confused for a second it wasn't infinite, love that for them, genuinely. what a unique and fun way to experience this.
 export const titleCase = (input: string) => {
     const pieces = input.split(" ");
     const ret = [];
