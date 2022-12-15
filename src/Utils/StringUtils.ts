@@ -6,6 +6,7 @@ import SeededRandom from "./SeededRandom";
 //krisotf gets a shout out for having the highest possible Gender so far: 1959
 //asssiel wins for going to the real gauntlet instead of the sim and being confused for a second it wasn't infinite, love that for them, genuinely. what a unique and fun way to experience this.
 //persnickety-peahen wins for their gender being... gender.
+//congrats to burrowing-bear for unlocking the emotion 'giggling while having anxiety'
 export const titleCase = (input: string) => {
     const pieces = input.split(" ");
     const ret = [];
