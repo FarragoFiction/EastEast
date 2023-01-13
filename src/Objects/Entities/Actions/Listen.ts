@@ -6,7 +6,7 @@ import { Quotidian } from "../Blorbos/Quotidian";
 import { Action } from "./BaseAction";
 import { PhysicalObject } from "../../PhysicalObject";
 import { AiBeat } from "../StoryBeats/BaseBeat";
-
+//have you cast aside all aspirations of mortality?
 //assume only peewee can look
 export class Listen extends Action {
     /*
