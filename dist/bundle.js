@@ -1591,6 +1591,7 @@ exports.Listen = void 0;
 const ArrayUtils_1 = __webpack_require__(3907);
 const ThemeStorage_1 = __webpack_require__(1288);
 const BaseAction_1 = __webpack_require__(7042);
+//have you cast aside all aspirations of mortality?
 //assume only peewee can look
 class Listen extends BaseAction_1.Action {
     constructor() {
@@ -6413,6 +6414,7 @@ class MoveToSpecificElement extends BaseMovement_1.Movement {
             }
         };
         this.moveX = (remaining_x) => {
+            console.log("JR NOTE: move x");
             //if object x is bigger than mine, need to go right, so d
             if (remaining_x > 0) {
                 this.entity.direction = Quotidian_1.Direction.RIGHT;
@@ -6422,11 +6424,14 @@ class MoveToSpecificElement extends BaseMovement_1.Movement {
             }
         };
         this.moveY = (remaining_y) => {
+            console.log("JR NOTE: move y", remaining_y);
             //if object y is bigger than mine, need to go down, so s
             if (remaining_y > 0) {
+                console.log("JR NOTE: i want to move down");
                 this.entity.direction = Quotidian_1.Direction.DOWN;
             }
             else {
+                console.log("JR NOTE: i want to move up");
                 this.entity.direction = Quotidian_1.Direction.UP;
             }
         };
@@ -6436,21 +6441,43 @@ class MoveToSpecificElement extends BaseMovement_1.Movement {
             }
             const myRect = this.ele.getBoundingClientRect();
             const clientRect = this.entity.container.getBoundingClientRect();
-            let remaining_x = myRect.x - clientRect.x;
-            let remaining_y = myRect.y - clientRect.y;
+            let myMiddleX = (myRect.left + myRect.right) / 2;
+            let myMiddleY = (myRect.top + myRect.bottom) / 2;
+            let clientMiddleX = (clientRect.left + clientRect.right) / 2;
+            let clientMiddleY = (clientRect.top + clientRect.bottom) / 2;
+            let remaining_x = myMiddleX - clientMiddleX;
+            let remaining_y = myMiddleY - clientMiddleY;
+            ;
+            /*
+            if(this.entity.direction === Direction.DOWN){
+                remaining_y = myRect.bottom - clientRect.top;
+            }else{
+                remaining_y = myRect.top - clientRect.bottom;
+            }
+    
+            if(this.entity.direction === Direction.LEFT){
+                remaining_x = myRect.left -clientRect.right;
+            }else{
+                remaining_x = myRect.right -clientRect.left;
+            }*/
+            console.log("JR NOTE: pickNewDirection", { direction: this.entity.direction, myRect, clientRect, remaining_x, remaining_y, speed: this.entity.currentSpeed });
             if (remaining_y > 0) {
                 //coming from above, so shoot for the bottom to touch.
                 remaining_y = myRect.bottom - clientRect.bottom;
             }
             const shouldX = () => {
                 if (Math.abs(remaining_x) < this.entity.currentSpeed) { //if theres no reaosn to go x, don't
+                    console.log("JR NOTE: I think that i have no more x to move");
                     return false;
                 }
                 else if (Math.abs(remaining_y) < this.entity.currentSpeed) { //no sense doing y, it won't do anything
+                    console.log("JR NOTE: I think that i have no more y to move");
                     return true;
                 }
                 else {
-                    return Math.abs(Math.abs(remaining_x) - Math.abs(remaining_y)) > this.entity.width * 3;
+                    console.log("JR NOTE: I think that i could really go either direction");
+                    return Math.abs(remaining_x) < Math.abs(remaining_y);
+                    //return Math.abs( Math.abs(remaining_x) - Math.abs(remaining_y)) > this.entity.width;
                 }
             };
             if (shouldX()) {
@@ -11777,6 +11804,18 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Zalgo = exports.isNumeric = exports.getTimeStringBuff = exports.getTimeString = exports.checkTimeMS = exports.checkTime = exports.domWordMeaningFuckery = exports.stringtoseed = exports.replaceStringAt = exports.sentenceCase = exports.titleCase = void 0;
 const NonSeededRandUtils_1 = __webpack_require__(8258);
 const SeededRandom_1 = __importDefault(__webpack_require__(3450));
+//had to grab this for http://eyedolgames.com/Gender/
+//chubby-aphrodite has a gender of Zampanio, winner
+//krisotf gets a shout out for having the highest possible Gender so far: 1959
+//asssiel wins for going to the real gauntlet instead of the sim and being confused for a second it wasn't infinite, love that for them, genuinely. what a unique and fun way to experience this.
+//persnickety-peahen wins for their gender being... gender.
+//congrats to burrowingbear for unlocking the emotion 'giggling while having anxiety'
+//congrats to ploncc for getting the high score of over 18k questions!
+//draconic-idolatry broke the page and only the word 'scholar' remains so, enjoy the new gender
+//congrats to arimwe for being the first person to getthe special 413 Homestuck  gender
+//congrats to bibliotheca-babble-on for getting the oroboros 113 special gender
+//congrats to chillypeper for getting the nice 69 special
+//congrats to saltayjek004 for getting the dig 13 special
 const titleCase = (input) => {
     const pieces = input.split(" ");
     const ret = [];
