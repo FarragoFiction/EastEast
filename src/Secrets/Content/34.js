@@ -1,7 +1,7 @@
 //http://knucklessux.com/InfoTokenReader/?mode=loop
 export const text = `
  
-“ The phrase means that no matter who you are with or where you are in the world, your family and Where lies the strangling fruit that came from the hand of the sinner I shall bring forth the home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and seeds of the dead to share with the worms that gather in the darkness and I've wandered as far west as I can go. Sitting now on the sand, I watch the happy memories. It might not always be the building itself, but being near your loved ones.
+" The phrase means that no matter who you are with or where you are in the world, your family and Where lies the strangling fruit that came from the hand of the sinner I shall bring forth the home always have the deepest affection and emotional pull. It is the place where you have a foundation of love, warmth, and seeds of the dead to share with the worms that gather in the darkness and I've wandered as far west as I can go. Sitting now on the sand, I watch the happy memories. It might not always be the building itself, but being near your loved ones.
 
 Home is surround the world with the power of their lives while from the dimlit halls of other places forms that sun blur into an aftermath. Reds finally marrying blues. Soon night will where the heart was, where is it now?
 
@@ -22,13 +22,13 @@ You had to Know just to Know it, no ending will there be.
 
 Wasted, Wasted, Digging at the Roots:
 If you know how to amounts to a long column of my yesterdays, towards the end, though not the is no sin in shadow or in light that the seeds of the dead cannot forgive. And there shall be make it, your ending will be Truth.
-  in the planting in the shadows a grace and a mercy from which shall blossom dark flowers, and very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going.”
+  in the planting in the shadows a grace and a mercy from which shall blossom dark flowers, and very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going."
 
-This is their teeth shall devour and sustain and herald the passing of why classical thought concerning structure could say that the center is, paradoxically, within the structure and an age. That which dies shall still know life in death for all that decays is not forgotten and outside it. The center is at the center of the totality, and yet, since the center does not belong to the reanimated it shall walk the world in the bliss of not-knowing. And then there shall be a totality (is not part of the totality), the totality has its fire that knows the naming of you, and in the presence of the strangling fruit, its dark flame shall acquire every part of center elsewhere. The center is not the center.”
+This is their teeth shall devour and sustain and herald the passing of why classical thought concerning structure could say that the center is, paradoxically, within the structure and an age. That which dies shall still know life in death for all that decays is not forgotten and outside it. The center is at the center of the totality, and yet, since the center does not belong to the reanimated it shall walk the world in the bliss of not-knowing. And then there shall be a totality (is not part of the totality), the totality has its fire that knows the naming of you, and in the presence of the strangling fruit, its dark flame shall acquire every part of center elsewhere. The center is not the center."
 
 
-“If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that you that remains.
-  surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits.”
+"If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that you that remains.
+  surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits."
 
 
 `;
@@ -42,12 +42,12 @@ The phrase means that no matter who you are with or where you are in the world, 
 
 `,
 //House of Leaves
-`“I've wandered as far west as I can go. Sitting now on the sand, I watch the sun blur into an aftermath. Reds finally marrying blues. Soon night will enfold us all. But the light is still not gone, not yet, and by it I can dimly see here my own dark hallway, or maybe it was just a foyer and maybe not dark at all, not in fact brightly lit, an afternoon sun blazing through the lead panes, now detected amidst what amounts to a long column of my yesterdays, towards the end, though not the very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going.”
+`"I've wandered as far west as I can go. Sitting now on the sand, I watch the sun blur into an aftermath. Reds finally marrying blues. Soon night will enfold us all. But the light is still not gone, not yet, and by it I can dimly see here my own dark hallway, or maybe it was just a foyer and maybe not dark at all, not in fact brightly lit, an afternoon sun blazing through the lead panes, now detected amidst what amounts to a long column of my yesterdays, towards the end, though not the very end of course, where I had stood at the age of seven, gripping my mother's wrists, trying as hard as I could to keep her from going."
 
-This is why classical thought concerning structure could say that the center is, paradoxically, within the structure and outside it. The center is at the center of the totality, and yet, since the center does not belong to the totality (is not part of the totality), the totality has its center elsewhere. The center is not the center.”
+This is why classical thought concerning structure could say that the center is, paradoxically, within the structure and outside it. The center is at the center of the totality, and yet, since the center does not belong to the totality (is not part of the totality), the totality has its center elsewhere. The center is not the center."
 
 
-“If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits.”
+"If one invests some interest in, for example, a tree and begins to form some thoughts about this tree then writes these thoughts down, further examining the meanings that surface, allowing for unconscious associations to take place, writing all this down as well, until the subject of the tree branches off into the subject of the shelf, that person will enjoy immense psychological benefits."
 `
 //JR, both past and present
 

@@ -21,11 +21,11 @@ It didn't take long for his entrance to be noticed; a repeated _clink_ could be 
 
 It was not working. 
 
-Ronin looked down at her. A smirk escaped him. “What, already antsy out of prison?”
+Ronin looked down at her. A smirk escaped him. "What, already antsy out of prison?"
 
 Her eye shone dangerously in response, along with some sort of guttural snarl. Her motions went to scratching at the absence of any progress in stabbing, the razor tearing through his clothes and thin layer of faux-muscle, and leaving dents in the metal layer underneath.
 
-“Mhm.” She raised her arm again-- he found purchase on her forearm, stopping the blow mid-swing. Her strength was formidable for a woman her size, but it simply wasn't enough to overpower the mechanical prowess of his late father. His arm shook under the pressure. “Listen, I wasn't trying to tear up your door,” he said, both sets of eyes looking back at it. A glimpse of the bedroom was not too far in. “Barely knew you lived here, to begin with. I'll patch up the door, alright? Just give me a hammer and something to work with.”
+"Mhm." She raised her arm again-- he found purchase on her forearm, stopping the blow mid-swing. Her strength was formidable for a woman her size, but it simply wasn't enough to overpower the mechanical prowess of his late father. His arm shook under the pressure. "Listen, I wasn't trying to tear up your door," he said, both sets of eyes looking back at it. A glimpse of the bedroom was not too far in. "Barely knew you lived here, to begin with. I'll patch up the door, alright? Just give me a hammer and something to work with."
 
 The killer twitched under his grip, the thick trench coat unable to slip away from the hold. They look at each other. 
 
