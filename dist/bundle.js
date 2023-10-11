@@ -14746,6 +14746,26 @@ Message: I no longer Believe these Artifacts are parallels of our own. I Worry t
 
 /***/ }),
 
+/***/ 6537:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "text": () => (/* binding */ text)
+/* harmony export */ });
+const text = `
+THERE WAS NEVER ANYTHING HERE.
+
+BUT NOW THERE IS.
+
+WHICH IS MORE TRUE.
+
+I WONDER.
+`;
+
+/***/ }),
+
 /***/ 1178:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -15413,6 +15433,8 @@ var map = {
 	"./Secrets/Content/57.js": 3097,
 	"./Secrets/Content/58": 9831,
 	"./Secrets/Content/58.js": 9831,
+	"./Secrets/Content/59": 6537,
+	"./Secrets/Content/59.js": 6537,
 	"./Secrets/Content/6": 1178,
 	"./Secrets/Content/6.js": 1178,
 	"./Secrets/Content/60": 5593,
