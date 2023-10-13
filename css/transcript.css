@@ -120,7 +120,6 @@ color: red;
   );
   opacity: 0.4;
   position: absolute;
-  left: 150px;
   bottom: 100%;
   animation: scanline 3s linear infinite;
 }
@@ -153,7 +152,6 @@ color: red;
   background-size: 1000px 8px;
   height: 650px;
   width: 1200px;
-  left: 150px;
   position: absolute;
   pointer-events: none;
 }
@@ -206,6 +204,7 @@ video{
     margin-right: auto;
     border-radius: 13px;
     text-overflow: hidden;
+    position: relative;
 }
 .terminal-button{
   font-family: gamer;
